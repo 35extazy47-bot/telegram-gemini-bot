@@ -1,0 +1,535 @@
+[
+  {
+    "id": 1,
+    "category": "tarih",
+    "level": 1,
+    "question": "Osmanlı Devleti'nin kurucusu kimdir?",
+    "options": [
+      "A) Orhan Bey",
+      "B) Osman Bey",
+      "C) Ertuğrul Gazi",
+      "D) Alaeddin Keykubat"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 2,
+    "category": "tarih",
+    "level": 1,
+    "question": "Malazgirt Savaşı hangi iki hükümdar arasında yapılmıştır?",
+    "options": [
+      "A) Alparslan - IV. Romanos Diogenes",
+      "B) Osman Bey - Andronikos",
+      "C) Fatih Sultan Mehmet - XI. Konstantinos",
+      "D) Kanuni Sultan Süleyman - Şarlken"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": 3,
+    "category": "tarih",
+    "level": 1,
+    "question": "İstanbul'u fetheden Osmanlı padişahı kimdir?",
+    "options": [
+      "A) I. Selim",
+      "B) II. Mehmet",
+      "C) I. Süleyman",
+      "D) IV. Murat"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 4,
+    "category": "tarih",
+    "level": 1,
+    "question": "Türkiye Cumhuriyeti'nin ilk başbakanı kimdir?",
+    "options": [
+      "A) Celal Bayar",
+      "B) Adnan Menderes",
+      "C) İsmet İnönü",
+      "D) Mustafa Kemal Atatürk"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 5,
+    "category": "tarih",
+    "level": 1,
+    "question": "Kurtuluş Savaşı'nı başlatan olay hangisidir?",
+    "options": [
+      "A) TBMM'nin açılması",
+      "B) Atatürk'ün Samsun'a çıkışı",
+      "C) Sivas Kongresi",
+      "D) Erzurum Kongresi"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 6,
+    "category": "tarih",
+    "level": 1,
+    "question": "Lale Devri hangi padişah döneminde yaşanmıştır?",
+    "options": [
+      "A) III. Selim",
+      "B) II. Mahmut",
+      "C) III. Ahmet",
+      "D) I. Abdülhamit"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 7,
+    "category": "tarih",
+    "level": 1,
+    "question": "'Ya istiklal ya ölüm!' sözü nerede söylenmiştir?",
+    "options": [
+      "A) Amasya Genelgesi",
+      "B) Erzurum Kongresi",
+      "C) Sivas Kongresi",
+      "D) Havza Genelgesi"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 8,
+    "category": "tarih",
+    "level": 1,
+    "question": "İlk Türk denizcisi olarak bilinen kişi kimdir?",
+    "options": [
+      "A) Piri Reis",
+      "B) Barbaros Hayrettin Paşa",
+      "C) Çaka Bey",
+      "D) Turgut Reis"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 9,
+    "category": "tarih",
+    "level": 1,
+    "question": "Tanzimat Fermanı hangi padişah döneminde ilan edilmiştir?",
+    "options": [
+      "A) II. Mahmut",
+      "B) Abdülmecid",
+      "C) Abdülaziz",
+      "D) II. Abdülhamit"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 10,
+    "category": "tarih",
+    "level": 1,
+    "question": "Göktürk Devleti'nin kurucusu kimdir?",
+    "options": [
+      "A) Bumin Kağan",
+      "B) Teoman",
+      "C) Mete Han",
+      "D) Attila"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": 11,
+    "category": "tarih",
+    "level": 1,
+    "question": "Lozan Barış Antlaşması hangi tarihte imzalanmıştır?",
+    "options": [
+      "A) 23 Nisan 1920",
+      "B) 29 Ekim 1923",
+      "C) 30 Ağustos 1922",
+      "D) 24 Temmuz 1923"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": 12,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'nin en yüksek dağı hangisidir?",
+    "options": [
+      "A) Erciyes Dağı",
+      "B) Uludağ",
+      "C) Ağrı Dağı",
+      "D) Süphan Dağı"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 13,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'nin en büyük gölü hangisidir?",
+    "options": [
+      "A) Tuz Gölü",
+      "B) Van Gölü",
+      "C) Beyşehir Gölü",
+      "D) Eğirdir Gölü"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 14,
+    "category": "cografya",
+    "level": 1,
+    "question": "Kapadokya'daki peri bacaları hangi tür kayaçların aşınmasıyla oluşmuştur?",
+    "options": [
+      "A) Mermer",
+      "B) Granit",
+      "C) Volkanik tüf",
+      "D) Kireçtaşı"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 15,
+    "category": "cografya",
+    "level": 1,
+    "question": "Fırat ve Dicle nehirlerinin birleşerek oluşturduğu nehrin adı nedir?",
+    "options": [
+      "A) Asi Nehri",
+      "B) Ceyhan Nehri",
+      "C) Şatt'ül-Arap",
+      "D) Aras Nehri"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 16,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'de çay tarımı en çok hangi bölgede yapılır?",
+    "options": [
+      "A) Akdeniz Bölgesi",
+      "B) Ege Bölgesi",
+      "C) Marmara Bölgesi",
+      "D) Doğu Karadeniz Bölgesi"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": 17,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'nin en kalabalık şehri hangisidir?",
+    "options": [
+      "A) Ankara",
+      "B) İzmir",
+      "C) İstanbul",
+      "D) Bursa"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 18,
+    "category": "cografya",
+    "level": 1,
+    "question": "Pamukkale travertenleri hangi ilimizde yer almaktadır?",
+    "options": [
+      "A) Aydın",
+      "B) Denizli",
+      "C) Muğla",
+      "D) Afyonkarahisar"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 19,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'nin hangi komşusu ile en uzun kara sınırı vardır?",
+    "options": [
+      "A) İran",
+      "B) Irak",
+      "C) Suriye",
+      "D) Yunanistan"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 20,
+    "category": "cografya",
+    "level": 1,
+    "question": "Akdeniz ikliminin karakteristik bitki örtüsü nedir?",
+    "options": [
+      "A) Bozkır",
+      "B) Orman",
+      "C) Maki",
+      "D) Tundra"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 21,
+    "category": "cografya",
+    "level": 1,
+    "question": "Bor madeni rezervlerinde dünya birincisi olan ülke hangisidir?",
+    "options": [
+      "A) ABD",
+      "B) Rusya",
+      "C) Çin",
+      "D) Türkiye"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": 22,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Türkiye'de yasama yetkisi kime aittir?",
+    "options": [
+      "A) Cumhurbaşkanı",
+      "B) Mahkemeler",
+      "C) Türkiye Büyük Millet Meclisi (TBMM)",
+      "D) Bakanlar Kurulu"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 23,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Türkiye Cumhuriyeti Anayasası'na göre, milletvekili seçilme yaşı kaçtır?",
+    "options": [
+      "A) 18",
+      "B) 20",
+      "C) 25",
+      "D) 30"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": 24,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Temel hak ve hürriyetler hangi durumda sınırlandırılabilir?",
+    "options": [
+      "A) Sadece kanunla",
+      "B) Cumhurbaşkanı kararıyla",
+      "C) Yönetmelikle",
+      "D) Hiçbir şekilde sınırlandırılamaz"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": 25,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Bir kanunu kim veto edebilir?",
+    "options": [
+      "A) Başbakan",
+      "B) Anayasa Mahkemesi Başkanı",
+      "C) Cumhurbaşkanı",
+      "D) TBMM Başkanı"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 26,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Türkiye'de genel seçimler kaç yılda bir yapılır?",
+    "options": [
+      "A) 3",
+      "B) 4",
+      "C) 5",
+      "D) 6"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 27,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Devletin temel amaç ve görevleri Anayasa'nın hangi maddesinde belirtilmiştir?",
+    "options": [
+      "A) 1. Madde",
+      "B) 5. Madde",
+      "C) 10. Madde",
+      "D) 2. Madde"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 28,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Anayasa Mahkemesi kaç üyeden oluşur?",
+    "options": [
+      "A) 11",
+      "B) 13",
+      "C) 15",
+      "D) 17"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 29,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "'Kanun önünde eşitlik' ilkesi Anayasa'nın hangi maddesinde yer alır?",
+    "options": [
+      "A) 5. Madde",
+      "B) 10. Madde",
+      "C) 2. Madde",
+      "D) 12. Madde"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 30,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Yargı yetkisi kim tarafından kullanılır?",
+    "options": [
+      "A) TBMM",
+      "B) Cumhurbaşkanı",
+      "C) Bağımsız ve tarafsız mahkemeler",
+      "D) Barolar Birliği"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 31,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Belediye başkanı kim tarafından seçilir?",
+    "options": [
+      "A) Vali tarafından atanır",
+      "B) Halk tarafından seçilir",
+      "C) Belediye meclisi tarafından seçilir",
+      "D) İçişleri Bakanı tarafından atanır"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 32,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye'nin ilk yerli ve milli otomobilinin markası nedir?",
+    "options": [
+      "A) Anadol",
+      "B) Tofaş",
+      "C) Togg",
+      "D) Devrim"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 33,
+    "category": "guncel",
+    "level": 1,
+    "question": "2025 Nobel Edebiyat Ödülü'nü hangi yazar kazanmıştır?",
+    "options": [
+      "A) Han Kang",
+      "B) Jon Fosse",
+      "C) Annie Ernaux",
+      "D) László Krasznahorkai"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": 34,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye'nin ilk astronotu olan Alper Gezeravcı'nın uzaydaki görevinin adı nedir?",
+    "options": [
+      "A) Gökbörü",
+      "B) Ay Yıldız",
+      "C) Axiom Mission 3",
+      "D) Türk Uzay Misyonu"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 35,
+    "category": "guncel",
+    "level": 1,
+    "question": "2024 Yaz Olimpiyatları hangi şehirde düzenlenmiştir?",
+    "options": [
+      "A) Tokyo",
+      "B) Los Angeles",
+      "C) Paris",
+      "D) Roma"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 36,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye'nin en büyük savaş gemisinin adı nedir?",
+    "options": [
+      "A) TCG Kınalıada",
+      "B) TCG Anadolu",
+      "C) TCG Burgazada",
+      "D) TCG Oruçreis"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 37,
+    "category": "guncel",
+    "level": 1,
+    "question": "COVID-19'a karşı Türkiye'de geliştirilen yerli aşının adı nedir?",
+    "options": [
+      "A) Biontech",
+      "B) Sinovac",
+      "C) Turkovac",
+      "D) Sputnik V"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 38,
+    "category": "guncel",
+    "level": 1,
+    "question": "2023 yılında Türkiye Cumhuriyeti'nin kaçıncı kuruluş yıl dönümü kutlanmıştır?",
+    "options": [
+      "A) 99.",
+      "B) 100.",
+      "C) 101.",
+      "D) 98."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 39,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye'nin en uzun köprüsü olan 1915 Çanakkale Köprüsü hangi denizin üzerinde yer alır?",
+    "options": [
+      "A) Ege Denizi",
+      "B) Karadeniz",
+      "C) Akdeniz",
+      "D) Marmara Denizi"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": 40,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye'nin ilk insansız savaş uçağının adı nedir?",
+    "options": [
+      "A) Akıncı",
+      "B) Anka",
+      "C) Bayraktar TB2",
+      "D) Kızılelma"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": 41,
+    "category": "guncel",
+    "level": 1,
+    "question": "2022 FIFA Dünya Kupası'nı hangi ülke kazanmıştır?",
+    "options": [
+      "A) Fransa",
+      "B) Brezilya",
+      "C) Arjantin",
+      "D) Almanya"
+    ],
+    "answer": "C"
+  }
+]
