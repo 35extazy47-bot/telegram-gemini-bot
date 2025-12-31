@@ -201,7 +201,7 @@ def check_answer(message):
             f"{result}\n\n💀 Canların bitti!\n📊 Level: {level} | ⭐️ EXP: {exp}"
         )
         users[user_id]["lives"] = 3
-        del users[user_id]["current_answer"]
+        users[user_id].pop("current_answer", None)
         save_users()
         return
 
@@ -210,7 +210,7 @@ def check_answer(message):
         f"{result}\n\n📊 Level: {level}\n⭐️ EXP: {exp}/{level*100}"
     )
 
-    del users[user_id]["current_answer"]
+    users[user_id].pop("current_answer", None)
     save_users()
 
     # 🔁 Otomatik yeni soru
@@ -237,11 +237,10 @@ def run_http():
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
 
-def run_bot():
-    print("🤖 Bot aktif...")
+if __name__ == "__main__":
+    # Flask sunucusunu ayrı bir kanalda başlat ki botu engellemesin
+    Thread(target=run_http).start()
+    
+    # Botu çalıştır
+    print("Bot aktif ve Render üzerinde çalışıyor...")
     bot.infinity_polling()
-
-if __name__ == '__main__':
-    t = Thread(target=run_http)
-    t.start()
-    run_bot()
