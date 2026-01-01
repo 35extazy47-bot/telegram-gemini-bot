@@ -65,7 +65,9 @@ def send_question(chat_id, user_id):
         "\n".join(q["options"])
     )
 
-    bot.send_message(chat_id, text)
+    msg = bot.send_message(chat_id, text)
+    users[user_id]["last_question_message_id"] = msg.message_id
+    save_users()
 
 @bot.message_handler(commands=["start"])
 def start_message(message):
@@ -238,7 +240,9 @@ def open_trivia_question(message):
         text = f"🌍 **Global Quiz** | {item['category']}\n\n❓ {question_text}\n\n{options_text}"
         
         bot.delete_message(message.chat.id, wait_msg.message_id)
-        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+        msg = bot.send_message(message.chat.id, text, parse_mode="Markdown")
+        users[user_id]["last_question_message_id"] = msg.message_id
+        save_users()
         
     except Exception as e:
         bot.edit_message_text(f"Hata / Error: {str(e)}", message.chat.id, wait_msg.message_id)
@@ -249,6 +253,18 @@ def check_answer(message):
 
     if user_id not in users or "current_answer" not in users[user_id]:
         return
+    
+    # Eski soruyu ve kullanıcının cevabını sil / Delete old question and user answer
+    if "last_question_message_id" in users[user_id]:
+        try:
+            bot.delete_message(message.chat.id, users[user_id]["last_question_message_id"])
+        except:
+            pass # Mesaj zaten silinmişse hata verme
+    try:
+        bot.delete_message(message.chat.id, message.message_id)
+    except:
+        pass
+
     answer = message.text.upper()
     correct = users[user_id]["current_answer"]
 
