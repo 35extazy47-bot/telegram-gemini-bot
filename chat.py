@@ -3,7 +3,7 @@ import json
 import random
 from dotenv import load_dotenv
 from flask import Flask
-from threading import Thread
+from threading import Thread, Timer
 import requests
 import html
 from deep_translator import GoogleTranslator
@@ -299,10 +299,17 @@ def check_answer(message):
         save_users()
         return
 
-    bot.send_message(
+    msg = bot.send_message(
         message.chat.id,
         f"{result}\n\n📊 Level: {level}\n⭐️ EXP: {exp}/{level*100}"
     )
+    
+    def auto_delete():
+        try:
+            bot.delete_message(message.chat.id, msg.message_id)
+        except:
+            pass
+    Timer(5.0, auto_delete).start()
 
     users[user_id].pop("current_answer", None)
     save_users()
