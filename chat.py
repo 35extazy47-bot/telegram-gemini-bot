@@ -27,6 +27,9 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 USERS_FILE = "users_data.json"
 data_lock = Lock()
 
+# Yasaklı Kelimeler Listesi (Burayı istediğin gibi genişletebilirsin)
+BANNED_WORDS = ["aptal", "salak", "gerizekalı", "mal", "ezik", "ahmak", "özürlü", "amq", "oruspu" ]
+
 def load_users():
     try:
         with open(USERS_FILE, "r", encoding="utf-8") as f:
@@ -856,6 +859,17 @@ def help_guide(message):
 
 @bot.message_handler(func=lambda message: not message.text.startswith("/"))
 def handle_message(message):
+    # Küfür/Hakaret Kontrolü
+    text_lower = message.text.lower()
+    if any(word in text_lower for word in BANNED_WORDS):
+        try:
+            bot.delete_message(message.chat.id, message.message_id)
+            warning = bot.send_message(message.chat.id, f"⚠️ {message.from_user.first_name}, lütfen saygılı olalım! 🚫")
+            Timer(5.0, lambda: bot.delete_message(message.chat.id, warning.message_id)).start()
+        except:
+            pass
+        return
+
     try:
         response = client.models.generate_content(
             model="gemini-2.5-flash",
