@@ -531,5 +531,525 @@
       "D) Almanya"
     ],
     "answer": "C"
+  },
+  {
+    "id": 42,
+    "category": "tarih",
+    "level": 1,
+    "question": "Uygurlar hangi dini kabul ederek yerleşik hayata geçmişlerdir?",
+    "options": [
+      "A) Gök Tanrı",
+      "B) Maniheizm",
+      "C) Budizm",
+      "D) İslamiyet"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 43,
+    "category": "tarih",
+    "level": 1,
+    "question": "Anadolu'nun Türk yurdu olduğu kesinleşen savaş hangisidir?",
+    "options": [
+      "A) Malazgirt",
+      "B) Pasinler",
+      "C) Miryokefalon",
+      "D) Yassıçemen"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 44,
+    "category": "tarih",
+    "level": 1,
+    "question": "Osmanlı Devleti'nde 'Sultan' unvanını kullanan ilk padişah kimdir?",
+    "options": [
+      "A) Osman Bey",
+      "B) Orhan Bey",
+      "C) I. Murat",
+      "D) Yıldırım Bayezid"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 45,
+    "category": "tarih",
+    "level": 1,
+    "question": "Yeniçeri Ocağı hangi padişah döneminde kaldırılmıştır (Vaka-i Hayriye)?",
+    "options": [
+      "A) III. Selim",
+      "B) II. Mahmut",
+      "C) Abdülmecid",
+      "D) II. Abdülhamit"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 46,
+    "category": "tarih",
+    "level": 1,
+    "question": "Mustafa Kemal'in 'Gazeteci Şerif Bey' takma adıyla katıldığı savaş hangisidir?",
+    "options": [
+      "A) Balkan Savaşları",
+      "B) Çanakkale Savaşı",
+      "C) Trablusgarp Savaşı",
+      "D) I. Dünya Savaşı"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 47,
+    "category": "tarih",
+    "level": 1,
+    "question": "Milli Mücadele'nin amaç, yöntem ve gerekçesi ilk kez nerede belirtilmiştir?",
+    "options": [
+      "A) Erzurum Kongresi",
+      "B) Sivas Kongresi",
+      "C) Havza Genelgesi",
+      "D) Amasya Genelgesi"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": 48,
+    "category": "tarih",
+    "level": 1,
+    "question": "Mustafa Kemal'e 'Gazilik' unvanı ve 'Mareşallik' rütbesi hangi savaştan sonra verilmiştir?",
+    "options": [
+      "A) I. İnönü",
+      "B) II. İnönü",
+      "C) Sakarya Meydan Muharebesi",
+      "D) Büyük Taarruz"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 49,
+    "category": "tarih",
+    "level": 1,
+    "question": "Halifelik hangi tarihte kaldırılmıştır?",
+    "options": [
+      "A) 29 Ekim 1923",
+      "B) 3 Mart 1924",
+      "C) 1 Kasım 1922",
+      "D) 17 Şubat 1926"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 50,
+    "category": "tarih",
+    "level": 1,
+    "question": "Hatay Cumhuriyeti'nin ilk ve tek cumhurbaşkanı kimdir?",
+    "options": [
+      "A) Tayfur Sökmen",
+      "B) Abdurrahman Melek",
+      "C) Rauf Orbay",
+      "D) Şükrü Saraçoğlu"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": 51,
+    "category": "tarih",
+    "level": 1,
+    "question": "Türk kadınlarına milletvekili seçme ve seçilme hakkı hangi yıl verilmiştir?",
+    "options": [
+      "A) 1930",
+      "B) 1933",
+      "C) 1934",
+      "D) 1936"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 52,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'nin en doğu ucu hangi ilimizdedir?",
+    "options": [
+      "A) Kars",
+      "B) Iğdır",
+      "C) Hakkari",
+      "D) Artvin"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 53,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'nin en uzun akarsuyu hangisidir?",
+    "options": [
+      "A) Fırat",
+      "B) Dicle",
+      "C) Kızılırmak",
+      "D) Sakarya"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 54,
+    "category": "cografya",
+    "level": 1,
+    "question": "Ege Bölgesi'nde dağların denize uzanış şekli nasıldır?",
+    "options": [
+      "A) Paralel",
+      "B) Dik",
+      "C) Eğik",
+      "D) Karışık"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 55,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'de aritmetik nüfus yoğunluğunun en fazla olduğu bölge hangisidir?",
+    "options": [
+      "A) Ege",
+      "B) İç Anadolu",
+      "C) Marmara",
+      "D) Akdeniz"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 56,
+    "category": "cografya",
+    "level": 1,
+    "question": "Dünya rezervlerinin büyük kısmı Türkiye'de bulunan maden hangisidir?",
+    "options": [
+      "A) Demir",
+      "B) Bakır",
+      "C) Bor",
+      "D) Krom"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 57,
+    "category": "cografya",
+    "level": 1,
+    "question": "Muz tarımı Türkiye'de en çok hangi yörede yapılır?",
+    "options": [
+      "A) Rize - Artvin",
+      "B) Anamur - Alanya",
+      "C) İzmir - Aydın",
+      "D) Bursa - Yalova"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 58,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'nin ilk nükleer güç santrali hangi ilimizde inşa edilmektedir?",
+    "options": [
+      "A) Sinop",
+      "B) Mersin",
+      "C) Kırklareli",
+      "D) Konya"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 59,
+    "category": "cografya",
+    "level": 1,
+    "question": "GAP (Güneydoğu Anadolu Projesi) kapsamında yapılan Türkiye'nin en büyük barajı hangisidir?",
+    "options": [
+      "A) Keban Barajı",
+      "B) Karakaya Barajı",
+      "C) Atatürk Barajı",
+      "D) Hirfanlı Barajı"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 60,
+    "category": "cografya",
+    "level": 1,
+    "question": "Nemrut Dağı Milli Parkı ve heykelleri hangi ilimizdedir?",
+    "options": [
+      "A) Bitlis",
+      "B) Adıyaman",
+      "C) Şanlıurfa",
+      "D) Gaziantep"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 61,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'de rüzgar enerjisinden elektrik üretiminde ilk sırada yer alan bölge hangisidir?",
+    "options": [
+      "A) Marmara",
+      "B) Ege",
+      "C) Akdeniz",
+      "D) İç Anadolu"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 62,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "1982 Anayasası'na göre, Türkiye Devleti'nin yönetim şekli nedir?",
+    "options": [
+      "A) Monarşi",
+      "B) Cumhuriyet",
+      "C) Oligarşi",
+      "D) Teokrasi"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 63,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Yönetmelikleri kimler çıkarabilir?",
+    "options": [
+      "A) Sadece Cumhurbaşkanı",
+      "B) TBMM",
+      "C) Cumhurbaşkanı, Bakanlıklar ve Kamu Tüzel Kişileri",
+      "D) Valiler"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 64,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Yürütme yetkisi ve görevi kime aittir?",
+    "options": [
+      "A) TBMM Başkanı",
+      "B) Başbakan",
+      "C) Cumhurbaşkanı",
+      "D) Genelkurmay Başkanı"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 65,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Siyasi partilerin mali denetimini kim yapar?",
+    "options": [
+      "A) Yargıtay",
+      "B) Danıştay",
+      "C) Sayıştay",
+      "D) Anayasa Mahkemesi"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": 66,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "İdari yargının en yüksek mahkemesi (temyiz mercii) hangisidir?",
+    "options": [
+      "A) Yargıtay",
+      "B) Danıştay",
+      "C) Sayıştay",
+      "D) Uyuşmazlık Mahkemesi"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 67,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Cumhurbaşkanlığı kararnameleri ile ilgili yargısal denetimi kim yapar?",
+    "options": [
+      "A) Danıştay",
+      "B) Yargıtay",
+      "C) Anayasa Mahkemesi",
+      "D) TBMM"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 68,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Bir ilde devletin ve cumhurbaşkanının temsilcisi kimdir?",
+    "options": [
+      "A) Belediye Başkanı",
+      "B) Vali",
+      "C) Kaymakam",
+      "D) Emniyet Müdürü"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 69,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Memurluktan çıkarma cezasına karşı yargı yolu açık mıdır?",
+    "options": [
+      "A) Hayır, kapalıdır",
+      "B) Evet, açıktır",
+      "C) Sadece OHAL döneminde açıktır",
+      "D) Sadece amir izniyle açıktır"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 70,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Türkiye'nin NATO'ya üye olduğu yıl hangisidir?",
+    "options": [
+      "A) 1945",
+      "B) 1950",
+      "C) 1952",
+      "D) 1960"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 71,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "TBMM, Olağanüstü Hal (OHAL) süresini her defasında en fazla kaç ay uzatabilir?",
+    "options": [
+      "A) 2",
+      "B) 3",
+      "C) 4",
+      "D) 6"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 72,
+    "category": "guncel",
+    "level": 1,
+    "question": "NATO'ya 2024 yılında katılan 32. üye ülke hangisidir?",
+    "options": [
+      "A) Finlandiya",
+      "B) İsveç",
+      "C) Ukrayna",
+      "D) Norveç"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 73,
+    "category": "guncel",
+    "level": 1,
+    "question": "2024 Avrupa Futbol Şampiyonası'nı (EURO 2024) kazanan ülke hangisidir?",
+    "options": [
+      "A) İngiltere",
+      "B) Almanya",
+      "C) İspanya",
+      "D) Fransa"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 74,
+    "category": "guncel",
+    "level": 1,
+    "question": "2023 yılında UNESCO Dünya Mirası Listesi'ne giren 'Gordion' antik kenti hangi ilimizdedir?",
+    "options": [
+      "A) Ankara",
+      "B) Konya",
+      "C) Eskişehir",
+      "D) Afyonkarahisar"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": 75,
+    "category": "guncel",
+    "level": 1,
+    "question": "2025 yılında UNESCO Dünya Mirası Listesi'ne dahil edilen 'Sardes Antik Kenti' hangi ilimizdedir?",
+    "options": [
+      "A) İzmir",
+      "B) Manisa",
+      "C) Aydın",
+      "D) Denizli"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 76,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye'nin 50. Milli Parkı olarak ilan edilen (2025) 'Geben Vadisi' hangi ilimizdedir?",
+    "options": [
+      "A) Sivas",
+      "B) Kahramanmaraş",
+      "C) Adana",
+      "D) Osmaniye"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 77,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye'nin ilk yerli ve milli haberleşme uydusu hangisidir?",
+    "options": [
+      "A) TÜRKSAT 5B",
+      "B) TÜRKSAT 6A",
+      "C) GÖKTÜRK-1",
+      "D) İMECE"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 78,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye'nin Milli Muharip Uçağı KAAN ilk uçuşunu hangi yıl gerçekleştirmiştir?",
+    "options": [
+      "A) 2022",
+      "B) 2023",
+      "C) 2024",
+      "D) 2025"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": 79,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye'nin uzaya giden ikinci astronotu kimdir?",
+    "options": [
+      "A) Alper Gezeravcı",
+      "B) Tuva Cihangir Atasever",
+      "C) Selçuk Bayraktar",
+      "D) Haluk Bayraktar"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": 80,
+    "category": "guncel",
+    "level": 1,
+    "question": "2024 Nobel Edebiyat Ödülü'nü kazanan Güney Koreli yazar kimdir?",
+    "options": [
+      "A) Han Kang",
+      "B) Haruki Murakami",
+      "C) Jon Fosse",
+      "D) Orhan Pamuk"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": 81,
+    "category": "guncel",
+    "level": 1,
+    "question": "2024 yılında Anayasa Mahkemesi Başkanlığına kim seçilmiştir?",
+    "options": [
+      "A) Zühtü Arslan",
+      "B) Kadir Özkaya",
+      "C) Muhterem İnce",
+      "D) İrfan Fidan"
+    ],
+    "answer": "B"
   }
 ]
