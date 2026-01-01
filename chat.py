@@ -73,6 +73,7 @@ def send_question(chat_id, user_id):
         return
 
     users[user_id]["current_answer"] = q["answer"]
+    users[user_id]["current_question_id"] = q["id"]
 
     text = (
         f"🧠 {category.upper()} | Level {level}\n"
@@ -90,6 +91,37 @@ def send_question(chat_id, user_id):
     )
 
     msg = bot.send_message(chat_id, text, reply_markup=markup)
+    users[user_id]["last_question_message_id"] = msg.message_id
+    save_users()
+
+def send_wrong_question(chat_id, user_id):
+    wrong_ids = users[user_id].get("wrong_answers", [])
+    if not wrong_ids:
+        bot.send_message(chat_id, "🎉 **Tebrikler!** Yanlış yaptığın tüm soruları temizledin. Harikasın! 👏")
+        users[user_id]["mode"] = "local"
+        return
+
+    q_id = random.choice(wrong_ids)
+    # Soruyu bul
+    q = next((item for item in QUIZ_QUESTIONS if item["id"] == q_id), None)
+    
+    if not q:
+        # Soru veritabanından silinmişse listeden de sil
+        users[user_id]["wrong_answers"].remove(q_id)
+        send_wrong_question(chat_id, user_id)
+        return
+
+    users[user_id]["current_answer"] = q["answer"]
+    users[user_id]["current_question_id"] = q["id"]
+
+    text = (
+        f"🔄 **Tekrar Zamanı** | {q['category'].upper()}\n"
+        f"⚠️ Bu soruyu daha önce yanlış yapmıştın!\n\n"
+        f"{q['question']}\n\n" +
+        "\n".join(q['options'])
+    )
+
+    msg = bot.send_message(chat_id, text)
     users[user_id]["last_question_message_id"] = msg.message_id
     save_users()
 
@@ -147,6 +179,7 @@ def language_selected(call):
                 "🧠 /bilgi - İlginç Bilgiler Öğren\n"
                 "⛏️ /kaz - Maden Kaz ve Hazine Bul\n"
                 "🎒 /envanter - Çantana Bak\n"
+                "🔄 /yanlislarim - Hatalarını Telafi Et\n"
                 "⚔️ /duello - Botla Kapış\n"
                 "Herhangi bir önerin veya geri bildirimin varsa\n"
                 "aşağıdaki butona tıklayarak bana ulaşabilirsin 👇"
@@ -339,6 +372,7 @@ def open_trivia_question(message):
     users[user_id]["mode"] = "global"
     users[user_id]["name"] = message.from_user.first_name
     users[user_id]["username"] = message.from_user.username
+    users[user_id].pop("current_question_id", None) # Global sorularda ID takibi yok
     save_users()
     
     target_lang = users[user_id].get("lang", "tr")
@@ -610,6 +644,16 @@ def duel_bot(message):
     save_users()
     bot.send_message(message.chat.id, msg, parse_mode="Markdown")
 
+@bot.message_handler(commands=['yanlislarim'])
+def retry_wrongs(message):
+    user_id = str(message.from_user.id)
+    if user_id not in users: return
+    
+    users[user_id]["mode"] = "retry"
+    users[user_id]["name"] = message.from_user.first_name
+    save_users()
+    send_wrong_question(message.chat.id, user_id)
+
 @bot.message_handler(commands=['bilgi'])
 def random_fact(message):
     try:
@@ -649,6 +693,12 @@ def check_answer(message):
     bet_amount = users[user_id].get("active_bet", 0)
 
     if answer == correct:
+        # Eğer tekrar modundaysak veya normal modda yanlış listesindeyse sil
+        if "current_question_id" in users[user_id]:
+            q_id = users[user_id]["current_question_id"]
+            if "wrong_answers" in users[user_id] and q_id in users[user_id]["wrong_answers"]:
+                users[user_id]["wrong_answers"].remove(q_id)
+
         users[user_id]["total_correct"] = users[user_id].get("total_correct", 0) + 1
         streak += 1
         
@@ -676,6 +726,14 @@ def check_answer(message):
             
         exp += total_points
     else:
+        # Yanlış yapıldıysa listeye ekle (Sadece local modda)
+        if users[user_id].get("mode") == "local" and "current_question_id" in users[user_id]:
+            q_id = users[user_id]["current_question_id"]
+            if "wrong_answers" not in users[user_id]:
+                users[user_id]["wrong_answers"] = []
+            if q_id not in users[user_id]["wrong_answers"]:
+                users[user_id]["wrong_answers"].append(q_id)
+
         streak = 0
         users[user_id]["lives"] -= 1
         exp = max(0, exp - 10)
@@ -733,6 +791,8 @@ def check_answer(message):
     # 🔁 Otomatik yeni soru
     if users[user_id].get("mode") == "global":
         open_trivia_question(message)
+    elif users[user_id].get("mode") == "retry":
+        send_wrong_question(message.chat.id, user_id)
     else:
         send_question(message.chat.id, user_id)
 
@@ -832,12 +892,120 @@ def admin_broadcast_manual(message):
             
     bot.reply_to(message, f"✅ Mesaj başarıyla {count} kişiye iletildi.")
 
+@bot.message_handler(commands=['ozet'])
+def get_summary(message):
+    args = message.text.split(maxsplit=1)
+    if len(args) < 2:
+        bot.reply_to(message, "⚠️ Hangi konuyu özetleyeyim? Örnek: `/ozet Islahat Fermanı`")
+        return
+    
+    topic = args[1]
+    wait_msg = bot.reply_to(message, f"📚 '{topic}' konusu hazırlanıyor...")
+    
+    try:
+        prompt = f"KPSS öğrencisi için '{topic}' konusunu maddeler halinde, akılda kalıcı ve özet şekilde anlat. Çok uzun olmasın, önemli noktaları vurgula. En sona bu konuyla ilgili 1 adet çoktan seçmeli örnek soru ve cevabını ekle."
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
+        bot.delete_message(message.chat.id, wait_msg.message_id)
+        bot.reply_to(message, f"📝 **KONU ÖZETİ: {topic.upper()}**\n\n{response.text}", parse_mode="Markdown")
+    except Exception:
+        bot.edit_message_text("Özet çıkarırken bir hata oluştu.", message.chat.id, wait_msg.message_id)
+
+@bot.message_handler(commands=['pomodoro'])
+def start_pomodoro(message):
+    msg = bot.reply_to(message, "🍅 **Pomodoro Başladı!**\n\n25 dakika boyunca odaklan. Süre bitince seni etiketleyip haber vereceğim! 📚\n_(Botu sessize alma)_")
+    
+    def finish_pomodoro():
+        try:
+            bot.reply_to(msg, "⏰ **SÜRE DOLDU!**\n\n5 dakika mola ver, sonra tekrar başla! ☕")
+        except:
+            pass
+        
+    Timer(1500, finish_pomodoro).start()
+
+@bot.message_handler(commands=['dogruyanlis'])
+def true_false_game(message):
+    user_id = str(message.from_user.id)
+    wait_msg = bot.send_message(message.chat.id, "🤔 Bilgi hazırlanıyor...")
+    
+    try:
+        prompt = """
+        KPSS Tarih, Coğrafya veya Vatandaşlık konularından rastgele bir bilgi cümlesi yaz. 
+        Bu cümle bazen doğru bilgi içersin, bazen yanlış bilgi içersin (şaşırtmalı olsun).
+        Cevabı şu JSON formatında ver (başka bir şey yazma):
+        {
+            "soru": "Cümle buraya",
+            "cevap": "D" veya "Y",
+            "aciklama": "Neden doğru veya yanlış olduğu buraya"
+        }
+        """
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
+        
+        text_resp = response.text.replace("```json", "").replace("```", "").strip()
+        data = json.loads(text_resp)
+        
+        users[user_id]["dy_answer"] = data["cevap"]
+        users[user_id]["dy_explanation"] = data["aciklama"]
+        save_users()
+        
+        markup = InlineKeyboardMarkup()
+        markup.add(
+            InlineKeyboardButton("✅ Doğru", callback_data="dy_D"),
+            InlineKeyboardButton("❌ Yanlış", callback_data="dy_Y")
+        )
+        
+        bot.delete_message(message.chat.id, wait_msg.message_id)
+        bot.send_message(message.chat.id, f"❓ **Doğru mu Yanlış mı?**\n\n{data['soru']}", reply_markup=markup)
+        
+    except Exception as e:
+        bot.edit_message_text("Hata oluştu, tekrar dene.", message.chat.id, wait_msg.message_id)
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("dy_"))
+def check_dy(call):
+    user_id = str(call.from_user.id)
+    if user_id not in users: return
+    
+    choice = call.data.split("_")[1] # D or Y
+    
+    if "dy_answer" not in users[user_id]:
+        bot.answer_callback_query(call.id, "Bu soru zaman aşımına uğradı.")
+        return
+        
+    correct = users[user_id]["dy_answer"]
+    explanation = users[user_id]["dy_explanation"]
+    
+    if choice == correct:
+        users[user_id]["exp"] += 15
+        msg = f"🎉 **Tebrikler!** Doğru bildin.\n\n💡 {explanation}"
+    else:
+        msg = f"🥀 **Yanlış!**\n\n💡 {explanation}"
+        
+    users[user_id].pop("dy_answer", None)
+    users[user_id].pop("dy_explanation", None)
+    save_users()
+    
+    bot.edit_message_text(
+        chat_id=call.message.chat.id,
+        message_id=call.message.message_id,
+        text=msg
+    )
+
 @bot.message_handler(commands=['help', 'hakkinda'])
 def help_guide(message):
     text = (
         "📚 **BOT REHBERİ & OYUN KURALLARI** 📚\n\n"
         "🎮 **Nasıl Oynanır?**\n"
         "Amacın soruları bilerek EXP kazanmak, seviye atlamak ve en güçlü oyuncu olmak!\n\n"
+        "🎓 **KPSS Çalışma Araçları:**\n"
+        "🔹 `/ozet <konu>` - İstediğin konunun özetini çıkarır.\n"
+        "🔹 `/dogruyanlis` - Doğru/Yanlış oyunu ile bilgilerini sına.\n"
+        "🔹 `/yanlislarim` - Yanlış yaptığın soruları tekrar çöz.\n"
+        "🔹 `/pomodoro` - 25 dakikalık ders çalışma sayacı başlat.\n\n"
         "⚔️ **Oyun Modları:**\n"
         "🔹 `/quiz` - Kategorili sorular çöz.\n"
         "🔹 `/clock` - Dünya genelinden zor sorular (Global).\n"
