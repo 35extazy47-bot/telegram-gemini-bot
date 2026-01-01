@@ -104,12 +104,18 @@ def language_selected(call):
     if user_id not in users:
         users[user_id] = {"level": 1, "exp": 0, "lives": 3, "category": "karisik"}
     users[user_id]["lang"] = lang_code
+    users[user_id]["name"] = call.from_user.first_name
     save_users()
 
     if call.data == "lang_tr":
         text = (
             f"Merhaba hoş geldin {user_text} 👋\n\n"
             "Ben geliştiricim Hüseyin tarafından yazıldım.\n\n"
+            "🤖 **Komutlar:**\n"
+            "🔹 /quiz - KPSS Soruları Çöz\n"
+            "🔹 /clock - Global Yarışma (Zamanlı)\n"
+            "🔹 /profil - Profilini Gör\n"
+            "🔹 /top10 - Liderlik Tablosu\n\n"
             "Herhangi bir önerin veya geri bildirimin varsa\n"
             "aşağıdaki butona tıklayarak bana ulaşabilirsin 👇"
         )
@@ -119,6 +125,11 @@ def language_selected(call):
         text = (
             f"Welcome {user_text} 👋\n\n"
             "I was developed by Hüseyin.\n\n"
+            "🤖 **Commands:**\n"
+            "🔹 /quiz - Solve Questions\n"
+            "🔹 /clock - Global Trivia\n"
+            "🔹 /profil - View Profile\n"
+            "🔹 /top10 - Leaderboard\n\n"
             "If you have any suggestions or feedback,\n"
             "you can contact my developer by clicking the button below 👇"
         )
@@ -128,6 +139,11 @@ def language_selected(call):
         text = (
             f"Здравей, добре дошъл {user_text} 👋\n\n"
             "Аз бях създаден от моя разработчик Хюсеин.\n\n"
+            "🤖 **Команди:**\n"
+            "🔹 /quiz - Решаване на въпроси\n"
+            "🔹 /clock - Глобален тест\n"
+            "🔹 /profil - Виж профила\n"
+            "🔹 /top10 - Класация\n\n"
             "Ако имаш предложения или обратна връзка,\n"
             "можеш да се свържеш с моя разработчик, като натиснеш бутона по-долу 👇"
         )
@@ -175,6 +191,7 @@ def category_selected(call):
 
     users[user_id]["category"] = category
     users[user_id]["mode"] = "local"
+    users[user_id]["name"] = call.from_user.first_name
     save_users()
 
     # 🔹 İlk soru gönder
@@ -189,6 +206,7 @@ def open_trivia_question(message):
         users[user_id] = {"level": 1, "exp": 0, "lives": 3, "category": "karisik", "lang": "tr"}
     
     users[user_id]["mode"] = "global"
+    users[user_id]["name"] = message.from_user.first_name
     save_users()
     
     target_lang = users[user_id].get("lang", "tr")
@@ -319,6 +337,48 @@ def check_answer(message):
         open_trivia_question(message)
     else:
         send_question(message.chat.id, user_id)
+
+@bot.message_handler(commands=['profil'])
+def my_profile(message):
+    user_id = str(message.from_user.id)
+    if user_id not in users:
+        bot.reply_to(message, "Henüz bir profilin yok. /start ile başla!")
+        return
+    
+    u = users[user_id]
+    # İsim yoksa kaydet
+    if "name" not in u:
+        u["name"] = message.from_user.first_name
+        save_users()
+
+    text = (
+        f"👤 **Profilin / Profile**\n\n"
+        f"🏷 İsim: {u.get('name', 'Bilinmiyor')}\n"
+        f"📊 Level: {u.get('level', 1)}\n"
+        f"⭐️ EXP: {u.get('exp', 0)}\n"
+        f"❤️ Can: {u.get('lives', 3)}\n"
+        f"🌍 Mod: {u.get('mode', 'local').title()}\n"
+    )
+    bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+@bot.message_handler(commands=['top10'])
+def leaderboard(message):
+    # Level'a göre, sonra EXP'ye göre sırala (Büyükten küçüğe)
+    sorted_users = sorted(
+        users.items(), 
+        key=lambda x: (x[1].get("level", 1), x[1].get("exp", 0)), 
+        reverse=True
+    )[:10]
+    
+    text = "🏆 **Liderlik Tablosu (Top 10)** 🏆\n\n"
+    for i, (uid, data) in enumerate(sorted_users, 1):
+        name = data.get("name", "Gizli Oyuncu")
+        lvl = data.get("level", 1)
+        xp = data.get("exp", 0)
+        text += f"{i}. {name} — 🏅 Lvl {lvl} | ⭐️ {xp}\n"
+        
+    bot.send_message(message.chat.id, text)
+
 @bot.message_handler(func=lambda message: not message.text.startswith("/"))
 def handle_message(message):
     try:
