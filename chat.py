@@ -1,9 +1,11 @@
 import os
 import json
 import random
+import time
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from flask import Flask
-from threading import Thread, Timer
+from threading import Thread, Timer, Lock
 import requests
 import html
 from deep_translator import GoogleTranslator
@@ -15,7 +17,7 @@ with open("quiz_data.json", "r", encoding="utf-8") as f:
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from telebot import TeleBot
 from google import genai
-DEVELOPER_USERNAME = "HuseyinAcar35"
+DEVELOPER_USERNAME = "HuseyinAcar35" # 👈 Buraya kendi kullanıcı adını yaz (@ olmadan)
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -23,6 +25,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 bot = TeleBot(BOT_TOKEN)
 client = genai.Client(api_key=GEMINI_API_KEY)
 USERS_FILE = "users_data.json"
+data_lock = Lock()
 
 def load_users():
     try:
@@ -32,9 +35,19 @@ def load_users():
         return {}
 
 def save_users():
-    with open(USERS_FILE, "w", encoding="utf-8") as f:
-        json.dump(users, f, ensure_ascii=False, indent=2)
+    with data_lock:
+        with open(USERS_FILE, "w", encoding="utf-8") as f:
+            json.dump(users, f, ensure_ascii=False, indent=2)
 users = load_users()
+def get_rank(level):
+    if level >= 20:
+        return "Bilge 🧙‍♂️"
+    elif level >= 10:
+        return "Usta ⚔️"
+    elif level >= 5:
+        return "Çırak 🛠️"
+    else:
+        return "Acemi 👶"
 def get_question(level, category):
     if category == "karisik":
         uygun = [
@@ -65,7 +78,15 @@ def send_question(chat_id, user_id):
         "\n".join(q["options"])
     )
 
-    msg = bot.send_message(chat_id, text)
+    # Joker Butonları
+    markup = InlineKeyboardMarkup()
+    markup.add(
+        InlineKeyboardButton("💡 %50 Joker (10 EXP)", callback_data="joker_50"),
+        InlineKeyboardButton("⏭ Pas Geç (5 EXP)", callback_data="joker_pass"),
+        InlineKeyboardButton("👥 Seyirci (15 EXP)", callback_data="joker_audience")
+    )
+
+    msg = bot.send_message(chat_id, text, reply_markup=markup)
     users[user_id]["last_question_message_id"] = msg.message_id
     save_users()
 
@@ -107,52 +128,63 @@ def language_selected(call):
     users[user_id]["name"] = call.from_user.first_name
     save_users()
 
-    if call.data == "lang_tr":
-        text = (
-            f"Merhaba hoş geldin {user_text} 👋\n\n"
-            "Ben geliştiricim Hüseyin tarafından yazıldım.\n\n"
-            "🤖 **Komutlar:**\n"
-            "🔹 /quiz - KPSS Soruları Çöz\n"
-            "🔹 /clock - Global Yarışma (Zamanlı)\n"
-            "🔹 /profil - Profilini Gör\n"
-            "🔹 /top10 - Liderlik Tablosu\n\n"
-            "Herhangi bir önerin veya geri bildirimin varsa\n"
-            "aşağıdaki butona tıklayarak bana ulaşabilirsin 👇"
-        )
-        button_text = "📩 Geliştiriciye Mesaj Gönder"
+    messages = {
+        "tr": {
+            "text": (
+                f"Merhaba hoş geldin {user_text} 👋\n\n"
+                "Ben geliştiricim tarafından yazıldım.\n\n"
+                "🤖 **Komutlar:**\n"
+                "🔹 /quiz - KPSS Soruları Çöz\n"
+                "🔹 /clock - Global Yarışma (Zamanlı)\n"
+                "🔹 /profil - Profilini Gör\n"
+                "🔹 /top10 - Liderlik Tablosu\n\n"
+                "🛒 /market - Puanlarını Harca\n"
+                "🎲 /bahis - Risk Al ve Kazan\n"
+                "🧠 /bilgi - İlginç Bilgiler Öğren\n"
+                "⛏️ /kaz - Maden Kaz ve Hazine Bul\n"
+                "🎒 /envanter - Çantana Bak\n"
+                "⚔️ /duello - Botla Kapış\n"
+                "Herhangi bir önerin veya geri bildirimin varsa\n"
+                "aşağıdaki butona tıklayarak bana ulaşabilirsin 👇"
+            ),
+            "btn": " Geliştiriciye Mesaj Gönder"
+        },
+        "en": {
+            "text": (
+                f"Welcome {user_text} 👋\n\n"
+                "I was developed by my creator.\n\n"
+                "🤖 **Commands:**\n"
+                "🔹 /quiz - Solve Questions\n"
+                "🔹 /clock - Global Trivia\n"
+                "🔹 /profil - View Profile\n"
+                "🔹 /top10 - Leaderboard\n\n"
+                "If you have any suggestions or feedback,\n"
+                "you can contact my developer by clicking the button below 👇"
+            ),
+            "btn": "📩 Contact the Developer"
+        },
+        "bg": {
+            "text": (
+                f"Здравей, добре дошъл {user_text} 👋\n\n"
+                "Аз бях създаден от моя разработчик.\n\n"
+                "🤖 **Команди:**\n"
+                "🔹 /quiz - Решаване на въпроси\n"
+                "🔹 /clock - Глобален тест\n"
+                "🔹 /profil - Виж профила\n"
+                "🔹 /top10 - Класация\n\n"
+                "Ако имаш предложения или обратна връзка,\n"
+                "можеш да се свържеш с моя разработчик, като натиснеш бутона по-долу 👇"
+            ),
+            "btn": "📩 Свържи се с разработчика"
+        }
+    }
 
-    elif call.data == "lang_en":
-        text = (
-            f"Welcome {user_text} 👋\n\n"
-            "I was developed by Hüseyin.\n\n"
-            "🤖 **Commands:**\n"
-            "🔹 /quiz - Solve Questions\n"
-            "🔹 /clock - Global Trivia\n"
-            "🔹 /profil - View Profile\n"
-            "🔹 /top10 - Leaderboard\n\n"
-            "If you have any suggestions or feedback,\n"
-            "you can contact my developer by clicking the button below 👇"
-        )
-        button_text = "📩 Contact the Developer"
-
-    else:  # lang_bg
-        text = (
-            f"Здравей, добре дошъл {user_text} 👋\n\n"
-            "Аз бях създаден от моя разработчик Хюсеин.\n\n"
-            "🤖 **Команди:**\n"
-            "🔹 /quiz - Решаване на въпроси\n"
-            "🔹 /clock - Глобален тест\n"
-            "🔹 /profil - Виж профила\n"
-            "🔹 /top10 - Класация\n\n"
-            "Ако имаш предложения или обратна връзка,\n"
-            "можеш да се свържеш с моя разработчик, като натиснеш бутона по-долу 👇"
-        )
-        button_text = "📩 Свържи се с разработчика"
+    selected = messages.get(lang_code, messages["en"])
 
     keyboard = InlineKeyboardMarkup()
     keyboard.add(
         InlineKeyboardButton(
-            text=button_text,
+            text=selected["btn"],
             url=f"https://t.me/{DEVELOPER_USERNAME}"
         )
     )
@@ -160,7 +192,7 @@ def language_selected(call):
     bot.edit_message_text(
         chat_id=call.message.chat.id,
         message_id=call.message.message_id,
-        text=text,
+        text=selected["text"],
         reply_markup=keyboard
     )
 @bot.message_handler(commands=['quiz'])
@@ -196,6 +228,100 @@ def category_selected(call):
 
     # 🔹 İlk soru gönder
     send_question(call.message.chat.id, user_id)
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("joker_"))
+def handle_jokers(call):
+    user_id = str(call.from_user.id)
+    action = call.data
+    
+    if user_id not in users:
+        return
+
+    current_exp = users[user_id].get("exp", 0)
+    correct_answer = users[user_id].get("current_answer")
+
+    if not correct_answer:
+        bot.answer_callback_query(call.id, "⚠️ Aktif bir soru yok!")
+        return
+
+    # --- %50 JOKER ---
+    if action == "joker_50":
+        if current_exp < 10:
+            bot.answer_callback_query(call.id, "❌ Yetersiz EXP! (Gereken: 10)", show_alert=True)
+            return
+        
+        # Yanlış şıkları bul
+        options = ["A", "B", "C", "D"]
+        if correct_answer in options:
+            options.remove(correct_answer)
+        
+        # Rastgele 2 yanlış şık seç
+        eliminated = random.sample(options, 2)
+        users[user_id]["exp"] -= 10
+        save_users()
+        
+        bot.answer_callback_query(
+            call.id, 
+            f"💡 İpucu: {eliminated[0]} ve {eliminated[1]} şıkları YANLIŞ! ❌", 
+            show_alert=True
+        )
+
+    # --- PAS GEÇ ---
+    elif action == "joker_pass":
+        if current_exp < 5:
+            bot.answer_callback_query(call.id, "❌ Yetersiz EXP! (Gereken: 5)", show_alert=True)
+            return
+
+        users[user_id]["exp"] -= 5
+        save_users()
+        
+        bot.answer_callback_query(call.id, "⏭ Soru geçiliyor...", show_alert=False)
+        
+        # Eski mesajı silmeye çalış
+        try:
+            bot.delete_message(call.message.chat.id, call.message.message_id)
+        except:
+            pass
+
+    # --- SEYİRCİ JOKERİ ---
+    elif action == "joker_audience":
+        if current_exp < 15:
+            bot.answer_callback_query(call.id, "❌ Yetersiz EXP! (Gereken: 15)", show_alert=True)
+            return
+
+        users[user_id]["exp"] -= 15
+        save_users()
+
+        # Mantık: Doğru cevaba %50-%80 arası ver, kalanı diğerlerine dağıt
+        options = ["A", "B", "C", "D"]
+        percentages = {}
+        remaining_percent = 100
+
+        # Doğru cevap oranı
+        correct_percent = random.randint(50, 85)
+        percentages[correct_answer] = correct_percent
+        remaining_percent -= correct_percent
+
+        # Yanlış şıklar
+        wrong_options = [o for o in options if o != correct_answer]
+        
+        # Kalan yüzdeyi rastgele dağıt
+        for i, opt in enumerate(wrong_options):
+            if i == len(wrong_options) - 1:
+                percentages[opt] = remaining_percent
+            else:
+                val = random.randint(0, remaining_percent)
+                percentages[opt] = val
+                remaining_percent -= val
+
+        msg_text = "👥 **Seyirci Oylaması:**\n\n" + "\n".join([f"{k}: %{v} {'█' * (v // 10)}" for k, v in sorted(percentages.items())])
+        bot.answer_callback_query(call.id, "Seyirciler oyladı! Sonuçlar mesaj olarak geldi.", show_alert=False)
+        bot.send_message(call.message.chat.id, msg_text, parse_mode="Markdown")
+        # Yeni soru gönder
+        if users[user_id].get("mode") == "global":
+            open_trivia_question(call.message)
+        else:
+            send_question(call.message.chat.id, user_id)
 
 @bot.message_handler(commands=['clock'])
 def open_trivia_question(message):
@@ -257,13 +383,230 @@ def open_trivia_question(message):
         
         text = f"🌍 **Global Quiz** | {item['category']}\n\n❓ {question_text}\n\n{options_text}"
         
-        bot.delete_message(message.chat.id, wait_msg.message_id)
-        msg = bot.send_message(message.chat.id, text, parse_mode="Markdown")
-        users[user_id]["last_question_message_id"] = msg.message_id
-        save_users()
+        # Joker Butonları
+        markup = InlineKeyboardMarkup()
+        markup.add(
+            InlineKeyboardButton("💡 %50 Joker (10 EXP)", callback_data="joker_50"),
+            InlineKeyboardButton("⏭ Pas Geç (5 EXP)", callback_data="joker_pass"),
+            InlineKeyboardButton("👥 Seyirci (15 EXP)", callback_data="joker_audience")
+        )
+
+@bot.message_handler(commands=['market'])
+def market_menu(message):
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("❤️ +1 Can (100 EXP)", callback_data="buy_life"))
+    markup.add(InlineKeyboardButton("🎁 Şans Kutusu (50 EXP)", callback_data="buy_box"))
+    markup.add(InlineKeyboardButton("⛏️ Elmas Kazma (500 EXP)", callback_data="buy_pickaxe"))
+    bot.send_message(message.chat.id, "🛒 **MARKET**\n\nPuanlarını harcayarak güçlenebilirsin!", reply_markup=markup, parse_mode="Markdown")
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("buy_"))
+def market_buy(call):
+    user_id = str(call.from_user.id)
+    if user_id not in users: return
+    
+    if call.data == "buy_life":
+        cost = 100
+        if users[user_id]["exp"] < cost:
+            bot.answer_callback_query(call.id, "❌ Yetersiz EXP!", show_alert=True)
+            return
+        users[user_id]["exp"] -= cost
+        users[user_id]["lives"] += 1
+        bot.answer_callback_query(call.id, "✅ +1 Can satın alındı!")
         
-    except Exception as e:
-        bot.edit_message_text(f"Hata / Error: {str(e)}", message.chat.id, wait_msg.message_id)
+    elif call.data == "buy_box":
+        cost = 50
+        if users[user_id]["exp"] < cost:
+            bot.answer_callback_query(call.id, "❌ Yetersiz EXP!", show_alert=True)
+            return
+        users[user_id]["exp"] -= cost
+        
+        # Rastgele ödül mantığı
+        reward = random.choice(["exp_20", "exp_100", "life_1", "empty"])
+        if reward == "exp_20":
+            users[user_id]["exp"] += 20
+            msg = "kutudan 20 EXP çıktı! (Zarar ettin 😅)"
+        elif reward == "exp_100":
+            users[user_id]["exp"] += 100
+            msg = "🎉 TEBRİKLER! Kutudan 100 EXP çıktı!"
+        elif reward == "life_1":
+            users[user_id]["lives"] += 1
+            msg = "❤️ Kutudan 1 Can çıktı!"
+        else:
+            msg = "💨 Kutu boş çıktı... Şansına küs!"
+            
+        bot.answer_callback_query(call.id, "Kutu açılıyor...", show_alert=False)
+        bot.send_message(call.message.chat.id, f"🎁 **ŞANS KUTUSU SONUCU:**\n{msg}", parse_mode="Markdown")
+
+    elif call.data == "buy_pickaxe":
+        if users[user_id].get("has_pickaxe"):
+            bot.answer_callback_query(call.id, "⚠️ Zaten en iyi kazmaya sahipsin!", show_alert=True)
+            return
+        cost = 500
+        if users[user_id]["exp"] < cost:
+            bot.answer_callback_query(call.id, "❌ Yetersiz EXP! (500 Gerekli)", show_alert=True)
+            return
+        users[user_id]["exp"] -= cost
+        users[user_id]["has_pickaxe"] = True
+        bot.answer_callback_query(call.id, "✅ Elmas Kazma satın alındı! Artık madende daha şanslısın.")
+        
+    save_users()
+
+@bot.message_handler(commands=['bahis'])
+def set_bet(message):
+    user_id = str(message.from_user.id)
+    if user_id not in users: return
+    
+    try:
+        amount = int(message.text.split()[1])
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: /bahis <miktar>\nÖrnek: /bahis 50")
+        return
+        
+    if amount <= 0:
+        bot.reply_to(message, "❌ Pozitif bir sayı girmelisin.")
+        return
+        
+    if users[user_id]["exp"] < amount:
+        bot.reply_to(message, f"❌ Yetersiz EXP! Mevcut: {users[user_id]['exp']}")
+        return
+        
+    if users[user_id].get("active_bet", 0) > 0:
+        bot.reply_to(message, "⚠️ Zaten aktif bir bahsin var! Önce sıradaki soruyu çöz.")
+        return
+    
+    users[user_id]["exp"] -= amount
+    users[user_id]["active_bet"] = amount
+    save_users()
+    
+    bot.reply_to(message, f"🎲 **BAHİS OYNANDI!**\n\nMasaya {amount} EXP koydun.\nSıradaki soruyu doğru bilirsen {amount * 2} EXP kazanacaksın!\nYanlış bilirsen para gider. 💸")
+
+@bot.message_handler(commands=['kaz'])
+def mine_resource(message):
+    user_id = str(message.from_user.id)
+    if user_id not in users: return
+
+    # Cooldown kontrolü (15 dakika)
+    last_mine = users[user_id].get("last_mine_time")
+    now = datetime.utcnow()
+    
+    if last_mine:
+        last_time = datetime.strptime(last_mine, "%Y-%m-%d %H:%M:%S")
+        diff = now - last_time
+        if diff.total_seconds() < 900: # 900 saniye = 15 dk
+            remaining = int((900 - diff.total_seconds()) / 60)
+            bot.reply_to(message, f"⏳ Maden yorgun knk! İşçiler dinleniyor.\n{remaining} dakika sonra tekrar gel.")
+            return
+
+    users[user_id]["last_mine_time"] = now.strftime("%Y-%m-%d %H:%M:%S")
+    has_pickaxe = users[user_id].get("has_pickaxe", False)
+    
+    # Şans faktörü (1-100)
+    roll = random.randint(1, 100)
+    if has_pickaxe:
+        roll += 10 # Kazma varsa şans artar
+        
+    if roll > 95: # Elmas
+        amount = random.randint(200, 300)
+        users[user_id]["exp"] += amount
+        msg = f"💎 **İNANILMAZ!** Bir ELMAS buldun!\nDeğeri: +{amount} EXP"
+    elif roll > 75: # Altın
+        amount = random.randint(50, 100)
+        users[user_id]["exp"] += amount
+        msg = f"✨ **Parıl parıl!** Altın damarı buldun.\nKazanç: +{amount} EXP"
+    elif roll > 40: # Kömür/Demir
+        amount = random.randint(15, 40)
+        users[user_id]["exp"] += amount
+        msg = f"⛏️ Demir ve Kömür çıkardın.\nKazanç: +{amount} EXP"
+    elif roll > 15: # Boş
+        msg = "💨 Maalesef bu sefer sadece toz ve toprak çıktı..."
+    else: # Göçük (Risk)
+        if has_pickaxe and random.random() > 0.5:
+             msg = "⚠️ Göçük oldu ama **Elmas Kazman** seni korudu! Ucuz atlattın."
+        else:
+            users[user_id]["lives"] -= 1
+            msg = "💥 **GÖÇÜK!** Maden üzerine çöktü.\nHasar: -1 Can ❤️"
+            
+    save_users()
+    bot.reply_to(message, msg, parse_mode="Markdown")
+
+@bot.message_handler(commands=['envanter'])
+def show_inventory(message):
+    user_id = str(message.from_user.id)
+    if user_id not in users: return
+    
+    u = users[user_id]
+    
+    # Eşyalar listesi
+    items = []
+    if u.get("has_pickaxe"):
+        items.append("⛏️ **Elmas Kazma** (Maden şansını artırır)")
+    
+    # Eğer hiç eşya yoksa
+    if not items:
+        items_text = "💨 Çantan boş..."
+    else:
+        items_text = "\n".join(items)
+        
+    text = (
+        f"🎒 **ENVANTERİN**\n\n"
+        f"👤 **Sahibi:** {u.get('name', 'Bilinmiyor')}\n"
+        f"💰 **Varlık:** {u.get('exp', 0)} EXP\n"
+        f"❤️ **Can:** {u.get('lives', 3)}\n"
+        f"🎖 **Rütbe:** {get_rank(u.get('level', 1))}\n\n"
+        f"📦 **Eşyalar:**\n{items_text}"
+    )
+    bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+@bot.message_handler(commands=['duello'])
+def duel_bot(message):
+    user_id = str(message.from_user.id)
+    if user_id not in users: return
+
+    try:
+        amount = int(message.text.split()[1])
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: /duello <miktar>\nÖrnek: /duello 100")
+        return
+
+    if amount <= 0:
+        bot.reply_to(message, "❌ Pozitif bir sayı girmelisin.")
+        return
+
+    if users[user_id]["exp"] < amount:
+        bot.reply_to(message, f"❌ Yetersiz EXP! Mevcut: {users[user_id]['exp']}")
+        return
+
+    # Zar atma mantığı
+    user_roll = random.randint(1, 6)
+    bot_roll = random.randint(1, 6)
+    
+    msg = f"⚔️ **DÜELLO BAŞLADI!** ⚔️\nOrtadaki Ödül: {amount * 2} EXP\n\n"
+    msg += f"👤 Senin Zarın: 🎲 {user_roll}\n"
+    msg += f"🤖 Botun Zarı: 🎲 {bot_roll}\n\n"
+    
+    if user_roll > bot_roll:
+        users[user_id]["exp"] += amount
+        msg += f"🎉 **KAZANDIN!** Botu ezip geçtin! (+{amount} EXP)"
+    elif bot_roll > user_roll:
+        users[user_id]["exp"] -= amount
+        msg += f"💀 **KAYBETTİN!** Bot seni yendi... (-{amount} EXP)"
+    else:
+        msg += "🤝 **BERABERE!** Zarlar aynı geldi, puanın iade edildi."
+        
+    save_users()
+    bot.send_message(message.chat.id, msg, parse_mode="Markdown")
+
+@bot.message_handler(commands=['bilgi'])
+def random_fact(message):
+    try:
+        prompt = "Bana çok ilginç, şaşırtıcı ve kısa bir genel kültür bilgisi ver. Sadece bilgiyi yaz."
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
+        bot.reply_to(message, f"🧠 **Bunları Biliyor muydun?**\n\n{response.text}")
+    except Exception:
+        bot.reply_to(message, "Şu an bilgi veremiyorum knk :(")
 
 @bot.message_handler(func=lambda m: m.text and m.text.upper() in ["A", "B", "C", "D"])
 def check_answer(message):
@@ -288,29 +631,70 @@ def check_answer(message):
 
     level = users[user_id]["level"]
     exp = users[user_id]["exp"]
+    streak = users[user_id].get("streak", 0)
+    bet_amount = users[user_id].get("active_bet", 0)
 
     if answer == correct:
-        exp += 20
-        result = "✅ Doğru!"
+        users[user_id]["total_correct"] = users[user_id].get("total_correct", 0) + 1
+        streak += 1
+        
+        # Puan Hesaplama
+        base_points = 20
+        streak_bonus = streak * 2
+        total_points = base_points + streak_bonus
+
+        # Happy Hour (20:00 - 22:00 TR Saati)
+        now = datetime.utcnow() + timedelta(hours=3)
+        is_happy_hour = 20 <= now.hour < 22
+
+        if is_happy_hour:
+            total_points *= 2
+            result = f"✅ **Mükemmel! Doğru Cevap!** 🎉\n🔥 **HAPPY HOUR (2x EXP)** 🔥\n🔥 Combo: {streak}x"
+        else:
+            result = f"✅ **Mükemmel! Doğru Cevap!** 🎉\n🔥 Combo: {streak}x (+{streak_bonus} Bonus)"
+            
+        # Bahis Kazancı
+        if bet_amount > 0:
+            win_amount = bet_amount * 2
+            total_points += win_amount
+            result += f"\n🎲 **BAHİS KAZANDIN!** (+{win_amount} EXP)"
+            users[user_id]["active_bet"] = 0
+            
+        exp += total_points
     else:
+        streak = 0
         users[user_id]["lives"] -= 1
         exp = max(0, exp - 10)
-        result = f"❌ Yanlış! ❤️ Kalan can: {users[user_id]['lives']}"
+        result = f"❌ **Maalesef Yanlış!** 🥀\nDoğru Cevap: {correct}\n❤️ Kalan Can: {users[user_id]['lives']}"
+        
+        if bet_amount > 0:
+            result += f"\n💸 **BAHİS KAYBETTİN!** (-{bet_amount} EXP)"
+            users[user_id]["active_bet"] = 0
 
     # Level kontrolü
+    old_rank = get_rank(level)
     if exp >= level * 100:
         level += 1
         exp = 0
-        result += f"\n🎉 Level atladın! ({level})"
+        result += f"\n\n🚀 **TEBRİKLER! LEVEL ATLADIN!** 🚀\n🏆 Yeni Seviye: {level}"
+        
+        new_rank = get_rank(level)
+        if new_rank != old_rank:
+            result += f"\n🎖 **YENİ RÜTBE:** {new_rank}"
+            
+        if level == 15:
+            result += "\n🌟 **TEBRİKLER! ARTIK VIP ÜYESİN!** 👑\nBundan sonra adının yanında taç taşıyacaksın!"
 
     users[user_id]["level"] = level
     users[user_id]["exp"] = exp
+    users[user_id]["streak"] = streak
+    users[user_id]["total_questions"] = users[user_id].get("total_questions", 0) + 1
 
     # Can bitti mi?
     if users[user_id]["lives"] <= 0:
         bot.send_message(
             message.chat.id,
-            f"{result}\n\n💀 Canların bitti!\n📊 Level: {level} | ⭐️ EXP: {exp}"
+            f"{result}\n\n💀 **OYUN BİTTİ!** 💀\nCanların tükendi knk.\n📊 Ulaşılan Level: {level} | ⭐️ Toplam EXP: {exp}\n\n🔄 /quiz veya /clock yazarak tekrar başla!"
         )
         users[user_id]["lives"] = 3
         users[user_id].pop("current_answer", None)
@@ -319,7 +703,7 @@ def check_answer(message):
 
     msg = bot.send_message(
         message.chat.id,
-        f"{result}\n\n📊 Level: {level}\n⭐️ EXP: {exp}/{level*100}"
+        f"{result}\n\n📊 Level: {level} | ⭐️ EXP: {exp}/{level*100}"
     )
     
     def auto_delete():
@@ -351,14 +735,34 @@ def my_profile(message):
         u["name"] = message.from_user.first_name
         save_users()
 
+    total = u.get('total_questions', 0)
+    correct_count = u.get('total_correct', 0)
+    success_rate = (correct_count / total * 100) if total > 0 else 0
+
+    is_vip = u.get('level', 1) >= 15
+    status_text = "👑 VIP Üye" if is_vip else "Standart Üye"
+    
+    equip = "⛏️ Elmas Kazma" if u.get("has_pickaxe") else "Yok"
+
     text = (
         f"👤 **Profilin / Profile**\n\n"
         f"🏷 İsim: {u.get('name', 'Bilinmiyor')}\n"
+        f"💎 Statü: {status_text}\n"
+        f"🎒 Ekipman: {equip}\n"
         f"📊 Level: {u.get('level', 1)}\n"
+        f"🎖 Rütbe: {get_rank(u.get('level', 1))}\n"
+        f"📝 Çözülen Soru: {total}\n"
+        f"🎯 Başarı: %{success_rate:.1f}\n"
         f"⭐️ EXP: {u.get('exp', 0)}\n"
         f"❤️ Can: {u.get('lives', 3)}\n"
         f"🌍 Mod: {u.get('mode', 'local').title()}\n"
     )
+
+    if total > 5 and success_rate < 30:
+        text += "\n💡 **Tavsiye:** Biraz daha çalışmalısın knk! 📚 Bol bol test çöz."
+    elif total > 5 and success_rate > 80:
+        text += "\n🔥 **Durum:** Harika gidiyorsun! Bu hızla devam et. 🚀"
+
     bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
 @bot.message_handler(commands=['top10'])
@@ -375,9 +779,42 @@ def leaderboard(message):
         name = data.get("name", "Gizli Oyuncu")
         lvl = data.get("level", 1)
         xp = data.get("exp", 0)
-        text += f"{i}. {name} — 🏅 Lvl {lvl} | ⭐️ {xp}\n"
+        
+        t_q = data.get('total_questions', 0)
+        t_c = data.get('total_correct', 0)
+        rate = (t_c / t_q * 100) if t_q > 0 else 0
+        
+        rank = get_rank(lvl)
+        vip_tag = " 👑" if lvl >= 15 else ""
+        text += f"{i}. {name}{vip_tag} — {rank} | 🏅 Lvl {lvl} | ⭐️ {xp} (🎯 %{rate:.0f})\n"
         
     bot.send_message(message.chat.id, text)
+
+@bot.message_handler(commands=['duyuru'])
+def admin_broadcast_manual(message):
+    # Sadece geliştirici kullanabilir
+    if message.from_user.username != DEVELOPER_USERNAME:
+        return
+
+    # Komuttan sonraki metni al
+    args = message.text.split(maxsplit=1)
+    if len(args) < 2:
+        bot.reply_to(message, "⚠️ Mesaj yazmayı unuttun knk!\nÖrnek: /duyuru Herkese selam")
+        return
+
+    text_to_send = args[1]
+    count = 0
+    
+    bot.reply_to(message, "📨 Gönderim başladı...")
+    
+    for user_id in list(users.keys()):
+        try:
+            bot.send_message(user_id, f"📢 **DUYURU** 📢\n\n{text_to_send}", parse_mode="Markdown")
+            count += 1
+        except:
+            pass
+            
+    bot.reply_to(message, f"✅ Mesaj başarıyla {count} kişiye iletildi.")
 
 @bot.message_handler(func=lambda message: not message.text.startswith("/"))
 def handle_message(message):
@@ -389,6 +826,24 @@ def handle_message(message):
         bot.reply_to(message, response.text)
     except Exception as e:
         bot.reply_to(message, "Bir hata oluştu knk 😅")
+
+def send_morning_broadcast():
+    # Kullanıcı listesi üzerinde dön ve mesaj at
+    for user_id, data in list(users.items()):
+        try:
+            name = data.get("name", "Dostum")
+            bot.send_message(user_id, f"GOOD MORNİNG {name.upper()} ☀️")
+        except:
+            pass # Kullanıcı botu engellemiş olabilir, devam et
+
+def scheduler_thread():
+    while True:
+        # Türkiye Saati (UTC+3) hesaplama
+        now = datetime.utcnow() + timedelta(hours=3)
+        if now.hour == 8 and now.minute == 0:
+            send_morning_broadcast()
+            time.sleep(65) # 1 dakika bekle ki tekrar tekrar atmasın
+        time.sleep(20) # 20 saniyede bir saati kontrol et
 
 app = Flask(__name__)
 
@@ -406,6 +861,11 @@ if __name__ == "__main__":
     t = Thread(target=run_http)
     t.daemon = True
     t.start()
+    
+    # Sabah 8 mesajı için zamanlayıcıyı başlat
+    s = Thread(target=scheduler_thread)
+    s.daemon = True
+    s.start()
     
     # Botu çalıştır
     print("Bot aktif ve Render üzerinde çalışıyor...")
