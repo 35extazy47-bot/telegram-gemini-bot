@@ -409,8 +409,6 @@ if __name__ == "__main__":
     
     # Botu çalıştır
     print("Bot aktif ve Render üzerinde çalışıyor...")
-    try:
-        bot.delete_webhook()
-    except:
-        pass
+    # Botu başlatmadan hemen önce eski webhookları ve takılı kalan mesajları siler
+    bot.delete_webhook(drop_pending_updates=True)
     bot.infinity_polling()
