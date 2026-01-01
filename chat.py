@@ -391,6 +391,14 @@ def open_trivia_question(message):
             InlineKeyboardButton("👥 Seyirci (15 EXP)", callback_data="joker_audience")
         )
 
+        bot.delete_message(message.chat.id, wait_msg.message_id)
+        msg = bot.send_message(message.chat.id, text, parse_mode="Markdown", reply_markup=markup)
+        users[user_id]["last_question_message_id"] = msg.message_id
+        save_users()
+        
+    except Exception as e:
+        bot.edit_message_text(f"Hata / Error: {str(e)}", message.chat.id, wait_msg.message_id)
+
 @bot.message_handler(commands=['market'])
 def market_menu(message):
     markup = InlineKeyboardMarkup()
@@ -815,6 +823,31 @@ def admin_broadcast_manual(message):
             pass
             
     bot.reply_to(message, f"✅ Mesaj başarıyla {count} kişiye iletildi.")
+
+@bot.message_handler(commands=['help', 'hakkinda'])
+def help_guide(message):
+    text = (
+        "📚 **BOT REHBERİ & OYUN KURALLARI** 📚\n\n"
+        "🎮 **Nasıl Oynanır?**\n"
+        "Amacın soruları bilerek EXP kazanmak, seviye atlamak ve en güçlü oyuncu olmak!\n\n"
+        "⚔️ **Oyun Modları:**\n"
+        "🔹 `/quiz` - Kategorili sorular çöz.\n"
+        "🔹 `/clock` - Dünya genelinden zor sorular (Global).\n"
+        "🔹 `/duello <miktar>` - Botla zar atışına gir. Kazanan hepsini alır!\n\n"
+        "⛏️ **Madencilik & Ekonomi:**\n"
+        "🔹 `/kaz` - Madene in (15 dk'da bir). Elmas, Altın veya Kömür bulabilirsin. Dikkat et göçük olabilir!\n"
+        "🔹 `/market` - Kazandığın EXP ile Can, Şans Kutusu veya **Elmas Kazma** al.\n"
+        "🔹 `/envanter` - Çantana, parana ve eşyalarına bak.\n\n"
+        "🎲 **Risk & Ödül:**\n"
+        "🔹 `/bahis <miktar>` - Kendine güveniyorsan sıradaki soruya bahis oyna. Doğru bilirsen 2 katı!\n"
+        "🔹 **Happy Hour:** Her akşam 20:00-22:00 arası 2 kat EXP!\n\n"
+        "🏆 **Rütbeler:**\n"
+        "👶 Acemi -> 🛠️ Çırak -> ⚔️ Usta -> 🧙‍♂️ Bilge\n"
+        "👑 **VIP:** Level 15 olursan isminin yanına taç gelir!\n\n"
+        "💡 **Jokerler:**\n"
+        "Sorularda %50, Pas Geç ve Seyirci jokerlerini kullanabilirsin."
+    )
+    bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
 @bot.message_handler(func=lambda message: not message.text.startswith("/"))
 def handle_message(message):
