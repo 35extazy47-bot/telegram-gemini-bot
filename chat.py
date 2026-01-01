@@ -4,6 +4,9 @@ import random
 from dotenv import load_dotenv
 from flask import Flask
 from threading import Thread
+import requests
+import html
+from deep_translator import GoogleTranslator
 
 load_dotenv()
 
@@ -93,6 +96,14 @@ def language_selected(call):
     else:
         user_text = call.from_user.first_name
 
+    # Dil tercihini kaydet / Save language preference
+    user_id = str(call.from_user.id)
+    lang_code = call.data.replace("lang_", "")
+    if user_id not in users:
+        users[user_id] = {"level": 1, "exp": 0, "lives": 3, "category": "karisik"}
+    users[user_id]["lang"] = lang_code
+    save_users()
+
     if call.data == "lang_tr":
         text = (
             f"Merhaba hoş geldin {user_text} 👋\n\n"
@@ -161,10 +172,77 @@ def category_selected(call):
         users[user_id] = {"level": 1, "exp": 0, "lives": 3}
 
     users[user_id]["category"] = category
+    users[user_id]["mode"] = "local"
     save_users()
 
     # 🔹 İlk soru gönder
     send_question(call.message.chat.id, user_id)
+
+@bot.message_handler(commands=['clock'])
+def open_trivia_question(message):
+    user_id = str(message.from_user.id)
+    
+    # Kullanıcı yoksa oluştur
+    if user_id not in users:
+        users[user_id] = {"level": 1, "exp": 0, "lives": 3, "category": "karisik", "lang": "tr"}
+    
+    users[user_id]["mode"] = "global"
+    save_users()
+    
+    target_lang = users[user_id].get("lang", "tr")
+    
+    # Bekleme mesajı
+    wait_msg = bot.send_message(message.chat.id, "⏳ 🌍 ...")
+
+    try:
+        # 1. OpenTDB API'den soru çek
+        response = requests.get("https://opentdb.com/api.php?amount=1&type=multiple", timeout=10)
+        data = response.json()
+        
+        if data["response_code"] != 0:
+            bot.edit_message_text("API Hatası / API Error", message.chat.id, wait_msg.message_id)
+            return
+
+        item = data["results"][0]
+        
+        # HTML karakterlerini temizle (örn: &quot; -> ")
+        question_text = html.unescape(item["question"])
+        correct_text = html.unescape(item["correct_answer"])
+        incorrect_texts = [html.unescape(ans) for ans in item["incorrect_answers"]]
+        
+        # 2. Çeviri (Eğer dil İngilizce değilse)
+        if target_lang != "en":
+            translator = GoogleTranslator(source='auto', target=target_lang)
+            # Hepsini tek seferde çevir (daha hızlı)
+            texts_to_translate = [question_text, correct_text] + incorrect_texts
+            translated = translator.translate_batch(texts_to_translate)
+            
+            question_text = translated[0]
+            correct_text = translated[1]
+            incorrect_texts = translated[2:]
+
+        # 3. Şıkları hazırla ve karıştır
+        all_options = incorrect_texts + [correct_text]
+        random.shuffle(all_options)
+        
+        # Doğru cevabın harfini bul (A, B, C, D)
+        letters = ["A", "B", "C", "D"]
+        correct_index = all_options.index(correct_text)
+        correct_letter = letters[correct_index]
+        
+        users[user_id]["current_answer"] = correct_letter
+        save_users()
+        
+        options_text = "\n".join([f"{letters[i]}) {opt}" for i, opt in enumerate(all_options)])
+        
+        text = f"🌍 **Global Quiz** | {item['category']}\n\n❓ {question_text}\n\n{options_text}"
+        
+        bot.delete_message(message.chat.id, wait_msg.message_id)
+        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+        
+    except Exception as e:
+        bot.edit_message_text(f"Hata / Error: {str(e)}", message.chat.id, wait_msg.message_id)
+
 @bot.message_handler(func=lambda m: m.text and m.text.upper() in ["A", "B", "C", "D"])
 def check_answer(message):
     user_id = str(message.from_user.id)
@@ -214,7 +292,10 @@ def check_answer(message):
     save_users()
 
     # 🔁 Otomatik yeni soru
-    send_question(message.chat.id, user_id)
+    if users[user_id].get("mode") == "global":
+        open_trivia_question(message)
+    else:
+        send_question(message.chat.id, user_id)
 @bot.message_handler(func=lambda message: not message.text.startswith("/"))
 def handle_message(message):
     try:

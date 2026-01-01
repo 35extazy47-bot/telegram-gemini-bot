@@ -1,4 +1,6 @@
 pyTelegramBotAPI
-google-genai
 python-dotenv
 flask
+google-genai
+requests
+deep-translator
