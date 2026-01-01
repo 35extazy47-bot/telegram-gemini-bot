@@ -403,8 +403,14 @@ def run_http():
 
 if __name__ == "__main__":
     # Flask sunucusunu ayrı bir kanalda başlat ki botu engellemesin
-    Thread(target=run_http).start()
+    t = Thread(target=run_http)
+    t.daemon = True
+    t.start()
     
     # Botu çalıştır
     print("Bot aktif ve Render üzerinde çalışıyor...")
+    try:
+        bot.delete_webhook()
+    except:
+        pass
     bot.infinity_polling()
