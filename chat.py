@@ -126,6 +126,7 @@ def language_selected(call):
         users[user_id] = {"level": 1, "exp": 0, "lives": 3, "category": "karisik"}
     users[user_id]["lang"] = lang_code
     users[user_id]["name"] = call.from_user.first_name
+    users[user_id]["username"] = call.from_user.username
     save_users()
 
     messages = {
@@ -224,6 +225,7 @@ def category_selected(call):
     users[user_id]["category"] = category
     users[user_id]["mode"] = "local"
     users[user_id]["name"] = call.from_user.first_name
+    users[user_id]["username"] = call.from_user.username
     save_users()
 
     # 🔹 İlk soru gönder
@@ -333,6 +335,7 @@ def open_trivia_question(message):
     
     users[user_id]["mode"] = "global"
     users[user_id]["name"] = message.from_user.first_name
+    users[user_id]["username"] = message.from_user.username
     save_users()
     
     target_lang = users[user_id].get("lang", "tr")
@@ -738,15 +741,16 @@ def my_profile(message):
         return
     
     u = users[user_id]
-    # İsim yoksa kaydet
-    if "name" not in u:
-        u["name"] = message.from_user.first_name
-        save_users()
+    # Bilgileri güncelle
+    u["name"] = message.from_user.first_name
+    u["username"] = message.from_user.username
+    save_users()
 
     total = u.get('total_questions', 0)
     correct_count = u.get('total_correct', 0)
     success_rate = (correct_count / total * 100) if total > 0 else 0
 
+    dev_icon = " 👨‍💻" if u.get("username") == DEVELOPER_USERNAME else ""
     is_vip = u.get('level', 1) >= 15
     status_text = "👑 VIP Üye" if is_vip else "Standart Üye"
     
@@ -754,7 +758,7 @@ def my_profile(message):
 
     text = (
         f"👤 **Profilin / Profile**\n\n"
-        f"🏷 İsim: {u.get('name', 'Bilinmiyor')}\n"
+        f"🏷 İsim: {u.get('name', 'Bilinmiyor')}{dev_icon}\n"
         f"💎 Statü: {status_text}\n"
         f"🎒 Ekipman: {equip}\n"
         f"📊 Level: {u.get('level', 1)}\n"
@@ -794,7 +798,8 @@ def leaderboard(message):
         
         rank = get_rank(lvl)
         vip_tag = " 👑" if lvl >= 15 else ""
-        text += f"{i}. {name}{vip_tag} — {rank} | 🏅 Lvl {lvl} | ⭐️ {xp} (🎯 %{rate:.0f})\n"
+        dev_tag = " 👨‍💻" if data.get("username") == DEVELOPER_USERNAME else ""
+        text += f"{i}. {name}{vip_tag}{dev_tag} — {rank} | 🏅 Lvl {lvl} | ⭐️ {xp} (🎯 %{rate:.0f})\n"
         
     bot.send_message(message.chat.id, text)
 
