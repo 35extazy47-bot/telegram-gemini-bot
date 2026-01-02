@@ -73,6 +73,45 @@ last_prices = market_prices.copy() # Önceki fiyatları tutar
 market_news = "Borsa işlemleri başladı. Piyasa sakin. ☁️"
 last_market_update = datetime.now()
 
+# 💾 Borsa Verilerini Kaydetme/Yükleme
+MARKET_FILE = "market_data.json"
+
+def save_market_data():
+    try:
+        data = {
+            "prices": market_prices,
+            "volumes": market_volumes,
+            "last_prices": last_prices,
+            "news": market_news,
+            "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S")
+        }
+        with open(MARKET_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"Piyasa kaydetme hatası: {e}")
+
+def load_market_data():
+    global market_prices, market_volumes, last_prices, market_news, last_market_update
+    if not os.path.exists(MARKET_FILE):
+        return
+
+    try:
+        with open(MARKET_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            
+        market_prices = data.get("prices", market_prices)
+        market_volumes = data.get("volumes", market_volumes)
+        last_prices = data.get("last_prices", last_prices)
+        market_news = data.get("news", market_news)
+        
+        if "last_update" in data:
+            last_market_update = datetime.strptime(data["last_update"], "%Y-%m-%d %H:%M:%S")
+            
+    except Exception as e:
+        print(f"Piyasa yükleme hatası: {e}")
+
+load_market_data()
+
 # 📰 Borsa Haber Şablonları
 NEWS_TEMPLATES = {
     "ipek": {
@@ -1695,6 +1734,7 @@ def buy_item(message):
         market_volumes[item_code] += amount
     
     save_users()
+    save_market_data()
     bot.reply_to(message, f"✅ **İşlem Başarılı!**\n📥 Alınan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Ödenen: {total_cost} EXP")
 
 @bot.message_handler(commands=['sat'])
@@ -1730,6 +1770,7 @@ def sell_item(message):
         market_volumes[item_code] -= amount
 
     save_users()
+    save_market_data()
     bot.reply_to(message, f"✅ **Satış Başarılı!**\n📤 Satılan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Kazanılan: {total_gain} EXP")
 
 @bot.message_handler(commands=['zenginler'])
@@ -2247,6 +2288,7 @@ def scheduler_thread():
         if (datetime.now() - last_market_update).total_seconds() > 300:
             update_market()
             last_market_update = datetime.now()
+            save_market_data()
             
         time.sleep(20) # 20 saniyede bir saati kontrol et
 

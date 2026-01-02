@@ -4,6 +4,9 @@
 # User data file - KULLANICI VERİLERİNİ GİZLER
 users_data.json
 
+# Market data file - BORSA VERİLERİNİ GİZLER
+market_data.json
+
 # Python cache
 __pycache__/
 *.pyc
