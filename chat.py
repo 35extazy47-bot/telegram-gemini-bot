@@ -44,6 +44,22 @@ def safe_generate_content(prompt_content):
 # Yasaklı Kelimeler Listesi (Burayı istediğin gibi genişletebilirsin)
 BANNED_WORDS = ["aptal", "salak", "gerizekalı", "mal", "ezik", "ahmak", "özürlü", "amq", "oruspu" ]
 
+# 🃏 Kart Koleksiyonu Veritabanı
+CARDS = {
+    1: {"name": "Mete Han", "rarity": "Efsanevi 🌟", "prob": 0.02},
+    2: {"name": "M. Kemal Atatürk", "rarity": "Efsanevi 🌟", "prob": 0.02},
+    3: {"name": "Fatih Sultan Mehmet", "rarity": "Efsanevi 🌟", "prob": 0.02},
+    4: {"name": "Kanuni Sultan Süleyman", "rarity": "Efsanevi 🌟", "prob": 0.02},
+    5: {"name": "Alparslan", "rarity": "Nadir 🔷", "prob": 0.08},
+    6: {"name": "Mimar Sinan", "rarity": "Nadir 🔷", "prob": 0.08},
+    7: {"name": "Piri Reis", "rarity": "Nadir 🔷", "prob": 0.08},
+    8: {"name": "Tomris Hatun", "rarity": "Nadir 🔷", "prob": 0.08},
+    9: {"name": "Yeniçeri Ağası", "rarity": "Yaygın ⚪", "prob": 0.15},
+    10: {"name": "Tımarlı Sipahi", "rarity": "Yaygın ⚪", "prob": 0.15},
+    11: {"name": "Akıncı Beyi", "rarity": "Yaygın ⚪", "prob": 0.15},
+    12: {"name": "Mehterbaşı", "rarity": "Yaygın ⚪", "prob": 0.15},
+}
+
 def load_users():
     try:
         with open(USERS_FILE, "r", encoding="utf-8") as f:
@@ -320,6 +336,8 @@ def language_selected(call):
                 "🔹 /macera - Tarihsel Macera (Yeni!)\n"
                 "🔹 /clock - Global Yarışma (Zamanlı)\n"
                 "🔹 /ikna - Botu İkna Et (Münazara)\n"
+                "🔹 /paket - Kart Paketi Aç (Koleksiyon)\n"
+                "🔹 /album - Kart Albümüne Bak\n"
                 "🔹 /tarihtebugun - Tarihte Bugün Ne Oldu?\n"
                 "🔹 /profil - Profilini Gör\n"
                 "🔹 /top10 - Liderlik Tablosu\n\n"
@@ -344,6 +362,8 @@ def language_selected(call):
                 "🔹 /quiz - Solve Questions\n"
                 "🔹 /macera - Historical Adventure (New!)\n"
                 "🔹 /ikna - Debate with AI\n"
+                "🔹 /paket - Open Card Pack\n"
+                "🔹 /album - View Album\n"
                 "🔹 /tarihtebugun - On This Day\n"
                 "🔹 /clock - Global Trivia\n"
                 "🔹 /profil - View Profile\n"
@@ -362,6 +382,8 @@ def language_selected(call):
                 "🔹 /quiz - Решаване на въпроси\n"
                 "🔹 /macera - Историческо приключение (Ново!)\n"
                 "🔹 /ikna - Дебат с AI\n"
+                "🔹 /paket - Отвори пакет карти\n"
+                "🔹 /album - Виж албума\n"
                 "🔹 /tarihtebugun - На този ден\n"
                 "🔹 /clock - Глобален тест\n"
                 "🔹 /profil - Виж профила\n"
@@ -1416,6 +1438,66 @@ def history_today(message):
         print(f"Tarih Hatasi: {e}")
         bot.reply_to(message, "Tarih kitapları şu an tozlu... Daha sonra bak.")
 
+@bot.message_handler(commands=['paket'])
+def open_card_pack(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        return
+
+    cost = 150
+    if users[user_id].get("exp", 0) < cost:
+        bot.reply_to(message, f"❌ Yetersiz EXP! Bir paket {cost} EXP.")
+        return
+
+    users[user_id]["exp"] -= cost
+    
+    # Kart seçimi (Ağırlıklı rastgele)
+    card_ids = list(CARDS.keys())
+    weights = [d["prob"] for d in CARDS.values()]
+    selected_id = random.choices(card_ids, weights=weights, k=1)[0]
+    card = CARDS[selected_id]
+    
+    # Kullanıcı kartları
+    user_cards = users[user_id].get("cards", [])
+    
+    msg = "📦 Paket açılıyor...\n"
+    
+    if selected_id in user_cards:
+        # Duplicate (Tekrar)
+        refund = 30
+        users[user_id]["exp"] += refund
+        msg += f"🃏 **{card['name']}** ({card['rarity']}) çıktı!\n⚠️ Ama bu karta zaten sahipsin.\n♻️ Kart bozduruldu: +{refund} EXP iade edildi."
+    else:
+        # Yeni Kart
+        if "cards" not in users[user_id]:
+            users[user_id]["cards"] = []
+        users[user_id]["cards"].append(selected_id)
+        msg += f"🎉 **TEBRİKLER! YENİ KART!**\n\n🃏 **{card['name']}**\n✨ Nadirlik: {card['rarity']}\n\nAlbümüne eklendi!"
+
+    save_users()
+    bot.reply_to(message, msg)
+
+@bot.message_handler(commands=['album'])
+def show_album(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        return
+        
+    user_cards = users[user_id].get("cards", [])
+    total_cards = len(CARDS)
+    owned_count = len(user_cards)
+    
+    text = f"📚 **TARİH KARTLARI ALBÜMÜ** ({owned_count}/{total_cards})\n\n"
+    
+    for cid, data in CARDS.items():
+        status = "✅" if cid in user_cards else "⬛"
+        text += f"{status} {data['name']} ({data['rarity']})\n"
+        
+    if owned_count == total_cards:
+        text += "\n🏆 **TEBRİKLER! TÜM KOLEKSİYONU TAMAMLADIN!** 🏆"
+        
+    bot.send_message(message.chat.id, text)
+
 @bot.callback_query_handler(func=lambda c: c.data.startswith("adv_"))
 def adventure_callback(call):
     user_id = str(call.from_user.id)
@@ -1556,6 +1638,8 @@ def help_guide(message):
         "🔹 `/macera` - Tarihsel bir olayın içinde rol yap ve karar ver! (Yeni! 🕰️)\n"
         "🔹 `/ikna <fikir>` - Botla tartış, argümanın kadar puan kazan! (Yeni! 🗣️)\n"
         "🔹 `/tarihtebugun` - Bugün tarihte ne olduğunu öğren. 📅\n"
+        "🔹 `/paket` - 150 EXP karşılığı tarih kartı paketi aç. 🃏\n"
+        "🔹 `/album` - Topladığın kartları gör. 📚\n"
         "🔹 `/clock` - Dünya genelinden zor sorular (Global).\n"
         "🔹 `/duello <miktar>` - Botla zar atışına gir. Kazanan hepsini alır!\n\n"
         "⛏️ **Madencilik & Ekonomi:**\n"
