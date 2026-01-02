@@ -172,7 +172,14 @@ def send_question(chat_id, user_id):
     users[user_id]["current_answer"] = q["answer"]
     users[user_id]["current_question_id"] = q["id"]
 
+    # Maraton Modu Başlığı
+    mode_prefix = ""
+    if users[user_id].get("mode") == "marathon":
+        step = users[user_id].get("marathon_score", 0) + 1
+        mode_prefix = f"🏃‍♂️ **MARATON: {step}. SORU**\n"
+
     text = (
+        f"{mode_prefix}"
         f"🧠 {category.upper()} | Level {level}\n"
         f"❤️ Can: {users[user_id]['lives']}\n\n"
         f"{q['question']}\n\n" +
@@ -376,6 +383,8 @@ def language_selected(call):
                 "🔹 /quiz - KPSS Soruları Çöz\n"
                 "🔹 /macera - Tarihsel Macera (Yeni!)\n"
                 "🔹 /clock - Global Yarışma (Zamanlı)\n"
+                "🔹 /maraton - Tek hakla ne kadar gidebilirsin? (Yeni! 🏃‍♂️)\n"
+                "🔹 /soruekle - Kendi sorunu gönder (Yeni! 📝)\n"
                 "🔹 /ikna - Botu İkna Et (Münazara)\n"
                 "🔹 /borsa - Kapalıçarşı Ticaret (Canlı!)\n"
                 "🔹 /beylik - Beylik Yönetimi ve Fetih (Yeni! 🏰)\n"
@@ -405,6 +414,8 @@ def language_selected(call):
                 "🤖 **Commands:**\n"
                 "🔹 /quiz - Solve Questions\n"
                 "🔹 /macera - Historical Adventure (New!)\n"
+                "🔹 /maraton - Marathon Mode 🏃‍♂️\n"
+                "🔹 /soruekle - Submit Question 📝\n"
                 "🔹 /ikna - Debate with AI\n"
                 "🔹 /borsa - Grand Bazaar Trading\n"
                 "🔹 /beylik - Principality Management 🏰\n"
@@ -428,6 +439,8 @@ def language_selected(call):
                 "🤖 **Команди:**\n"
                 "🔹 /quiz - Решаване на въпроси\n"
                 "🔹 /macera - Историческо приключение (Ново!)\n"
+                "🔹 /maraton - Маратон режим 🏃‍♂️\n"
+                "🔹 /soruekle - Добави въпрос 📝\n"
                 "🔹 /ikna - Дебат с AI\n"
                 "🔹 /borsa - Търговия на Капалъчарши\n"
                 "🔹 /beylik - Управление на княжеството 🏰\n"
@@ -500,6 +513,44 @@ def category_selected(call):
 
     # 🔹 İlk soru gönder
     send_question(call.message.chat.id, user_id)
+
+@bot.message_handler(commands=['maraton'])
+def start_marathon(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
+    
+    users[user_id]["mode"] = "marathon"
+    users[user_id]["marathon_score"] = 0
+    save_users()
+    
+    bot.send_message(message.chat.id, "🏃‍♂️ **MARATON BAŞLIYOR!** 🏃‍♂️\n\n⚠️ Tek bir yanlış hakkın var!\n🔥 Her soruda ödül artacak.\n\nHazırsan ilk soru geliyor... 🚀")
+    send_question(message.chat.id, user_id)
+
+@bot.message_handler(commands=['soruekle'])
+def suggest_question(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    if len(message.text) < 15:
+        bot.reply_to(message, "⚠️ Lütfen sorunuzu tam yazın.\n\n**Örnek:**\n`/soruekle Fatih Sultan Mehmet kaç yılında doğdu? A)1432 B)1453 C)1481 D)1299 Cevap:A Kategori:Tarih`", parse_mode="Markdown")
+        return
+        
+    suggestion = message.text.replace("/soruekle", "").strip()
+    
+    # Geliştiriciyi bul ve gönder
+    target_id = None
+    for uid, u in users.items():
+        if u.get("username") == DEVELOPER_USERNAME:
+            target_id = uid
+            break
+            
+    if target_id:
+        bot.send_message(target_id, f"📩 **YENİ SORU ÖNERİSİ**\n\n👤 Gönderen: @{message.from_user.username}\n📝 **Soru:**\n{suggestion}")
+        bot.reply_to(message, "✅ Soru önerin geliştiriciye iletildi! Teşekkürler. 🤝")
+    else:
+        bot.reply_to(message, "❌ Geliştiriciye şu an ulaşılamıyor.")
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("joker_"))
 def handle_jokers(call):
@@ -965,6 +1016,43 @@ def check_answer(message):
     streak = users[user_id].get("streak", 0)
     bet_amount = users[user_id].get("active_bet", 0)
 
+    # --- MARATON MODU MANTIĞI ---
+    if users[user_id].get("mode") == "marathon":
+        if answer == correct:
+            users[user_id]["marathon_score"] = users[user_id].get("marathon_score", 0) + 1
+            score = users[user_id]["marathon_score"]
+            
+            # Ödül: Soru sayısı x 10 (Örn: 5. soruda 50 EXP)
+            reward = 10 * score
+            users[user_id]["exp"] += reward
+            
+            msg = bot.send_message(message.chat.id, f"✅ **DOĞRU!** ({score}. Soru)\n💰 +{reward} EXP\nDevam... 🏃‍♂️💨")
+            Timer(1.5, lambda: bot.delete_message(message.chat.id, msg.message_id)).start()
+            
+            users[user_id].pop("current_answer", None)
+            save_users()
+            send_question(message.chat.id, user_id)
+            return
+        else:
+            score = users[user_id].get("marathon_score", 0)
+            best = users[user_id].get("best_marathon", 0)
+            
+            result_msg = f"❌ **YANLIŞ! MARATON BİTTİ!** 🛑\n\n🏃‍♂️ **Skorun:** {score} Soru\n"
+            if score > best:
+                users[user_id]["best_marathon"] = score
+                result_msg += f"🏆 **YENİ REKOR!** (Eski: {best})\n"
+            else:
+                result_msg += f"🏅 **En İyi Skorun:** {best}\n"
+            result_msg += f"\nDoğru Cevap: {correct}"
+            
+            users[user_id]["mode"] = "local" # Normale dön
+            users[user_id]["marathon_score"] = 0
+            users[user_id].pop("current_answer", None)
+            save_users()
+            bot.send_message(message.chat.id, result_msg)
+            return
+    # ---------------------------
+
     if answer == correct:
         # Eğer tekrar modundaysak veya normal modda yanlış listesindeyse sil
         if "current_question_id" in users[user_id]:
@@ -1103,6 +1191,7 @@ def my_profile(message):
         f"📊 Level: {u.get('level', 1)}\n"
         f"🎖 Rütbe: {get_rank(u.get('level', 1), u.get('username'))}\n"
         f"📝 Çözülen Soru: {total}\n"
+        f"🏃‍♂️ En Uzun Maraton: {u.get('best_marathon', 0)}\n"
         f"🎯 Başarı: %{success_rate:.1f}\n"
         f"⭐️ EXP: {u.get('exp', 0)}\n"
         f"❤️ Can: {u.get('lives', 3)}\n"
@@ -2007,6 +2096,8 @@ def help_guide(message):
         "⚔️ **Oyun Modları:**\n"
         "🔹 `/quiz` - Kategorili sorular çöz.\n"
         "🔹 `/macera` - Tarihsel bir olayın içinde rol yap ve karar ver! (Yeni! 🕰️)\n"
+        "🔹 `/maraton` - Tek hakla ne kadar gidebilirsin? (Yeni! 🏃‍♂️)\n"
+        "🔹 `/soruekle` - Kendi sorunu gönder (Yeni! 📝)\n"
         "🔹 `/ikna <fikir>` - Botla tartış, argümanın kadar puan kazan! (Yeni! 🗣️)\n"
         "🔹 `/tarihtebugun` - Bugün tarihte ne olduğunu öğren. 📅\n"
         "🔹 `/borsa` - Kapalıçarşı'da ticaret yap, servetine servet kat! (Yeni! 📈)\n"
