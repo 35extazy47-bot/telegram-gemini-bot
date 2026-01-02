@@ -30,7 +30,7 @@ data_lock = Lock()
 def safe_generate_content(prompt_content):
     """Modeller arası geçiş yaparak hata riskini azaltır."""
     # Sırasıyla bu modelleri dener. Biri çalışırsa cevap döner.
-    models = ["gemini-2.5-flash"]
+    models = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash-exp", "gemini-pro-latest"]
     for model in models:
         try:
             return client.models.generate_content(
@@ -805,10 +805,6 @@ def random_fact(message):
         return
     try:
         prompt = "Bana çok ilginç, şaşırtıcı ve kısa bir genel kültür bilgisi ver. Sadece bilgiyi yaz."
-        response = client.models.generate_content(
-            model="gemini-1.5-flash-001",
-            contents=prompt
-        )
         response = safe_generate_content(prompt)
         bot.reply_to(message, f"🧠 **Bunları Biliyor muydun?**\n\n{response.text}")
     except Exception as e:
@@ -1126,10 +1122,6 @@ def get_summary(message):
     
     try:
         prompt = f"KPSS öğrencisi için '{topic}' konusunu maddeler halinde, akılda kalıcı ve özet şekilde anlat. Çok uzun olmasın, önemli noktaları vurgula. En sona bu konuyla ilgili 1 adet çoktan seçmeli örnek soru ve cevabını ekle."
-        response = client.models.generate_content(
-            model="gemini-1.5-flash-001",
-            contents=prompt
-        )
         response = safe_generate_content(prompt)
         bot.delete_message(message.chat.id, wait_msg.message_id)
         bot.reply_to(message, f"📝 **KONU ÖZETİ: {topic.upper()}**\n\n{response.text}", parse_mode="Markdown")
@@ -1172,10 +1164,6 @@ def true_false_game(message):
             "aciklama": "Neden doğru veya yanlış olduğu buraya"
         }
         """
-        response = client.models.generate_content(
-            model="gemini-1.5-flash-001",
-            contents=prompt
-        )
         response = safe_generate_content(prompt)
         
         text_resp = response.text.replace("```json", "").replace("```", "").strip()
@@ -1262,10 +1250,6 @@ def start_adventure(message):
             "kayip_mesaji": "Başarısızlık durumunda gösterilecek açıklama."
         }
         """
-        response = client.models.generate_content(
-            model="gemini-1.5-flash-001",
-            contents=prompt
-        )
         response = safe_generate_content(prompt)
         
         text_resp = response.text.replace("```json", "").replace("```", "").strip()
@@ -1403,10 +1387,6 @@ def handle_message(message):
         return
 
     try:
-        response = client.models.generate_content(
-            model="gemini-1.5-flash-001",
-            contents=message.text
-        )
         response = safe_generate_content(message.text)
         bot.reply_to(message, response.text)
     except Exception as e:
