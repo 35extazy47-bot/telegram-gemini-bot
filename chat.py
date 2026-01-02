@@ -71,6 +71,7 @@ market_prices = {k: v["base"] for k, v in TRADE_GOODS.items()}
 market_volumes = {k: 0 for k in TRADE_GOODS.keys()} # Alım-Satım hacmini takip eder
 last_prices = market_prices.copy() # Önceki fiyatları tutar
 market_news = "Borsa işlemleri başladı. Piyasa sakin. ☁️"
+last_market_update = datetime.now()
 
 # 📰 Borsa Haber Şablonları
 NEWS_TEMPLATES = {
@@ -1526,7 +1527,15 @@ def check_market(message):
     if not users.get(user_id, {}).get("is_approved", True):
         return
 
-    text = f"📰 **SON DAKİKA:** {market_news}\n\n"
+    # Kalan süreyi hesapla
+    time_diff = datetime.now() - last_market_update
+    seconds_left = 300 - time_diff.total_seconds()
+    if seconds_left < 0: seconds_left = 0
+    mins = int(seconds_left // 60)
+    secs = int(seconds_left % 60)
+
+    text = f"📰 **SON DAKİKA:** {market_news}\n"
+    text += f"⏳ **Sonraki Güncelleme:** {mins} dk {secs} sn\n\n"
     text += "📈 **KAPALIÇARŞI GÜNCEL FİYATLAR** 📉\n\n"
     
     for code, price in market_prices.items():
@@ -1860,34 +1869,31 @@ def update_market():
         current_price = market_prices[code]
         volume = market_volumes.get(code, 0)
         
-        # 1. Arz-Talep Etkisi (Normal Durum)
-        # Hacim pozitifse (alım çoksa) fiyat artar, negatifse düşer.
-        # Normal değişim limiti: %10 (+/-)
+        # 1. Arz-Talep Etkisi (Hacme Duyarlı)
+        # Temel rastgele dalgalanma (-%3 ile +%3 arası)
+        change_percent = random.uniform(-0.03, 0.03)
         
-        change_percent = 0
-        if volume > 0:
-            # Talep var, fiyat artar (Max %10)
-            change_percent = random.uniform(0.01, 0.10)
-        elif volume < 0:
-            # Satış baskısı, fiyat düşer (Max %10)
-            change_percent = random.uniform(-0.10, -0.01)
-        else:
-            # İşlem yok, yatay seyir
-            change_percent = random.uniform(-0.02, 0.02)
+        # Hacim Etkisi: Her 1 birim alım %0.5 artırır, satım düşürür.
+        # Örn: 50 tane alındıysa -> +0.25 (%25 artış)
+        volume_impact = volume * 0.005
+        
+        # Toplam değişim
+        change_percent += volume_impact
+        
+        # Normal şartlarda değişimi %30 ile sınırla
+        change_percent = max(-0.30, min(change_percent, 0.30))
             
         # 2. Sürpriz Olaylar (Manipülasyon)
         # %10 ihtimalle piyasa ters köşe yapar
         surprise_roll = random.random()
         
         if surprise_roll < 0.10: # %10 şansla sürpriz
-            if volume <= 0: 
-                # Kimsenin almadığı mal patlama yapar (Şirket anlaşması)
-                change_percent = random.uniform(0.15, 0.30) # %15-%30 artış
-                print(f"🚀 SÜRPRİZ: {data['name']} için dev anlaşma! Fiyat fırladı.")
-            elif volume > 0:
-                # Çok alınan mal çakılır (Kötü haber)
-                change_percent = random.uniform(-0.30, -0.15) # %15-%30 düşüş
-                print(f"📉 SÜRPRİZ: {data['name']} hakkında kötü haber! Fiyat çakıldı.")
+            if volume > 10: # Çok alınan mal çakılır (Balon patladı)
+                change_percent = random.uniform(-0.40, -0.20) # Sert düşüş
+                print(f"📉 SÜRPRİZ: {data['name']} balon yaptı ve patladı!")
+            elif volume < -10: # Çok satılan mal fırlar (Tepki alımı)
+                change_percent = random.uniform(0.20, 0.40) # Sert yükseliş
+                print(f"🚀 SÜRPRİZ: {data['name']} dip fiyattan toplandı!")
         
         # Yeni fiyatı hesapla
         new_price = int(current_price * (1 + change_percent))
@@ -1917,7 +1923,7 @@ def update_market():
     print(f"📰 Haber: {market_news}")
 
 def scheduler_thread():
-    last_market_update = datetime.now()
+    global last_market_update
     while True:
         # Türkiye Saati (UTC+3) hesaplama
         now = datetime.utcnow() + timedelta(hours=3)
@@ -1925,8 +1931,8 @@ def scheduler_thread():
             send_morning_broadcast()
             time.sleep(65) # 1 dakika bekle ki tekrar tekrar atmasın
             
-        # Market Güncellemesi (10 dakikada bir)
-        if (datetime.now() - last_market_update).total_seconds() > 600:
+        # Market Güncellemesi (5 dakikada bir)
+        if (datetime.now() - last_market_update).total_seconds() > 300:
             update_market()
             last_market_update = datetime.now()
             
