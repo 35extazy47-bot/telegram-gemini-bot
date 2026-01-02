@@ -1298,6 +1298,28 @@ def adventure_callback(call):
     
     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=msg)
 
+@bot.message_handler(commands=['ruya'])
+def dream_interpret(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        return
+        
+    if len(message.text.split()) < 2:
+        bot.reply_to(message, "😴 Rüyayı yazmadın knk!\nÖrnek: `/ruya uçurumdan düştüğümü gördüm`")
+        return
+        
+    dream_text = message.text.split(maxsplit=1)[1]
+    wait_msg = bot.reply_to(message, "🔮 Küreye bakıyorum... Rüyaların gizemini çözüyorum...")
+    
+    try:
+        prompt = f"Sen mistik, bilge ve biraz gizemli konuşan bir rüya tabircisisin. Kullanıcının şu rüyasını yorumla: '{dream_text}'. Geleceğe dair (uydurma ama eğlenceli) kehanetlerde bulun. Kısa ve öz olsun."
+        response = safe_generate_content(prompt)
+        bot.delete_message(message.chat.id, wait_msg.message_id)
+        bot.reply_to(message, f"🌙 **RÜYA TABİRİ** 🌙\n\n{response.text}")
+    except Exception as e:
+        print(f"Ruya Hatasi: {e}")
+        bot.edit_message_text("Rüyalar alemi şu an kapalı... Daha sonra tekrar dene.", message.chat.id, wait_msg.message_id)
+
 @bot.message_handler(commands=['hediye'])
 def admin_gift(message):
     # Sadece geliştirici kullanabilir
@@ -1358,6 +1380,8 @@ def help_guide(message):
         "🔹 `/kaz` - Madene in (15 dk'da bir). Elmas, Altın veya Kömür bulabilirsin. Dikkat et göçük olabilir!\n"
         "🔹 `/market` - Kazandığın EXP ile Can, Şans Kutusu veya **Elmas Kazma** al.\n"
         "🔹 `/envanter` - Çantana, parana ve eşyalarına bak.\n\n"
+        "🔮 **Eğlence & Mistik:**\n"
+        "🔹 `/ruya <metin>` - Rüyalarını yapay zekaya yorumlat. 🌙\n"
         "🎲 **Risk & Ödül:**\n"
         "🔹 `/bahis <miktar>` - Kendine güveniyorsan sıradaki soruya bahis oyna. Doğru bilirsen 2 katı!\n"
         "🔹 **Happy Hour:** Her akşam 20:00-22:00 arası 2 kat EXP!\n\n"
