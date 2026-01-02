@@ -792,7 +792,7 @@ def random_fact(message):
     try:
         prompt = "Bana çok ilginç, şaşırtıcı ve kısa bir genel kültür bilgisi ver. Sadece bilgiyi yaz."
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-1.5-flash-001",
             contents=prompt
         )
         bot.reply_to(message, f"🧠 **Bunları Biliyor muydun?**\n\n{response.text}")
@@ -1112,7 +1112,7 @@ def get_summary(message):
     try:
         prompt = f"KPSS öğrencisi için '{topic}' konusunu maddeler halinde, akılda kalıcı ve özet şekilde anlat. Çok uzun olmasın, önemli noktaları vurgula. En sona bu konuyla ilgili 1 adet çoktan seçmeli örnek soru ve cevabını ekle."
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-1.5-flash-001",
             contents=prompt
         )
         bot.delete_message(message.chat.id, wait_msg.message_id)
@@ -1157,7 +1157,7 @@ def true_false_game(message):
         }
         """
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-1.5-flash-001",
             contents=prompt
         )
         
@@ -1246,7 +1246,7 @@ def start_adventure(message):
         }
         """
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-1.5-flash-001",
             contents=prompt
         )
         
@@ -1386,7 +1386,7 @@ def handle_message(message):
 
     try:
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-1.5-flash-001",
             contents=message.text
         )
         bot.reply_to(message, response.text)
