@@ -42,7 +42,9 @@ def save_users():
         with open(USERS_FILE, "w", encoding="utf-8") as f:
             json.dump(users, f, ensure_ascii=False, indent=2)
 users = load_users()
-def get_rank(level):
+def get_rank(level, username=None):
+    if username == DEVELOPER_USERNAME:
+        return "Kurucu 👑"
     if level >= 20:
         return "Bilge 🧙‍♂️"
     elif level >= 10:
@@ -616,7 +618,7 @@ def show_inventory(message):
         f"👤 **Sahibi:** {u.get('name', 'Bilinmiyor')}\n"
         f"💰 **Varlık:** {u.get('exp', 0)} EXP\n"
         f"❤️ **Can:** {u.get('lives', 3)}\n"
-        f"🎖 **Rütbe:** {get_rank(u.get('level', 1))}\n\n"
+        f"🎖 **Rütbe:** {get_rank(u.get('level', 1), u.get('username'))}\n\n"
         f"📦 **Eşyalar:**\n{items_text}"
     )
     bot.send_message(message.chat.id, text, parse_mode="Markdown")
@@ -760,13 +762,13 @@ def check_answer(message):
             users[user_id]["active_bet"] = 0
 
     # Level kontrolü
-    old_rank = get_rank(level)
+    old_rank = get_rank(level, users[user_id].get("username"))
     if exp >= level * 100:
         level += 1
         exp = 0
         result += f"\n\n🚀 **TEBRİKLER! LEVEL ATLADIN!** 🚀\n🏆 Yeni Seviye: {level}"
         
-        new_rank = get_rank(level)
+        new_rank = get_rank(level, users[user_id].get("username"))
         if new_rank != old_rank:
             result += f"\n🎖 **YENİ RÜTBE:** {new_rank}"
             
@@ -841,7 +843,7 @@ def my_profile(message):
         f"💎 Statü: {status_text}\n"
         f"🎒 Ekipman: {equip}\n"
         f"📊 Level: {u.get('level', 1)}\n"
-        f"🎖 Rütbe: {get_rank(u.get('level', 1))}\n"
+        f"🎖 Rütbe: {get_rank(u.get('level', 1), u.get('username'))}\n"
         f"📝 Çözülen Soru: {total}\n"
         f"🎯 Başarı: %{success_rate:.1f}\n"
         f"⭐️ EXP: {u.get('exp', 0)}\n"
@@ -875,12 +877,56 @@ def leaderboard(message):
         t_c = data.get('total_correct', 0)
         rate = (t_c / t_q * 100) if t_q > 0 else 0
         
-        rank = get_rank(lvl)
+        rank = get_rank(lvl, data.get("username"))
         vip_tag = " 👑" if lvl >= 15 else ""
         dev_tag = " 👨‍💻" if data.get("username") == DEVELOPER_USERNAME else ""
         text += f"{i}. {name}{vip_tag}{dev_tag} — {rank} | 🏅 Lvl {lvl} | ⭐️ {xp} (🎯 %{rate:.0f})\n"
         
     bot.send_message(message.chat.id, text)
+
+@bot.message_handler(commands=['admin_panel'])
+def admin_panel(message):
+    if message.from_user.username != DEVELOPER_USERNAME:
+        bot.reply_to(message, "⛔ Bu komut sadece Kurucu'ya özeldir!")
+        return
+
+    user_count = len(users)
+    total_questions_solved = sum(u.get("total_questions", 0) for u in users.values())
+    
+    text = (
+        f"👑 **YÖNETİCİ PANELİ** 👑\n\n"
+        f"👥 **Toplam Kullanıcı:** {user_count}\n"
+        f"📝 **Toplam Çözülen Soru:** {total_questions_solved}\n\n"
+        "👇 **Hızlı İşlemler:**"
+    )
+
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("📢 Duyuru Bilgisi", callback_data="admin_help_duyuru"))
+    markup.add(InlineKeyboardButton("🎁 Hediye Bilgisi", callback_data="admin_help_hediye"))
+    markup.add(InlineKeyboardButton("💾 Veritabanını İndir", callback_data="admin_backup"))
+
+    bot.send_message(message.chat.id, text, reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("admin_"))
+def admin_callbacks(call):
+    if call.from_user.username != DEVELOPER_USERNAME:
+        bot.answer_callback_query(call.id, "⛔ Yetkisiz işlem!")
+        return
+
+    if call.data == "admin_help_duyuru":
+        bot.answer_callback_query(call.id)
+        bot.send_message(call.message.chat.id, "📢 **Duyuru Kullanımı:**\n`/duyuru Mesajınız`\nÖrnek: `/duyuru Yarın bakım var!`", parse_mode="Markdown")
+    
+    elif call.data == "admin_help_hediye":
+        bot.answer_callback_query(call.id)
+        bot.send_message(call.message.chat.id, "🎁 **Hediye Kullanımı:**\n`/hediye <USER_ID> <MİKTAR>`\nÖrnek: `/hediye 123456789 500`", parse_mode="Markdown")
+        
+    elif call.data == "admin_backup":
+        try:
+            with open(USERS_FILE, "rb") as f:
+                bot.send_document(call.message.chat.id, f, caption=f"💾 Yedek: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        except Exception as e:
+            bot.send_message(call.message.chat.id, f"Hata: {e}")
 
 @bot.message_handler(commands=['duyuru'])
 def admin_broadcast_manual(message):
