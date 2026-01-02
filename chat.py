@@ -792,11 +792,12 @@ def random_fact(message):
     try:
         prompt = "Bana çok ilginç, şaşırtıcı ve kısa bir genel kültür bilgisi ver. Sadece bilgiyi yaz."
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-1.5-flash",
             contents=prompt
         )
         bot.reply_to(message, f"🧠 **Bunları Biliyor muydun?**\n\n{response.text}")
-    except Exception:
+    except Exception as e:
+        print(f"Bilgi Hatasi: {e}")
         bot.reply_to(message, "Şu an bilgi veremiyorum knk :(")
 
 @bot.message_handler(func=lambda m: m.text and m.text.upper() in ["A", "B", "C", "D"])
@@ -1111,12 +1112,13 @@ def get_summary(message):
     try:
         prompt = f"KPSS öğrencisi için '{topic}' konusunu maddeler halinde, akılda kalıcı ve özet şekilde anlat. Çok uzun olmasın, önemli noktaları vurgula. En sona bu konuyla ilgili 1 adet çoktan seçmeli örnek soru ve cevabını ekle."
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-1.5-flash",
             contents=prompt
         )
         bot.delete_message(message.chat.id, wait_msg.message_id)
         bot.reply_to(message, f"📝 **KONU ÖZETİ: {topic.upper()}**\n\n{response.text}", parse_mode="Markdown")
-    except Exception:
+    except Exception as e:
+        print(f"Ozet Hatasi: {e}")
         bot.edit_message_text("Özet çıkarırken bir hata oluştu.", message.chat.id, wait_msg.message_id)
 
 @bot.message_handler(commands=['pomodoro'])
@@ -1155,7 +1157,7 @@ def true_false_game(message):
         }
         """
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-1.5-flash",
             contents=prompt
         )
         
@@ -1176,6 +1178,7 @@ def true_false_game(message):
         bot.send_message(message.chat.id, f"❓ **Doğru mu Yanlış mı?**\n\n{data['soru']}", reply_markup=markup)
         
     except Exception as e:
+        print(f"DogruYanlis Hatasi: {e}")
         bot.edit_message_text("Hata oluştu, tekrar dene.", message.chat.id, wait_msg.message_id)
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("dy_"))
@@ -1243,7 +1246,7 @@ def start_adventure(message):
         }
         """
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-1.5-flash",
             contents=prompt
         )
         
@@ -1263,6 +1266,7 @@ def start_adventure(message):
         bot.send_message(message.chat.id, f"📜 **TARİHSEL MACERA**\n\n{data['hikaye']}", reply_markup=markup)
         
     except Exception as e:
+        print(f"Macera Hatasi: {e}")
         bot.edit_message_text("Zaman makinesinde bir arıza oluştu! Tekrar dene.", message.chat.id, wait_msg.message_id)
         # Hata durumunda parayı iade et
         users[user_id]["exp"] += cost
@@ -1382,11 +1386,12 @@ def handle_message(message):
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-1.5-flash",
             contents=message.text
         )
         bot.reply_to(message, response.text)
     except Exception as e:
+        print(f"Sohbet Hatasi: {e}")
         bot.reply_to(message, "Bir hata oluştu knk 😅")
 
 def send_morning_broadcast():
