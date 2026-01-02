@@ -1,12 +1,36 @@
 {
   "1089288022": {
-    "level": 2,
-    "exp": 146,
+    "level": 4,
+    "exp": 120,
     "lives": 3,
     "category": "karisik",
     "lang": "tr",
     "name": "HÜSEYİN :)",
     "last_mine_time": "2026-01-01 17:47:16",
-    "username": "HuseyinAcar35"
+    "username": "HuseyinAcar35",
+    "mode": "local",
+    "last_question_message_id": 890,
+    "wrong_answers": [
+      24,
+      71,
+      27,
+      76
+    ],
+    "streak": 0,
+    "total_questions": 26,
+    "total_correct": 17,
+    "current_question_id": 76
+  },
+  "8423482808": {
+    "level": 1,
+    "exp": 0,
+    "lives": 3,
+    "category": "karisik",
+    "lang": "tr",
+    "mode": "global",
+    "name": "Tırtıl",
+    "username": "YELKOVANBOT",
+    "current_answer": "C",
+    "last_question_message_id": 828
   }
 }

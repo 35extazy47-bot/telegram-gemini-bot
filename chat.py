@@ -90,7 +90,15 @@ def send_question(chat_id, user_id):
         InlineKeyboardButton("👥 Seyirci (15 EXP)", callback_data="joker_audience")
     )
 
-    msg = bot.send_message(chat_id, text, reply_markup=markup)
+    # Eğer soruda resim varsa fotoğraf olarak gönder
+    if q.get("image"):
+        try:
+            msg = bot.send_photo(chat_id, photo=q["image"], caption=text, reply_markup=markup)
+        except:
+            msg = bot.send_message(chat_id, text, reply_markup=markup)
+    else:
+        msg = bot.send_message(chat_id, text, reply_markup=markup)
+        
     users[user_id]["last_question_message_id"] = msg.message_id
     save_users()
 
@@ -121,7 +129,15 @@ def send_wrong_question(chat_id, user_id):
         "\n".join(q['options'])
     )
 
-    msg = bot.send_message(chat_id, text)
+    # Resim kontrolü (Tekrar soruları için)
+    if q.get("image"):
+        try:
+            msg = bot.send_photo(chat_id, photo=q["image"], caption=text)
+        except:
+            msg = bot.send_message(chat_id, text)
+    else:
+        msg = bot.send_message(chat_id, text)
+        
     users[user_id]["last_question_message_id"] = msg.message_id
     save_users()
 
@@ -994,6 +1010,33 @@ def check_dy(call):
         message_id=call.message.message_id,
         text=msg
     )
+
+@bot.message_handler(commands=['hediye'])
+def admin_gift(message):
+    # Sadece geliştirici kullanabilir
+    if message.from_user.username != DEVELOPER_USERNAME:
+        return
+    
+    try:
+        # Kullanım: /hediye <user_id> <miktar>
+        args = message.text.split()
+        target_id = args[1]
+        amount = int(args[2])
+        
+        if target_id in users:
+            users[target_id]["exp"] += amount
+            save_users()
+            bot.reply_to(message, f"✅ {users[target_id]['name']} kullanıcısına {amount} EXP gönderildi.")
+            
+            # Kullanıcıya da müjdeyi verelim
+            try:
+                bot.send_message(target_id, f"🎁 **YÖNETİCİ HEDİYESİ!**\n\nHesabına {amount} EXP yüklendi. İyi oyunlar! 🚀")
+            except:
+                pass
+        else:
+            bot.reply_to(message, "❌ Kullanıcı veritabanında bulunamadı.")
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: /hediye <user_id> <miktar>\nÖrnek: /hediye 123456789 1000")
 
 @bot.message_handler(commands=['help', 'hakkinda'])
 def help_guide(message):
