@@ -196,6 +196,11 @@ def start_message(message):
             users[user_id]["is_approved"] = True
             save_users()
 
+    # Ban Kontrolü
+    if users.get(user_id, {}).get("is_banned"):
+        bot.reply_to(message, "🚫 Hesabınız yasaklanmıştır.")
+        return
+
     # 2. Kullanıcı veritabanında yoksa (YENİ ÜYE)
     if user_id not in users:
         # Kullanıcıyı oluştur ama onaysız yap
@@ -1078,6 +1083,7 @@ def admin_panel(message):
     markup.add(InlineKeyboardButton("👥 Kayıtlı Üyeler", callback_data="admin_user_list"))
     markup.add(InlineKeyboardButton("📢 Duyuru Bilgisi", callback_data="admin_help_duyuru"))
     markup.add(InlineKeyboardButton("🎁 Hediye Bilgisi", callback_data="admin_help_hediye"))
+    markup.add(InlineKeyboardButton("🚫 Ban İşlemi", callback_data="admin_help_ban"))
     markup.add(InlineKeyboardButton("💾 Veritabanını İndir", callback_data="admin_backup"))
 
     bot.send_message(message.chat.id, text, reply_markup=markup)
@@ -1135,6 +1141,10 @@ def admin_callbacks(call):
     elif call.data == "admin_help_hediye":
         bot.answer_callback_query(call.id)
         bot.send_message(call.message.chat.id, "🎁 **Hediye Kullanımı:**\n`/hediye <USER_ID> <MİKTAR>`\nÖrnek: `/hediye 123456789 500`", parse_mode="Markdown")
+        
+    elif call.data == "admin_help_ban":
+        bot.answer_callback_query(call.id)
+        bot.send_message(call.message.chat.id, "🚫 **Banlama:**\n`/ban <USER_ID>`\n\n✅ **Ban Kaldırma:**\n`/unban <USER_ID>`", parse_mode="Markdown")
         
     elif call.data == "admin_backup":
         try:
@@ -1502,6 +1512,34 @@ def admin_gift(message):
     except:
         bot.reply_to(message, "⚠️ Kullanım: /hediye <KullanıcıAdı veya ID> <Miktar>\nÖrnek: /hediye @HuseyinAcar35 1000")
 
+@bot.message_handler(commands=['ban'])
+def ban_user(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+    try:
+        target_id = message.text.split()[1]
+        if target_id in users:
+            users[target_id]["is_banned"] = True
+            save_users()
+            bot.reply_to(message, f"🚫 Kullanıcı ({target_id}) yasaklandı.")
+        else:
+            bot.reply_to(message, "❌ Kullanıcı bulunamadı.")
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: /ban <ID>")
+
+@bot.message_handler(commands=['unban'])
+def unban_user(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+    try:
+        target_id = message.text.split()[1]
+        if target_id in users:
+            users[target_id]["is_banned"] = False
+            save_users()
+            bot.reply_to(message, f"✅ Kullanıcı ({target_id}) yasağı kaldırıldı.")
+        else:
+            bot.reply_to(message, "❌ Kullanıcı bulunamadı.")
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: /unban <ID>")
+
 @bot.message_handler(commands=['help', 'hakkinda'])
 def help_guide(message):
     text = (
@@ -1552,6 +1590,9 @@ def handle_message(message):
             Timer(5.0, lambda: bot.delete_message(message.chat.id, warning.message_id)).start()
         except:
             pass
+        return
+
+    if users.get(user_id, {}).get("is_banned"):
         return
 
     if not check_daily_limit(user_id):
