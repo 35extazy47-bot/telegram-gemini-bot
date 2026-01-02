@@ -1075,6 +1075,7 @@ def admin_panel(message):
 
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton("⏳ Onay Bekleyenler", callback_data="admin_pending_list"))
+    markup.add(InlineKeyboardButton("👥 Kayıtlı Üyeler", callback_data="admin_user_list"))
     markup.add(InlineKeyboardButton("📢 Duyuru Bilgisi", callback_data="admin_help_duyuru"))
     markup.add(InlineKeyboardButton("🎁 Hediye Bilgisi", callback_data="admin_help_hediye"))
     markup.add(InlineKeyboardButton("💾 Veritabanını İndir", callback_data="admin_backup"))
@@ -1109,6 +1110,27 @@ def admin_callbacks(call):
             markup = InlineKeyboardMarkup()
             markup.add(InlineKeyboardButton("✅ Onayla", callback_data=f"approve_{uid}"), InlineKeyboardButton("❌ Reddet", callback_data=f"reject_{uid}"))
             bot.send_message(call.message.chat.id, info, reply_markup=markup, parse_mode="Markdown")
+
+    elif call.data == "admin_user_list":
+        if not users:
+            bot.answer_callback_query(call.id, "Hiç üye yok!")
+            return
+            
+        text = "📋 **Kayıtlı Üyeler Listesi**\n\n"
+        for i, (uid, u) in enumerate(users.items(), 1):
+            name = u.get("name", "Bilinmiyor")
+            username = u.get("username", "Yok")
+            level = u.get("level", 1)
+            line = f"{i}. {name} (@{username}) - ID: `{uid}` - Lvl: {level}\n"
+            
+            if len(text + line) > 4000:
+                bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
+                text = ""
+            text += line
+            
+        if text:
+            bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
+        bot.answer_callback_query(call.id)
 
     elif call.data == "admin_help_hediye":
         bot.answer_callback_query(call.id)
