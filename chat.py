@@ -93,6 +93,14 @@ NEWS_TEMPLATES = {
     }
 }
 
+# 🏰 Sefer (Fetih) Bölgeleri
+EXPEDITIONS = {
+    "akin": {"name": "Sınır Akını 🐎", "req_soldier": 10, "risk": 20, "reward_min": 100, "reward_max": 300},
+    "kale": {"name": "Kale Kuşatması 🏰", "req_soldier": 50, "risk": 40, "reward_min": 500, "reward_max": 1200},
+    "meydan": {"name": "Meydan Savaşı ⚔️", "req_soldier": 200, "risk": 60, "reward_min": 2500, "reward_max": 5000},
+    "viyana": {"name": "Viyana Kapıları 🚩", "req_soldier": 1000, "risk": 80, "reward_min": 15000, "reward_max": 30000}
+}
+
 def load_users():
     try:
         with open(USERS_FILE, "r", encoding="utf-8") as f:
@@ -370,6 +378,7 @@ def language_selected(call):
                 "🔹 /clock - Global Yarışma (Zamanlı)\n"
                 "🔹 /ikna - Botu İkna Et (Münazara)\n"
                 "🔹 /borsa - Kapalıçarşı Ticaret (Canlı!)\n"
+                "🔹 /beylik - Beylik Yönetimi ve Fetih (Yeni! 🏰)\n"
                 "🔹 /zenginler - En Zenginler Listesi 💸\n"
                 "🔹 /paket - Kart Paketi Aç (Koleksiyon)\n"
                 "🔹 /album - Kart Albümüne Bak\n"
@@ -398,6 +407,7 @@ def language_selected(call):
                 "🔹 /macera - Historical Adventure (New!)\n"
                 "🔹 /ikna - Debate with AI\n"
                 "🔹 /borsa - Grand Bazaar Trading\n"
+                "🔹 /beylik - Principality Management 🏰\n"
                 "🔹 /zenginler - Richest Players List 💸\n"
                 "🔹 /paket - Open Card Pack\n"
                 "🔹 /album - View Album\n"
@@ -420,6 +430,7 @@ def language_selected(call):
                 "🔹 /macera - Историческо приключение (Ново!)\n"
                 "🔹 /ikna - Дебат с AI\n"
                 "🔹 /borsa - Търговия на Капалъчарши\n"
+                "🔹 /beylik - Управление на княжеството 🏰\n"
                 "🔹 /zenginler - Списък на най-богатите 💸\n"
                 "🔹 /paket - Отвори пакет карти\n"
                 "🔹 /album - Виж албума\n"
@@ -1662,6 +1673,181 @@ def rich_list(message):
         
     bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
+@bot.message_handler(commands=['beylik'])
+def beylik_menu(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    # Veri başlatma
+    if "beylik" not in users[user_id]:
+        users[user_id]["beylik"] = {
+            "level": 1,
+            "soldiers": 0,
+            "last_tax": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        save_users()
+
+    b = users[user_id]["beylik"]
+    lvl = b["level"]
+    soldiers = b["soldiers"]
+    
+    # Vergi Hesaplama (Saatlik gelir = Level * 50 EXP)
+    hourly_income = lvl * 50
+    last_tax_time = datetime.strptime(b["last_tax"], "%Y-%m-%d %H:%M:%S")
+    diff = datetime.now() - last_tax_time
+    hours_passed = diff.total_seconds() / 3600
+    accumulated_tax = int(hours_passed * hourly_income)
+    # Maksimum birikim sınırı (24 saatlik gelir)
+    max_tax = hourly_income * 24
+    if accumulated_tax > max_tax: accumulated_tax = max_tax
+
+    upgrade_cost = (lvl ** 2) * 500  # Artan maliyet
+
+    text = (
+        f"🏰 **BEYLİK YÖNETİMİ** 🏰\n\n"
+        f"👑 **Otağ Seviyesi:** {lvl}\n"
+        f"⚔️ **Ordu Gücü:** {soldiers} Asker\n"
+        f"💰 **Saatlik Vergi:** {hourly_income} EXP\n"
+        f"📦 **Biriken Vergi:** {accumulated_tax} EXP\n\n"
+        f"🛠 **Yükseltme Maliyeti:** {upgrade_cost} EXP\n"
+        f"_(Seviye arttıkça vergi geliri artar!)_\n\n"
+        "👇 **Komutlar:**\n"
+        "🔹 `/vergi` - Biriken parayı topla\n"
+        "🔹 `/yatirim` - Otağ seviyesini yükselt\n"
+        "🔹 `/asker <miktar>` - Asker yetiştir (Tanesi 20 EXP)\n"
+        "🔹 `/sefer` - Ordunu savaşa gönder!"
+    )
+    bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+@bot.message_handler(commands=['vergi'])
+def collect_tax(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    if "beylik" not in users[user_id]:
+        bot.reply_to(message, "Önce /beylik yazarak beyliğini kur!")
+        return
+
+    b = users[user_id]["beylik"]
+    lvl = b["level"]
+    hourly_income = lvl * 50
+    last_tax_time = datetime.strptime(b["last_tax"], "%Y-%m-%d %H:%M:%S")
+    
+    diff = datetime.now() - last_tax_time
+    hours_passed = diff.total_seconds() / 3600
+    accumulated_tax = int(hours_passed * hourly_income)
+    
+    if accumulated_tax < 10:
+        bot.reply_to(message, "⏳ Henüz toplanacak kadar vergi birikmedi. Biraz bekle!")
+        return
+        
+    # Maksimum sınır (24 saat)
+    max_tax = hourly_income * 24
+    if accumulated_tax > max_tax: accumulated_tax = max_tax
+
+    users[user_id]["exp"] += accumulated_tax
+    users[user_id]["beylik"]["last_tax"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    save_users()
+    
+    bot.reply_to(message, f"💰 **Vergiler Toplandı!**\nHazineye +{accumulated_tax} EXP eklendi.")
+
+@bot.message_handler(commands=['yatirim'])
+def upgrade_beylik(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    if "beylik" not in users[user_id]: return
+
+    b = users[user_id]["beylik"]
+    lvl = b["level"]
+    cost = (lvl ** 2) * 500
+
+    if users[user_id]["exp"] < cost:
+        bot.reply_to(message, f"❌ Yetersiz EXP! Yükseltme için {cost} EXP gerekli.")
+        return
+
+    users[user_id]["exp"] -= cost
+    users[user_id]["beylik"]["level"] += 1
+    save_users()
+    
+    bot.reply_to(message, f"🏗 **Otağ Yükseltildi!**\nYeni Seviye: {lvl + 1}\nArtık daha fazla vergi toplayacaksın! 📈")
+
+@bot.message_handler(commands=['asker'])
+def recruit_soldiers(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    if "beylik" not in users[user_id]: return
+
+    try:
+        amount = int(message.text.split()[1])
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: `/asker 10` (Tanesi 20 EXP)")
+        return
+
+    if amount <= 0: return
+    cost = amount * 20
+    
+    if users[user_id]["exp"] < cost:
+        bot.reply_to(message, f"❌ Yetersiz EXP! {amount} asker için {cost} EXP lazım.")
+        return
+
+    users[user_id]["exp"] -= cost
+    users[user_id]["beylik"]["soldiers"] += amount
+    save_users()
+    
+    bot.reply_to(message, f"⚔️ **Orduya Katılım!**\n{amount} yeni asker yetiştirildi. Toplam Güç: {users[user_id]['beylik']['soldiers']}")
+
+@bot.message_handler(commands=['sefer'])
+def expedition_menu(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    if "beylik" not in users[user_id]: return
+
+    markup = InlineKeyboardMarkup()
+    for key, data in EXPEDITIONS.items():
+        btn_text = f"{data['name']} (Min: {data['req_soldier']} Asker)"
+        markup.add(InlineKeyboardButton(btn_text, callback_data=f"sefer_{key}"))
+    
+    bot.send_message(message.chat.id, "🚩 **SEFER HAZIRLIĞI**\nOrdunu nereye göndermek istersin?", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("sefer_"))
+def handle_expedition(call):
+    user_id = str(call.from_user.id)
+    if "beylik" not in users[user_id]: return
+    
+    target = call.data.split("_")[1]
+    data = EXPEDITIONS[target]
+    soldiers = users[user_id]["beylik"]["soldiers"]
+    
+    if soldiers < data["req_soldier"]:
+        bot.answer_callback_query(call.id, f"❌ Yetersiz Asker! En az {data['req_soldier']} gerekli.", show_alert=True)
+        return
+
+    # Savaş Mantığı
+    # Kazanma şansı: Asker sayısı gereksinimin 2 katıysa %90, tam sınırsa %50
+    win_chance = min(0.9, (soldiers / data["req_soldier"]) * 0.5)
+    # Risk faktörü (Zor seferlerde şans azalır)
+    win_chance -= (data["risk"] / 200) 
+    
+    is_win = random.random() < win_chance
+    
+    # Kayıplar (Her türlü asker ölür)
+    loss_ratio = random.uniform(0.1, 0.3) if is_win else random.uniform(0.4, 0.7)
+    lost_soldiers = int(soldiers * loss_ratio)
+    # En az 1 asker ölsün
+    if lost_soldiers == 0 and soldiers > 0: lost_soldiers = 1
+    
+    users[user_id]["beylik"]["soldiers"] -= lost_soldiers
+    
+    msg = ""
+    if is_win:
+        reward = random.randint(data["reward_min"], data["reward_max"])
+        users[user_id]["exp"] += reward
+        msg = f"🎉 **ZAFER!** Ordun {data['name']} seferinden galip döndü!\n\n💰 Ganimet: +{reward} EXP\n💀 Şehitler: {lost_soldiers} Asker"
+    else:
+        msg = f"🏳️ **BOZGUN!** Ordun {data['name']} seferinde pusuya düştü ve geri çekildi.\n\n💀 Kayıplar: {lost_soldiers} Asker\n💰 Kazanç: 0"
+
+    save_users()
+    bot.edit_message_text(msg, call.message.chat.id, call.message.message_id)
+
 @bot.message_handler(commands=['album'])
 def show_album(message):
     user_id = str(message.from_user.id)
@@ -1824,6 +2010,7 @@ def help_guide(message):
         "🔹 `/ikna <fikir>` - Botla tartış, argümanın kadar puan kazan! (Yeni! 🗣️)\n"
         "🔹 `/tarihtebugun` - Bugün tarihte ne olduğunu öğren. 📅\n"
         "🔹 `/borsa` - Kapalıçarşı'da ticaret yap, servetine servet kat! (Yeni! 📈)\n"
+        "🔹 `/beylik` - Kendi beyliğini kur, vergi topla ve fetihlere çık! (Yeni! 🏰)\n"
         "🔹 `/zenginler` - Piyasanın en zenginlerini gör. 💸\n"
         "🔹 `/paket` - 150 EXP karşılığı tarih kartı paketi aç. 🃏\n"
         "🔹 `/album` - Topladığın kartları gör. 📚\n"
