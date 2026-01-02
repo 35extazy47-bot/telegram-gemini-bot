@@ -30,7 +30,7 @@ data_lock = Lock()
 def safe_generate_content(prompt_content):
     """Modeller arası geçiş yaparak hata riskini azaltır."""
     # Sırasıyla bu modelleri dener. Biri çalışırsa cevap döner.
-    models = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash-exp", "gemini-pro-latest"]
+    models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"]
     for model in models:
         try:
             return client.models.generate_content(
