@@ -370,6 +370,7 @@ def language_selected(call):
                 "🔹 /clock - Global Yarışma (Zamanlı)\n"
                 "🔹 /ikna - Botu İkna Et (Münazara)\n"
                 "🔹 /borsa - Kapalıçarşı Ticaret (Canlı!)\n"
+                "🔹 /zenginler - En Zenginler Listesi 💸\n"
                 "🔹 /paket - Kart Paketi Aç (Koleksiyon)\n"
                 "🔹 /album - Kart Albümüne Bak\n"
                 "🔹 /tarihtebugun - Tarihte Bugün Ne Oldu?\n"
@@ -397,6 +398,7 @@ def language_selected(call):
                 "🔹 /macera - Historical Adventure (New!)\n"
                 "🔹 /ikna - Debate with AI\n"
                 "🔹 /borsa - Grand Bazaar Trading\n"
+                "🔹 /zenginler - Richest Players List 💸\n"
                 "🔹 /paket - Open Card Pack\n"
                 "🔹 /album - View Album\n"
                 "🔹 /tarihtebugun - On This Day\n"
@@ -418,6 +420,7 @@ def language_selected(call):
                 "🔹 /macera - Историческо приключение (Ново!)\n"
                 "🔹 /ikna - Дебат с AI\n"
                 "🔹 /borsa - Търговия на Капалъчарши\n"
+                "🔹 /zenginler - Списък на най-богатите 💸\n"
                 "🔹 /paket - Отвори пакет карти\n"
                 "🔹 /album - Виж албума\n"
                 "🔹 /tarihtebugun - На този ден\n"
@@ -1629,6 +1632,36 @@ def sell_item(message):
     save_users()
     bot.reply_to(message, f"✅ **Satış Başarılı!**\n📤 Satılan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Kazanılan: {total_gain} EXP")
 
+@bot.message_handler(commands=['zenginler'])
+def rich_list(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        return
+
+    leaderboard = []
+    for uid, u in users.items():
+        # Nakit Varlık
+        net_worth = u.get("exp", 0)
+        
+        # Envanter Değeri (Güncel Fiyatlarla)
+        inv = u.get("inventory", {})
+        for code, count in inv.items():
+            if code in market_prices:
+                net_worth += count * market_prices[code]
+        
+        leaderboard.append((u.get("name", "Gizli"), net_worth, u.get("username")))
+
+    # Servete göre sırala (Çoktan aza)
+    leaderboard.sort(key=lambda x: x[1], reverse=True)
+    
+    text = "💸 **KAPALIÇARŞI'NIN EN ZENGİNLERİ** 💸\n_(Nakit + Mal Varlığı)_\n\n"
+    for i, (name, wealth, uname) in enumerate(leaderboard[:10], 1):
+        icon = "🥇" if i == 1 else ("🥈" if i == 2 else ("🥉" if i == 3 else "▫️"))
+        dev_tag = " 👨‍💻" if uname == DEVELOPER_USERNAME else ""
+        text += f"{icon} {i}. {name}{dev_tag}: **{wealth}** EXP\n"
+        
+    bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
 @bot.message_handler(commands=['album'])
 def show_album(message):
     user_id = str(message.from_user.id)
@@ -1791,6 +1824,7 @@ def help_guide(message):
         "🔹 `/ikna <fikir>` - Botla tartış, argümanın kadar puan kazan! (Yeni! 🗣️)\n"
         "🔹 `/tarihtebugun` - Bugün tarihte ne olduğunu öğren. 📅\n"
         "🔹 `/borsa` - Kapalıçarşı'da ticaret yap, servetine servet kat! (Yeni! 📈)\n"
+        "🔹 `/zenginler` - Piyasanın en zenginlerini gör. 💸\n"
         "🔹 `/paket` - 150 EXP karşılığı tarih kartı paketi aç. 🃏\n"
         "🔹 `/album` - Topladığın kartları gör. 📚\n"
         "🔹 `/clock` - Dünya genelinden zor sorular (Global).\n"
