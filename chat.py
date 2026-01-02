@@ -69,6 +69,28 @@ TRADE_GOODS = {
 }
 market_prices = {k: v["base"] for k, v in TRADE_GOODS.items()}
 market_volumes = {k: 0 for k in TRADE_GOODS.keys()} # Alım-Satım hacmini takip eder
+last_prices = market_prices.copy() # Önceki fiyatları tutar
+market_news = "Borsa işlemleri başladı. Piyasa sakin. ☁️"
+
+# 📰 Borsa Haber Şablonları
+NEWS_TEMPLATES = {
+    "ipek": {
+        "up": ["Sarayda ipek modası başladı! Talep patladı! 👗", "İpek Yolu'nda kervanlar yağmalandı, arz düştü! ⚔️"],
+        "down": ["Çin'den dev ipek kervanı ulaştı! Piyasada bolluk var. 🐫", "Halk pamuklu kumaşa yöneldi, ipeğe ilgi azaldı. 📉"]
+    },
+    "baharat": {
+        "up": ["Saray mutfağı için yüklü baharat siparişi verildi! 🍛", "Hint Okyanusu'nda fırtına! Baharat gemileri battı. 🌊"],
+        "down": ["Yeni baharat yolu keşfedildi! Fiyatlar düşüşte. 🗺️", "Baharat stokları doldu taştı, tüccarlar elden çıkarıyor. 📦"]
+    },
+    "cini": {
+        "up": ["Yeni cami inşaatı için binlerce çini aranıyor! 🕌", "Ünlü çini ustaları greve gitti! Üretim durdu. 🔨"],
+        "down": ["Çini atölyelerinde üretim rekoru kırıldı! 🏺", "Yabancı tüccarlar çini alımını durdurdu. ❌"]
+    },
+    "tuz": {
+        "up": ["Kış yaklaşıyor, halk tuz stokluyor! ❄️", "Tuz Gölü'nde kuraklık var, üretim düştü! ☀️"],
+        "down": ["Yeni tuz madeni keşfedildi! ⛏️", "Tuz vergileri düşürüldü, fiyatlar rahatladı. ⬇️"]
+    }
+}
 
 def load_users():
     try:
@@ -1504,15 +1526,20 @@ def check_market(message):
     if not users.get(user_id, {}).get("is_approved", True):
         return
 
-    text = "📈 **KAPALIÇARŞI GÜNCEL FİYATLAR** 📉\n\n"
+    text = f"📰 **SON DAKİKA:** {market_news}\n\n"
+    text += "📈 **KAPALIÇARŞI GÜNCEL FİYATLAR** 📉\n\n"
+    
     for code, price in market_prices.items():
         item = TRADE_GOODS[code]
-        # Fiyat durumuna göre ikon
-        trend = "➖"
-        if price > item["base"] * 1.2: trend = "🔥 (Yüksek)"
-        elif price < item["base"] * 0.8: trend = "🔻 (Düşük)"
         
-        text += f"▫️ **{item['name']}:** {price} EXP {trend}\n"
+        # Değişim hesapla
+        old_price = last_prices.get(code, price)
+        diff = price - old_price
+        diff_str = f"({'+' if diff > 0 else ''}{diff})"
+        
+        trend_icon = "🟢 ⬆️" if diff > 0 else ("🔴 ⬇️" if diff < 0 else "⚪ ➖")
+        
+        text += f"▫️ **{item['name']}:** {price} EXP {diff_str} {trend_icon}\n"
     
     text += "\n🛒 **İşlemler:**\n`/al <mal> <adet>` (Örn: `/al ipek 5`)\n`/sat <mal> <adet>` (Örn: `/sat ipek 5`)"
     bot.send_message(message.chat.id, text, parse_mode="Markdown")
@@ -1818,10 +1845,17 @@ def send_morning_broadcast():
 
 def update_market():
     """Piyasa fiyatlarını arz-talep ve sürpriz olaylara göre günceller."""
-    global market_prices, market_volumes
+    global market_prices, market_volumes, last_prices, market_news
+    
+    # Mevcut fiyatları "eski" olarak kaydet
+    last_prices = market_prices.copy()
     
     print(f"📊 Piyasa Öncesi Hacimler: {market_volumes}")
     
+    biggest_change = 0
+    news_item = None
+    news_direction = None
+
     for code, data in TRADE_GOODS.items():
         current_price = market_prices[code]
         volume = market_volumes.get(code, 0)
@@ -1861,11 +1895,26 @@ def update_market():
         # Sınırları kontrol et
         new_price = max(data["min"], min(new_price, data["max"]))
         market_prices[code] = new_price
+        
+        # En büyük değişimi takip et (Haber için)
+        if current_price > 0:
+            pct_change = (new_price - current_price) / current_price
+            if abs(pct_change) > abs(biggest_change):
+                biggest_change = pct_change
+                news_item = code
+                news_direction = "up" if pct_change > 0 else "down"
+
+    # Haber Oluştur
+    if news_item and abs(biggest_change) > 0.05: # %5'ten büyük değişim varsa haber yap
+        market_news = random.choice(NEWS_TEMPLATES[news_item][news_direction])
+    else:
+        market_news = "Piyasa sakin seyrediyor, belirgin bir hareketlilik yok. ☁️"
 
     # Hacimleri sıfırla (Bir sonraki döngü için)
     market_volumes = {k: 0 for k in TRADE_GOODS.keys()}
     
     print(f"📉 Piyasa Güncellendi: {market_prices}")
+    print(f"📰 Haber: {market_news}")
 
 def scheduler_thread():
     last_market_update = datetime.now()
