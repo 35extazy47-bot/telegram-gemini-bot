@@ -60,6 +60,15 @@ CARDS = {
     12: {"name": "Mehterbaşı", "rarity": "Yaygın ⚪", "prob": 0.15},
 }
 
+# 📈 Kapalıçarşı (Borsa) Verileri
+TRADE_GOODS = {
+    "ipek": {"name": "İpek 🧶", "base": 100, "min": 50, "max": 250},
+    "baharat": {"name": "Baharat 🌶️", "base": 80, "min": 40, "max": 200},
+    "cini": {"name": "Çini 🏺", "base": 150, "min": 100, "max": 400},
+    "tuz": {"name": "Tuz 🧂", "base": 30, "min": 10, "max": 100}
+}
+market_prices = {k: v["base"] for k, v in TRADE_GOODS.items()}
+
 def load_users():
     try:
         with open(USERS_FILE, "r", encoding="utf-8") as f:
@@ -336,6 +345,7 @@ def language_selected(call):
                 "🔹 /macera - Tarihsel Macera (Yeni!)\n"
                 "🔹 /clock - Global Yarışma (Zamanlı)\n"
                 "🔹 /ikna - Botu İkna Et (Münazara)\n"
+                "🔹 /borsa - Kapalıçarşı Ticaret (Canlı!)\n"
                 "🔹 /paket - Kart Paketi Aç (Koleksiyon)\n"
                 "🔹 /album - Kart Albümüne Bak\n"
                 "🔹 /tarihtebugun - Tarihte Bugün Ne Oldu?\n"
@@ -362,6 +372,7 @@ def language_selected(call):
                 "🔹 /quiz - Solve Questions\n"
                 "🔹 /macera - Historical Adventure (New!)\n"
                 "🔹 /ikna - Debate with AI\n"
+                "🔹 /borsa - Grand Bazaar Trading\n"
                 "🔹 /paket - Open Card Pack\n"
                 "🔹 /album - View Album\n"
                 "🔹 /tarihtebugun - On This Day\n"
@@ -382,6 +393,7 @@ def language_selected(call):
                 "🔹 /quiz - Решаване на въпроси\n"
                 "🔹 /macera - Историческо приключение (Ново!)\n"
                 "🔹 /ikna - Дебат с AI\n"
+                "🔹 /borsa - Търговия на Капалъчарши\n"
                 "🔹 /paket - Отвори пакет карти\n"
                 "🔹 /album - Виж албума\n"
                 "🔹 /tarihtebugun - На този ден\n"
@@ -788,6 +800,14 @@ def show_inventory(message):
     items = []
     if u.get("has_pickaxe"):
         items.append("⛏️ **Elmas Kazma** (Maden şansını artırır)")
+        
+    # Ticaret Malları
+    inv = u.get("inventory", {})
+    has_trade_items = False
+    for code, count in inv.items():
+        if count > 0:
+            items.append(f"📦 {TRADE_GOODS[code]['name']}: {count} adet")
+            has_trade_items = True
     
     # Eğer hiç eşya yoksa
     if not items:
@@ -1477,6 +1497,92 @@ def open_card_pack(message):
     save_users()
     bot.reply_to(message, msg)
 
+@bot.message_handler(commands=['borsa'])
+def check_market(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        return
+
+    text = "📈 **KAPALIÇARŞI GÜNCEL FİYATLAR** 📉\n\n"
+    for code, price in market_prices.items():
+        item = TRADE_GOODS[code]
+        # Fiyat durumuna göre ikon
+        trend = "➖"
+        if price > item["base"] * 1.2: trend = "🔥 (Yüksek)"
+        elif price < item["base"] * 0.8: trend = "🔻 (Düşük)"
+        
+        text += f"▫️ **{item['name']}:** {price} EXP {trend}\n"
+    
+    text += "\n🛒 **İşlemler:**\n`/al <mal> <adet>` (Örn: `/al ipek 5`)\n`/sat <mal> <adet>` (Örn: `/sat ipek 5`)"
+    bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+@bot.message_handler(commands=['al'])
+def buy_item(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    try:
+        args = message.text.lower().split()
+        item_code = args[1]
+        amount = int(args[2])
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: `/al ipek 5`")
+        return
+
+    if item_code not in TRADE_GOODS:
+        bot.reply_to(message, "❌ Böyle bir mal yok! (ipek, baharat, cini, tuz)")
+        return
+    if amount <= 0:
+        bot.reply_to(message, "❌ Geçersiz miktar.")
+        return
+
+    price = market_prices[item_code]
+    total_cost = price * amount
+
+    if users[user_id].get("exp", 0) < total_cost:
+        bot.reply_to(message, f"❌ Yetersiz EXP! Gerekli: {total_cost}")
+        return
+
+    users[user_id]["exp"] -= total_cost
+    
+    # Envantere ekle
+    if "inventory" not in users[user_id]: users[user_id]["inventory"] = {}
+    current_stock = users[user_id]["inventory"].get(item_code, 0)
+    users[user_id]["inventory"][item_code] = current_stock + amount
+    
+    save_users()
+    bot.reply_to(message, f"✅ **İşlem Başarılı!**\n📥 Alınan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Ödenen: {total_cost} EXP")
+
+@bot.message_handler(commands=['sat'])
+def sell_item(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    try:
+        args = message.text.lower().split()
+        item_code = args[1]
+        amount = int(args[2])
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: `/sat ipek 5`")
+        return
+
+    if item_code not in TRADE_GOODS:
+        bot.reply_to(message, "❌ Böyle bir mal yok!")
+        return
+    
+    user_inv = users[user_id].get("inventory", {})
+    if user_inv.get(item_code, 0) < amount:
+        bot.reply_to(message, "❌ Envanterinde bu kadar mal yok!")
+        return
+
+    price = market_prices[item_code]
+    total_gain = price * amount
+
+    users[user_id]["inventory"][item_code] -= amount
+    users[user_id]["exp"] += total_gain
+    save_users()
+    bot.reply_to(message, f"✅ **Satış Başarılı!**\n📤 Satılan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Kazanılan: {total_gain} EXP")
+
 @bot.message_handler(commands=['album'])
 def show_album(message):
     user_id = str(message.from_user.id)
@@ -1638,6 +1744,7 @@ def help_guide(message):
         "🔹 `/macera` - Tarihsel bir olayın içinde rol yap ve karar ver! (Yeni! 🕰️)\n"
         "🔹 `/ikna <fikir>` - Botla tartış, argümanın kadar puan kazan! (Yeni! 🗣️)\n"
         "🔹 `/tarihtebugun` - Bugün tarihte ne olduğunu öğren. 📅\n"
+        "🔹 `/borsa` - Kapalıçarşı'da ticaret yap, servetine servet kat! (Yeni! 📈)\n"
         "🔹 `/paket` - 150 EXP karşılığı tarih kartı paketi aç. 🃏\n"
         "🔹 `/album` - Topladığın kartları gör. 📚\n"
         "🔹 `/clock` - Dünya genelinden zor sorular (Global).\n"
@@ -1699,13 +1806,33 @@ def send_morning_broadcast():
         except:
             pass # Kullanıcı botu engellemiş olabilir, devam et
 
+def update_market():
+    """Piyasa fiyatlarını rastgele dalgalandırır."""
+    global market_prices
+    for code, data in TRADE_GOODS.items():
+        # %10 ile +%10 arası değişim
+        change = random.uniform(0.9, 1.1)
+        new_price = int(market_prices[code] * change)
+        
+        # Sınırları kontrol et
+        new_price = max(data["min"], min(new_price, data["max"]))
+        market_prices[code] = new_price
+    print(f"📉 Piyasa Güncellendi: {market_prices}")
+
 def scheduler_thread():
+    last_market_update = datetime.now()
     while True:
         # Türkiye Saati (UTC+3) hesaplama
         now = datetime.utcnow() + timedelta(hours=3)
         if now.hour == 8 and now.minute == 0:
             send_morning_broadcast()
             time.sleep(65) # 1 dakika bekle ki tekrar tekrar atmasın
+            
+        # Market Güncellemesi (10 dakikada bir)
+        if (datetime.now() - last_market_update).total_seconds() > 600:
+            update_market()
+            last_market_update = datetime.now()
+            
         time.sleep(20) # 20 saniyede bir saati kontrol et
 
 app = Flask(__name__)
