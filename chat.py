@@ -27,6 +27,20 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 USERS_FILE = "users_data.json"
 data_lock = Lock()
 
+def safe_generate_content(prompt_content):
+    """Modeller arası geçiş yaparak hata riskini azaltır."""
+    # Sırasıyla bu modelleri dener. Biri çalışırsa cevap döner.
+    models = ["gemini-2.5-flash"]
+    for model in models:
+        try:
+            return client.models.generate_content(
+                model=model,
+                contents=prompt_content
+            )
+        except Exception as e:
+            print(f"⚠️ {model} hatası: {e} -> Diğer modele geçiliyor...")
+    raise Exception("Tüm modeller başarısız oldu.")
+
 # Yasaklı Kelimeler Listesi (Burayı istediğin gibi genişletebilirsin)
 BANNED_WORDS = ["aptal", "salak", "gerizekalı", "mal", "ezik", "ahmak", "özürlü", "amq", "oruspu" ]
 
@@ -795,6 +809,7 @@ def random_fact(message):
             model="gemini-1.5-flash-001",
             contents=prompt
         )
+        response = safe_generate_content(prompt)
         bot.reply_to(message, f"🧠 **Bunları Biliyor muydun?**\n\n{response.text}")
     except Exception as e:
         print(f"Bilgi Hatasi: {e}")
@@ -1115,6 +1130,7 @@ def get_summary(message):
             model="gemini-1.5-flash-001",
             contents=prompt
         )
+        response = safe_generate_content(prompt)
         bot.delete_message(message.chat.id, wait_msg.message_id)
         bot.reply_to(message, f"📝 **KONU ÖZETİ: {topic.upper()}**\n\n{response.text}", parse_mode="Markdown")
     except Exception as e:
@@ -1160,6 +1176,7 @@ def true_false_game(message):
             model="gemini-1.5-flash-001",
             contents=prompt
         )
+        response = safe_generate_content(prompt)
         
         text_resp = response.text.replace("```json", "").replace("```", "").strip()
         data = json.loads(text_resp)
@@ -1249,6 +1266,7 @@ def start_adventure(message):
             model="gemini-1.5-flash-001",
             contents=prompt
         )
+        response = safe_generate_content(prompt)
         
         text_resp = response.text.replace("```json", "").replace("```", "").strip()
         data = json.loads(text_resp)
@@ -1389,6 +1407,7 @@ def handle_message(message):
             model="gemini-1.5-flash-001",
             contents=message.text
         )
+        response = safe_generate_content(message.text)
         bot.reply_to(message, response.text)
     except Exception as e:
         print(f"Sohbet Hatasi: {e}")
