@@ -1217,10 +1217,23 @@ def admin_gift(message):
     try:
         # Kullanım: /hediye <user_id> <miktar>
         args = message.text.split()
-        target_id = args[1]
+        target_input = args[1]
         amount = int(args[2])
         
-        if target_id in users:
+        target_id = None
+        
+        # 1. Önce ID olarak kontrol et
+        if target_input in users:
+            target_id = target_input
+        else:
+            # 2. Bulunamazsa Kullanıcı Adı olarak ara (başındaki @ işaretini silerek)
+            search_name = target_input.lstrip("@")
+            for uid, u in users.items():
+                if u.get("username") == search_name:
+                    target_id = uid
+                    break
+        
+        if target_id:
             users[target_id]["exp"] += amount
             save_users()
             bot.reply_to(message, f"✅ {users[target_id]['name']} kullanıcısına {amount} EXP gönderildi.")
@@ -1231,9 +1244,9 @@ def admin_gift(message):
             except:
                 pass
         else:
-            bot.reply_to(message, "❌ Kullanıcı veritabanında bulunamadı.")
+            bot.reply_to(message, "❌ Kullanıcı bulunamadı! (Doğru ID veya Kullanıcı Adı girdiğinden emin ol)")
     except:
-        bot.reply_to(message, "⚠️ Kullanım: /hediye <user_id> <miktar>\nÖrnek: /hediye 123456789 1000")
+        bot.reply_to(message, "⚠️ Kullanım: /hediye <KullanıcıAdı veya ID> <Miktar>\nÖrnek: /hediye @HuseyinAcar35 1000")
 
 @bot.message_handler(commands=['help', 'hakkinda'])
 def help_guide(message):
