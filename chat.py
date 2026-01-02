@@ -145,7 +145,44 @@ def send_wrong_question(chat_id, user_id):
 
 @bot.message_handler(commands=["start"])
 def start_message(message):
+    user_id = str(message.from_user.id)
     username = message.from_user.username
+    
+    # 1. Kurucu ise her zaman onaylıdır ve giriş yapar
+    if username == DEVELOPER_USERNAME:
+        if user_id not in users:
+            users[user_id] = {"level": 1, "exp": 0, "lives": 3, "category": "karisik", "is_approved": True}
+            save_users()
+        else:
+            # Eğer önceden varsa ama approved flag yoksa ekle
+            users[user_id]["is_approved"] = True
+            save_users()
+
+    # 2. Kullanıcı veritabanında yoksa (YENİ ÜYE)
+    if user_id not in users:
+        # Kullanıcıyı oluştur ama onaysız yap
+        users[user_id] = {
+            "level": 1, "exp": 0, "lives": 3, "category": "karisik",
+            "is_approved": False, 
+            "username": username,
+            "name": message.from_user.first_name,
+            "join_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        save_users()
+        
+        # Bilgi mesajı ve Talep Butonu
+        markup = InlineKeyboardMarkup()
+        markup.add(InlineKeyboardButton("📝 Üye Olmak İstiyorum", callback_data="request_access"))
+        
+        bot.send_message(message.chat.id, "🔒 **Bot Erişim İzni**\n\nMerhaba! Bu bot özel bir bottur ve sadece onaylı üyeler kullanabilir.\n\nErişim izni istemek için aşağıdaki butona tıklayabilirsin. 👇", reply_markup=markup)
+        return
+
+    # 3. Kullanıcı var ama onayı yoksa (Daha önce girmiş ama onaylanmamış)
+    if not users.get(user_id, {}).get("is_approved", True): # Varsayılan True (Eski üyeler için)
+        bot.send_message(message.chat.id, "⏳ **Onay Bekleniyor...**\n\nTalebiniz yöneticilere iletildi. Lütfen onaylanmayı bekleyin.")
+        return
+
+    # 4. Onaylı kullanıcılar için normal akış
     if username:
         user_text = f"@{username}"
     else:
@@ -164,6 +201,54 @@ def start_message(message):
     )
 
     bot.send_message(message.chat.id, text, reply_markup=keyboard)
+
+@bot.callback_query_handler(func=lambda c: c.data == "request_access")
+def request_access_handler(call):
+    user_id = str(call.from_user.id)
+    
+    # Kullanıcıya bilgi ver
+    bot.edit_message_text("✅ **Talebiniz Alındı!**\n\nKurucuya bildirim gönderildi. Onaylandığında size mesaj gelecektir. Lütfen bekleyin. ⏳", call.message.chat.id, call.message.message_id)
+    
+    # Kurucuya (Admin) bildirim gönder
+    admin_id = get_admin_id()
+    if admin_id:
+        markup = InlineKeyboardMarkup()
+        markup.add(
+            InlineKeyboardButton("✅ Onayla", callback_data=f"approve_{user_id}"),
+            InlineKeyboardButton("❌ Reddet", callback_data=f"reject_{user_id}")
+        )
+        
+        user_info = f"👤 İsim: {call.from_user.first_name}\n🆔 ID: {user_id}\n🔗 Kullanıcı Adı: @{call.from_user.username}"
+        bot.send_message(admin_id, f"🔔 **YENİ ÜYELİK TALEBİ!**\n\n{user_info}\n\nBotu kullanmak için izin istiyor.", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("approve_") or c.data.startswith("reject_"))
+def admin_approval_callback(call):
+    # Sadece geliştirici bu butonları kullanabilir
+    if call.from_user.username != DEVELOPER_USERNAME:
+        bot.answer_callback_query(call.id, "⛔ Yetkisiz işlem!")
+        return
+        
+    action, target_id = call.data.split("_")
+    
+    if action == "approve":
+        if target_id in users:
+            users[target_id]["is_approved"] = True
+            save_users()
+            
+            bot.edit_message_text(f"✅ Kullanıcı ({target_id}) **ONAYLANDI**.", call.message.chat.id, call.message.message_id, parse_mode="Markdown")
+            
+            # Kullanıcıya müjdeyi ver
+            try:
+                bot.send_message(target_id, "🎉 **Tebrikler! Üyeliğiniz Onaylandı!**\n\nArtık botu kullanabilirsiniz.\nBaşlamak için 👉 /start yazın.")
+            except:
+                pass
+        else:
+            bot.answer_callback_query(call.id, "Kullanıcı bulunamadı.")
+            
+    elif action == "reject":
+        bot.edit_message_text(f"❌ Kullanıcı ({target_id}) **REDDEDİLDİ**.", call.message.chat.id, call.message.message_id, parse_mode="Markdown")
+        # İstersen kullanıcıya reddedildi mesajı atabilirsin veya sessiz kalabilirsin.
+
 @bot.callback_query_handler(func=lambda call: call.data.startswith("lang_"))
 def language_selected(call):
     username = call.from_user.username
@@ -252,6 +337,10 @@ def language_selected(call):
     )
 @bot.message_handler(commands=['quiz'])
 def quiz(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Botu kullanmak için onay almalısınız. /start yazarak talep oluşturun.")
+        return
     kb = InlineKeyboardMarkup()
     kb.add(
         InlineKeyboardButton("📜 Tarih", callback_data="cat_tarih"),
@@ -382,6 +471,9 @@ def handle_jokers(call):
 @bot.message_handler(commands=['clock'])
 def open_trivia_question(message):
     user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
     
     # Kullanıcı yoksa oluştur
     if user_id not in users:
@@ -459,6 +551,10 @@ def open_trivia_question(message):
 
 @bot.message_handler(commands=['market'])
 def market_menu(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton("❤️ +1 Can (100 EXP)", callback_data="buy_life"))
     markup.add(InlineKeyboardButton("🎁 Şans Kutusu (50 EXP)", callback_data="buy_box"))
@@ -520,6 +616,9 @@ def market_buy(call):
 @bot.message_handler(commands=['bahis'])
 def set_bet(message):
     user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
     if user_id not in users: return
     
     try:
@@ -549,6 +648,9 @@ def set_bet(message):
 @bot.message_handler(commands=['kaz'])
 def mine_resource(message):
     user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
     if user_id not in users: return
 
     # Cooldown kontrolü (15 dakika)
@@ -598,6 +700,9 @@ def mine_resource(message):
 @bot.message_handler(commands=['envanter'])
 def show_inventory(message):
     user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
     if user_id not in users: return
     
     u = users[user_id]
@@ -626,6 +731,9 @@ def show_inventory(message):
 @bot.message_handler(commands=['duello'])
 def duel_bot(message):
     user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
     if user_id not in users: return
 
     try:
@@ -665,6 +773,9 @@ def duel_bot(message):
 @bot.message_handler(commands=['yanlislarim'])
 def retry_wrongs(message):
     user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
     if user_id not in users: return
     
     users[user_id]["mode"] = "retry"
@@ -674,6 +785,10 @@ def retry_wrongs(message):
 
 @bot.message_handler(commands=['bilgi'])
 def random_fact(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
     try:
         prompt = "Bana çok ilginç, şaşırtıcı ve kısa bir genel kültür bilgisi ver. Sadece bilgiyi yaz."
         response = client.models.generate_content(
@@ -687,6 +802,8 @@ def random_fact(message):
 @bot.message_handler(func=lambda m: m.text and m.text.upper() in ["A", "B", "C", "D"])
 def check_answer(message):
     user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        return
 
     if user_id not in users or "current_answer" not in users[user_id]:
         return
@@ -817,6 +934,9 @@ def check_answer(message):
 @bot.message_handler(commands=['profil'])
 def my_profile(message):
     user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
     if user_id not in users:
         bot.reply_to(message, "Henüz bir profilin yok. /start ile başla!")
         return
@@ -901,6 +1021,7 @@ def admin_panel(message):
     )
 
     markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("⏳ Onay Bekleyenler", callback_data="admin_pending_list"))
     markup.add(InlineKeyboardButton("📢 Duyuru Bilgisi", callback_data="admin_help_duyuru"))
     markup.add(InlineKeyboardButton("🎁 Hediye Bilgisi", callback_data="admin_help_hediye"))
     markup.add(InlineKeyboardButton("💾 Veritabanını İndir", callback_data="admin_backup"))
@@ -917,6 +1038,25 @@ def admin_callbacks(call):
         bot.answer_callback_query(call.id)
         bot.send_message(call.message.chat.id, "📢 **Duyuru Kullanımı:**\n`/duyuru Mesajınız`\nÖrnek: `/duyuru Yarın bakım var!`", parse_mode="Markdown")
     
+    elif call.data == "admin_pending_list":
+        pending_users = [
+            (uid, u) for uid, u in users.items() 
+            if not u.get("is_approved", True)
+        ]
+        
+        if not pending_users:
+            bot.answer_callback_query(call.id, "✅ Onay bekleyen kimse yok!")
+            return
+            
+        bot.answer_callback_query(call.id)
+        bot.send_message(call.message.chat.id, f"⏳ **Onay Bekleyen {len(pending_users)} Kişi Var:**")
+        
+        for uid, u in pending_users:
+            info = f"👤 {u.get('name', 'Bilinmiyor')}\n🆔 `{uid}`\n🔗 @{u.get('username', 'Yok')}"
+            markup = InlineKeyboardMarkup()
+            markup.add(InlineKeyboardButton("✅ Onayla", callback_data=f"approve_{uid}"), InlineKeyboardButton("❌ Reddet", callback_data=f"reject_{uid}"))
+            bot.send_message(call.message.chat.id, info, reply_markup=markup, parse_mode="Markdown")
+
     elif call.data == "admin_help_hediye":
         bot.answer_callback_query(call.id)
         bot.send_message(call.message.chat.id, "🎁 **Hediye Kullanımı:**\n`/hediye <USER_ID> <MİKTAR>`\nÖrnek: `/hediye 123456789 500`", parse_mode="Markdown")
@@ -956,6 +1096,10 @@ def admin_broadcast_manual(message):
 
 @bot.message_handler(commands=['ozet'])
 def get_summary(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
     args = message.text.split(maxsplit=1)
     if len(args) < 2:
         bot.reply_to(message, "⚠️ Hangi konuyu özetleyeyim? Örnek: `/ozet Islahat Fermanı`")
@@ -977,6 +1121,10 @@ def get_summary(message):
 
 @bot.message_handler(commands=['pomodoro'])
 def start_pomodoro(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
     msg = bot.reply_to(message, "🍅 **Pomodoro Başladı!**\n\n25 dakika boyunca odaklan. Süre bitince seni etiketleyip haber vereceğim! 📚\n_(Botu sessize alma)_")
     
     def finish_pomodoro():
@@ -990,6 +1138,9 @@ def start_pomodoro(message):
 @bot.message_handler(commands=['dogruyanlis'])
 def true_false_game(message):
     user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
     wait_msg = bot.send_message(message.chat.id, "🤔 Bilgi hazırlanıyor...")
     
     try:
@@ -1116,6 +1267,10 @@ def help_guide(message):
 
 @bot.message_handler(func=lambda message: not message.text.startswith("/"))
 def handle_message(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        # Onaysız kullanıcıların mesajlarını yoksay
+        return
     # Küfür/Hakaret Kontrolü
     text_lower = message.text.lower()
     if any(word in text_lower for word in BANNED_WORDS):
