@@ -67,6 +67,30 @@ def get_rank(level, username=None):
         return "Çırak 🛠️"
     else:
         return "Acemi 👶"
+
+def check_daily_limit(user_id):
+    """Kullanıcının günlük Gemini kullanım hakkını kontrol eder ve günceller."""
+    # Yöneticiye (Sana) limit yok! 👑
+    if users.get(user_id, {}).get("username") == DEVELOPER_USERNAME:
+        return True
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    user_data = users[user_id]
+    
+    # Eğer gün değişmişse sayacı sıfırla
+    if user_data.get("last_gemini_date") != today:
+        user_data["last_gemini_date"] = today
+        user_data["daily_gemini_count"] = 0
+    
+    # Limit kontrolü (3 hak)
+    if user_data.get("daily_gemini_count", 0) >= 3:
+        return False
+    
+    # Kullanımı artır
+    user_data["daily_gemini_count"] = user_data.get("daily_gemini_count", 0) + 1
+    save_users()
+    return True
+
 def get_question(level, category):
     if category == "karisik":
         uygun = [
@@ -803,6 +827,11 @@ def random_fact(message):
     if not users.get(user_id, {}).get("is_approved", True):
         bot.reply_to(message, "⛔ Onay bekleniyor...")
         return
+
+    if not check_daily_limit(user_id):
+        bot.reply_to(message, "⛔ Günlük Gemini mesaj hakkın (3/3) doldu! Yarın tekrar gel.")
+        return
+
     try:
         prompt = "Bana çok ilginç, şaşırtıcı ve kısa bir genel kültür bilgisi ver. Sadece bilgiyi yaz."
         response = safe_generate_content(prompt)
@@ -1116,6 +1145,10 @@ def get_summary(message):
     if len(args) < 2:
         bot.reply_to(message, "⚠️ Hangi konuyu özetleyeyim? Örnek: `/ozet Islahat Fermanı`")
         return
+
+    if not check_daily_limit(user_id):
+        bot.reply_to(message, "⛔ Günlük Gemini mesaj hakkın (3/3) doldu! Yarın tekrar gel.")
+        return
     
     topic = args[1]
     wait_msg = bot.reply_to(message, f"📚 '{topic}' konusu hazırlanıyor...")
@@ -1304,6 +1337,10 @@ def dream_interpret(message):
     if not users.get(user_id, {}).get("is_approved", True):
         return
         
+    if not check_daily_limit(user_id):
+        bot.reply_to(message, "⛔ Günlük Gemini mesaj hakkın (3/3) doldu! Yarın tekrar gel.")
+        return
+
     if len(message.text.split()) < 2:
         bot.reply_to(message, "😴 Rüyayı yazmadın knk!\nÖrnek: `/ruya uçurumdan düştüğümü gördüm`")
         return
@@ -1408,6 +1445,10 @@ def handle_message(message):
             Timer(5.0, lambda: bot.delete_message(message.chat.id, warning.message_id)).start()
         except:
             pass
+        return
+
+    if not check_daily_limit(user_id):
+        bot.reply_to(message, "⛔ Günlük Gemini mesaj hakkın (3/3) doldu! Yarın tekrar gel.")
         return
 
     try:
