@@ -1208,6 +1208,90 @@ def check_dy(call):
         text=msg
     )
 
+@bot.message_handler(commands=['macera'])
+def start_adventure(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
+    
+    # Maliyet kontrolü (Örn: 20 EXP)
+    cost = 20
+    if users[user_id].get("exp", 0) < cost:
+        bot.reply_to(message, f"❌ Bu maceraya atılmak için {cost} EXP gerekli! (Mevcut: {users[user_id]['exp']})")
+        return
+
+    users[user_id]["exp"] -= cost
+    save_users()
+
+    wait_msg = bot.send_message(message.chat.id, "🕰️ Zaman makinesi çalıştırılıyor... Tarihin derinliklerine gidiyorsun... ⚡")
+
+    try:
+        prompt = """
+        Sen bir tarihsel macera oyunu yöneticisisin.
+        Kullanıcı için Türk Tarihi (Hunlar, Selçuklu, Osmanlı veya Cumhuriyet dönemi) ile ilgili kısa, sürükleyici, 2. tekil şahıs (sen) ile yazılmış bir kriz/karar anı senaryosu oluştur.
+        Kullanıcıya 3 seçenek sun (A, B, C).
+        Sadece BİR seçenek tarihsel gerçeklere veya mantığa göre başarıya ulaştırmalı. Diğerleri başarısızlığa yol açmalı.
+        
+        Yanıtı SADECE şu JSON formatında ver (başka hiçbir şey yazma):
+        {
+            "hikaye": "Senaryo metni buraya...",
+            "secenekler": {"A": "...", "B": "...", "C": "..."},
+            "dogru_cevap": "A",
+            "kazanc_mesaji": "Başarı durumunda gösterilecek açıklama ve tarihsel bilgi.",
+            "kayip_mesaji": "Başarısızlık durumunda gösterilecek açıklama."
+        }
+        """
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
+        
+        text_resp = response.text.replace("```json", "").replace("```", "").strip()
+        data = json.loads(text_resp)
+        
+        # Kullanıcının aktif macerasını kaydet
+        users[user_id]["active_adventure"] = data
+        save_users()
+        
+        markup = InlineKeyboardMarkup()
+        markup.add(InlineKeyboardButton(f"A) {data['secenekler']['A']}", callback_data="adv_A"))
+        markup.add(InlineKeyboardButton(f"B) {data['secenekler']['B']}", callback_data="adv_B"))
+        markup.add(InlineKeyboardButton(f"C) {data['secenekler']['C']}", callback_data="adv_C"))
+        
+        bot.delete_message(message.chat.id, wait_msg.message_id)
+        bot.send_message(message.chat.id, f"📜 **TARİHSEL MACERA**\n\n{data['hikaye']}", reply_markup=markup)
+        
+    except Exception as e:
+        bot.edit_message_text("Zaman makinesinde bir arıza oluştu! Tekrar dene.", message.chat.id, wait_msg.message_id)
+        # Hata durumunda parayı iade et
+        users[user_id]["exp"] += cost
+        save_users()
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("adv_"))
+def adventure_callback(call):
+    user_id = str(call.from_user.id)
+    if user_id not in users or "active_adventure" not in users[user_id]:
+        bot.answer_callback_query(call.id, "Bu macera sona ermiş.")
+        return
+
+    choice = call.data.split("_")[1]
+    data = users[user_id]["active_adventure"]
+    
+    if choice == data["dogru_cevap"]:
+        reward = 50
+        users[user_id]["exp"] += reward
+        msg = f"🎉 **BAŞARDIN!**\n\n{data['kazanc_mesaji']}\n\n💰 Ödül: +{reward} EXP"
+    else:
+        users[user_id]["lives"] -= 1
+        msg = f"💀 **BAŞARISIZ OLDUN...**\n\n{data['kayip_mesaji']}\n\n❤️ -1 Can Kaybettin."
+
+    # Macerayı temizle
+    users[user_id].pop("active_adventure", None)
+    save_users()
+    
+    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=msg)
+
 @bot.message_handler(commands=['hediye'])
 def admin_gift(message):
     # Sadece geliştirici kullanabilir
@@ -1261,6 +1345,7 @@ def help_guide(message):
         "🔹 `/pomodoro` - 25 dakikalık ders çalışma sayacı başlat.\n\n"
         "⚔️ **Oyun Modları:**\n"
         "🔹 `/quiz` - Kategorili sorular çöz.\n"
+        "🔹 `/macera` - Tarihsel bir olayın içinde rol yap ve karar ver! (Yeni! 🕰️)\n"
         "🔹 `/clock` - Dünya genelinden zor sorular (Global).\n"
         "🔹 `/duello <miktar>` - Botla zar atışına gir. Kazanan hepsini alır!\n\n"
         "⛏️ **Madencilik & Ekonomi:**\n"
