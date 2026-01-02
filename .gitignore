@@ -1,2 +1,12 @@
+# Environment variables - API anahtarını korur
 .env
+
+# User data file - KULLANICI VERİLERİNİ GİZLER
+users_data.json
+
+# Python cache
 __pycache__/
+*.pyc
+
+# Geçici kontrol scriptleri
+check_models.py
