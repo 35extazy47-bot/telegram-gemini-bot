@@ -68,6 +68,7 @@ TRADE_GOODS = {
     "tuz": {"name": "Tuz 🧂", "base": 30, "min": 10, "max": 100}
 }
 market_prices = {k: v["base"] for k, v in TRADE_GOODS.items()}
+market_volumes = {k: 0 for k in TRADE_GOODS.keys()} # Alım-Satım hacmini takip eder
 
 def load_users():
     try:
@@ -1550,6 +1551,10 @@ def buy_item(message):
     current_stock = users[user_id]["inventory"].get(item_code, 0)
     users[user_id]["inventory"][item_code] = current_stock + amount
     
+    # Hacim güncelle (Talep arttı)
+    if item_code in market_volumes:
+        market_volumes[item_code] += amount
+    
     save_users()
     bot.reply_to(message, f"✅ **İşlem Başarılı!**\n📥 Alınan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Ödenen: {total_cost} EXP")
 
@@ -1580,6 +1585,11 @@ def sell_item(message):
 
     users[user_id]["inventory"][item_code] -= amount
     users[user_id]["exp"] += total_gain
+    
+    # Hacim güncelle (Satış baskısı)
+    if item_code in market_volumes:
+        market_volumes[item_code] -= amount
+
     save_users()
     bot.reply_to(message, f"✅ **Satış Başarılı!**\n📤 Satılan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Kazanılan: {total_gain} EXP")
 
@@ -1807,16 +1817,54 @@ def send_morning_broadcast():
             pass # Kullanıcı botu engellemiş olabilir, devam et
 
 def update_market():
-    """Piyasa fiyatlarını rastgele dalgalandırır."""
-    global market_prices
+    """Piyasa fiyatlarını arz-talep ve sürpriz olaylara göre günceller."""
+    global market_prices, market_volumes
+    
+    print(f"📊 Piyasa Öncesi Hacimler: {market_volumes}")
+    
     for code, data in TRADE_GOODS.items():
-        # %10 ile +%10 arası değişim
-        change = random.uniform(0.9, 1.1)
-        new_price = int(market_prices[code] * change)
+        current_price = market_prices[code]
+        volume = market_volumes.get(code, 0)
+        
+        # 1. Arz-Talep Etkisi (Normal Durum)
+        # Hacim pozitifse (alım çoksa) fiyat artar, negatifse düşer.
+        # Normal değişim limiti: %10 (+/-)
+        
+        change_percent = 0
+        if volume > 0:
+            # Talep var, fiyat artar (Max %10)
+            change_percent = random.uniform(0.01, 0.10)
+        elif volume < 0:
+            # Satış baskısı, fiyat düşer (Max %10)
+            change_percent = random.uniform(-0.10, -0.01)
+        else:
+            # İşlem yok, yatay seyir
+            change_percent = random.uniform(-0.02, 0.02)
+            
+        # 2. Sürpriz Olaylar (Manipülasyon)
+        # %10 ihtimalle piyasa ters köşe yapar
+        surprise_roll = random.random()
+        
+        if surprise_roll < 0.10: # %10 şansla sürpriz
+            if volume <= 0: 
+                # Kimsenin almadığı mal patlama yapar (Şirket anlaşması)
+                change_percent = random.uniform(0.15, 0.30) # %15-%30 artış
+                print(f"🚀 SÜRPRİZ: {data['name']} için dev anlaşma! Fiyat fırladı.")
+            elif volume > 0:
+                # Çok alınan mal çakılır (Kötü haber)
+                change_percent = random.uniform(-0.30, -0.15) # %15-%30 düşüş
+                print(f"📉 SÜRPRİZ: {data['name']} hakkında kötü haber! Fiyat çakıldı.")
+        
+        # Yeni fiyatı hesapla
+        new_price = int(current_price * (1 + change_percent))
         
         # Sınırları kontrol et
         new_price = max(data["min"], min(new_price, data["max"]))
         market_prices[code] = new_price
+
+    # Hacimleri sıfırla (Bir sonraki döngü için)
+    market_volumes = {k: 0 for k in TRADE_GOODS.keys()}
+    
     print(f"📉 Piyasa Güncellendi: {market_prices}")
 
 def scheduler_thread():
