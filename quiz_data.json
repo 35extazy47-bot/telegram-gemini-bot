@@ -2131,5 +2131,103 @@
     ],
     "answer": "D",
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Aegean_Sea_map_bathymetry-fr.jpg/600px-Aegean_Sea_map_bathymetry-fr.jpg"
+  },
+  {
+    "id": 162,
+    "category": "tarih",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde 'Devlet-i Ebed Müddet' anlayışı neyi ifade eder?",
+    "options": [
+      "A) Devletin sonsuza kadar yaşayacağı inancı",
+      "B) Padişahın yetkilerinin sınırsızlığı",
+      "C) Ordunun yenilmezliği",
+      "D) Ekonomik bağımsızlık"
+    ],
+    "answer": "A",
+    "explanation": "Devlet-i Ebed Müddet, devletin sonsuza kadar yaşayacağı inancını ve idealini temsil eden bir Osmanlı mottosudur."
+  },
+  {
+    "id": 163,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de 'Rüzgar Erozyonu'nun en şiddetli görüldüğü bölge hangisidir?",
+    "options": [
+      "A) Karadeniz",
+      "B) İç Anadolu",
+      "C) Ege",
+      "D) Akdeniz"
+    ],
+    "answer": "B",
+    "explanation": "Bitki örtüsünün cılız olduğu ve kuraklığın etkili olduğu İç Anadolu Bölgesi (özellikle Konya-Karapınar çevresi) rüzgar erozyonunun en fazla görüldüğü yerdir."
+  },
+  {
+    "id": 164,
+    "category": "vatandaslik",
+    "level": 2,
+    "question": "1982 Anayasası'na göre, Cumhurbaşkanı hastalık veya yurt dışına çıkma gibi sebeplerle görevinden ayrıldığında yerine kim vekalet eder?",
+    "options": [
+      "A) TBMM Başkanı",
+      "B) En yaşlı Bakan",
+      "C) Cumhurbaşkanı Yardımcısı",
+      "D) Anayasa Mahkemesi Başkanı"
+    ],
+    "answer": "C",
+    "explanation": "2017 Anayasa değişikliği ile Cumhurbaşkanına vekalet etme yetkisi Cumhurbaşkanı Yardımcısına verilmiştir."
+  },
+  {
+    "id": 165,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye'nin ilk yerli ve milli yüksek çözünürlüklü yer gözlem uydusu hangisidir?",
+    "options": [
+      "A) Göktürk-1",
+      "B) İMECE",
+      "C) Rasat",
+      "D) Türksat 6A"
+    ],
+    "answer": "B",
+    "explanation": "İMECE, Türkiye'nin metre altı çözünürlüğe sahip ilk yerli ve milli yer gözlem uydusudur."
+  },
+  {
+    "id": 166,
+    "category": "tarih",
+    "level": 2,
+    "question": "Mustafa Kemal Atatürk'ün 'Benim şahsi meselem' dediği ve anavatana katılması için büyük çaba harcadığı il hangisidir?",
+    "options": [
+      "A) Musul",
+      "B) Kerkük",
+      "C) Hatay",
+      "D) Batum"
+    ],
+    "answer": "C",
+    "explanation": "Atatürk, Hatay sorunu için 'Benim şahsi meselem' ifadesini kullanmış ve hastalığına rağmen bu konuyla yakından ilgilenmiştir."
+  },
+  {
+    "id": 167,
+    "category": "cografya",
+    "level": 3,
+    "question": "Aşağıdaki göllerden hangisi 'Karstik' oluşumlu göllerimizden biridir?",
+    "options": [
+      "A) Sapanca Gölü",
+      "B) Salda Gölü",
+      "C) Tortum Gölü",
+      "D) Büyükçekmece Gölü"
+    ],
+    "answer": "B",
+    "explanation": "Salda Gölü, karstik oluşumlu bir göldür ve beyaz kumsalları nedeniyle 'Türkiye'nin Maldivleri' olarak bilinir."
+  },
+  {
+    "id": 168,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Hukuk kurallarına aykırı yapılan bir işlemin, baştan itibaren hüküm ifade etmemesi durumuna ne ad verilir?",
+    "options": [
+      "A) İptal",
+      "B) Yokluk",
+      "C) Butlan (Mutlak Butlan)",
+      "D) Tazminat"
+    ],
+    "answer": "C",
+    "explanation": "Kurucu unsurları tam olan bir işlemin, emredici hükümlere aykırı olması durumunda geçersiz sayılmasına Mutlak Butlan denir."
   }
 ]

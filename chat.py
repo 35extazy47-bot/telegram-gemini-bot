@@ -593,6 +593,24 @@ def suggest_question(message):
     else:
         bot.reply_to(message, "❌ Geliştiriciye şu an ulaşılamıyor.")
 
+@bot.message_handler(commands=['sorudurumu'])
+def question_stats(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    
+    stats = {}
+    total = len(QUIZ_QUESTIONS)
+    
+    for q in QUIZ_QUESTIONS:
+        cat = q["category"].capitalize()
+        stats[cat] = stats.get(cat, 0) + 1
+        
+    text = f"📊 **SORU BANKASI DURUMU**\n\n🗂 **Toplam Soru:** {total}\n\n"
+    for cat, count in stats.items():
+        text += f"🔹 {cat}: {count} soru\n"
+        
+    bot.reply_to(message, text)
+
 @bot.callback_query_handler(func=lambda c: c.data.startswith("joker_"))
 def handle_jokers(call):
     user_id = str(call.from_user.id)
@@ -2415,6 +2433,7 @@ def help_guide(message):
         "🔹 `/macera` - Tarihsel bir olayın içinde rol yap ve karar ver! (Yeni! 🕰️)\n"
         "🔹 `/maraton` - Tek hakla ne kadar gidebilirsin? (Yeni! 🏃‍♂️)\n"
         "🔹 `/soruekle` - Kendi sorunu gönder (Yeni! 📝)\n"
+        "🔹 `/sorudurumu` - Soru bankası istatistiklerini gör. 📊\n"
         "🔹 `/ikna <fikir>` - Botla tartış, argümanın kadar puan kazan! (Yeni! 🗣️)\n"
         "🔹 `/tarihtebugun` - Bugün tarihte ne olduğunu öğren. 📅\n"
         "🔹 `/borsa` - Kapalıçarşı'da ticaret yap, servetine servet kat! (Yeni! 📈)\n"
