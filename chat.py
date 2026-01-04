@@ -9,6 +9,8 @@ from threading import Thread, Timer, Lock
 import requests
 import html
 from deep_translator import GoogleTranslator
+import io
+from PIL import Image, ImageDraw, ImageFont
 
 load_dotenv()
 
@@ -1094,6 +1096,30 @@ def check_answer(message):
     streak = users[user_id].get("streak", 0)
     bet_amount = users[user_id].get("active_bet", 0)
 
+    # Eğlenceli Mesaj Listeleri
+    correct_msgs = [
+        "✅ **Harikasın! Doğru Cevap!** 🎉",
+        "🔥 **Alev aldı buralar!** 🚒",
+        "🧠 **Zeka küpü müsün be!** 🧊",
+        "🎯 **Tam isabet!** 🏹",
+        "🚀 **Uçuşa geçtin!** 🌌",
+        "😎 **Bu işi biliyorsun!** 👊",
+        "🌟 **Yıldız gibi parlıyorsun!** ✨",
+        "🥳 **Helal olsun!** 🎊",
+        "👑 **Kral hareket!** 🦁"
+    ]
+    
+    wrong_msgs = [
+        "❌ **Ah be! Yanlış oldu.** 🥀",
+        "🐢 **Biraz daha dikkat!** 🐢",
+        "🤔 **Mantıklıydı ama yanlıştı...** 📉",
+        "💥 **Patladık! Yanlış cevap.** 💣",
+        "👀 **Gözden kaçtı sanırım.** 👓",
+        "📉 **Bu sefer olmadı.** 🤷‍♂️",
+        "🧊 **Soğuk duş etkisi...** 🚿",
+        "🙈 **Görmemiş olalım...** 🙈"
+    ]
+
     # --- MARATON MODU MANTIĞI ---
     if users[user_id].get("mode") == "marathon":
         if answer == correct:
@@ -1104,7 +1130,8 @@ def check_answer(message):
             reward = 10 * score
             users[user_id]["exp"] += reward
             
-            msg = bot.send_message(message.chat.id, f"✅ **DOĞRU!** ({score}. Soru)\n💰 +{reward} EXP\nDevam... 🏃‍♂️💨")
+            selected_msg = random.choice(correct_msgs)
+            msg = bot.send_message(message.chat.id, f"{selected_msg} ({score}. Soru)\n💰 +{reward} EXP\nDevam... 🏃‍♂️💨")
             Timer(1.5, lambda: bot.delete_message(message.chat.id, msg.message_id)).start()
             
             users[user_id].pop("current_answer", None)
@@ -1152,11 +1179,13 @@ def check_answer(message):
         now = datetime.utcnow() + timedelta(hours=3)
         is_happy_hour = 20 <= now.hour < 22
 
+        selected_msg = random.choice(correct_msgs)
+
         if is_happy_hour:
             total_points *= 2
-            result = f"✅ **Mükemmel! Doğru Cevap!** 🎉\n🔥 **HAPPY HOUR (2x EXP)** 🔥\n🔥 Combo: {streak}x"
+            result = f"{selected_msg}\n🔥 **HAPPY HOUR (2x EXP)** 🔥\n🔥 Combo: {streak}x"
         else:
-            result = f"✅ **Mükemmel! Doğru Cevap!** 🎉\n🔥 Combo: {streak}x (+{streak_bonus} Bonus)"
+            result = f"{selected_msg}\n🔥 Combo: {streak}x (+{streak_bonus} Bonus)"
             
         # Bahis Kazancı
         if bet_amount > 0:
@@ -1178,7 +1207,8 @@ def check_answer(message):
         streak = 0
         users[user_id]["lives"] -= 1
         exp = max(0, exp - 10)
-        result = f"❌ **Maalesef Yanlış!** 🥀\nDoğru Cevap: {correct}\n❤️ Kalan Can: {users[user_id]['lives']}"
+        selected_msg = random.choice(wrong_msgs)
+        result = f"{selected_msg}\nDoğru Cevap: {correct}\n❤️ Kalan Can: {users[user_id]['lives']}"
         
         if bet_amount > 0:
             result += f"\n💸 **BAHİS KAYBETTİN!** (-{bet_amount} EXP)"
@@ -1245,6 +1275,96 @@ def check_answer(message):
     else:
         send_question(message.chat.id, user_id)
 
+def create_profile_image(user_data):
+    width = 600
+    height = 400
+    bg_color = (35, 39, 42) # Koyu Gri
+    text_color = (255, 255, 255)
+    accent_color = (0, 174, 255) # Mavi vurgu
+    bar_bg = (60, 60, 60)
+    bar_fill = (46, 204, 113) # Yeşil bar
+
+    img = Image.new('RGB', (width, height), color=bg_color)
+    draw = ImageDraw.Draw(img)
+
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path):
+            candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "/System/Library/Fonts/Helvetica.ttc"]
+            for f in candidates:
+                if os.path.exists(f):
+                    font_path = f
+                    break
+        
+        name_font = ImageFont.truetype(font_path, 32)
+        header_font = ImageFont.truetype(font_path, 24)
+        normal_font = ImageFont.truetype(font_path, 18)
+        small_font = ImageFont.truetype(font_path, 14)
+    except:
+        name_font = ImageFont.load_default()
+        header_font = ImageFont.load_default()
+        normal_font = ImageFont.load_default()
+        small_font = ImageFont.load_default()
+
+    name = user_data.get('name', 'Bilinmiyor')[:20]
+    level = user_data.get('level', 1)
+    exp = user_data.get('exp', 0)
+    target_xp = level * 100
+    rank = get_rank(level, user_data.get('username'))
+    
+    total = user_data.get('total_questions', 0)
+    correct = user_data.get('total_correct', 0)
+    success_rate = (correct / total * 100) if total > 0 else 0
+    best_marathon = user_data.get('best_marathon', 0)
+    lives = user_data.get('lives', 3)
+
+    # İsim ve Rütbe
+    draw.text((30, 30), name, font=name_font, fill=text_color)
+    draw.text((30, 75), rank, font=header_font, fill=accent_color)
+    
+    # Sağ üstte Level
+    draw.text((450, 30), f"Level {level}", font=name_font, fill=(255, 215, 0))
+
+    # İlerleme Çubuğu (Progress Bar)
+    bar_x, bar_y = 30, 130
+    bar_w, bar_h = 540, 20
+    draw.rectangle([bar_x, bar_y, bar_x + bar_w, bar_y + bar_h], fill=bar_bg)
+    percent = min(exp / target_xp, 1.0)
+    if percent > 0:
+        draw.rectangle([bar_x, bar_y, bar_x + int(bar_w * percent), bar_y + bar_h], fill=bar_fill)
+    
+    draw.text((bar_x, bar_y - 20), f"EXP: {exp} / {target_xp}", font=small_font, fill=(200, 200, 200))
+
+    # İstatistikler (Grid yapısı)
+    y_start = 180
+    col1 = 30
+    col2 = 300
+    
+    # Satır 1
+    draw.text((col1, y_start), "📝 Toplam Soru", font=normal_font, fill=(170, 170, 170))
+    draw.text((col1, y_start + 25), str(total), font=header_font, fill=text_color)
+    
+    draw.text((col2, y_start), "🎯 Başarı", font=normal_font, fill=(170, 170, 170))
+    draw.text((col2, y_start + 25), f"%{success_rate:.1f}", font=header_font, fill=text_color)
+    
+    # Satır 2
+    y_start += 70
+    draw.text((col1, y_start), "🏃‍♂️ En İyi Maraton", font=normal_font, fill=(170, 170, 170))
+    draw.text((col1, y_start + 25), str(best_marathon), font=header_font, fill=text_color)
+    
+    draw.text((col2, y_start), "❤️ Can", font=normal_font, fill=(170, 170, 170))
+    draw.text((col2, y_start + 25), str(lives), font=header_font, fill=text_color)
+
+    # Alt Bilgi (Ekipman)
+    equip = "⛏️ Elmas Kazma" if user_data.get("has_pickaxe") else "Yok"
+    draw.line([(30, 350), (570, 350)], fill=(60, 60, 60), width=1)
+    draw.text((30, 365), f"🎒 Ekipman: {equip}", font=small_font, fill=(150, 150, 150))
+
+    bio = io.BytesIO()
+    img.save(bio, 'PNG')
+    bio.seek(0)
+    return bio
+
 @bot.message_handler(commands=['profil'])
 def my_profile(message):
     user_id = str(message.from_user.id)
@@ -1264,6 +1384,17 @@ def my_profile(message):
     total = u.get('total_questions', 0)
     correct_count = u.get('total_correct', 0)
     success_rate = (correct_count / total * 100) if total > 0 else 0
+    try:
+        # Görsel oluştur ve gönder
+        photo = create_profile_image(u)
+        bot.send_photo(message.chat.id, photo, caption=f"👤 **{u.get('name')}** Profil Kartı")
+    except Exception as e:
+        print(f"Profil görsel hatası: {e}")
+        # Hata olursa (örn: kütüphane yoksa) basit metin gönder
+        lvl = u.get('level', 1)
+        xp = u.get('exp', 0)
+        text = f"👤 **Profilin**\n🏷 İsim: {u.get('name')}\n📊 Level: {lvl}\n⭐️ EXP: {xp}"
+        bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
     dev_icon = " 👨‍💻" if u.get("username") == DEVELOPER_USERNAME else ""
     is_vip = u.get('level', 1) >= 15
@@ -1303,6 +1434,73 @@ def my_profile(message):
 
     bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
+def create_leaderboard_image(sorted_users):
+    width = 800
+    height = 140 + (len(sorted_users) * 60)
+    
+    bg_color = (35, 39, 42) # Koyu Gri Arkaplan
+    header_bg = (44, 47, 51)
+    text_color = (255, 255, 255)
+    gold = (255, 215, 0)
+    
+    img = Image.new('RGB', (width, height), color=bg_color)
+    draw = ImageDraw.Draw(img)
+    
+    try:
+        # Font ayarları (Sistemde Arial varsa onu kullanır, yoksa varsayılan)
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path):
+            # Linux sunucular için alternatif yollar
+            candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "/System/Library/Fonts/Helvetica.ttc"]
+            for f in candidates:
+                if os.path.exists(f):
+                    font_path = f
+                    break
+        
+        title_font = ImageFont.truetype(font_path, 40)
+        row_font = ImageFont.truetype(font_path, 26)
+    except:
+        title_font = ImageFont.load_default()
+        row_font = ImageFont.load_default()
+
+    # Başlık
+    draw.text((220, 30), "🏆 LİDERLİK TABLOSU 🏆", font=title_font, fill=gold)
+    
+    # Tablo Başlıkları
+    draw.rectangle([(20, 90), (width-20, 140)], fill=header_bg)
+    headers = ["#", "OYUNCU", "RÜTBE", "LEVEL", "EXP"]
+    x_pos = [40, 120, 380, 580, 700]
+    
+    for i, h in enumerate(headers):
+        draw.text((x_pos[i], 100), h, font=row_font, fill=(200, 200, 200))
+        
+    # Satırlar
+    y = 160
+    for i, (uid, data) in enumerate(sorted_users, 1):
+        name = data.get("name", "Gizli")[:12] # İsim çok uzunsa kes
+        lvl = str(data.get("level", 1))
+        xp = str(data.get("exp", 0))
+        rank = get_rank(int(lvl), data.get("username")).split()[0] # Emojiyi at (kare çıkmasın diye)
+        
+        color = text_color
+        if i == 1: color = gold
+        elif i == 2: color = (192, 192, 192) # Gümüş
+        elif i == 3: color = (205, 127, 50)  # Bronz
+        
+        draw.text((x_pos[0], y), str(i), font=row_font, fill=color)
+        draw.text((x_pos[1], y), name, font=row_font, fill=color)
+        draw.text((x_pos[2], y), rank, font=row_font, fill=color)
+        draw.text((x_pos[3], y), lvl, font=row_font, fill=color)
+        draw.text((x_pos[4], y), xp, font=row_font, fill=color)
+        
+        draw.line([(40, y+45), (width-40, y+45)], fill=(60, 60, 60), width=1)
+        y += 60
+        
+    bio = io.BytesIO()
+    img.save(bio, 'PNG')
+    bio.seek(0)
+    return bio
+
 @bot.message_handler(commands=['top10'])
 def leaderboard(message):
     # Level'a göre, sonra EXP'ye göre sırala (Büyükten küçüğe)
@@ -1312,22 +1510,29 @@ def leaderboard(message):
         reverse=True
     )[:10]
     
-    text = "🏆 **Liderlik Tablosu (Top 10)** 🏆\n\n"
-    for i, (uid, data) in enumerate(sorted_users, 1):
-        name = data.get("name", "Gizli Oyuncu")
-        lvl = data.get("level", 1)
-        xp = data.get("exp", 0)
-        
-        t_q = data.get('total_questions', 0)
-        t_c = data.get('total_correct', 0)
-        rate = (t_c / t_q * 100) if t_q > 0 else 0
-        
-        rank = get_rank(lvl, data.get("username"))
-        vip_tag = " 👑" if lvl >= 15 else ""
-        dev_tag = " 👨‍💻" if data.get("username") == DEVELOPER_USERNAME else ""
-        text += f"{i}. {name}{vip_tag}{dev_tag} — {rank} | 🏅 Lvl {lvl} | ⭐️ {xp} (🎯 %{rate:.0f})\n"
-        
-    bot.send_message(message.chat.id, text)
+    try:
+        # Görsel oluştur ve gönder
+        photo = create_leaderboard_image(sorted_users)
+        bot.send_photo(message.chat.id, photo, caption="🏆 **Liderlik Tablosu**\nZirve yarışında son durum! 🚀")
+    except Exception as e:
+        print(f"Görsel oluşturma hatası: {e}")
+        # Hata olursa (örn: kütüphane yoksa) eski usul metin gönder
+        text = "🏆 **Liderlik Tablosu (Top 10)** 🏆\n\n"
+        for i, (uid, data) in enumerate(sorted_users, 1):
+            name = data.get("name", "Gizli Oyuncu")
+            lvl = data.get("level", 1)
+            xp = data.get("exp", 0)
+            
+            t_q = data.get('total_questions', 0)
+            t_c = data.get('total_correct', 0)
+            rate = (t_c / t_q * 100) if t_q > 0 else 0
+            
+            rank = get_rank(lvl, data.get("username"))
+            vip_tag = " 👑" if lvl >= 15 else ""
+            dev_tag = " 👨‍💻" if data.get("username") == DEVELOPER_USERNAME else ""
+            text += f"{i}. {name}{vip_tag}{dev_tag} — {rank} | 🏅 Lvl {lvl} | ⭐️ {xp} (🎯 %{rate:.0f})\n"
+            
+        bot.send_message(message.chat.id, text)
 
 @bot.message_handler(commands=['admin_panel'])
 def admin_panel(message):
