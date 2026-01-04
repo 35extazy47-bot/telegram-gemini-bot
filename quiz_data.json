@@ -10,7 +10,8 @@
       "C) Ertuğrul Gazi",
       "D) Alaeddin Keykubat"
     ],
-    "answer": "B"
+    "answer": "B",
+    "explanation": "Osmanlı Beyliği, 1299 yılında Osman Bey tarafından Söğüt ve Domaniç çevresinde kurulmuştur."
   },
   {
     "id": 2,
@@ -23,7 +24,8 @@
       "C) Fatih Sultan Mehmet - XI. Konstantinos",
       "D) Kanuni Sultan Süleyman - Şarlken"
     ],
-    "answer": "A"
+    "answer": "A",
+    "explanation": "1071 Malazgirt Savaşı, Büyük Selçuklu Hükümdarı Alparslan ile Bizans İmparatoru Romen Diyojen arasında yapılmıştır."
   },
   {
     "id": 3,
@@ -36,7 +38,8 @@
       "C) I. Süleyman",
       "D) IV. Murat"
     ],
-    "answer": "B"
+    "answer": "B",
+    "explanation": "İstanbul, 29 Mayıs 1453 tarihinde II. Mehmet (Fatih Sultan Mehmet) tarafından fethedilmiştir."
   },
   {
     "id": 4,
@@ -49,7 +52,8 @@
       "C) İsmet İnönü",
       "D) Mustafa Kemal Atatürk"
     ],
-    "answer": "C"
+    "answer": "C",
+    "explanation": "Cumhuriyetin ilanıyla birlikte ilk Cumhurbaşkanı Mustafa Kemal Atatürk, ilk Başbakan ise İsmet İnönü olmuştur."
   },
   {
     "id": 5,
@@ -62,7 +66,8 @@
       "C) Sivas Kongresi",
       "D) Erzurum Kongresi"
     ],
-    "answer": "B"
+    "answer": "B",
+    "explanation": "Mustafa Kemal Atatürk'ün 19 Mayıs 1919'da Samsun'a çıkışı, Kurtuluş Savaşı'nın fiilen başladığı tarih kabul edilir."
   },
   {
     "id": 6,
@@ -75,7 +80,8 @@
       "C) III. Ahmet",
       "D) I. Abdülhamit"
     ],
-    "answer": "C"
+    "answer": "C",
+    "explanation": "Lale Devri (1718-1730), Padişah III. Ahmet ve Sadrazam Nevşehirli Damat İbrahim Paşa dönemini kapsar."
   },
   {
     "id": 7,
@@ -88,7 +94,8 @@
       "C) Sivas Kongresi",
       "D) Havza Genelgesi"
     ],
-    "answer": "C"
+    "answer": "C",
+    "explanation": "Mustafa Kemal Paşa, Sivas Kongresi'nde manda ve himayeyi kesin olarak reddederek 'Ya istiklal ya ölüm!' demiştir."
   },
   {
     "id": 8,
@@ -101,7 +108,8 @@
       "C) Çaka Bey",
       "D) Turgut Reis"
     ],
-    "answer": "C"
+    "answer": "C",
+    "explanation": "1081 yılında İzmir'de beyliğini kuran Çaka Bey, tarihteki ilk Türk denizcisi olarak kabul edilir."
   },
   {
     "id": 9,
@@ -114,7 +122,8 @@
       "C) Abdülaziz",
       "D) II. Abdülhamit"
     ],
-    "answer": "B"
+    "answer": "B",
+    "explanation": "Tanzimat Fermanı, 1839 yılında Sultan Abdülmecid döneminde Mustafa Reşit Paşa tarafından okunmuştur."
   },
   {
     "id": 10,
@@ -127,7 +136,8 @@
       "C) Mete Han",
       "D) Attila"
     ],
-    "answer": "A"
+    "answer": "A",
+    "explanation": "Göktürk Devleti, 552 yılında Bumin Kağan tarafından Ötüken merkezli olarak kurulmuştur."
   },
   {
     "id": 11,
@@ -140,7 +150,8 @@
       "C) 30 Ağustos 1922",
       "D) 24 Temmuz 1923"
     ],
-    "answer": "D"
+    "answer": "D",
+    "explanation": "Lozan Barış Antlaşması, Türkiye Cumhuriyeti'nin bağımsızlığını tüm dünyaya kabul ettirdiği 'tapu senedi' niteliğindedir."
   },
   {
     "id": 12,
@@ -153,7 +164,8 @@
       "C) Ağrı Dağı",
       "D) Süphan Dağı"
     ],
-    "answer": "C"
+    "answer": "C",
+    "explanation": "Ağrı Dağı, 5.137 metre yüksekliği ile Türkiye'nin en yüksek dağıdır ve sönmüş bir volkandır."
   },
   {
     "id": 13,
@@ -166,7 +178,8 @@
       "C) Beyşehir Gölü",
       "D) Eğirdir Gölü"
     ],
-    "answer": "B"
+    "answer": "B",
+    "explanation": "Van Gölü, Türkiye'nin en büyük gölü olmasının yanı sıra dünyanın en büyük sodalı gölüdür."
   },
   {
     "id": 14,
@@ -179,7 +192,8 @@
       "C) Volkanik tüf",
       "D) Kireçtaşı"
     ],
-    "answer": "C"
+    "answer": "C",
+    "explanation": "Peri bacaları, Erciyes ve Hasandağı gibi volkanlardan çıkan tüflerin rüzgar ve sel sularıyla aşınması sonucu oluşmuştur."
   },
   {
     "id": 15,
@@ -192,7 +206,8 @@
       "C) Şatt'ül-Arap",
       "D) Aras Nehri"
     ],
-    "answer": "C"
+    "answer": "C",
+    "explanation": "Fırat ve Dicle nehirleri Irak topraklarında birleşerek Şatt'ül-Arap adını alır ve Basra Körfezi'ne dökülür."
   },
   {
     "id": 16,
@@ -205,7 +220,8 @@
       "C) Marmara Bölgesi",
       "D) Doğu Karadeniz Bölgesi"
     ],
-    "answer": "D"
+    "answer": "D",
+    "explanation": "Çay bitkisi, bol yağış, nem ve kireçsiz toprak istediği için Türkiye'de sadece Doğu Karadeniz kıyılarında yetişir."
   },
   {
     "id": 17,
@@ -218,7 +234,8 @@
       "C) İstanbul",
       "D) Bursa"
     ],
-    "answer": "C"
+    "answer": "C",
+    "explanation": "İstanbul, sanayi, ticaret ve turizmin merkezi olması nedeniyle Türkiye'nin en kalabalık şehridir."
   },
   {
     "id": 18,
@@ -231,7 +248,8 @@
       "C) Muğla",
       "D) Afyonkarahisar"
     ],
-    "answer": "B"
+    "answer": "B",
+    "explanation": "Pamukkale travertenleri ve Hierapolis Antik Kenti, Denizli ilimizde yer alır ve UNESCO Dünya Mirası Listesi'ndedir."
   },
   {
     "id": 19,
@@ -244,7 +262,8 @@
       "C) Suriye",
       "D) Yunanistan"
     ],
-    "answer": "C"
+    "answer": "C",
+    "explanation": "Türkiye'nin en uzun kara sınırı 911 km ile Suriye sınırıdır."
   },
   {
     "id": 20,
@@ -257,7 +276,8 @@
       "C) Maki",
       "D) Tundra"
     ],
-    "answer": "C"
+    "answer": "C",
+    "explanation": "Akdeniz ikliminin bitki örtüsü, kızılçam ormanlarının tahrip edilmesiyle ortaya çıkan kısa boylu ağaççıklar olan makidir."
   },
   {
     "id": 21,

@@ -1,15 +1,15 @@
 {
   "1089288022": {
-    "level": 6,
-    "exp": 10,
-    "lives": 3,
-    "category": "cografya",
+    "level": 75,
+    "exp": 698,
+    "lives": 1,
+    "category": "karisik",
     "lang": "tr",
     "name": "HÜSEYİN :)",
-    "last_mine_time": "2026-01-02 13:40:41",
+    "last_mine_time": "2026-01-03 11:46:07",
     "username": "HuseyinAcar35",
     "mode": "global",
-    "last_question_message_id": 1058,
+    "last_question_message_id": 1623,
     "wrong_answers": [
       24,
       71,
@@ -20,16 +20,56 @@
       77,
       58,
       132,
-      150,
       140,
       110,
       105,
       97,
-      101
+      127,
+      20,
+      32,
+      5,
+      49,
+      139,
+      95
     ],
     "streak": 0,
-    "total_questions": 74,
-    "total_correct": 50
+    "total_questions": 101,
+    "total_correct": 64,
+    "is_approved": true,
+    "cards": [
+      4,
+      10,
+      9,
+      8,
+      11,
+      6,
+      12,
+      2,
+      5
+    ],
+    "inventory": {
+      "cini": 630,
+      "tuz": 1610,
+      "baharat": 205,
+      "ipek": 455
+    },
+    "beylik": {
+      "level": 10,
+      "soldiers": 2470,
+      "last_tax": "2026-01-03 14:47:17"
+    },
+    "active_adventure": {
+      "hikaye": "Konstantinopolis surları önünde haftalar süren amansız kuşatma devam ediyor. Toplarımız surlarda nihayet bir gedik açmayı başardı ancak Bizans müdafileri bu dar geçidi canla başla savunuyor. Sultan Fatih, sabırsızlıkla yeni bir hamle bekliyor. Mühendisbaşı olarak, düşman tahkimatını en iyi sen biliyorsun ve bu dar gediği nasıl aşacağımız konusunda kritik bir karar anındasın. Yüz binlerce askerin kaderi, fethin tamamlanması senin vereceğin karara bağlı.",
+      "secenekler": {
+        "A": "Mevcut gediği top ateşiyle daha da genişletmek ve aynı anda yeni takviye kuvvetlerle tam bir genel taarruz için hazırlık yapmak.",
+        "B": "Hiç vakit kaybetmeden tüm Yeniçerileri dar gedikten içeri sürmek, düşmanı sürpriz bir baskınla alt etmeye çalışmak.",
+        "C": "Mevcut gediği bırakıp, surların başka bir sağlam noktasından gizlice tünel kazarak içeri sızmaya çalışmak."
+      },
+      "dogru_cevap": "A",
+      "kazanc_mesaji": "Akıllıca bir karardı! Topçular gediği genişletirken, Yeniçeriler ve azaplar tam bir koordinasyon içinde taarruza geçti. Genişleyen gedik ve farklı noktalardan yapılan eş zamanlı hücumlar Bizans savunmasını çökertti. Nihayetinde, 29 Mayıs 1453'te Konstantinopolis düştü ve Fatih Sultan Mehmet, 'Fatih' unvanını alarak tarihe geçti. Bu strateji, Osmanlı ordusunun güçlü disiplini ve Fatih'in planlı kuşatma taktikleriyle birleşince zaferi kaçınılmaz kıldı.",
+      "kayip_mesaji": "Ne yazık ki, bu karar feci sonuçlar doğurdu. Dar gedikten yapılan hücum, Bizanslılar için kolay bir hedef haline geldi ve askerlerin çoğu surlara ulaşamadan ok ve taş yağmuru altında kaldı. Ya da tünel kazma girişimi çok zaman aldı ve düşman tarafından kolayca fark edilerek boşa çıkarıldı. Kuşatma uzadı, ordu morali düştü ve Konstantinopolis'in fethi imkansız hale geldi. Tarihin akışı değişti."
+    },
+    "current_answer": "A"
   },
   "8423482808": {
     "level": 1,
@@ -40,7 +80,17 @@
     "mode": "global",
     "name": "Tırtıl",
     "username": "YELKOVANBOT",
-    "current_answer": "C",
-    "last_question_message_id": 828
+    "current_answer": "D",
+    "last_question_message_id": 1614
+  },
+  "7353714016": {
+    "level": 1,
+    "exp": 0,
+    "lives": 3,
+    "category": "karisik",
+    "is_approved": true,
+    "username": null,
+    "name": "Tuna",
+    "join_date": "2026-01-03 15:01:27"
   }
 }

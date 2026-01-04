@@ -1027,6 +1027,41 @@ def random_fact(message):
         print(f"Bilgi Hatasi: {e}")
         bot.reply_to(message, "Şu an bilgi veremiyorum knk :(")
 
+@bot.message_handler(commands=['gunluk'])
+def daily_reward(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        return
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    last_reward = users[user_id].get("last_daily_reward")
+
+    if last_reward == today:
+        bot.reply_to(message, "⏳ **Sabırsızlanma!** Bugünün ödülünü zaten aldın.\nYarın tekrar gel! 👋")
+        return
+
+    # Seri (Streak) Kontrolü
+    streak = users[user_id].get("daily_streak", 0)
+    
+    # Eğer dün aldıysa seriyi artır, yoksa sıfırla
+    yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+    if last_reward == yesterday:
+        streak += 1
+    else:
+        streak = 1
+
+    # Ödül Hesaplama (Temel 50 + Seri Başına 10)
+    base_reward = 50
+    bonus = min(streak * 10, 150) # Maksimum 150 bonus
+    total_reward = base_reward + bonus
+
+    users[user_id]["exp"] += total_reward
+    users[user_id]["last_daily_reward"] = today
+    users[user_id]["daily_streak"] = streak
+    save_users()
+
+    bot.reply_to(message, f"🎁 **GÜNLÜK ÖDÜL ALINDI!**\n\n💰 Kazanç: +{total_reward} EXP\n🔥 Günlük Seri: {streak}. Gün\n\n_(Her gün gel, ödülünü katla!)_")
+
 @bot.message_handler(func=lambda m: m.text and m.text.upper() in ["A", "B", "C", "D"])
 def check_answer(message):
     user_id = str(message.from_user.id)
@@ -1036,6 +1071,10 @@ def check_answer(message):
     if user_id not in users or "current_answer" not in users[user_id]:
         return
     
+    # Sorunun verilerini bul (Puanlama ve Açıklama için)
+    q_id = users[user_id].get("current_question_id")
+    question_data = next((q for q in QUIZ_QUESTIONS if q["id"] == q_id), None)
+
     # Eski soruyu ve kullanıcının cevabını sil / Delete old question and user answer
     if "last_question_message_id" in users[user_id]:
         try:
@@ -1103,7 +1142,9 @@ def check_answer(message):
         streak += 1
         
         # Puan Hesaplama
-        base_points = 20
+        # Sorunun zorluğuna göre puan ver (Level 1: 20, Level 2: 35, Level 3: 50)
+        q_level = question_data.get("level", 1) if question_data else 1
+        base_points = 15 * q_level + 5
         streak_bonus = streak * 2
         total_points = base_points + streak_bonus
 
@@ -1143,11 +1184,19 @@ def check_answer(message):
             result += f"\n💸 **BAHİS KAYBETTİN!** (-{bet_amount} EXP)"
             users[user_id]["active_bet"] = 0
 
+    # 💡 EĞER SORUNUN AÇIKLAMASI VARSA EKLE
+    if question_data and question_data.get("explanation"):
+        result += f"\n\n💡 **Bilgi:** {question_data['explanation']}"
+
     # Level kontrolü
     old_rank = get_rank(level, users[user_id].get("username"))
-    if exp >= level * 100:
+    leveled_up = False
+    while exp >= level * 100:
+        exp -= level * 100
         level += 1
-        exp = 0
+        leveled_up = True
+
+    if leveled_up:
         result += f"\n\n🚀 **TEBRİKLER! LEVEL ATLADIN!** 🚀\n🏆 Yeni Seviye: {level}"
         
         new_rank = get_rank(level, users[user_id].get("username"))
@@ -1222,17 +1271,27 @@ def my_profile(message):
     
     equip = "⛏️ Elmas Kazma" if u.get("has_pickaxe") else "Yok"
 
+    # İlerleme Çubuğu Hesaplama
+    lvl = u.get('level', 1)
+    xp = u.get('exp', 0)
+    target_xp = lvl * 100
+    percentage = min(xp / target_xp, 1.0)
+    bar_len = 10
+    filled = int(bar_len * percentage)
+    bar = "█" * filled + "░" * (bar_len - filled)
+
     text = (
         f"👤 **Profilin / Profile**\n\n"
         f"🏷 İsim: {u.get('name', 'Bilinmiyor')}{dev_icon}\n"
         f"💎 Statü: {status_text}\n"
         f"🎒 Ekipman: {equip}\n"
-        f"📊 Level: {u.get('level', 1)}\n"
-        f"🎖 Rütbe: {get_rank(u.get('level', 1), u.get('username'))}\n"
-        f"📝 Çözülen Soru: {total}\n"
+        f"📊 Level: {lvl}\n"
+        f"🎖 Rütbe: {get_rank(lvl, u.get('username'))}\n"
+        f"📈 İlerleme: `{bar}` %{int(percentage * 100)}\n"
+        f"� Çözülen Soru: {total}\n"
         f"🏃‍♂️ En Uzun Maraton: {u.get('best_marathon', 0)}\n"
         f"🎯 Başarı: %{success_rate:.1f}\n"
-        f"⭐️ EXP: {u.get('exp', 0)}\n"
+        f"⭐️ EXP: {xp} / {target_xp}\n"
         f"❤️ Can: {u.get('lives', 3)}\n"
         f"🌍 Mod: {u.get('mode', 'local').title()}\n"
     )
@@ -2082,8 +2141,19 @@ def admin_gift(message):
         
         if target_id:
             users[target_id]["exp"] += amount
+            
+            # Level atlama kontrolü (Hediye sonrası)
+            lvl = users[target_id].get("level", 1)
+            xp = users[target_id]["exp"]
+            while xp >= lvl * 100:
+                xp -= lvl * 100
+                lvl += 1
+            
+            users[target_id]["level"] = lvl
+            users[target_id]["exp"] = xp
+            
             save_users()
-            bot.reply_to(message, f"✅ {users[target_id]['name']} kullanıcısına {amount} EXP gönderildi.")
+            bot.reply_to(message, f"✅ {users[target_id]['name']} kullanıcısına {amount} EXP gönderildi. (Yeni Level: {lvl})")
             
             # Kullanıcıya da müjdeyi verelim
             try:
@@ -2133,6 +2203,7 @@ def help_guide(message):
         "🔹 `/ozet <konu>` - İstediğin konunun özetini çıkarır.\n"
         "🔹 `/dogruyanlis` - Doğru/Yanlış oyunu ile bilgilerini sına.\n"
         "🔹 `/yanlislarim` - Yanlış yaptığın soruları tekrar çöz.\n"
+        "🔹 `/gunluk` - Günlük EXP ödülünü al (Seri yap, çok kazan!).\n"
         "🔹 `/pomodoro` - 25 dakikalık ders çalışma sayacı başlat.\n\n"
         "⚔️ **Oyun Modları:**\n"
         "🔹 `/quiz` - Kategorili sorular çöz.\n"
