@@ -292,7 +292,7 @@ def start_message(message):
         markup = InlineKeyboardMarkup()
         markup.add(InlineKeyboardButton("📝 Üye Olmak İstiyorum", callback_data="request_access"))
         
-        bot.send_message(message.chat.id, "🔒 **Bot Erişim İzni**\n\nMerhaba! Bu bot özel bir bottur ve sadece onaylı üyeler kullanabilir.\n\nErişim izni istemek için aşağıdaki butona tıklayabilirsin. 👇", reply_markup=markup)
+        bot.send_message(message.chat.id, "🔒 **Bot Erişim İzni**\n\nMerhaba! Bu bot özel bir bottur ve sadece onaylı üyeler kullanabilir.\n\nErişim izni istemek için aşağıdaki butona tıklayabilirsin. 👇", reply_markup=markup, parse_mode="Markdown")
         return
 
     # 3. Kullanıcı var ama onayı yoksa (Daha önce girmiş ama onaylanmamış)
@@ -307,18 +307,20 @@ def start_message(message):
         user_text = message.from_user.first_name
 
     text = (
-        f"Merhaba {user_text} 👋\n"
-        "Lütfen dil seçiniz / Please choose a language / Моля, изберете език 🌍"
+        f"👋 **Hoş Geldin, {user_text}!**\n\n"
+        "🌍 **Dil Seçimi / Language Selection / Избор на език**\n"
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        "🇹🇷 Lütfen kullanmak istediğin dili seç.\n"
+        "🇬🇧 Please select the language you want to use.\n"
+        "🇧🇬 Моля, изберете езика, който искате да използвате."
     )
 
     keyboard = InlineKeyboardMarkup()
-    keyboard.add(
-        InlineKeyboardButton("🇹🇷 Türkçe", callback_data="lang_tr"),
-        InlineKeyboardButton("🇬🇧 English", callback_data="lang_en"),
-        InlineKeyboardButton("🇧🇬 Български", callback_data="lang_bg")
-    )
+    keyboard.add(InlineKeyboardButton("🇹🇷 Türkçe", callback_data="lang_tr"))
+    keyboard.add(InlineKeyboardButton("🇬🇧 English", callback_data="lang_en"))
+    keyboard.add(InlineKeyboardButton("🇧🇬 Български", callback_data="lang_bg"))
 
-    bot.send_message(message.chat.id, text, reply_markup=keyboard)
+    bot.send_message(message.chat.id, text, reply_markup=keyboard, parse_mode="Markdown")
 
 @bot.callback_query_handler(func=lambda c: c.data == "request_access")
 def request_access_handler(call):
