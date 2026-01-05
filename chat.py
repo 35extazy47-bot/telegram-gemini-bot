@@ -204,72 +204,84 @@ def get_question(level, category):
     return random.choice(uygun) if uygun else None
 
 def fetch_image(url):
-    """Resmi indirmeyi dener (Basit ve Kararlı Sürüm)."""
-    # 1. URL Temizliği
+    """Resmi indirmeyi dener (Gelişmiş ve Hata Ayıklamalı)."""
     url = url.strip()
-    try:
-        # URL zaten decode edilmişse bozulmasın diye kontrol
-        if "%" in url:
+    
+    # URL Decode
+    if "%" in url:
+        try:
             url = unquote(url)
-    except:
-        pass
+        except:
+            pass
 
-    # 2. Header Ayarları (Tarayıcı Taklidi)
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
-        "Referer": "https://www.google.com/"
-    }
+    # Farklı User-Agent'lar (Engeli aşmak için rotasyon)
+    user_agents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15",
+        "TelegramBot (like TwitterBot)"
+    ]
 
-    # 3. Denenecek URL Listesi
     urls_to_try = [url]
 
-    # Wikimedia Thumbnail Mantığı (Yedek Plan)
+    # Wikimedia Thumbnail Mantığı
     if "upload.wikimedia.org" in url and "/thumb/" in url:
         try:
-            # Orijinal dosya yolunu bulmaya çalış
             parts = url.split("/thumb/")
             base = parts[0] 
             rest = parts[1] 
             path_parts = rest.split("/")
             original_path = "/".join(path_parts[:-1])
             
-            # Eğer orijinal SVG ise, 1024px boyutunu yedek olarak ekle
             if ".svg" in original_path.lower():
                 filename = path_parts[-1]
                 clean_name = filename.split("px-", 1)[1] if "px-" in filename else filename
-                new_url = f"{base}/thumb/{original_path}/1024px-{clean_name}"
-                urls_to_try.append(new_url)
+                # Alternatif boyutlar
+                for size in ["1024px", "800px", "500px"]:
+                    new_url = f"{base}/thumb/{original_path}/{size}-{clean_name}"
+                    if new_url not in urls_to_try:
+                        urls_to_try.append(new_url)
             else:
-                # SVG değilse orijinalini de dene
                 urls_to_try.append(f"{base}/{original_path}")
         except:
             pass
 
-    # 4. İndirme Döngüsü
     for target in urls_to_try:
-        try:
-            print(f"📥 İndiriliyor: {target}")
-            response = requests.get(target, headers=headers, timeout=20)
-            
-            if response.status_code == 200:
-                ct = response.headers.get("Content-Type", "").lower()
-                if "text/html" in ct: # Resim yerine HTML geldiyse atla
-                    continue
-                return response.content
-            
-            elif response.status_code == 429:
-                print("⚠️ Çok hızlı istek (429). 5 saniye bekleniyor...")
-                time.sleep(5)
-                # Son bir şans
-                response = requests.get(target, headers=headers, timeout=20)
+        for ua in user_agents:
+            try:
+                headers = {
+                    "User-Agent": ua,
+                    "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+                }
+                
+                print(f"📥 İndiriliyor: {target}")
+                response = requests.get(target, headers=headers, timeout=15)
+                
                 if response.status_code == 200:
+                    ct = response.headers.get("Content-Type", "").lower()
+                    if "text/html" in ct:
+                        print("⚠️ Resim yerine HTML geldi, atlanıyor.")
+                        continue
                     return response.content
+                
+                elif response.status_code == 429:
+                    print("⚠️ Çok hızlı istek (429). Bekleniyor...")
+                    time.sleep(2)
+                    continue
+                else:
+                    print(f"❌ Başarısız (Kod {response.status_code})")
             
-        except Exception as e:
-            print(f"❌ Bağlantı hatası: {e}")
+            except Exception as e:
+                print(f"❌ Bağlantı hatası: {e}")
+                # SSL Hatası durumunda verify=False dene
+                if "SSLError" in str(e) or "CertificateError" in str(e):
+                    try:
+                        print("⚠️ SSL Hatası, sertifika kontrolü kapatılıp deneniyor...")
+                        response = requests.get(target, headers=headers, timeout=15, verify=False)
+                        if response.status_code == 200: return response.content
+                    except:
+                        pass
         
-        time.sleep(1) # Her deneme arası nefes al
+        time.sleep(0.5)
             
     return None
 
