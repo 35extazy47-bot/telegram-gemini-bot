@@ -202,6 +202,38 @@ def get_question(level, category):
             if q["level"] <= level and q["category"] == category
         ]
     return random.choice(uygun) if uygun else None
+
+def fetch_image(url):
+    """Resmi indirmeyi dener, başarısız olursa alternatifleri (orijinal boyut vb.) dener."""
+    url = url.strip()
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    }
+    
+    # 1. Decode edip dene (Örn: %2C -> ,)
+    try:
+        clean_url = unquote(url)
+        response = requests.get(clean_url, headers=headers, timeout=10)
+        if response.status_code == 200:
+            return response.content
+    except:
+        pass
+
+    # 2. Wikimedia Thumbnail Fallback (Küçük resim yoksa orijinali dene)
+    if "upload.wikimedia.org" in url and "/thumb/" in url:
+        try:
+            # .../commons/thumb/a/ab/File.jpg/600px-File.jpg -> .../commons/a/ab/File.jpg
+            base = url.replace("/thumb/", "/")
+            parts = base.split("/")
+            original_url = "/".join(parts[:-1])
+            print(f"🔄 Thumbnail hatası, orijinal deneniyor: {original_url}")
+            response = requests.get(original_url, headers=headers, timeout=10)
+            if response.status_code == 200:
+                return response.content
+        except:
+            pass
+    return None
+
 def send_question(chat_id, user_id):
     level = users[user_id]["level"]
     category = users[user_id]["category"]
@@ -243,15 +275,12 @@ def send_question(chat_id, user_id):
         except Exception as e:
             print(f"⚠️ Resim URL hatası: {e}. İndirilip deneniyor...")
             try:
-                # URL'deki kodlanmış karakterleri çöz (örn: %2C -> ,)
-                clean_url = unquote(q["image"])
-                headers = {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-                }
-                response = requests.get(clean_url, headers=headers, timeout=15)
-                response.raise_for_status()
-                photo_data = io.BytesIO(response.content)
-                msg = bot.send_photo(chat_id, photo=photo_data, caption=text, reply_markup=markup)
+                img_data = fetch_image(q["image"])
+                if img_data:
+                    photo_data = io.BytesIO(img_data)
+                    msg = bot.send_photo(chat_id, photo=photo_data, caption=text, reply_markup=markup)
+                else:
+                    raise Exception("Resim indirilemedi")
             except Exception as e2:
                 print(f"⚠️ Resim gönderilemedi: {e2}")
                 msg = bot.send_message(chat_id, text, reply_markup=markup)
@@ -295,15 +324,12 @@ def send_wrong_question(chat_id, user_id):
         except Exception as e:
             print(f"⚠️ Resim URL hatası: {e}. İndirilip deneniyor...")
             try:
-                # URL'deki kodlanmış karakterleri çöz (örn: %2C -> ,)
-                clean_url = unquote(q["image"])
-                headers = {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-                }
-                response = requests.get(clean_url, headers=headers, timeout=15)
-                response.raise_for_status()
-                photo_data = io.BytesIO(response.content)
-                msg = bot.send_photo(chat_id, photo=photo_data, caption=text)
+                img_data = fetch_image(q["image"])
+                if img_data:
+                    photo_data = io.BytesIO(img_data)
+                    msg = bot.send_photo(chat_id, photo=photo_data, caption=text)
+                else:
+                    raise Exception("Resim indirilemedi")
             except Exception as e2:
                 print(f"⚠️ Resim gönderilemedi: {e2}")
                 msg = bot.send_message(chat_id, text)
