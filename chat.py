@@ -415,11 +415,12 @@ def language_selected(call):
                 "🔹 `/ruya` - Rüya Tabiri 🌙\n"
                 "🔹 `/tarot` - Tarot Falı 🃏\n"
                 "🔹 `/burc` - Günlük Burç Yorumu ♈\n"
+                "🔹 `/ozet` - Konu Özeti Çıkar 📝\n"
                 "🔹 `/tarihtebugun` - Tarihte Bugün 📅\n"
                 "🔹 `/bilgi` - İlginç Bilgiler 🧠\n\n"
                 "⚠️ **Yapay Zeka Limiti**\n"
                 "Günlük **3 hak** ile sınırlıdır. (Her gece yenilenir)\n"
-                "🤖 **AI Özellikleri:** /ruya, /tarot, /burc, /bilgi, /ozet ve Sohbet\n\n"
+                "🤖 **AI Özellikleri:** /ruya, /tarot, /burc, /bilgi, /ozet, /tarihtebugun ve Sohbet\n\n"
                 "👇 **İletişim & Destek**"
             ),
             "btn": "📩 Geliştiriciye Mesaj Gönder"
@@ -451,11 +452,12 @@ def language_selected(call):
                 "🔹 `/ruya` - Dream Interpretation 🌙\n"
                 "🔹 `/tarot` - Tarot Reading 🃏\n"
                 "🔹 `/burc` - Daily Horoscope ♈\n"
+                "🔹 `/ozet` - Topic Summary 📝\n"
                 "🔹 `/tarihtebugun` - On This Day 📅\n"
                 "🔹 `/bilgi` - Interesting Facts 🧠\n\n"
                 "⚠️ **AI Usage Limit**\n"
                 "Limited to **3 uses** per day. (Resets nightly)\n"
-                "🤖 **AI Features:** /ruya, /tarot, /burc, /bilgi, /ozet and Chat\n\n"
+                "🤖 **AI Features:** /ruya, /tarot, /burc, /bilgi, /ozet, /tarihtebugun and Chat\n\n"
                 "👇 **Contact & Support**"
             ),
             "btn": "📩 Contact the Developer"
@@ -487,11 +489,12 @@ def language_selected(call):
                 "🔹 `/ruya` - Тълкуване на сънища 🌙\n"
                 "🔹 `/tarot` - Таро четене 🃏\n"
                 "🔹 `/burc` - Дневен хороскоп ♈\n"
+                "🔹 `/ozet` - Резюме на тема 📝\n"
                 "🔹 `/tarihtebugun` - На този ден 📅\n"
                 "🔹 `/bilgi` - Интересни факти 🧠\n\n"
                 "⚠️ **Лимит за AI**\n"
                 "Ограничено до **3 използвания** на ден. (Нулира се всяка нощ)\n"
-                "🤖 **AI Функции:** /ruya, /tarot, /burc, /bilgi, /ozet и Чат\n\n"
+                "🤖 **AI Функции:** /ruya, /tarot, /burc, /bilgi, /ozet, /tarihtebugun и Чат\n\n"
                 "� **Контакт и Поддръжка**"
             ),
             "btn": "📩 Свържи се с разработчика"
@@ -1829,8 +1832,9 @@ def history_today(message):
     if not users.get(user_id, {}).get("is_approved", True):
         return
 
-    # Bu özellik basit olduğu için günlük limitten düşmeyebiliriz veya düşebiliriz.
-    # Şimdilik düşmeyelim, hediye olsun.
+    if not check_daily_limit(user_id):
+        bot.reply_to(message, "⛔ Günlük Gemini mesaj hakkın (3/3) doldu! Yarın tekrar gel.")
+        return
     
     try:
         now = datetime.now()
