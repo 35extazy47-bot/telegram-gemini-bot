@@ -205,12 +205,19 @@ def send_question(chat_id, user_id):
     )
 
     # Joker Butonları
+    inv = users[user_id].get("inventory", {})
     markup = InlineKeyboardMarkup()
-    markup.add(
-        InlineKeyboardButton("💡 %50 Joker (10 EXP)", callback_data="joker_50"),
-        InlineKeyboardButton("⏭ Pas Geç (5 EXP)", callback_data="joker_pass"),
-        InlineKeyboardButton("👥 Seyirci (15 EXP)", callback_data="joker_audience")
-    )
+    
+    joker_btns = []
+    if inv.get("joker_50", 0) > 0:
+        joker_btns.append(InlineKeyboardButton(f"💡 %50 ({inv['joker_50']})", callback_data="joker_50"))
+    if inv.get("joker_pass", 0) > 0:
+        joker_btns.append(InlineKeyboardButton(f"⏭ Pas ({inv['joker_pass']})", callback_data="joker_pass"))
+    if inv.get("joker_audience", 0) > 0:
+        joker_btns.append(InlineKeyboardButton(f"👥 Seyirci ({inv['joker_audience']})", callback_data="joker_audience"))
+    
+    if joker_btns:
+        markup.add(*joker_btns)
 
     msg = bot.send_message(chat_id, text, reply_markup=markup)
         
@@ -570,7 +577,7 @@ def handle_jokers(call):
     if user_id not in users:
         return
 
-    current_exp = users[user_id].get("exp", 0)
+    inv = users[user_id].get("inventory", {})
     correct_answer = users[user_id].get("current_answer")
 
     if not correct_answer:
@@ -579,8 +586,8 @@ def handle_jokers(call):
 
     # --- %50 JOKER ---
     if action == "joker_50":
-        if current_exp < 10:
-            bot.answer_callback_query(call.id, "❌ Yetersiz EXP! (Gereken: 10)", show_alert=True)
+        if inv.get("joker_50", 0) <= 0:
+            bot.answer_callback_query(call.id, "❌ Bu jokerden kalmadı! Marketten almalısın.", show_alert=True)
             return
         
         # Yanlış şıkları bul
@@ -590,7 +597,7 @@ def handle_jokers(call):
         
         # Rastgele 2 yanlış şık seç
         eliminated = random.sample(options, 2)
-        users[user_id]["exp"] -= 10
+        users[user_id]["inventory"]["joker_50"] -= 1
         save_users()
         
         bot.answer_callback_query(
@@ -601,11 +608,11 @@ def handle_jokers(call):
 
     # --- PAS GEÇ ---
     elif action == "joker_pass":
-        if current_exp < 5:
-            bot.answer_callback_query(call.id, "❌ Yetersiz EXP! (Gereken: 5)", show_alert=True)
+        if inv.get("joker_pass", 0) <= 0:
+            bot.answer_callback_query(call.id, "❌ Bu jokerden kalmadı! Marketten almalısın.", show_alert=True)
             return
 
-        users[user_id]["exp"] -= 5
+        users[user_id]["inventory"]["joker_pass"] -= 1
         save_users()
         
         bot.answer_callback_query(call.id, "⏭ Soru geçiliyor...", show_alert=False)
@@ -618,11 +625,11 @@ def handle_jokers(call):
 
     # --- SEYİRCİ JOKERİ ---
     elif action == "joker_audience":
-        if current_exp < 15:
-            bot.answer_callback_query(call.id, "❌ Yetersiz EXP! (Gereken: 15)", show_alert=True)
+        if inv.get("joker_audience", 0) <= 0:
+            bot.answer_callback_query(call.id, "❌ Bu jokerden kalmadı! Marketten almalısın.", show_alert=True)
             return
 
-        users[user_id]["exp"] -= 15
+        users[user_id]["inventory"]["joker_audience"] -= 1
         save_users()
 
         # Mantık: Doğru cevaba %50-%80 arası ver, kalanı diğerlerine dağıt
@@ -722,12 +729,18 @@ def open_trivia_question(message):
         text = f"🌍 **Global Quiz** | {item['category']}\n\n❓ {question_text}\n\n{options_text}"
         
         # Joker Butonları
+        inv = users[user_id].get("inventory", {})
         markup = InlineKeyboardMarkup()
-        markup.add(
-            InlineKeyboardButton("💡 %50 Joker (10 EXP)", callback_data="joker_50"),
-            InlineKeyboardButton("⏭ Pas Geç (5 EXP)", callback_data="joker_pass"),
-            InlineKeyboardButton("👥 Seyirci (15 EXP)", callback_data="joker_audience")
-        )
+        joker_btns = []
+        if inv.get("joker_50", 0) > 0:
+            joker_btns.append(InlineKeyboardButton(f"💡 %50 ({inv['joker_50']})", callback_data="joker_50"))
+        if inv.get("joker_pass", 0) > 0:
+            joker_btns.append(InlineKeyboardButton(f"⏭ Pas ({inv['joker_pass']})", callback_data="joker_pass"))
+        if inv.get("joker_audience", 0) > 0:
+            joker_btns.append(InlineKeyboardButton(f"👥 Seyirci ({inv['joker_audience']})", callback_data="joker_audience"))
+        
+        if joker_btns:
+            markup.add(*joker_btns)
 
         bot.delete_message(message.chat.id, wait_msg.message_id)
         msg = bot.send_message(message.chat.id, text, parse_mode="Markdown", reply_markup=markup)
@@ -744,6 +757,11 @@ def market_menu(message):
         bot.reply_to(message, "⛔ Onay bekleniyor...")
         return
     markup = InlineKeyboardMarkup()
+    # Jokerler
+    markup.add(InlineKeyboardButton("💡 %50 Joker (10 EXP)", callback_data="buy_joker_50"))
+    markup.add(InlineKeyboardButton("⏭ Pas Geç (5 EXP)", callback_data="buy_joker_pass"))
+    markup.add(InlineKeyboardButton("👥 Seyirci (15 EXP)", callback_data="buy_joker_audience"))
+    # Diğer Eşyalar
     markup.add(InlineKeyboardButton("❤️ +1 Can (100 EXP)", callback_data="buy_life"))
     markup.add(InlineKeyboardButton("🎁 Şans Kutusu (50 EXP)", callback_data="buy_box"))
     markup.add(InlineKeyboardButton("⛏️ Elmas Kazma (500 EXP)", callback_data="buy_pickaxe"))
@@ -754,6 +772,29 @@ def market_buy(call):
     user_id = str(call.from_user.id)
     if user_id not in users: return
     
+    # Joker Satın Alma
+    if call.data.startswith("buy_joker_"):
+        joker_type = call.data.replace("buy_", "") # joker_50, joker_pass, joker_audience
+        prices = {"joker_50": 10, "joker_pass": 5, "joker_audience": 15}
+        names = {"joker_50": "%50 Joker", "joker_pass": "Pas Geçme", "joker_audience": "Seyirci Jokeri"}
+        
+        cost = prices.get(joker_type, 9999)
+        
+        if users[user_id]["exp"] < cost:
+            bot.answer_callback_query(call.id, f"❌ Yetersiz EXP! ({cost} EXP gerekli)", show_alert=True)
+            return
+            
+        users[user_id]["exp"] -= cost
+        
+        if "inventory" not in users[user_id]:
+            users[user_id]["inventory"] = {}
+            
+        users[user_id]["inventory"][joker_type] = users[user_id]["inventory"].get(joker_type, 0) + 1
+        save_users()
+        
+        bot.answer_callback_query(call.id, f"✅ {names[joker_type]} satın alındı!")
+        return
+
     if call.data == "buy_life":
         cost = 100
         if users[user_id]["exp"] < cost:
@@ -903,8 +944,15 @@ def show_inventory(message):
     # Ticaret Malları
     inv = u.get("inventory", {})
     has_trade_items = False
+    
+    # Jokerleri Göster
+    if inv.get("joker_50", 0) > 0: items.append(f"💡 %50 Joker: {inv['joker_50']} adet")
+    if inv.get("joker_pass", 0) > 0: items.append(f"⏭ Pas Geçme: {inv['joker_pass']} adet")
+    if inv.get("joker_audience", 0) > 0: items.append(f"👥 Seyirci Jokeri: {inv['joker_audience']} adet")
+
+    # Ticaret Mallarını Göster
     for code, count in inv.items():
-        if count > 0:
+        if count > 0 and code in TRADE_GOODS:
             items.append(f"📦 {TRADE_GOODS[code]['name']}: {count} adet")
             has_trade_items = True
     
