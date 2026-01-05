@@ -204,87 +204,72 @@ def get_question(level, category):
     return random.choice(uygun) if uygun else None
 
 def fetch_image(url):
-    """Resmi indirmeyi dener, başarısız olursa alternatifleri dener (Gelişmiş)."""
+    """Resmi indirmeyi dener (Basit ve Kararlı Sürüm)."""
+    # 1. URL Temizliği
     url = url.strip()
-    
-    # 1. URL Düzenleme (SVG ise PNG thumbnail'e çevir)
-    # Örn: .../File.svg -> .../thumb/.../File.svg/600px-File.svg.png
-    if "upload.wikimedia.org" in url and url.endswith(".svg") and "/thumb/" not in url:
-        try:
-            parts = url.split("/commons/")
-            if len(parts) > 1:
-                path_part = parts[1]
-                filename = path_part.split("/")[-1]
-                url = f"https://upload.wikimedia.org/wikipedia/commons/thumb/{path_part}/600px-{filename}.png"
-                print(f"🔄 SVG -> PNG Dönüştürüldü: {url}")
-        except:
-            pass
+    try:
+        # URL zaten decode edilmişse bozulmasın diye kontrol
+        if "%" in url:
+            url = unquote(url)
+    except:
+        pass
 
-    # İndirme listesi (Orijinal + Alternatifler)
-    urls_to_try = [url]
-    
-    # Eğer thumbnail ise diğer boyutları da ekle
-    if "/thumb/" in url and "px-" in url:
-        try:
-            base_parts = url.split("/")
-            filename_part = base_parts[-1]
-            if "px-" in filename_part:
-                width = filename_part.split("px-")[0]
-                rest = filename_part.split("px-")[1]
-                alternatives = ["1280", "1024", "800", "600", "500", "400", "300"]
-                if width in alternatives: alternatives.remove(width)
-                for alt_w in alternatives:
-                    new_name = f"{alt_w}px-{rest}"
-                    new_url = "/".join(base_parts[:-1] + [new_name])
-                    urls_to_try.append(new_url)
-        except:
-            pass
-
-    # Wikimedia'nın engellememesi için gerçekçi tarayıcı kimliği
+    # 2. Header Ayarları (Tarayıcı Taklidi)
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
         "Referer": "https://www.google.com/"
     }
 
-    for target_url in urls_to_try:
-        # Hızlı istek atmamak için kısa bekleme (Rate Limit önlemi)
-        time.sleep(0.5)
-        
-        try:
-            # Hem decode edilmiş hem ham halini dene
-            candidates = [unquote(target_url), target_url]
-            candidates = list(dict.fromkeys(candidates)) # Tekrarları sil
-            
-            for candidate in candidates:
-                print(f"📥 İndiriliyor: {candidate}")
-                try:
-                    response = requests.get(candidate, headers=headers, timeout=15)
-                except requests.exceptions.RequestException:
-                    continue
-                
-                if response.status_code == 200:
-                    ct = response.headers.get("Content-Type", "").lower()
-                    if "image/svg" in ct or "text/html" in ct:
-                        print(f"⚠️ Geçersiz içerik tipi: {ct}")
-                        continue
-                    return response.content
-                elif response.status_code == 429:
-                    print(f"⚠️ Çok fazla istek (429)! 3 saniye bekleniyor...")
-                    time.sleep(3)
-                    # Tekrar dene
-                    try:
-                        response = requests.get(candidate, headers=headers, timeout=15)
-                        if response.status_code == 200:
-                            return response.content
-                    except:
-                        pass
-                else:
-                    print(f"❌ Başarısız (Kod {response.status_code}): {candidate}")
+    # 3. Denenecek URL Listesi
+    urls_to_try = [url]
 
+    # Wikimedia Thumbnail Mantığı (Yedek Plan)
+    if "upload.wikimedia.org" in url and "/thumb/" in url:
+        try:
+            # Orijinal dosya yolunu bulmaya çalış
+            parts = url.split("/thumb/")
+            base = parts[0] 
+            rest = parts[1] 
+            path_parts = rest.split("/")
+            original_path = "/".join(path_parts[:-1])
+            
+            # Eğer orijinal SVG ise, 1024px boyutunu yedek olarak ekle
+            if ".svg" in original_path.lower():
+                filename = path_parts[-1]
+                clean_name = filename.split("px-", 1)[1] if "px-" in filename else filename
+                new_url = f"{base}/thumb/{original_path}/1024px-{clean_name}"
+                urls_to_try.append(new_url)
+            else:
+                # SVG değilse orijinalini de dene
+                urls_to_try.append(f"{base}/{original_path}")
+        except:
+            pass
+
+    # 4. İndirme Döngüsü
+    for target in urls_to_try:
+        try:
+            print(f"📥 İndiriliyor: {target}")
+            response = requests.get(target, headers=headers, timeout=20)
+            
+            if response.status_code == 200:
+                ct = response.headers.get("Content-Type", "").lower()
+                if "text/html" in ct: # Resim yerine HTML geldiyse atla
+                    continue
+                return response.content
+            
+            elif response.status_code == 429:
+                print("⚠️ Çok hızlı istek (429). 5 saniye bekleniyor...")
+                time.sleep(5)
+                # Son bir şans
+                response = requests.get(target, headers=headers, timeout=20)
+                if response.status_code == 200:
+                    return response.content
+            
         except Exception as e:
-            print(f"❌ Hata: {e}")
-            continue
+            print(f"❌ Bağlantı hatası: {e}")
+        
+        time.sleep(1) # Her deneme arası nefes al
             
     return None
 
