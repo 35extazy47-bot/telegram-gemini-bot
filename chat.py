@@ -1983,37 +1983,124 @@ def history_today(message):
         print(f"Tarih Hatasi: {e}")
         bot.reply_to(message, "Tarih kitapları şu an tozlu... Daha sonra bak.")
 
+def create_market_image():
+    width = 800
+    height = 500
+    bg_color = (35, 39, 42) # Koyu Gri
+    
+    img = Image.new('RGB', (width, height), color=bg_color)
+    draw = ImageDraw.Draw(img)
+    
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path):
+            candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "/System/Library/Fonts/Helvetica.ttc"]
+            for f in candidates:
+                if os.path.exists(f):
+                    font_path = f
+                    break
+        
+        title_font = ImageFont.truetype(font_path, 36)
+        header_font = ImageFont.truetype(font_path, 24)
+        row_font = ImageFont.truetype(font_path, 22)
+        small_font = ImageFont.truetype(font_path, 16)
+    except:
+        title_font = ImageFont.load_default()
+        header_font = ImageFont.load_default()
+        row_font = ImageFont.load_default()
+        small_font = ImageFont.load_default()
+
+    # Başlık
+    draw.rectangle([(0, 0), (width, 80)], fill=(44, 47, 51))
+    draw.text((200, 20), "📈 KAPALIÇARŞI BORSASI", font=title_font, fill=(255, 215, 0))
+    
+    # Haber Kutusu
+    draw.rectangle([(20, 100), (width-20, 150)], fill=(50, 50, 50))
+    news_text = f"📰 {market_news}"
+    if len(news_text) > 75: news_text = news_text[:72] + "..."
+    draw.text((30, 115), news_text, font=row_font, fill=(200, 200, 200))
+    
+    # Tablo Başlıkları
+    y_start = 180
+    draw.text((50, y_start), "ÜRÜN", font=header_font, fill=(150, 150, 150))
+    draw.text((250, y_start), "FİYAT", font=header_font, fill=(150, 150, 150))
+    draw.text((400, y_start), "DEĞİŞİM", font=header_font, fill=(150, 150, 150))
+    draw.text((600, y_start), "DURUM", font=header_font, fill=(150, 150, 150))
+    
+    draw.line([(40, y_start + 35), (width-40, y_start + 35)], fill=(100, 100, 100), width=1)
+    
+    y = y_start + 50
+    for code, price in market_prices.items():
+        item = TRADE_GOODS[code]
+        old_price = last_prices.get(code, price)
+        diff = price - old_price
+        
+        # İsim (Emojiyi at)
+        name_clean = item['name'].split()[0]
+        draw.text((50, y), name_clean, font=row_font, fill=(255, 255, 255))
+        
+        # Fiyat
+        draw.text((250, y), f"{price} EXP", font=row_font, fill=(255, 215, 0))
+        
+        # Değişim
+        if diff > 0:
+            diff_str = f"▲ +{diff}"
+            color = (46, 204, 113)
+        elif diff < 0:
+            diff_str = f"▼ {diff}"
+            color = (231, 76, 60)
+        else:
+            diff_str = "➖ 0"
+            color = (149, 165, 166)
+        draw.text((400, y), diff_str, font=row_font, fill=color)
+        
+        # Görsel Bar
+        p_min = item['min']
+        p_max = item['max']
+        ratio = (price - p_min) / (p_max - p_min) if p_max > p_min else 0
+        ratio = max(0, min(1, ratio))
+        
+        bar_x = 600
+        bar_w = 150
+        bar_h = 12
+        draw.rectangle([(bar_x, y+5), (bar_x + bar_w, y+5+bar_h)], fill=(60, 60, 60))
+        draw.rectangle([(bar_x, y+5), (bar_x + int(bar_w * ratio), y+5+bar_h)], fill=color)
+        
+        y += 50
+
+    # Alt Bilgi
+    time_diff = datetime.now() - last_market_update
+    seconds_left = 300 - time_diff.total_seconds()
+    if seconds_left < 0: seconds_left = 0
+    mins = int(seconds_left // 60)
+    secs = int(seconds_left % 60)
+    
+    draw.text((width - 250, height - 30), f"⏳ Yenilenme: {mins}dk {secs}sn", font=small_font, fill=(100, 100, 100))
+
+    bio = io.BytesIO()
+    img.save(bio, 'PNG')
+    bio.seek(0)
+    return bio
+
 @bot.message_handler(commands=['borsa'])
 def check_market(message):
     user_id = str(message.from_user.id)
     if not users.get(user_id, {}).get("is_approved", True):
         return
 
-    # Kalan süreyi hesapla
-    time_diff = datetime.now() - last_market_update
-    seconds_left = 300 - time_diff.total_seconds()
-    if seconds_left < 0: seconds_left = 0
-    mins = int(seconds_left // 60)
-    secs = int(seconds_left % 60)
-
-    text = f"📰 **SON DAKİKA:** {market_news}\n"
-    text += f"⏳ **Sonraki Güncelleme:** {mins} dk {secs} sn\n\n"
-    text += "📈 **KAPALIÇARŞI GÜNCEL FİYATLAR** 📉\n\n"
-    
-    for code, price in market_prices.items():
-        item = TRADE_GOODS[code]
-        
-        # Değişim hesapla
-        old_price = last_prices.get(code, price)
-        diff = price - old_price
-        diff_str = f"({'+' if diff > 0 else ''}{diff})"
-        
-        trend_icon = "🟢 ⬆️" if diff > 0 else ("🔴 ⬇️" if diff < 0 else "⚪ ➖")
-        
-        text += f"▫️ **{item['name']}:** {price} EXP {diff_str} {trend_icon}\n"
-    
-    text += "\n🛒 **İşlemler:**\n`/al <mal> <adet>` (Örn: `/al ipek 5`)\n`/sat <mal> <adet>` (Örn: `/sat ipek 5`)"
-    bot.send_message(message.chat.id, text, parse_mode="Markdown")
+    try:
+        photo = create_market_image()
+        text = "🛒 **İşlemler:**\n`/al <mal> <adet>` (Örn: `/al ipek 5`)\n`/sat <mal> <adet>` (Örn: `/sat ipek 5`)"
+        bot.send_photo(message.chat.id, photo, caption=text, parse_mode="Markdown")
+    except Exception as e:
+        print(f"Borsa görsel hatası: {e}")
+        # Hata durumunda eski usul metin
+        text = f"📰 **SON DAKİKA:** {market_news}\n\n"
+        for code, price in market_prices.items():
+            item = TRADE_GOODS[code]
+            text += f"▫️ **{item['name']}:** {price} EXP\n"
+        text += "\n🛒 **İşlemler:**\n`/al <mal> <adet>`\n`/sat <mal> <adet>`"
+        bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
 @bot.message_handler(commands=['al'])
 def buy_item(message):
