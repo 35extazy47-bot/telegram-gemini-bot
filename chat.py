@@ -239,6 +239,11 @@ def get_question(level, category):
         ]
     return random.choice(uygun) if uygun else None
 
+user_timers = {}
+
+def question_timeout(chat_id, user_id):
+    evaluate_quiz_answer(chat_id, user_id, "TIMEOUT")
+
 def send_question(chat_id, user_id):
     level = users[user_id]["level"]
     category = users[user_id]["category"]
@@ -260,7 +265,7 @@ def send_question(chat_id, user_id):
     # Görsel oluştur
     photo = create_quiz_image(q['question'], q['options'], category, level, users[user_id]['lives'])
     
-    caption = f"{mode_prefix}👇 Doğru şıkkı seç!"
+    caption = f"{mode_prefix}👇 Doğru şıkkı seç! (⏳ 30 sn)"
 
     # Butonlar
     inv = users[user_id].get("inventory", {})
@@ -283,9 +288,20 @@ def send_question(chat_id, user_id):
     if joker_btns:
         markup.add(*joker_btns)
 
+    # Eski zamanlayıcıyı iptal et
+    if user_id in user_timers:
+        try: user_timers[user_id].cancel()
+        except: pass
+
     msg = bot.send_photo(chat_id, photo, caption=caption, reply_markup=markup)
         
     users[user_id]["last_question_message_id"] = msg.message_id
+    
+    # Yeni zamanlayıcı başlat (30 saniye)
+    t = Timer(30.0, question_timeout, args=[chat_id, user_id])
+    user_timers[user_id] = t
+    t.start()
+    
     save_users()
 
 def send_wrong_question(chat_id, user_id):
@@ -310,7 +326,7 @@ def send_wrong_question(chat_id, user_id):
 
     # Görsel oluştur
     photo = create_quiz_image(q['question'], q['options'], q['category'], users[user_id]["level"], users[user_id]['lives'])
-    caption = "🔄 **Tekrar Zamanı!** (Daha önce yanlış yapmıştın)"
+    caption = "🔄 **Tekrar Zamanı!** (⏳ 30 sn)"
 
     markup = InlineKeyboardMarkup()
     # Cevap Butonları
@@ -321,9 +337,20 @@ def send_wrong_question(chat_id, user_id):
 
     # Joker yok (Tekrar modunda joker olmaz)
 
+    # Eski zamanlayıcıyı iptal et
+    if user_id in user_timers:
+        try: user_timers[user_id].cancel()
+        except: pass
+
     msg = bot.send_photo(chat_id, photo, caption=caption, reply_markup=markup)
         
     users[user_id]["last_question_message_id"] = msg.message_id
+    
+    # Yeni zamanlayıcı başlat
+    t = Timer(30.0, question_timeout, args=[chat_id, user_id])
+    user_timers[user_id] = t
+    t.start()
+    
     save_users()
 
 @bot.message_handler(commands=["start"])
@@ -864,9 +891,20 @@ def open_trivia_question(message):
         if joker_btns:
             markup.add(*joker_btns)
 
+        # Eski zamanlayıcıyı iptal et
+        if user_id in user_timers:
+            try: user_timers[user_id].cancel()
+            except: pass
+
         bot.delete_message(message.chat.id, wait_msg.message_id)
-        msg = bot.send_photo(message.chat.id, photo, caption=f"🌍 **Global Quiz** | {item['category']}", reply_markup=markup)
+        msg = bot.send_photo(message.chat.id, photo, caption=f"🌍 **Global Quiz** | {item['category']} (⏳ 30 sn)", reply_markup=markup)
         users[user_id]["last_question_message_id"] = msg.message_id
+        
+        # Yeni zamanlayıcı başlat
+        t = Timer(30.0, question_timeout, args=[message.chat.id, user_id])
+        user_timers[user_id] = t
+        t.start()
+        
         save_users()
         
     except Exception as e:
@@ -1201,6 +1239,13 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
     if user_id not in users or "current_answer" not in users[user_id]:
         return
     
+    # Zamanlayıcıyı durdur
+    if user_id in user_timers:
+        try:
+            user_timers[user_id].cancel()
+            del user_timers[user_id]
+        except: pass
+
     # Sorunun verilerini bul (Puanlama ve Açıklama için)
     q_id = users[user_id].get("current_question_id")
     question_data = next((q for q in QUIZ_QUESTIONS if q["id"] == q_id), None)
@@ -1337,7 +1382,12 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
         streak = 0
         users[user_id]["lives"] -= 1
         exp = max(0, exp - 10)
-        selected_msg = random.choice(wrong_msgs)
+        
+        if answer == "TIMEOUT":
+            selected_msg = "⏳ **Süre Doldu!** Çok yavaş kaldın... 🐢"
+        else:
+            selected_msg = random.choice(wrong_msgs)
+            
         result = f"{selected_msg}\nDoğru Cevap: {correct}\n❤️ Kalan Can: {users[user_id]['lives']}"
         
         if bet_amount > 0:
