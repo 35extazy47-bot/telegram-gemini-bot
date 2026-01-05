@@ -206,7 +206,7 @@ def get_question(level, category):
     return random.choice(uygun) if uygun else None
 
 def fetch_image(url):
-    """Resmi indirmeyi dener (Optimize Edilmiş ve Hata Korumalı)."""
+    """Resmi indirmeyi dener (Orijinal URL Destekli ve Hata Korumalı)."""
     url = url.strip()
     
     # URL Decode
@@ -222,28 +222,43 @@ def fetch_image(url):
         "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
     }
 
-    urls_to_try = [url]
+    urls_to_try = []
+    
+    # 1. Verilen URL'yi ekle
+    urls_to_try.append(url)
 
-    # Wikimedia Thumbnail Mantığı (Boyut Alternatifleri)
+    # 2. Wikimedia Thumbnail Mantığı (Orijinal ve Alternatifler)
     if "upload.wikimedia.org" in url and "/thumb/" in url:
         try:
             parts = url.split("/thumb/")
             base = parts[0] 
             rest = parts[1] 
             path_parts = rest.split("/")
-            original_path = "/".join(path_parts[:-1])
             
+            # Orijinal URL'yi bul
+            # Örn: .../thumb/a/ab/File.jpg/1024px-File.jpg -> .../a/ab/File.jpg
+            original_path = "/".join(path_parts[:-1])
+            original_url = f"{base}/{original_path}"
+            
+            # Orijinal URL'yi listeye ekle (İkinci sıraya)
+            if original_url not in urls_to_try:
+                urls_to_try.append(original_url)
+
             filename = path_parts[-1]
-            clean_name = filename.split("px-", 1)[1] if "px-" in filename else filename
+            # Dosya isminden px kısmını temizle (örn: 1024px-Dosya.jpg -> Dosya.jpg)
+            if "px-" in filename:
+                clean_name = filename.split("px-", 1)[1]
+            else:
+                clean_name = filename
             
             # Öncelikli boyutlar (Büyükten küçüğe)
-            sizes = ["1024px", "800px", "640px"]
+            sizes = ["1280px", "1024px", "800px", "640px"]
             for size in sizes:
                 new_url = f"{base}/thumb/{original_path}/{size}-{clean_name}"
                 if new_url not in urls_to_try:
                     urls_to_try.append(new_url)
-        except:
-            pass
+        except Exception as e:
+            print(f"URL oluşturma hatası: {e}")
 
     for target in urls_to_try:
         try:
@@ -270,6 +285,7 @@ def fetch_image(url):
                 if response.status_code == 200:
                     return response.content
                 else:
+                    print(f"❌ Tekrar deneme başarısız: {response.status_code}")
                     continue
             
             else:
