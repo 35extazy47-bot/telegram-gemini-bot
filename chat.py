@@ -1232,6 +1232,72 @@ def handle_quiz_answer_callback(call):
     except:
         pass
 
+def create_quiz_result_image(is_correct, correct_answer, earned_exp, streak, user_answer):
+    width = 800
+    height = 400
+    
+    if is_correct:
+        bg_color = (39, 174, 96) # Yeşil
+        title_text = "TEBRİKLER! DOĞRU 🎉"
+        text_color = (255, 255, 255)
+    else:
+        bg_color = (192, 57, 43) # Kırmızı
+        title_text = "YANLIŞ CEVAP... 🥀"
+        if user_answer == "TIMEOUT":
+             title_text = "SÜRE DOLDU! ⏳"
+        text_color = (255, 255, 255)
+
+    img = Image.new('RGB', (width, height), color=bg_color)
+    draw = ImageDraw.Draw(img)
+    
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path):
+            candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "/System/Library/Fonts/Helvetica.ttc"]
+            for f in candidates:
+                if os.path.exists(f):
+                    font_path = f
+                    break
+        
+        title_font = ImageFont.truetype(font_path, 45)
+        info_font = ImageFont.truetype(font_path, 30)
+        big_font = ImageFont.truetype(font_path, 55)
+    except:
+        title_font = ImageFont.load_default()
+        info_font = ImageFont.load_default()
+        big_font = ImageFont.load_default()
+
+    # Başlık
+    draw.text((50, 40), title_text, font=title_font, fill=text_color)
+    
+    # Bilgi
+    y = 130
+    if not is_correct:
+        if user_answer != "TIMEOUT":
+            draw.text((50, y), f"Senin Cevabın: {user_answer}", font=info_font, fill=(255, 200, 200))
+            y += 45
+        draw.text((50, y), f"Doğru Cevap: {correct_answer}", font=info_font, fill=(255, 255, 255))
+    else:
+        draw.text((50, y), f"Cevap: {correct_answer}", font=info_font, fill=(255, 255, 255))
+        
+    # Kazanç
+    y += 80
+    if earned_exp > 0:
+        draw.text((50, y), f"💰 +{earned_exp} EXP", font=big_font, fill=(255, 215, 0))
+    elif earned_exp < 0:
+        draw.text((50, y), f"📉 {earned_exp} EXP", font=big_font, fill=(255, 200, 200))
+    else:
+        draw.text((50, y), f"😐 0 EXP", font=big_font, fill=(255, 255, 255))
+
+    # Seri (Streak)
+    if streak > 1:
+        draw.text((500, y+10), f"🔥 {streak}x Seri", font=info_font, fill=(255, 165, 0))
+
+    bio = io.BytesIO()
+    img.save(bio, 'PNG')
+    bio.seek(0)
+    return bio
+
 def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
     if not users.get(user_id, {}).get("is_approved", True):
         return
@@ -1305,8 +1371,11 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
             reward = 10 * score
             users[user_id]["exp"] += reward
             
+            # Görsel oluştur
+            photo = create_quiz_result_image(True, correct, reward, score, answer)
+            
             selected_msg = random.choice(correct_msgs)
-            msg = bot.send_message(chat_id, f"{selected_msg} ({score}. Soru)\n💰 +{reward} EXP\nDevam... 🏃‍♂️💨")
+            msg = bot.send_photo(chat_id, photo, caption=f"{selected_msg} ({score}. Soru)\n💰 +{reward} EXP\nDevam... 🏃‍♂️💨")
             Timer(1.5, lambda: bot.delete_message(chat_id, msg.message_id)).start()
             
             users[user_id].pop("current_answer", None)
@@ -1325,14 +1394,18 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
                 result_msg += f"🏅 **En İyi Skorun:** {best}\n"
             result_msg += f"\nDoğru Cevap: {correct}"
             
+            # Görsel oluştur (Yanlış)
+            photo = create_quiz_result_image(False, correct, 0, score, answer)
+            
             users[user_id]["mode"] = "local" # Normale dön
             users[user_id]["marathon_score"] = 0
             users[user_id].pop("current_answer", None)
             save_users()
-            bot.send_message(chat_id, result_msg)
+            bot.send_photo(chat_id, photo, caption=result_msg)
             return
     # ---------------------------
 
+    earned_exp_display = 0
     if answer == correct:
         # Eğer tekrar modundaysak veya normal modda yanlış listesindeyse sil
         if "current_question_id" in users[user_id]:
@@ -1370,6 +1443,7 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
             users[user_id]["active_bet"] = 0
             
         exp += total_points
+        earned_exp_display = total_points
     else:
         # Yanlış yapıldıysa listeye ekle (Sadece local modda)
         if users[user_id].get("mode") == "local" and "current_question_id" in users[user_id]:
@@ -1382,6 +1456,7 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
         streak = 0
         users[user_id]["lives"] -= 1
         exp = max(0, exp - 10)
+        earned_exp_display = -10
         
         if answer == "TIMEOUT":
             selected_msg = "⏳ **Süre Doldu!** Çok yavaş kaldın... 🐢"
@@ -1432,9 +1507,19 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
         save_users()
         return
 
-    msg = bot.send_message(
+    # Sonuç Görseli Oluştur
+    result_photo = create_quiz_result_image(
+        is_correct=(answer == correct),
+        correct_answer=correct,
+        earned_exp=earned_exp_display,
+        streak=streak,
+        user_answer=answer
+    )
+
+    msg = bot.send_photo(
         chat_id,
-        f"{result}\n\n📊 Level: {level} | ⭐️ EXP: {exp}/{level*100}"
+        result_photo,
+        caption=f"{result}\n\n📊 Level: {level} | ⭐️ EXP: {exp}/{level*100}"
     )
     
     def auto_delete():
