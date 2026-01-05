@@ -1639,20 +1639,33 @@ def admin_panel(message):
     user_count = len(users)
     total_questions_solved = sum(u.get("total_questions", 0) for u in users.values())
     
+    # Bugün aktif olanlar
+    today = datetime.now().strftime("%Y-%m-%d")
+    active_today = sum(1 for u in users.values() if u.get("last_gemini_date") == today)
+    
+    # Onay bekleyen sayısı
+    pending_count = sum(1 for u in users.values() if not u.get("is_approved", True))
+    
     text = (
-        f"👑 **YÖNETİCİ PANELİ** 👑\n\n"
+        f"👑 **YÖNETİCİ KONTROL MERKEZİ** 👑\n"
+        f"━━━━━━━━━━━━━━━━━━━━\n"
         f"👥 **Toplam Kullanıcı:** {user_count}\n"
-        f"📝 **Toplam Çözülen Soru:** {total_questions_solved}\n\n"
-        "👇 **Hızlı İşlemler:**"
+        f"🔥 **Bugün Aktif:** {active_today}\n"
+        f"⏳ **Onay Bekleyen:** {pending_count}\n"
+        f"📝 **Çözülen Soru:** {total_questions_solved}\n"
+        f"━━━━━━━━━━━━━━━━━━━━\n"
+        "👇 **İşlem Seçiniz:**"
     )
 
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton("⏳ Onay Bekleyenler", callback_data="admin_pending_list"))
-    markup.add(InlineKeyboardButton("👥 Kayıtlı Üyeler", callback_data="admin_user_list"))
-    markup.add(InlineKeyboardButton("📢 Duyuru Bilgisi", callback_data="admin_help_duyuru"))
-    markup.add(InlineKeyboardButton("🎁 Hediye Bilgisi", callback_data="admin_help_hediye"))
-    markup.add(InlineKeyboardButton("🚫 Ban İşlemi", callback_data="admin_help_ban"))
-    markup.add(InlineKeyboardButton("💾 Veritabanını İndir", callback_data="admin_backup"))
+    # Satır 1: Kullanıcı Yönetimi
+    markup.add(InlineKeyboardButton(f"⏳ Onay ({pending_count})", callback_data="admin_pending_list"), InlineKeyboardButton("👥 Üyeler", callback_data="admin_user_list"))
+    # Satır 2: Özel Listeler
+    markup.add(InlineKeyboardButton("🚫 Yasaklılar", callback_data="admin_banned_list"), InlineKeyboardButton("👑 VIP'ler", callback_data="admin_vip_list"))
+    # Satır 3: Ekonomi & Sistem
+    markup.add(InlineKeyboardButton("📊 Eko. Analiz", callback_data="admin_economy_stats"), InlineKeyboardButton("💾 Yedek Al", callback_data="admin_backup"))
+    # Satır 4: Yardım Menüleri
+    markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("🎁 Hediye", callback_data="admin_help_hediye"), InlineKeyboardButton("🔨 Ban", callback_data="admin_help_ban"))
 
     bot.send_message(message.chat.id, text, reply_markup=markup)
 
@@ -1713,6 +1726,44 @@ def admin_callbacks(call):
             
         if text:
             bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
+        bot.answer_callback_query(call.id)
+
+    elif call.data == "admin_banned_list":
+        banned = [u for u in users.values() if u.get("is_banned")]
+        if not banned:
+            bot.answer_callback_query(call.id, "🚫 Yasaklı kullanıcı yok.")
+            return
+        
+        text = "🚫 **YASAKLI KULLANICILAR**\n\n"
+        for u in banned:
+            text += f"• {u.get('name')} (@{u.get('username')})\n"
+        
+        bot.send_message(call.message.chat.id, text)
+        bot.answer_callback_query(call.id)
+
+    elif call.data == "admin_vip_list":
+        vips = [u for u in users.values() if u.get("level", 1) >= 15]
+        if not vips:
+            bot.answer_callback_query(call.id, "👑 Henüz VIP üye yok.")
+            return
+            
+        text = "👑 **VIP ÜYELER (Level 15+)**\n\n"
+        for u in vips:
+            text += f"• {u.get('name')} (Lvl {u.get('level')})\n"
+            
+        bot.send_message(call.message.chat.id, text)
+        bot.answer_callback_query(call.id)
+
+    elif call.data == "admin_economy_stats":
+        total_exp = sum(u.get("exp", 0) for u in users.values())
+        avg_exp = total_exp // len(users) if users else 0
+        
+        text = (
+            f"📊 **EKONOMİ İSTATİSTİKLERİ**\n\n"
+            f"💰 **Toplam Piyasa Değeri:** {total_exp} EXP\n"
+            f"👤 **Kişi Başı Ortalama:** {avg_exp} EXP\n"
+        )
+        bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
         bot.answer_callback_query(call.id)
 
     elif call.data == "admin_help_hediye":
