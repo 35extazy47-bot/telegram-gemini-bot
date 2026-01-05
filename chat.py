@@ -169,7 +169,25 @@ def check_daily_limit(user_id):
 def create_quiz_image(question, options, category, level, lives):
     width = 800
     height = 600
-    bg_color = (35, 39, 42) # Koyu Gri
+    
+    # Kategoriye göre renk teması
+    cat_lower = category.lower()
+    if "tarih" in cat_lower:
+        bg_color = (60, 40, 30) # Tarih - Kahve/Bordo
+        header_text_color = (255, 200, 150)
+    elif "cografya" in cat_lower or "coğrafya" in cat_lower:
+        bg_color = (30, 60, 40) # Coğrafya - Yeşil
+        header_text_color = (150, 255, 150)
+    elif "vatandaslik" in cat_lower or "vatandaşlık" in cat_lower:
+        bg_color = (50, 30, 70) # Vatandaşlık - Mor
+        header_text_color = (200, 180, 255)
+    elif "guncel" in cat_lower or "güncel" in cat_lower:
+        bg_color = (80, 50, 20) # Güncel - Turuncu
+        header_text_color = (255, 220, 100)
+    else:
+        bg_color = (35, 39, 42) # Varsayılan - Koyu Gri
+        header_text_color = (255, 215, 0)
+
     card_color = (44, 47, 51)
     
     img = Image.new('RGB', (width, height), color=bg_color)
@@ -195,7 +213,7 @@ def create_quiz_image(question, options, category, level, lives):
     # Üst Bilgi Çubuğu
     draw.rectangle([(0, 0), (width, 80)], fill=(30, 33, 36))
     header_text = f"🧠 {category.upper()}  |  LEVEL {level}  |  ❤️ {lives}"
-    draw.text((40, 25), header_text, font=header_font, fill=(255, 215, 0))
+    draw.text((40, 25), header_text, font=header_font, fill=header_text_color)
 
     # Soru Alanı
     draw.rectangle([(40, 100), (760, 300)], fill=card_color)
@@ -284,6 +302,8 @@ def send_question(chat_id, user_id):
         joker_btns.append(InlineKeyboardButton(f"⏭ Pas ({inv['joker_pass']})", callback_data="joker_pass"))
     if inv.get("joker_audience", 0) > 0:
         joker_btns.append(InlineKeyboardButton(f"👥 Seyirci ({inv['joker_audience']})", callback_data="joker_audience"))
+    if inv.get("joker_ai", 0) > 0:
+        joker_btns.append(InlineKeyboardButton(f"🤖 AI İpucu ({inv['joker_ai']})", callback_data="joker_ai"))
     
     if joker_btns:
         markup.add(*joker_btns)
@@ -804,6 +824,40 @@ def handle_jokers(call):
         else:
             send_question(call.message.chat.id, user_id)
 
+    # --- AI İPUCU JOKERİ ---
+    elif action == "joker_ai":
+        if inv.get("joker_ai", 0) <= 0:
+            bot.answer_callback_query(call.id, "❌ Bu jokerden kalmadı! Marketten almalısın.", show_alert=True)
+            return
+
+        # Gemini Limiti Kontrolü (Joker olsa bile limit yoksa kullanamaz)
+        if not check_daily_limit(user_id):
+            bot.answer_callback_query(call.id, "⛔ Günlük AI limitin doldu! Yarın tekrar dene.", show_alert=True)
+            return
+
+        users[user_id]["inventory"]["joker_ai"] -= 1
+        save_users()
+
+        # Soruyu bul
+        q_id = users[user_id].get("current_question_id")
+        q = next((item for item in QUIZ_QUESTIONS if item["id"] == q_id), None)
+        
+        if q:
+            prompt = f"Bu soru için cevabı doğrudan söylemeden, kullanıcıyı doğru şıkka yönlendirecek kısa ve zekice bir ipucu ver. Soru: {q['question']} Seçenekler: {q['options']} Doğru Cevap: {q['answer']}"
+            try:
+                response = safe_generate_content(prompt)
+                bot.answer_callback_query(call.id, f"🤖 AI İpucu:\n{response.text}", show_alert=True)
+            except:
+                bot.answer_callback_query(call.id, "🤖 Bağlantı hatası! İpucu alınamadı (Joker iade edildi).", show_alert=True)
+                users[user_id]["inventory"]["joker_ai"] += 1
+                save_users()
+        
+        # Yeni soru göndermiyoruz, kullanıcı ipucunu okuyup cevaplayacak.
+        if users[user_id].get("mode") == "global":
+            open_trivia_question(call.message)
+        else:
+            send_question(call.message.chat.id, user_id)
+
 @bot.message_handler(commands=['clock'])
 def open_trivia_question(message):
     user_id = str(message.from_user.id)
@@ -887,6 +941,8 @@ def open_trivia_question(message):
             joker_btns.append(InlineKeyboardButton(f"⏭ Pas ({inv['joker_pass']})", callback_data="joker_pass"))
         if inv.get("joker_audience", 0) > 0:
             joker_btns.append(InlineKeyboardButton(f"👥 Seyirci ({inv['joker_audience']})", callback_data="joker_audience"))
+        if inv.get("joker_ai", 0) > 0:
+            joker_btns.append(InlineKeyboardButton(f"🤖 AI İpucu ({inv['joker_ai']})", callback_data="joker_ai"))
         
         if joker_btns:
             markup.add(*joker_btns)
@@ -921,6 +977,7 @@ def market_menu(message):
     markup.add(InlineKeyboardButton("💡 %50 Joker (10 EXP)", callback_data="buy_joker_50"))
     markup.add(InlineKeyboardButton("⏭ Pas Geç (5 EXP)", callback_data="buy_joker_pass"))
     markup.add(InlineKeyboardButton("👥 Seyirci (15 EXP)", callback_data="buy_joker_audience"))
+    markup.add(InlineKeyboardButton("🤖 AI İpucu (20 EXP)", callback_data="buy_joker_ai"))
     # Diğer Eşyalar
     markup.add(InlineKeyboardButton("❤️ +1 Can (100 EXP)", callback_data="buy_life"))
     markup.add(InlineKeyboardButton("🎁 Şans Kutusu (50 EXP)", callback_data="buy_box"))
@@ -934,9 +991,9 @@ def market_buy(call):
     
     # Joker Satın Alma
     if call.data.startswith("buy_joker_"):
-        joker_type = call.data.replace("buy_", "") # joker_50, joker_pass, joker_audience
-        prices = {"joker_50": 10, "joker_pass": 5, "joker_audience": 15}
-        names = {"joker_50": "%50 Joker", "joker_pass": "Pas Geçme", "joker_audience": "Seyirci Jokeri"}
+        joker_type = call.data.replace("buy_", "") # joker_50, joker_pass, joker_audience, joker_ai
+        prices = {"joker_50": 10, "joker_pass": 5, "joker_audience": 15, "joker_ai": 20}
+        names = {"joker_50": "%50 Joker", "joker_pass": "Pas Geçme", "joker_audience": "Seyirci Jokeri", "joker_ai": "AI İpucu"}
         
         cost = prices.get(joker_type, 9999)
         
@@ -1616,6 +1673,7 @@ def create_inventory_image(user_data):
     if inv.get("joker_50", 0) > 0: items.append({"name": "%50 Joker", "count": inv["joker_50"], "icon": "💡"})
     if inv.get("joker_pass", 0) > 0: items.append({"name": "Pas Geç", "count": inv["joker_pass"], "icon": "⏭"})
     if inv.get("joker_audience", 0) > 0: items.append({"name": "Seyirci", "count": inv["joker_audience"], "icon": "👥"})
+    if inv.get("joker_ai", 0) > 0: items.append({"name": "AI İpucu", "count": inv["joker_ai"], "icon": "🤖"})
     
     # Ticaret Malları
     for code, count in inv.items():
