@@ -46,23 +46,7 @@ def safe_generate_content(prompt_content):
 # Yasaklı Kelimeler Listesi (Burayı istediğin gibi genişletebilirsin)
 BANNED_WORDS = ["aptal", "salak", "gerizekalı", "mal", "ezik", "ahmak", "özürlü", "amq", "oruspu" ]
 
-# 🃏 Kart Koleksiyonu Veritabanı
-CARDS = {
-    1: {"name": "Mete Han", "rarity": "Efsanevi 🌟", "prob": 0.02},
-    2: {"name": "M. Kemal Atatürk", "rarity": "Efsanevi 🌟", "prob": 0.02},
-    3: {"name": "Fatih Sultan Mehmet", "rarity": "Efsanevi 🌟", "prob": 0.02},
-    4: {"name": "Kanuni Sultan Süleyman", "rarity": "Efsanevi 🌟", "prob": 0.02},
-    5: {"name": "Alparslan", "rarity": "Nadir 🔷", "prob": 0.08},
-    6: {"name": "Mimar Sinan", "rarity": "Nadir 🔷", "prob": 0.08},
-    7: {"name": "Piri Reis", "rarity": "Nadir 🔷", "prob": 0.08},
-    8: {"name": "Tomris Hatun", "rarity": "Nadir 🔷", "prob": 0.08},
-    9: {"name": "Yeniçeri Ağası", "rarity": "Yaygın ⚪", "prob": 0.15},
-    10: {"name": "Tımarlı Sipahi", "rarity": "Yaygın ⚪", "prob": 0.15},
-    11: {"name": "Akıncı Beyi", "rarity": "Yaygın ⚪", "prob": 0.15},
-    12: {"name": "Mehterbaşı", "rarity": "Yaygın ⚪", "prob": 0.15},
-}
-
-# 📈 Kapalıçarşı (Borsa) Verileri
+#  Kapalıçarşı (Borsa) Verileri
 TRADE_GOODS = {
     "ipek": {"name": "İpek 🧶", "base": 100, "min": 50, "max": 250},
     "baharat": {"name": "Baharat 🌶️", "base": 80, "min": 40, "max": 200},
@@ -401,15 +385,12 @@ def language_selected(call):
                 "Ben geliştiricim tarafından yazıldım.\n\n"
                 "🤖 **Komutlar:**\n"
                 "🔹 /quiz - KPSS Soruları Çöz\n"
-                "🔹 /macera - Tarihsel Macera (Yeni!)\n"
                 "🔹 /clock - Global Yarışma (Zamanlı)\n"
                 "🔹 /maraton - Tek hakla ne kadar gidebilirsin? (Yeni! 🏃‍♂️)\n"
                 "🔹 /soruekle - Kendi sorunu gönder (Yeni! 📝)\n"
                 "🔹 /ikna - Botu İkna Et (Münazara)\n"
                 "🔹 /borsa - Kapalıçarşı Ticaret (Canlı!)\n"
                 "🔹 /zenginler - En Zenginler Listesi 💸\n"
-                "🔹 /paket - Kart Paketi Aç (Koleksiyon)\n"
-                "🔹 /album - Kart Albümüne Bak\n"
                 "🔹 /tarihtebugun - Tarihte Bugün Ne Oldu?\n"
                 "🔹 /profil - Profilini Gör\n"
                 "🔹 /top10 - Liderlik Tablosu\n\n"
@@ -432,14 +413,11 @@ def language_selected(call):
                 "I was developed by my creator.\n\n"
                 "🤖 **Commands:**\n"
                 "🔹 /quiz - Solve Questions\n"
-                "🔹 /macera - Historical Adventure (New!)\n"
                 "🔹 /maraton - Marathon Mode 🏃‍♂️\n"
                 "🔹 /soruekle - Submit Question 📝\n"
                 "🔹 /ikna - Debate with AI\n"
                 "🔹 /borsa - Grand Bazaar Trading\n"
                 "🔹 /zenginler - Richest Players List 💸\n"
-                "🔹 /paket - Open Card Pack\n"
-                "🔹 /album - View Album\n"
                 "🔹 /tarihtebugun - On This Day\n"
                 "🔹 /clock - Global Trivia\n"
                 "🔹 /profil - View Profile\n"
@@ -456,14 +434,11 @@ def language_selected(call):
                 "Аз бях създаден от моя разработчик.\n\n"
                 "🤖 **Команди:**\n"
                 "🔹 /quiz - Решаване на въпроси\n"
-                "🔹 /macera - Историческо приключение (Ново!)\n"
                 "🔹 /maraton - Маратон режим 🏃‍♂️\n"
                 "🔹 /soruekle - Добави въпрос 📝\n"
                 "🔹 /ikna - Дебат с AI\n"
                 "🔹 /borsa - Търговия на Капалъчарши\n"
                 "🔹 /zenginler - Списък на най-богатите 💸\n"
-                "🔹 /paket - Отвори пакет карти\n"
-                "🔹 /album - Виж албума\n"
                 "🔹 /tarihtebugun - На този ден\n"
                 "🔹 /clock - Глобален тест\n"
                 "🔹 /profil - Виж профила\n"
@@ -1759,64 +1734,6 @@ def check_dy(call):
         text=msg
     )
 
-@bot.message_handler(commands=['macera'])
-def start_adventure(message):
-    user_id = str(message.from_user.id)
-    if not users.get(user_id, {}).get("is_approved", True):
-        bot.reply_to(message, "⛔ Onay bekleniyor...")
-        return
-    
-    # Maliyet kontrolü (Örn: 20 EXP)
-    cost = 20
-    if users[user_id].get("exp", 0) < cost:
-        bot.reply_to(message, f"❌ Bu maceraya atılmak için {cost} EXP gerekli! (Mevcut: {users[user_id]['exp']})")
-        return
-
-    users[user_id]["exp"] -= cost
-    save_users()
-
-    wait_msg = bot.send_message(message.chat.id, "🕰️ Zaman makinesi çalıştırılıyor... Tarihin derinliklerine gidiyorsun... ⚡")
-
-    try:
-        prompt = """
-        Sen bir tarihsel macera oyunu yöneticisisin.
-        Kullanıcı için Türk Tarihi (Hunlar, Selçuklu, Osmanlı veya Cumhuriyet dönemi) ile ilgili kısa, sürükleyici, 2. tekil şahıs (sen) ile yazılmış bir kriz/karar anı senaryosu oluştur.
-        Kullanıcıya 3 seçenek sun (A, B, C).
-        Sadece BİR seçenek tarihsel gerçeklere veya mantığa göre başarıya ulaştırmalı. Diğerleri başarısızlığa yol açmalı.
-        
-        Yanıtı SADECE şu JSON formatında ver (başka hiçbir şey yazma):
-        {
-            "hikaye": "Senaryo metni buraya...",
-            "secenekler": {"A": "...", "B": "...", "C": "..."},
-            "dogru_cevap": "A",
-            "kazanc_mesaji": "Başarı durumunda gösterilecek açıklama ve tarihsel bilgi.",
-            "kayip_mesaji": "Başarısızlık durumunda gösterilecek açıklama."
-        }
-        """
-        response = safe_generate_content(prompt)
-        
-        text_resp = response.text.replace("```json", "").replace("```", "").strip()
-        data = json.loads(text_resp)
-        
-        # Kullanıcının aktif macerasını kaydet
-        users[user_id]["active_adventure"] = data
-        save_users()
-        
-        markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton(f"A) {data['secenekler']['A']}", callback_data="adv_A"))
-        markup.add(InlineKeyboardButton(f"B) {data['secenekler']['B']}", callback_data="adv_B"))
-        markup.add(InlineKeyboardButton(f"C) {data['secenekler']['C']}", callback_data="adv_C"))
-        
-        bot.delete_message(message.chat.id, wait_msg.message_id)
-        bot.send_message(message.chat.id, f"📜 **TARİHSEL MACERA**\n\n{data['hikaye']}", reply_markup=markup)
-        
-    except Exception as e:
-        print(f"Macera Hatasi: {e}")
-        bot.edit_message_text("Zaman makinesinde bir arıza oluştu! Tekrar dene.", message.chat.id, wait_msg.message_id)
-        # Hata durumunda parayı iade et
-        users[user_id]["exp"] += cost
-        save_users()
-
 @bot.message_handler(commands=['ikna'])
 def start_debate(message):
     user_id = str(message.from_user.id)
@@ -1881,45 +1798,6 @@ def history_today(message):
     except Exception as e:
         print(f"Tarih Hatasi: {e}")
         bot.reply_to(message, "Tarih kitapları şu an tozlu... Daha sonra bak.")
-
-@bot.message_handler(commands=['paket'])
-def open_card_pack(message):
-    user_id = str(message.from_user.id)
-    if not users.get(user_id, {}).get("is_approved", True):
-        return
-
-    cost = 150
-    if users[user_id].get("exp", 0) < cost:
-        bot.reply_to(message, f"❌ Yetersiz EXP! Bir paket {cost} EXP.")
-        return
-
-    users[user_id]["exp"] -= cost
-    
-    # Kart seçimi (Ağırlıklı rastgele)
-    card_ids = list(CARDS.keys())
-    weights = [d["prob"] for d in CARDS.values()]
-    selected_id = random.choices(card_ids, weights=weights, k=1)[0]
-    card = CARDS[selected_id]
-    
-    # Kullanıcı kartları
-    user_cards = users[user_id].get("cards", [])
-    
-    msg = "📦 Paket açılıyor...\n"
-    
-    if selected_id in user_cards:
-        # Duplicate (Tekrar)
-        refund = 30
-        users[user_id]["exp"] += refund
-        msg += f"🃏 **{card['name']}** ({card['rarity']}) çıktı!\n⚠️ Ama bu karta zaten sahipsin.\n♻️ Kart bozduruldu: +{refund} EXP iade edildi."
-    else:
-        # Yeni Kart
-        if "cards" not in users[user_id]:
-            users[user_id]["cards"] = []
-        users[user_id]["cards"].append(selected_id)
-        msg += f"🎉 **TEBRİKLER! YENİ KART!**\n\n🃏 **{card['name']}**\n✨ Nadirlik: {card['rarity']}\n\nAlbümüne eklendi!"
-
-    save_users()
-    bot.reply_to(message, msg)
 
 @bot.message_handler(commands=['borsa'])
 def check_market(message):
@@ -2061,57 +1939,6 @@ def rich_list(message):
         
     bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
-@bot.message_handler(commands=['album'])
-def show_album(message):
-    user_id = str(message.from_user.id)
-    if not users.get(user_id, {}).get("is_approved", True):
-        return
-        
-    user_cards = users[user_id].get("cards", [])
-    total_cards = len(CARDS)
-    owned_count = len(user_cards)
-    
-    text = f"📚 **TARİH KARTLARI ALBÜMÜ** ({owned_count}/{total_cards})\n\n"
-    
-    for cid, data in CARDS.items():
-        status = "✅" if cid in user_cards else "⬛"
-        text += f"{status} {data['name']} ({data['rarity']})\n"
-        
-    if owned_count == total_cards:
-        text += "\n🏆 **TEBRİKLER! TÜM KOLEKSİYONU TAMAMLADIN!** 🏆"
-        
-    bot.send_message(message.chat.id, text)
-
-@bot.callback_query_handler(func=lambda c: c.data.startswith("adv_"))
-def adventure_callback(call):
-    user_id = str(call.from_user.id)
-    if user_id not in users or "active_adventure" not in users[user_id]:
-        save_users()
-
-@bot.callback_query_handler(func=lambda c: c.data.startswith("adv_"))
-def adventure_callback(call):
-    user_id = str(call.from_user.id)
-    if user_id not in users or "active_adventure" not in users[user_id]:
-        bot.answer_callback_query(call.id, "Bu macera sona ermiş.")
-        return
-
-    choice = call.data.split("_")[1]
-    data = users[user_id]["active_adventure"]
-    
-    if choice == data["dogru_cevap"]:
-        reward = 50
-        users[user_id]["exp"] += reward
-        msg = f"🎉 **BAŞARDIN!**\n\n{data['kazanc_mesaji']}\n\n💰 Ödül: +{reward} EXP"
-    else:
-        users[user_id]["lives"] -= 1
-        msg = f"💀 **BAŞARISIZ OLDUN...**\n\n{data['kayip_mesaji']}\n\n❤️ -1 Can Kaybettin."
-
-    # Macerayı temizle
-    users[user_id].pop("active_adventure", None)
-    save_users()
-    
-    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=msg)
-
 @bot.message_handler(commands=['ruya'])
 def dream_interpret(message):
     user_id = str(message.from_user.id)
@@ -2231,7 +2058,6 @@ def help_guide(message):
         "🔹 `/pomodoro` - 25 dakikalık ders çalışma sayacı başlat.\n\n"
         "⚔️ **Oyun Modları:**\n"
         "🔹 `/quiz` - Kategorili sorular çöz.\n"
-        "🔹 `/macera` - Tarihsel bir olayın içinde rol yap ve karar ver! (Yeni! 🕰️)\n"
         "🔹 `/maraton` - Tek hakla ne kadar gidebilirsin? (Yeni! 🏃‍♂️)\n"
         "🔹 `/soruekle` - Kendi sorunu gönder (Yeni! 📝)\n"
         "🔹 `/sorudurumu` - Soru bankası istatistiklerini gör. 📊\n"
@@ -2239,8 +2065,6 @@ def help_guide(message):
         "🔹 `/tarihtebugun` - Bugün tarihte ne olduğunu öğren. 📅\n"
         "🔹 `/borsa` - Kapalıçarşı'da ticaret yap, servetine servet kat! (Yeni! 📈)\n"
         "🔹 `/zenginler` - Piyasanın en zenginlerini gör. 💸\n"
-        "🔹 `/paket` - 150 EXP karşılığı tarih kartı paketi aç. 🃏\n"
-        "🔹 `/album` - Topladığın kartları gör. 📚\n"
         "🔹 `/clock` - Dünya genelinden zor sorular (Global).\n"
         "🔹 `/duello <miktar>` - Botla zar atışına gir. Kazanan hepsini alır!\n\n"
         "⛏️ **Madencilik & Ekonomi:**\n"
