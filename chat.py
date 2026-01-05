@@ -2303,6 +2303,80 @@ def dream_interpret(message):
         print(f"Ruya Hatasi: {e}")
         bot.edit_message_text("Rüyalar alemi şu an kapalı... Daha sonra tekrar dene.", message.chat.id, wait_msg.message_id)
 
+def create_tarot_image(cards):
+    width = 800
+    height = 450
+    bg_color = (25, 20, 40) # Mistik Mor/Siyah
+    
+    img = Image.new('RGB', (width, height), color=bg_color)
+    draw = ImageDraw.Draw(img)
+    
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path):
+            candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "/System/Library/Fonts/Helvetica.ttc"]
+            for f in candidates:
+                if os.path.exists(f):
+                    font_path = f
+                    break
+        
+        title_font = ImageFont.truetype(font_path, 36)
+        label_font = ImageFont.truetype(font_path, 20)
+        card_font = ImageFont.truetype(font_path, 18)
+    except:
+        title_font = ImageFont.load_default()
+        label_font = ImageFont.load_default()
+        card_font = ImageFont.load_default()
+
+    # Başlık
+    draw.text((260, 30), "🔮 TAROT FALI 🔮", font=title_font, fill=(186, 85, 211))
+
+    # Kart Pozisyonları
+    card_w = 180
+    card_h = 280
+    start_x = 80
+    y = 100
+    gap = 60
+    
+    positions = ["GEÇMİŞ", "ŞİMDİ", "GELECEK"]
+    
+    for i, card_name in enumerate(cards):
+        x = start_x + (i * (card_w + gap))
+        
+        # Kart Çerçevesi
+        draw.rectangle([(x, y), (x + card_w, y + card_h)], fill=(48, 25, 52), outline=(255, 215, 0), width=3)
+        
+        # Pozisyon Etiketi
+        draw.text((x + 50, y + 15), positions[i], font=label_font, fill=(200, 200, 200))
+        
+        # Ayırıcı Çizgi
+        draw.line([(x+20, y+45), (x+card_w-20, y+45)], fill=(100, 100, 100), width=1)
+        
+        # Kart İsmi (Satır kaydırma)
+        words = card_name.split()
+        lines = []
+        current_line = ""
+        for word in words:
+            if len(current_line + word) < 15:
+                current_line += word + " "
+            else:
+                lines.append(current_line)
+                current_line = word + " "
+        lines.append(current_line)
+        
+        text_y = y + 100
+        for line in lines:
+            draw.text((x + 20, text_y), line, font=card_font, fill=(255, 255, 255))
+            text_y += 25
+            
+        # Mistik Sembol
+        draw.ellipse((x + card_w/2 - 20, y + card_h - 60, x + card_w/2 + 20, y + card_h - 20), outline=(186, 85, 211), width=2)
+
+    bio = io.BytesIO()
+    img.save(bio, 'PNG')
+    bio.seek(0)
+    return bio
+
 @bot.message_handler(commands=['tarot'])
 def tarot_reading(message):
     user_id = str(message.from_user.id)
@@ -2357,9 +2431,12 @@ def perform_tarot_reading(message):
         prompt = f"Sen mistik, bilge ve sezgileri güçlü bir tarot yorumcususun. Kullanıcı şu soruyu sordu: '{question}'. Çekilen kartlar: 1. {drawn[0]} (Geçmiş/Temel), 2. {drawn[1]} (Şimdi/Durum), 3. {drawn[2]} (Gelecek/Sonuç). Bu kartları soruyla bağlantılı olarak yorumla. Kullanıcıya tavsiyeler ver. Gizemli ve etkileyici bir dil kullan."
         response = safe_generate_content(prompt)
         
-        text = f"🃏 **TAROT FALI** 🃏\n\n❓ **Soru:** {question}\n\n1️⃣ **{drawn[0]}**\n2️⃣ **{drawn[1]}**\n3️⃣ **{drawn[2]}**\n\n🔮 **Yorum:**\n{response.text}"
+        # Görsel oluştur
+        photo = create_tarot_image(drawn)
+        caption = f"🃏 **TAROT FALI** 🃏\n\n❓ **Soru:** {question}\n\n🔮 **Yorum:**\n{response.text}"
+        
         bot.delete_message(message.chat.id, wait_msg.message_id)
-        bot.reply_to(message, text, parse_mode="Markdown")
+        bot.send_photo(message.chat.id, photo, caption=caption, parse_mode="Markdown")
     except Exception as e:
         bot.edit_message_text("Kartlar şu an kapalı... Enerji akışı bozuk.", message.chat.id, wait_msg.message_id)
 
