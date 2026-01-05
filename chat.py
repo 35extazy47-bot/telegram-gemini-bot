@@ -239,8 +239,15 @@ def send_question(chat_id, user_id):
     if q.get("image"):
         try:
             msg = bot.send_photo(chat_id, photo=q["image"], caption=text, reply_markup=markup)
-        except:
-            msg = bot.send_message(chat_id, text, reply_markup=markup)
+        except Exception as e:
+            print(f"⚠️ Resim URL hatası: {e}. İndirilip deneniyor...")
+            try:
+                response = requests.get(q["image"], timeout=10)
+                photo_data = io.BytesIO(response.content)
+                msg = bot.send_photo(chat_id, photo=photo_data, caption=text, reply_markup=markup)
+            except Exception as e2:
+                print(f"⚠️ Resim gönderilemedi: {e2}")
+                msg = bot.send_message(chat_id, text, reply_markup=markup)
     else:
         msg = bot.send_message(chat_id, text, reply_markup=markup)
         
@@ -278,8 +285,15 @@ def send_wrong_question(chat_id, user_id):
     if q.get("image"):
         try:
             msg = bot.send_photo(chat_id, photo=q["image"], caption=text)
-        except:
-            msg = bot.send_message(chat_id, text)
+        except Exception as e:
+            print(f"⚠️ Resim URL hatası: {e}. İndirilip deneniyor...")
+            try:
+                response = requests.get(q["image"], timeout=10)
+                photo_data = io.BytesIO(response.content)
+                msg = bot.send_photo(chat_id, photo=photo_data, caption=text)
+            except Exception as e2:
+                print(f"⚠️ Resim gönderilemedi: {e2}")
+                msg = bot.send_message(chat_id, text)
     else:
         msg = bot.send_message(chat_id, text)
         
