@@ -10,6 +10,7 @@ import requests
 import html
 from deep_translator import GoogleTranslator
 import io
+from urllib.parse import unquote
 from PIL import Image, ImageDraw, ImageFont
 
 load_dotenv()
@@ -242,8 +243,12 @@ def send_question(chat_id, user_id):
         except Exception as e:
             print(f"⚠️ Resim URL hatası: {e}. İndirilip deneniyor...")
             try:
-                headers = {"User-Agent": "Mozilla/5.0"}
-                response = requests.get(q["image"], headers=headers, timeout=10)
+                # URL'deki kodlanmış karakterleri çöz (örn: %2C -> ,)
+                clean_url = unquote(q["image"])
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+                }
+                response = requests.get(clean_url, headers=headers, timeout=15)
                 response.raise_for_status()
                 photo_data = io.BytesIO(response.content)
                 msg = bot.send_photo(chat_id, photo=photo_data, caption=text, reply_markup=markup)
@@ -290,8 +295,12 @@ def send_wrong_question(chat_id, user_id):
         except Exception as e:
             print(f"⚠️ Resim URL hatası: {e}. İndirilip deneniyor...")
             try:
-                headers = {"User-Agent": "Mozilla/5.0"}
-                response = requests.get(q["image"], headers=headers, timeout=10)
+                # URL'deki kodlanmış karakterleri çöz (örn: %2C -> ,)
+                clean_url = unquote(q["image"])
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+                }
+                response = requests.get(clean_url, headers=headers, timeout=15)
                 response.raise_for_status()
                 photo_data = io.BytesIO(response.content)
                 msg = bot.send_photo(chat_id, photo=photo_data, caption=text)
