@@ -243,10 +243,14 @@ def fetch_image(url):
     # Wikimedia'nın engellememesi için gerçekçi tarayıcı kimliği
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "Referer": "https://www.google.com/"
     }
 
     for target_url in urls_to_try:
+        # Hızlı istek atmamak için kısa bekleme (Rate Limit önlemi)
+        time.sleep(0.5)
+        
         try:
             # Hem decode edilmiş hem ham halini dene
             candidates = [unquote(target_url), target_url]
@@ -254,7 +258,10 @@ def fetch_image(url):
             
             for candidate in candidates:
                 print(f"📥 İndiriliyor: {candidate}")
-                response = requests.get(candidate, headers=headers, timeout=10)
+                try:
+                    response = requests.get(candidate, headers=headers, timeout=15)
+                except requests.exceptions.RequestException:
+                    continue
                 
                 if response.status_code == 200:
                     ct = response.headers.get("Content-Type", "").lower()
@@ -262,6 +269,16 @@ def fetch_image(url):
                         print(f"⚠️ Geçersiz içerik tipi: {ct}")
                         continue
                     return response.content
+                elif response.status_code == 429:
+                    print(f"⚠️ Çok fazla istek (429)! 3 saniye bekleniyor...")
+                    time.sleep(3)
+                    # Tekrar dene
+                    try:
+                        response = requests.get(candidate, headers=headers, timeout=15)
+                        if response.status_code == 200:
+                            return response.content
+                    except:
+                        pass
                 else:
                     print(f"❌ Başarısız (Kod {response.status_code}): {candidate}")
 
