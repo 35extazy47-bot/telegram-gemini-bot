@@ -1336,7 +1336,20 @@ def check_answer(message):
     else:
         send_question(message.chat.id, user_id)
 
-def create_profile_image(user_data):
+def get_user_profile_image(user_id):
+    """Kullanıcının profil fotoğrafını indirir ve PIL Image olarak döndürür."""
+    try:
+        photos = bot.get_user_profile_photos(user_id)
+        if photos.total_count > 0:
+            file_id = photos.photos[0][-1].file_id # En yüksek çözünürlük
+            file_info = bot.get_file(file_id)
+            downloaded = bot.download_file(file_info.file_path)
+            return Image.open(io.BytesIO(downloaded))
+    except Exception as e:
+        print(f"Foto hatası {user_id}: {e}")
+    return None
+
+def create_profile_image(user_id, user_data):
     width = 600
     height = 400
     bg_color = (35, 39, 42) # Koyu Gri
@@ -1380,8 +1393,21 @@ def create_profile_image(user_data):
     lives = user_data.get('lives', 3)
 
     # İsim ve Rütbe
-    draw.text((30, 30), name, font=name_font, fill=text_color)
-    draw.text((30, 75), rank, font=header_font, fill=accent_color)
+    # Profil Resmi Varsa Ekle
+    profile_pic = get_user_profile_image(user_id)
+    text_x = 30
+    
+    if profile_pic:
+        # Resmi yeniden boyutlandır ve maskele
+        profile_pic = profile_pic.resize((80, 80))
+        mask = Image.new("L", (80, 80), 0)
+        draw_mask = ImageDraw.Draw(mask)
+        draw_mask.ellipse((0, 0, 80, 80), fill=255)
+        img.paste(profile_pic, (30, 30), mask)
+        text_x = 130 # Yazıları sağa kaydır
+
+    draw.text((text_x, 30), name, font=name_font, fill=text_color)
+    draw.text((text_x, 75), rank, font=header_font, fill=accent_color)
     
     # Sağ üstte Level
     draw.text((450, 30), f"Level {level}", font=name_font, fill=(255, 215, 0))
@@ -1447,7 +1473,7 @@ def my_profile(message):
     success_rate = (correct_count / total * 100) if total > 0 else 0
     try:
         # Görsel oluştur ve gönder
-        photo = create_profile_image(u)
+        photo = create_profile_image(user_id, u)
         bot.send_photo(message.chat.id, photo, caption=f"👤 **{u.get('name')}** Profil Kartı")
     except Exception as e:
         print(f"Profil görsel hatası: {e}")
@@ -1530,7 +1556,7 @@ def create_leaderboard_image(sorted_users):
     # Tablo Başlıkları
     draw.rectangle([(20, 90), (width-20, 140)], fill=header_bg)
     headers = ["#", "OYUNCU", "RÜTBE", "LEVEL", "EXP"]
-    x_pos = [40, 120, 380, 580, 700]
+    x_pos = [40, 130, 380, 580, 700]
     
     for i, h in enumerate(headers):
         draw.text((x_pos[i], 100), h, font=row_font, fill=(200, 200, 200))
@@ -1548,6 +1574,15 @@ def create_leaderboard_image(sorted_users):
         elif i == 2: color = (192, 192, 192) # Gümüş
         elif i == 3: color = (205, 127, 50)  # Bronz
         
+        # Profil Resmi (Küçük)
+        p_pic = get_user_profile_image(uid)
+        if p_pic:
+            p_pic = p_pic.resize((40, 40))
+            mask = Image.new("L", (40, 40), 0)
+            draw_mask = ImageDraw.Draw(mask)
+            draw_mask.ellipse((0, 0, 40, 40), fill=255)
+            img.paste(p_pic, (80, y-5), mask)
+
         draw.text((x_pos[0], y), str(i), font=row_font, fill=color)
         draw.text((x_pos[1], y), name, font=row_font, fill=color)
         draw.text((x_pos[2], y), rank, font=row_font, fill=color)
@@ -1648,7 +1683,16 @@ def admin_callbacks(call):
             info = f"👤 {u.get('name', 'Bilinmiyor')}\n🆔 `{uid}`\n🔗 @{u.get('username', 'Yok')}"
             markup = InlineKeyboardMarkup()
             markup.add(InlineKeyboardButton("✅ Onayla", callback_data=f"approve_{uid}"), InlineKeyboardButton("❌ Reddet", callback_data=f"reject_{uid}"))
-            bot.send_message(call.message.chat.id, info, reply_markup=markup, parse_mode="Markdown")
+            
+            # Varsa profil fotoğrafıyla gönder
+            try:
+                photos = bot.get_user_profile_photos(uid)
+                if photos.total_count > 0:
+                    bot.send_photo(call.message.chat.id, photos.photos[0][-1].file_id, caption=info, reply_markup=markup, parse_mode="Markdown")
+                else:
+                    bot.send_message(call.message.chat.id, info, reply_markup=markup, parse_mode="Markdown")
+            except:
+                bot.send_message(call.message.chat.id, info, reply_markup=markup, parse_mode="Markdown")
 
     elif call.data == "admin_user_list":
         if not users:
