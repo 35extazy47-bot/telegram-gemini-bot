@@ -413,6 +413,7 @@ def language_selected(call):
                 "🔮 **Ekstra Özellikler**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
                 "🔹 `/ruya` - Rüya Tabiri 🌙\n"
+                "🔹 `/tarot` - Tarot Falı 🃏\n"
                 "🔹 `/tarihtebugun` - Tarihte Bugün 📅\n"
                 "🔹 `/bilgi` - İlginç Bilgiler 🧠\n\n"
                 "👇 **İletişim & Destek**"
@@ -444,6 +445,7 @@ def language_selected(call):
                 "🔮 **Extra Features**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
                 "🔹 `/ruya` - Dream Interpretation 🌙\n"
+                "🔹 `/tarot` - Tarot Reading 🃏\n"
                 "🔹 `/tarihtebugun` - On This Day 📅\n"
                 "🔹 `/bilgi` - Interesting Facts 🧠\n\n"
                 "👇 **Contact & Support**"
@@ -475,6 +477,7 @@ def language_selected(call):
                 "🔮 **Екстра Функции**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
                 "🔹 `/ruya` - Тълкуване на сънища 🌙\n"
+                "🔹 `/tarot` - Таро четене 🃏\n"
                 "🔹 `/tarihtebugun` - На този ден 📅\n"
                 "🔹 `/bilgi` - Интересни факти 🧠\n\n"
                 "� **Контакт и Поддръжка**"
@@ -1993,6 +1996,50 @@ def dream_interpret(message):
         print(f"Ruya Hatasi: {e}")
         bot.edit_message_text("Rüyalar alemi şu an kapalı... Daha sonra tekrar dene.", message.chat.id, wait_msg.message_id)
 
+@bot.message_handler(commands=['tarot'])
+def tarot_reading(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
+
+    # 3 Hak Kontrolü (Burada limiti kontrol edip düşüyoruz)
+    if not check_daily_limit(user_id):
+        bot.reply_to(message, "⛔ Günlük Gemini mesaj hakkın (3/3) doldu! Yarın tekrar gel.")
+        return
+
+    wait_msg = bot.reply_to(message, "🔮 Kartlar karıştırılıyor... Enerjini odakla...")
+
+    # Tarot Destesi Oluşturma
+    major_arcana = [
+        "Deli (The Fool)", "Büyücü (The Magician)", "Azize (The High Priestess)", 
+        "İmparatoriçe (The Empress)", "İmparator (The Emperor)", "Aziz (The Hierophant)", 
+        "Aşıklar (The Lovers)", "Savaş Arabası (The Chariot)", "Güç (Strength)", 
+        "Ermiş (The Hermit)", "Kader Çarkı (Wheel of Fortune)", "Adalet (Justice)", 
+        "Asılan Adam (The Hanged Man)", "Ölüm (Death)", "Denge (Temperance)", 
+        "Şeytan (The Devil)", "Yıkılan Kule (The Tower)", "Yıldız (The Star)", 
+        "Ay (The Moon)", "Güneş (The Sun)", "Mahkeme (Judgement)", "Dünya (The World)"
+    ]
+    suits = ["Kupa (Cups)", "Kılıç (Swords)", "Değnek (Wands)", "Tılsım (Pentacles)"]
+    ranks = ["As", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Vale", "Şövalye", "Kraliçe", "Kral"]
+    
+    deck = major_arcana[:]
+    for suit in suits:
+        for rank in ranks:
+            deck.append(f"{suit} {rank}")
+            
+    drawn = random.sample(deck, 3)
+    
+    try:
+        prompt = f"Sen mistik, bilge ve sezgileri güçlü bir tarot yorumcususun. Kullanıcı için şu 3 kart çekildi: 1. {drawn[0]} (Geçmiş/Temel), 2. {drawn[1]} (Şimdi/Durum), 3. {drawn[2]} (Gelecek/Sonuç). Bu kartları birbiriyle bağlantılı olarak yorumla. Kullanıcıya tavsiyeler ver. Gizemli ve etkileyici bir dil kullan."
+        response = safe_generate_content(prompt)
+        
+        text = f"🃏 **TAROT FALI** 🃏\n\n1️⃣ **{drawn[0]}**\n2️⃣ **{drawn[1]}**\n3️⃣ **{drawn[2]}**\n\n🔮 **Yorum:**\n{response.text}"
+        bot.delete_message(message.chat.id, wait_msg.message_id)
+        bot.reply_to(message, text, parse_mode="Markdown")
+    except Exception as e:
+        bot.edit_message_text("Kartlar şu an kapalı... Enerji akışı bozuk.", message.chat.id, wait_msg.message_id)
+
 @bot.message_handler(commands=['hediye'])
 def admin_gift(message):
     # Sadece geliştirici kullanabilir
@@ -2099,6 +2146,7 @@ def help_guide(message):
         "🔹 `/market` - Kazandığın EXP ile Can, Şans Kutusu veya **Elmas Kazma** al.\n"
         "🔹 `/envanter` - Çantana, parana ve eşyalarına bak.\n\n"
         "🔮 **Eğlence & Mistik:**\n"
+        "🔹 `/tarot` - 3 kart seç ve geleceğini öğren. 🃏\n"
         "🔹 `/ruya <metin>` - Rüyalarını yapay zekaya yorumlat. 🌙\n"
         "🎲 **Risk & Ödül:**\n"
         "🔹 `/bahis <miktar>` - Kendine güveniyorsan sıradaki soruya bahis oyna. Doğru bilirsen 2 katı!\n"
