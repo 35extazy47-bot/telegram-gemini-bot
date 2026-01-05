@@ -1664,8 +1664,10 @@ def admin_panel(message):
     markup.add(InlineKeyboardButton("🚫 Yasaklılar", callback_data="admin_banned_list"), InlineKeyboardButton("👑 VIP'ler", callback_data="admin_vip_list"))
     # Satır 3: Ekonomi & Sistem
     markup.add(InlineKeyboardButton("📊 Eko. Analiz", callback_data="admin_economy_stats"), InlineKeyboardButton("💾 Yedek Al", callback_data="admin_backup"))
-    # Satır 4: Yardım Menüleri
-    markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("🎁 Hediye", callback_data="admin_help_hediye"), InlineKeyboardButton("🔨 Ban", callback_data="admin_help_ban"))
+    # Satır 4: İletişim & Anket
+    markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("📊 Anket", callback_data="admin_help_anket"))
+    # Satır 5: Yönetim
+    markup.add(InlineKeyboardButton("🎁 Hediye", callback_data="admin_help_hediye"), InlineKeyboardButton("🔨 Ban", callback_data="admin_help_ban"))
 
     bot.send_message(message.chat.id, text, reply_markup=markup)
 
@@ -1678,6 +1680,10 @@ def admin_callbacks(call):
     if call.data == "admin_help_duyuru":
         bot.answer_callback_query(call.id)
         bot.send_message(call.message.chat.id, "📢 **Duyuru Kullanımı:**\n`/duyuru Mesajınız`\nÖrnek: `/duyuru Yarın bakım var!`", parse_mode="Markdown")
+
+    elif call.data == "admin_help_anket":
+        bot.answer_callback_query(call.id)
+        bot.send_message(call.message.chat.id, "📊 **Anket Gönderimi:**\n`/anket Soru | Seçenek1 | Seçenek2 ...`\nÖrnek: `/anket Memnun musunuz? | Evet | Hayır`", parse_mode="Markdown")
     
     elif call.data == "admin_pending_list":
         pending_users = [
@@ -1806,6 +1812,42 @@ def admin_broadcast_manual(message):
             pass
             
     bot.reply_to(message, f"✅ Mesaj başarıyla {count} kişiye iletildi.")
+
+@bot.message_handler(commands=['anket'])
+def admin_broadcast_poll(message):
+    # Sadece geliştirici kullanabilir
+    if message.from_user.username != DEVELOPER_USERNAME:
+        return
+
+    try:
+        # Format: /anket Soru | Seçenek1 | Seçenek2 ...
+        text = message.text.replace("/anket", "").strip()
+        parts = text.split("|")
+        
+        if len(parts) < 3:
+            bot.reply_to(message, "⚠️ Eksik format!\nKullanım: `/anket Soru | Seçenek1 | Seçenek2`\nÖrnek: `/anket Botu beğendiniz mi? | Evet | Hayır`", parse_mode="Markdown")
+            return
+            
+        question = parts[0].strip()
+        options = [o.strip() for o in parts[1:]]
+        
+        if len(options) < 2 or len(options) > 10:
+             bot.reply_to(message, "⚠️ Seçenek sayısı 2 ile 10 arasında olmalı.")
+             return
+
+        count = 0
+        bot.reply_to(message, "📊 Anket dağıtımı başladı...")
+        
+        for user_id in list(users.keys()):
+            try:
+                bot.send_poll(chat_id=user_id, question=question, options=options, is_anonymous=True)
+                count += 1
+            except:
+                pass
+        
+        bot.reply_to(message, f"✅ Anket başarıyla {count} kişiye gönderildi.")
+    except Exception as e:
+        bot.reply_to(message, f"Hata oluştu: {e}")
 
 @bot.message_handler(commands=['ozet'])
 def get_summary(message):
