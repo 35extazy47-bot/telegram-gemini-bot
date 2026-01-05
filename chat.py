@@ -204,7 +204,7 @@ def get_question(level, category):
     return random.choice(uygun) if uygun else None
 
 def fetch_image(url):
-    """Resmi indirmeyi dener, başarısız olursa alternatifleri dener."""
+    """Resmi indirmeyi dener, başarısız olursa alternatifleri dener (Gelişmiş)."""
     url = url.strip()
     
     # 1. URL Düzenleme (SVG ise PNG thumbnail'e çevir)
@@ -231,7 +231,7 @@ def fetch_image(url):
             if "px-" in filename_part:
                 width = filename_part.split("px-")[0]
                 rest = filename_part.split("px-")[1]
-                alternatives = ["800", "1024", "400", "500", "300"]
+                alternatives = ["1280", "1024", "800", "600", "500", "400", "300"]
                 if width in alternatives: alternatives.remove(width)
                 for alt_w in alternatives:
                     new_name = f"{alt_w}px-{rest}"
@@ -240,18 +240,31 @@ def fetch_image(url):
         except:
             pass
 
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+    # Wikimedia'nın engellememesi için gerçekçi tarayıcı kimliği
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+    }
 
     for target_url in urls_to_try:
         try:
-            decoded_url = unquote(target_url)
-            print(f"📥 İndiriliyor: {decoded_url}")
-            response = requests.get(decoded_url, headers=headers, timeout=10)
-            if response.status_code == 200:
-                ct = response.headers.get("Content-Type", "").lower()
-                if "image/svg" in ct or "text/html" in ct:
-                    continue
-                return response.content
+            # Hem decode edilmiş hem ham halini dene
+            candidates = [unquote(target_url), target_url]
+            candidates = list(dict.fromkeys(candidates)) # Tekrarları sil
+            
+            for candidate in candidates:
+                print(f"📥 İndiriliyor: {candidate}")
+                response = requests.get(candidate, headers=headers, timeout=10)
+                
+                if response.status_code == 200:
+                    ct = response.headers.get("Content-Type", "").lower()
+                    if "image/svg" in ct or "text/html" in ct:
+                        print(f"⚠️ Geçersiz içerik tipi: {ct}")
+                        continue
+                    return response.content
+                else:
+                    print(f"❌ Başarısız (Kod {response.status_code}): {candidate}")
+
         except Exception as e:
             print(f"❌ Hata: {e}")
             continue
@@ -302,6 +315,7 @@ def send_question(chat_id, user_id):
                 img_data = fetch_image(q["image"])
                 if img_data:
                     photo_data = io.BytesIO(img_data)
+                    photo_data.name = "image.jpg" # Telegram bazen dosya ismi ister
                     msg = bot.send_photo(chat_id, photo=photo_data, caption=text, reply_markup=markup)
                 else:
                     raise Exception("Resim indirilemedi")
@@ -351,6 +365,7 @@ def send_wrong_question(chat_id, user_id):
                 img_data = fetch_image(q["image"])
                 if img_data:
                     photo_data = io.BytesIO(img_data)
+                    photo_data.name = "image.jpg" # Telegram bazen dosya ismi ister
                     msg = bot.send_photo(chat_id, photo=photo_data, caption=text)
                 else:
                     raise Exception("Resim indirilemedi")
