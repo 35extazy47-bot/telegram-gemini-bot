@@ -414,6 +414,7 @@ def language_selected(call):
                 "━━━━━━━━━━━━━━━━━━━━\n"
                 "🔹 `/ruya` - Rüya Tabiri 🌙\n"
                 "🔹 `/tarot` - Tarot Falı 🃏\n"
+                "🔹 `/burc` - Günlük Burç Yorumu ♈\n"
                 "🔹 `/tarihtebugun` - Tarihte Bugün 📅\n"
                 "🔹 `/bilgi` - İlginç Bilgiler 🧠\n\n"
                 "👇 **İletişim & Destek**"
@@ -446,6 +447,7 @@ def language_selected(call):
                 "━━━━━━━━━━━━━━━━━━━━\n"
                 "🔹 `/ruya` - Dream Interpretation 🌙\n"
                 "🔹 `/tarot` - Tarot Reading 🃏\n"
+                "🔹 `/burc` - Daily Horoscope ♈\n"
                 "🔹 `/tarihtebugun` - On This Day 📅\n"
                 "🔹 `/bilgi` - Interesting Facts 🧠\n\n"
                 "👇 **Contact & Support**"
@@ -478,6 +480,7 @@ def language_selected(call):
                 "━━━━━━━━━━━━━━━━━━━━\n"
                 "🔹 `/ruya` - Тълкуване на сънища 🌙\n"
                 "🔹 `/tarot` - Таро четене 🃏\n"
+                "🔹 `/burc` - Дневен хороскоп ♈\n"
                 "🔹 `/tarihtebugun` - На този ден 📅\n"
                 "🔹 `/bilgi` - Интересни факти 🧠\n\n"
                 "� **Контакт и Поддръжка**"
@@ -2056,6 +2059,46 @@ def perform_tarot_reading(message):
     except Exception as e:
         bot.edit_message_text("Kartlar şu an kapalı... Enerji akışı bozuk.", message.chat.id, wait_msg.message_id)
 
+@bot.message_handler(commands=['burc'])
+def daily_horoscope(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
+
+    msg = bot.reply_to(message, "♈♉♊♋♌♍♎♏♐♑♒♓\n\nLütfen burcunu yaz (Örn: Koç, Boğa, İkizler...): 👇")
+    bot.register_next_step_handler(msg, perform_horoscope_reading)
+
+def perform_horoscope_reading(message):
+    user_id = str(message.from_user.id)
+    
+    if not message.text:
+        bot.reply_to(message, "⚠️ Lütfen geçerli bir burç yaz.")
+        return
+
+    # Eğer kullanıcı vazgeçip komut yazdıysa iptal et
+    if message.text.startswith("/"):
+        bot.reply_to(message, "🔮 Burç yorumu iptal edildi.")
+        return
+
+    # 3 Hak Kontrolü
+    if not check_daily_limit(user_id):
+        bot.reply_to(message, "⛔ Günlük Gemini mesaj hakkın (3/3) doldu! Yarın tekrar gel.")
+        return
+
+    sign = message.text
+    wait_msg = bot.reply_to(message, f"🌟 **{sign}** burcu için yıldızlara bakıyorum...")
+
+    try:
+        prompt = f"Sen eğlenceli, samimi ve pozitif bir astroloğsun. Kullanıcı '{sign}' burcu. Ona bugünkü burç yorumunu yap. Aşk, kariyer, sağlık ve şans konularına kısaca değin. Motive edici bir ton kullan."
+        response = safe_generate_content(prompt)
+        
+        bot.delete_message(message.chat.id, wait_msg.message_id)
+        bot.reply_to(message, f"✨ **GÜNLÜK BURÇ YORUMU ({sign.upper()})** ✨\n\n{response.text}", parse_mode="Markdown")
+    except Exception as e:
+        print(f"Burc Hatasi: {e}")
+        bot.edit_message_text("Yıldızlar şu an bulutlu... Daha sonra tekrar dene.", message.chat.id, wait_msg.message_id)
+
 @bot.message_handler(commands=['hediye'])
 def admin_gift(message):
     # Sadece geliştirici kullanabilir
@@ -2163,6 +2206,7 @@ def help_guide(message):
         "🔹 `/envanter` - Çantana, parana ve eşyalarına bak.\n\n"
         "🔮 **Eğlence & Mistik:**\n"
         "🔹 `/tarot` - 3 kart seç ve geleceğini öğren. 🃏\n"
+        "🔹 `/burc` - Günlük burç yorumunu al. ♈\n"
         "🔹 `/ruya <metin>` - Rüyalarını yapay zekaya yorumlat. 🌙\n"
         "🎲 **Risk & Ödül:**\n"
         "🔹 `/bahis <miktar>` - Kendine güveniyorsan sıradaki soruya bahis oyna. Doğru bilirsen 2 katı!\n"
