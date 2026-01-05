@@ -202,6 +202,77 @@ def get_question(level, category):
         ]
     return random.choice(uygun) if uygun else None
 
+def send_question(chat_id, user_id):
+    level = users[user_id]["level"]
+    category = users[user_id]["category"]
+
+    q = get_question(level, category)
+    if not q:
+        bot.send_message(chat_id, "❌ Bu kategoride soru kalmadı knk")
+        return
+
+    users[user_id]["current_answer"] = q["answer"]
+    users[user_id]["current_question_id"] = q["id"]
+
+    # Maraton Modu Başlığı
+    mode_prefix = ""
+    if users[user_id].get("mode") == "marathon":
+        step = users[user_id].get("marathon_score", 0) + 1
+        mode_prefix = f"🏃‍♂️ **MARATON: {step}. SORU**\n"
+
+    text = (
+        f"{mode_prefix}"
+        f"🧠 {category.upper()} | Level {level}\n"
+        f"❤️ Can: {users[user_id]['lives']}\n\n"
+        f"{q['question']}\n\n" +
+        "\n".join(q["options"])
+    )
+
+    # Joker Butonları
+    markup = InlineKeyboardMarkup()
+    markup.add(
+        InlineKeyboardButton("💡 %50 Joker (10 EXP)", callback_data="joker_50"),
+        InlineKeyboardButton("⏭ Pas Geç (5 EXP)", callback_data="joker_pass"),
+        InlineKeyboardButton("👥 Seyirci (15 EXP)", callback_data="joker_audience")
+    )
+
+    msg = bot.send_message(chat_id, text, reply_markup=markup)
+        
+    users[user_id]["last_question_message_id"] = msg.message_id
+    save_users()
+
+def send_wrong_question(chat_id, user_id):
+    wrong_ids = users[user_id].get("wrong_answers", [])
+    if not wrong_ids:
+        bot.send_message(chat_id, "🎉 **Tebrikler!** Yanlış yaptığın tüm soruları temizledin. Harikasın! 👏")
+        users[user_id]["mode"] = "local"
+        return
+
+    q_id = random.choice(wrong_ids)
+    # Soruyu bul
+    q = next((item for item in QUIZ_QUESTIONS if item["id"] == q_id), None)
+    
+    if not q:
+        # Soru veritabanından silinmişse listeden de sil
+        users[user_id]["wrong_answers"].remove(q_id)
+        send_wrong_question(chat_id, user_id)
+        return
+
+    users[user_id]["current_answer"] = q["answer"]
+    users[user_id]["current_question_id"] = q["id"]
+
+    text = (
+        f"🔄 **Tekrar Zamanı** | {q['category'].upper()}\n"
+        f"⚠️ Bu soruyu daha önce yanlış yapmıştın!\n\n"
+        f"{q['question']}\n\n" +
+        "\n".join(q['options'])
+    )
+
+    msg = bot.send_message(chat_id, text)
+        
+    users[user_id]["last_question_message_id"] = msg.message_id
+    save_users()
+
 @bot.message_handler(commands=["start"])
 def start_message(message):
     user_id = str(message.from_user.id)
