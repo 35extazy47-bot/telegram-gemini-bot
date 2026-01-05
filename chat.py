@@ -204,68 +204,58 @@ def get_question(level, category):
     return random.choice(uygun) if uygun else None
 
 def fetch_image(url):
-    """Resmi indirmeyi dener, başarısız olursa alternatifleri dener (SVG korumalı)."""
+    """Resmi indirmeyi dener, başarısız olursa alternatifleri dener."""
     url = url.strip()
     
-    # Farklı User-Agent'lar ile deneme (Wikimedia bazen engelliyor)
-    headers_list = [
-        {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"},
-        {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15"}
-    ]
-    
-    # 1. Decode edip dene (Örn: %2C -> ,)
-    try:
-        clean_url = unquote(url)
-    except:
-        clean_url = url
-
-    for headers in headers_list:
+    # 1. URL Düzenleme (SVG ise PNG thumbnail'e çevir)
+    # Örn: .../File.svg -> .../thumb/.../File.svg/600px-File.svg.png
+    if "upload.wikimedia.org" in url and url.endswith(".svg") and "/thumb/" not in url:
         try:
-            response = requests.get(clean_url, headers=headers, timeout=15)
-            if response.status_code == 200:
-                # SVG ise indirme, çünkü Telegram desteklemiyor
-                if clean_url.endswith(".svg") or "image/svg" in response.headers.get("Content-Type", ""):
-                    print("⚠️ SVG tespit edildi, PNG alternatifi aranıyor...")
-                    break 
-                return response.content
-        except:
-            continue
-
-    # 2. Wikimedia Fallback (Farklı boyutları veya orijinali dene)
-    if "upload.wikimedia.org" in url and "/thumb/" in url:
-        try:
-            parts = clean_url.split("/")
-            filename = parts[-1]
-            
-            # A) Farklı boyutları dene (800px, 1024px, 400px)
-            if "px-" in filename:
-                current_width = filename.split("px-")[0]
-                alternatives = ["800", "1024", "400", "500"]
-                if current_width in alternatives: alternatives.remove(current_width)
-                
-                for alt_w in alternatives:
-                    try:
-                        new_filename = filename.replace(f"{current_width}px-", f"{alt_w}px-")
-                        new_url = "/".join(parts[:-1] + [new_filename])
-                        print(f"🔄 Farklı boyut deneniyor: {alt_w}px")
-                        res = requests.get(new_url, headers=headers_list[0], timeout=10)
-                        if res.status_code == 200:
-                            return res.content
-                    except:
-                        pass
-
-            # B) Orijinal dosyayı dene (Sadece SVG değilse!)
-            base = clean_url.replace("/thumb/", "/")
-            parts_base = base.split("/")
-            original_url = "/".join(parts_base[:-1])
-            
-            if not original_url.endswith(".svg"):
-                print(f"🔄 Orijinal deneniyor: {original_url}")
-                res = requests.get(original_url, headers=headers_list[0], timeout=10)
-                if res.status_code == 200:
-                    return res.content
+            parts = url.split("/commons/")
+            if len(parts) > 1:
+                path_part = parts[1]
+                filename = path_part.split("/")[-1]
+                url = f"https://upload.wikimedia.org/wikipedia/commons/thumb/{path_part}/600px-{filename}.png"
+                print(f"🔄 SVG -> PNG Dönüştürüldü: {url}")
         except:
             pass
+
+    # İndirme listesi (Orijinal + Alternatifler)
+    urls_to_try = [url]
+    
+    # Eğer thumbnail ise diğer boyutları da ekle
+    if "/thumb/" in url and "px-" in url:
+        try:
+            base_parts = url.split("/")
+            filename_part = base_parts[-1]
+            if "px-" in filename_part:
+                width = filename_part.split("px-")[0]
+                rest = filename_part.split("px-")[1]
+                alternatives = ["800", "1024", "400", "500", "300"]
+                if width in alternatives: alternatives.remove(width)
+                for alt_w in alternatives:
+                    new_name = f"{alt_w}px-{rest}"
+                    new_url = "/".join(base_parts[:-1] + [new_name])
+                    urls_to_try.append(new_url)
+        except:
+            pass
+
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+
+    for target_url in urls_to_try:
+        try:
+            decoded_url = unquote(target_url)
+            print(f"📥 İndiriliyor: {decoded_url}")
+            response = requests.get(decoded_url, headers=headers, timeout=10)
+            if response.status_code == 200:
+                ct = response.headers.get("Content-Type", "").lower()
+                if "image/svg" in ct or "text/html" in ct:
+                    continue
+                return response.content
+        except Exception as e:
+            print(f"❌ Hata: {e}")
+            continue
+            
     return None
 
 def send_question(chat_id, user_id):
