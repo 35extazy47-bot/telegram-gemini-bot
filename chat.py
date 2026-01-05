@@ -395,7 +395,6 @@ def language_selected(call):
                 "🔹 /clock - Global Yarışma (Zamanlı)\n"
                 "🔹 /maraton - Tek hakla ne kadar gidebilirsin? (Yeni! 🏃‍♂️)\n"
                 "🔹 /soruekle - Kendi sorunu gönder (Yeni! 📝)\n"
-                "🔹 /ikna - Botu İkna Et (Münazara)\n"
                 "🔹 /borsa - Kapalıçarşı Ticaret (Canlı!)\n"
                 "🔹 /zenginler - En Zenginler Listesi 💸\n"
                 "🔹 /tarihtebugun - Tarihte Bugün Ne Oldu?\n"
@@ -422,7 +421,6 @@ def language_selected(call):
                 "🔹 /quiz - Solve Questions\n"
                 "🔹 /maraton - Marathon Mode 🏃‍♂️\n"
                 "🔹 /soruekle - Submit Question 📝\n"
-                "🔹 /ikna - Debate with AI\n"
                 "🔹 /borsa - Grand Bazaar Trading\n"
                 "🔹 /zenginler - Richest Players List 💸\n"
                 "🔹 /tarihtebugun - On This Day\n"
@@ -443,7 +441,6 @@ def language_selected(call):
                 "🔹 /quiz - Решаване на въпроси\n"
                 "🔹 /maraton - Маратон режим 🏃‍♂️\n"
                 "🔹 /soruekle - Добави въпрос 📝\n"
-                "🔹 /ikna - Дебат с AI\n"
                 "🔹 /borsa - Търговия на Капалъчарши\n"
                 "🔹 /zenginler - Списък на най-богатите 💸\n"
                 "🔹 /tarihtebugun - На този ден\n"
@@ -1782,52 +1779,6 @@ def check_dy(call):
         text=msg
     )
 
-@bot.message_handler(commands=['ikna'])
-def start_debate(message):
-    user_id = str(message.from_user.id)
-    if not users.get(user_id, {}).get("is_approved", True):
-        return
-
-    if not check_daily_limit(user_id):
-        bot.reply_to(message, "⛔ Günlük Gemini mesaj hakkın (3/3) doldu! Yarın tekrar gel.")
-        return
-
-    if len(message.text.split()) < 2:
-        bot.reply_to(message, "🗣️ **Münazara Modu**\n\nBir fikir ortaya at, botu ikna etmeye çalış veya tartış!\nBot sana 100 üzerinden puan verecek.\n\nÖrnek: `/ikna Çay kahveden daha sağlıklıdır çünkü doğaldır.`")
-        return
-
-    user_argument = message.text.split(maxsplit=1)[1]
-    wait_msg = bot.reply_to(message, "🤔 Argümanın inceleniyor... Jüri toplanıyor...")
-
-    try:
-        prompt = f"""
-        Sen zor beğenen, mantıklı ve biraz iğneleyici bir münazara jürisisin.
-        Kullanıcının şu argümanını analiz et: "{user_argument}"
-        
-        1. Bu argümana kısa ve zekice bir karşı tez sun.
-        2. Kullanıcının ikna kabiliyetine ve mantığına 1 ile 100 arasında bir puan ver.
-        
-        Yanıtı SADECE şu JSON formatında ver:
-        {{
-            "karsi_tez": "Senin cevabın...",
-            "puan": 75
-        }}
-        """
-        response = safe_generate_content(prompt)
-        text_resp = response.text.replace("```json", "").replace("```", "").strip()
-        data = json.loads(text_resp)
-        
-        score = int(data.get("puan", 0))
-        users[user_id]["exp"] += score
-        save_users()
-
-        bot.delete_message(message.chat.id, wait_msg.message_id)
-        bot.reply_to(message, f"🗣️ **MÜNAZARA SONUCU**\n\n🤖 **Botun Cevabı:** {data['karsi_tez']}\n\n📊 **Puanın:** {score}/100\n💰 **Kazanç:** +{score} EXP")
-
-    except Exception as e:
-        print(f"Ikna Hatasi: {e}")
-        bot.edit_message_text("Jüri şu an molada... Daha sonra tekrar dene.", message.chat.id, wait_msg.message_id)
-
 @bot.message_handler(commands=['tarihtebugun'])
 def history_today(message):
     user_id = str(message.from_user.id)
@@ -2109,7 +2060,6 @@ def help_guide(message):
         "🔹 `/maraton` - Tek hakla ne kadar gidebilirsin? (Yeni! 🏃‍♂️)\n"
         "🔹 `/soruekle` - Kendi sorunu gönder (Yeni! 📝)\n"
         "🔹 `/sorudurumu` - Soru bankası istatistiklerini gör. 📊\n"
-        "🔹 `/ikna <fikir>` - Botla tartış, argümanın kadar puan kazan! (Yeni! 🗣️)\n"
         "🔹 `/tarihtebugun` - Bugün tarihte ne olduğunu öğren. 📅\n"
         "🔹 `/borsa` - Kapalıçarşı'da ticaret yap, servetine servet kat! (Yeni! 📈)\n"
         "🔹 `/zenginler` - Piyasanın en zenginlerini gör. 💸\n"
