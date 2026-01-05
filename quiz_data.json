@@ -1949,5 +1949,845 @@
     ],
     "answer": "C",
     "explanation": "Kurucu unsurları tam olan bir işlemin, emredici hükümlere aykırı olması durumunda geçersiz sayılmasına Mutlak Butlan denir."
+  },
+  {
+    "id": 169,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde ilk denk bütçeyi hazırlayan devlet adamı kimdir?",
+    "options": [
+      "A) Köprülü Fazıl Ahmet Paşa",
+      "B) Tarhuncu Ahmet Paşa",
+      "C) Merzifonlu Kara Mustafa Paşa",
+      "D) Sokullu Mehmet Paşa"
+    ],
+    "answer": "B",
+    "explanation": "Tarhuncu Ahmet Paşa, saray masraflarını kısarak Osmanlı tarihinin ilk denk bütçesini hazırlamıştır."
+  },
+  {
+    "id": 170,
+    "category": "tarih",
+    "level": 3,
+    "question": "II. Mahmut döneminde Ayanlarla imzalanan ve padişahın yetkilerini ilk kez kısıtlayan belge hangisidir?",
+    "options": [
+      "A) Tanzimat Fermanı",
+      "B) Islahat Fermanı",
+      "C) Sened-i İttifak",
+      "D) Kanun-i Esasi"
+    ],
+    "answer": "C",
+    "explanation": "1808 tarihli Sened-i İttifak, Osmanlı tarihinde padişahın yetkilerini kısıtlayan ilk belgedir ve Magna Carta'ya benzetilir."
+  },
+  {
+    "id": 171,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde rejimi değiştirmeye yönelik çıkan ilk isyan hangisidir?",
+    "options": [
+      "A) Patrona Halil İsyanı",
+      "B) Kabakçı Mustafa İsyanı",
+      "C) 31 Mart Vakası",
+      "D) Şeyh Sait İsyanı"
+    ],
+    "answer": "C",
+    "explanation": "1909'da çıkan 31 Mart Vakası, Meşrutiyet rejimine karşı yapılmış gerici bir ayaklanmadır."
+  },
+  {
+    "id": 172,
+    "category": "tarih",
+    "level": 2,
+    "question": "Mustafa Kemal Atatürk'ün sömürgeciliğe karşı savaştığı ilk cephe hangisidir?",
+    "options": [
+      "A) Çanakkale",
+      "B) Suriye-Filistin",
+      "C) Kafkas",
+      "D) Trablusgarp"
+    ],
+    "answer": "D",
+    "explanation": "Mustafa Kemal, gönüllü olarak gittiği Trablusgarp'ta İtalyan sömürgeciliğine karşı yerel halkı örgütlemiştir."
+  },
+  {
+    "id": 173,
+    "category": "tarih",
+    "level": 2,
+    "question": "I. Balkan Savaşı sonucunda Osmanlı Devleti'nden ayrılarak bağımsızlığını ilan eden son Balkan ulusu hangisidir?",
+    "options": [
+      "A) Bulgaristan",
+      "B) Arnavutluk",
+      "C) Sırbistan",
+      "D) Yunanistan"
+    ],
+    "answer": "B",
+    "explanation": "Arnavutluk, I. Balkan Savaşı sırasındaki karışıklıktan yararlanarak bağımsızlığını ilan eden son Balkan devletidir."
+  },
+  {
+    "id": 174,
+    "category": "tarih",
+    "level": 3,
+    "question": "I. Dünya Savaşı sırasında İtilaf Devletleri arasında yapılan gizli antlaşmaları dünya kamuoyuna duyuran devlet hangisidir?",
+    "options": [
+      "A) ABD",
+      "B) Sovyet Rusya",
+      "C) İtalya",
+      "D) Fransa"
+    ],
+    "answer": "B",
+    "explanation": "Çarlık rejiminin yıkılmasından sonra kurulan Sovyet Rusya, Sarı Kitap ile gizli antlaşmaları açıklamıştır."
+  },
+  {
+    "id": 175,
+    "category": "tarih",
+    "level": 3,
+    "question": "Milli Mücadele döneminde Temsil Heyeti'nin 'yürütme yetkisini' kullandığının ilk kanıtı nedir?",
+    "options": [
+      "A) Sivas Kongresi'nin toplanması",
+      "B) Ali Fuat Paşa'nın Batı Cephesi Komutanlığına atanması",
+      "C) Amasya Görüşmeleri'nin yapılması",
+      "D) İrade-i Milliye gazetesinin çıkarılması"
+    ],
+    "answer": "B",
+    "explanation": "Bir komutan atamak hükümetin (yürütmenin) görevidir. Temsil Heyeti bu atamayla hükümet gibi hareket etmiştir."
+  },
+  {
+    "id": 176,
+    "category": "tarih",
+    "level": 2,
+    "question": "TBMM'nin uluslararası alanda imzaladığı ilk antlaşma ve kazandığı ilk siyasi başarı hangisidir?",
+    "options": [
+      "A) Moskova Antlaşması",
+      "B) Ankara Antlaşması",
+      "C) Gümrü Antlaşması",
+      "D) Kars Antlaşması"
+    ],
+    "answer": "C",
+    "explanation": "Ermenistan ile imzalanan Gümrü Antlaşması (1920), TBMM'nin ilk siyasi başarısıdır."
+  },
+  {
+    "id": 177,
+    "category": "tarih",
+    "level": 2,
+    "question": "İstiklal Marşı, 1921 yılında hangi savaşın kazanılmasından sonra TBMM'de kabul edilmiştir?",
+    "options": [
+      "A) I. İnönü",
+      "B) II. İnönü",
+      "C) Sakarya",
+      "D) Büyük Taarruz"
+    ],
+    "answer": "A",
+    "explanation": "İstiklal Marşı, I. İnönü Savaşı'nın zaferle sonuçlanmasının ardından 12 Mart 1921'de kabul edilmiştir."
+  },
+  {
+    "id": 178,
+    "category": "tarih",
+    "level": 2,
+    "question": "Mustafa Kemal Paşa'ya 'Başkomutanlık' yetkisi hangi savaştan önce verilmiştir?",
+    "options": [
+      "A) I. İnönü",
+      "B) Kütahya-Eskişehir",
+      "C) Sakarya Meydan Muharebesi",
+      "D) Büyük Taarruz"
+    ],
+    "answer": "C",
+    "explanation": "Kütahya-Eskişehir yenilgisinden sonra, Sakarya Savaşı öncesinde Mustafa Kemal'e Başkomutanlık yetkisi verilmiştir."
+  },
+  {
+    "id": 179,
+    "category": "tarih",
+    "level": 3,
+    "question": "Lozan Barış Antlaşması'nda çözüme kavuşturulamayan ve sonraya bırakılan tek konu hangisidir?",
+    "options": [
+      "A) Kapitülasyonlar",
+      "B) Boğazlar",
+      "C) Irak Sınırı (Musul Sorunu)",
+      "D) Dış Borçlar"
+    ],
+    "answer": "C",
+    "explanation": "Musul sorunu İngiltere ile Türkiye arasında ikili görüşmelere bırakılmış, Lozan'da çözülememiştir."
+  },
+  {
+    "id": 180,
+    "category": "tarih",
+    "level": 2,
+    "question": "Cumhuriyet döneminde kurulan ilk muhalefet partisi hangisidir?",
+    "options": [
+      "A) Serbest Cumhuriyet Fırkası",
+      "B) Terakkiperver Cumhuriyet Fırkası",
+      "C) Demokrat Parti",
+      "D) Milli Kalkınma Partisi"
+    ],
+    "answer": "B",
+    "explanation": "Kazım Karabekir ve arkadaşları tarafından 1924'te kurulan Terakkiperver Cumhuriyet Fırkası ilk muhalefet partisidir."
+  },
+  {
+    "id": 181,
+    "category": "tarih",
+    "level": 3,
+    "question": "Türkiye'nin Milletler Cemiyeti'ne üye olduğu yıl hangisidir?",
+    "options": [
+      "A) 1923",
+      "B) 1929",
+      "C) 1932",
+      "D) 1939"
+    ],
+    "answer": "C",
+    "explanation": "Türkiye, İspanya'nın teklifi ve Yunanistan'ın desteğiyle 1932 yılında Milletler Cemiyeti'ne üye olmuştur."
+  },
+  {
+    "id": 182,
+    "category": "tarih",
+    "level": 3,
+    "question": "Montrö Boğazlar Sözleşmesi ile Boğazlar Komisyonu'nun kaldırılması Atatürk'ün hangi ilkesiyle doğrudan ilgilidir?",
+    "options": [
+      "A) Laiklik",
+      "B) Milliyetçilik (Bağımsızlık)",
+      "C) Halkçılık",
+      "D) İnkılapçılık"
+    ],
+    "answer": "B",
+    "explanation": "Komisyonun kaldırılıp yetkinin tamamen Türk devletine geçmesi tam bağımsızlık ve Milliyetçilik ilkesiyle ilgilidir."
+  },
+  {
+    "id": 183,
+    "category": "tarih",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde divan üyelerinden olan ve günümüzdeki Dışişleri Bakanı'nın görevini yürüten yetkili kimdir?",
+    "options": [
+      "A) Kazasker",
+      "B) Nişancı",
+      "C) Reisülküttab",
+      "D) Defterdar"
+    ],
+    "answer": "C",
+    "explanation": "17. yüzyıldan itibaren dış ilişkilerin önem kazanmasıyla Reisülküttab, Dışişleri Bakanı statüsüne yükselmiştir."
+  },
+  {
+    "id": 184,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde 'Mecelle' adlı medeni kanunu hazırlayan komisyonun başkanı kimdir?",
+    "options": [
+      "A) Mithat Paşa",
+      "B) Ahmet Cevdet Paşa",
+      "C) Mustafa Reşit Paşa",
+      "D) Namık Kemal"
+    ],
+    "answer": "B",
+    "explanation": "Ahmet Cevdet Paşa başkanlığındaki heyet, İslam hukukuna dayalı Mecelle'yi hazırlamıştır."
+  },
+  {
+    "id": 185,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde ilk kağıt para (Kaime) hangi padişah döneminde basılmıştır?",
+    "options": [
+      "A) II. Mahmut",
+      "B) Abdülmecit",
+      "C) Abdülaziz",
+      "D) II. Abdülhamit"
+    ],
+    "answer": "B",
+    "explanation": "İlk kağıt para olan Kaime-i Mutebere, Sultan Abdülmecit döneminde basılmıştır."
+  },
+  {
+    "id": 186,
+    "category": "tarih",
+    "level": 2,
+    "question": "Türk tarihinde 'Orhun Abideleri' hangi alfabe ile yazılmıştır?",
+    "options": [
+      "A) Uygur",
+      "B) Kiril",
+      "C) Göktürk",
+      "D) Arap"
+    ],
+    "answer": "C",
+    "explanation": "Orhun Abideleri, Türklerin bilinen ilk alfabesi olan 38 harfli Göktürk alfabesiyle yazılmıştır."
+  },
+  {
+    "id": 187,
+    "category": "tarih",
+    "level": 3,
+    "question": "Selçuklularda meliklerin (şehzadelerin) eğitimiyle ilgilenen devlet görevlisine ne ad verilir?",
+    "options": [
+      "A) Lala",
+      "B) Atabey",
+      "C) Hacip",
+      "D) Subaşı"
+    ],
+    "answer": "B",
+    "explanation": "Osmanlı'daki Lala'nın karşılığı Selçuklularda Atabey'dir."
+  },
+  {
+    "id": 188,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'nin Kuzey Afrika'da kaybettiği son toprak parçası hangisidir?",
+    "options": [
+      "A) Mısır",
+      "B) Tunus",
+      "C) Cezayir",
+      "D) Trablusgarp"
+    ],
+    "answer": "D",
+    "explanation": "Uşi Antlaşması ile İtalya'ya bırakılan Trablusgarp (Libya), Kuzey Afrika'daki son kayıptır."
+  },
+  {
+    "id": 189,
+    "category": "tarih",
+    "level": 2,
+    "question": "I. TBMM'nin gerçekleştirdiği tek inkılap hareketi hangisidir?",
+    "options": [
+      "A) Cumhuriyetin İlanı",
+      "B) Saltanatın Kaldırılması",
+      "C) Halifeliğin Kaldırılması",
+      "D) Medeni Kanun'un Kabulü"
+    ],
+    "answer": "B",
+    "explanation": "Savaş meclisi olan I. TBMM'nin yaptığı tek inkılap, 1 Kasım 1922'de Saltanatın kaldırılmasıdır."
+  },
+  {
+    "id": 190,
+    "category": "tarih",
+    "level": 2,
+    "question": "1926 yılında kabul edilen Türk Medeni Kanunu hangi ülkeden örnek alınmıştır?",
+    "options": [
+      "A) Almanya",
+      "B) İtalya",
+      "C) Fransa",
+      "D) İsviçre"
+    ],
+    "answer": "D",
+    "explanation": "Akılcı, pratik ve kadın-erkek eşitliğine dayalı olması nedeniyle İsviçre Medeni Kanunu örnek alınmıştır."
+  },
+  {
+    "id": 191,
+    "category": "tarih",
+    "level": 1,
+    "question": "Mustafa Kemal'in 'Ordular! İlk hedefiniz Akdeniz'dir. İleri!' emrini verdiği savaş hangisidir?",
+    "options": [
+      "A) Sakarya",
+      "B) I. İnönü",
+      "C) Büyük Taarruz",
+      "D) Çanakkale"
+    ],
+    "answer": "C",
+    "explanation": "Bu tarihi emir, Başkomutanlık Meydan Muharebesi (Büyük Taarruz) sırasında verilmiştir."
+  },
+  {
+    "id": 192,
+    "category": "tarih",
+    "level": 2,
+    "question": "Türkiye Cumhuriyeti'nin ilk Diyanet İşleri Başkanı kimdir?",
+    "options": [
+      "A) Mehmet Rıfat Börekçi",
+      "B) Elmalılı Hamdi Yazır",
+      "C) Ömer Nasuhi Bilmen",
+      "D) Ahmet Hamdi Akseki"
+    ],
+    "answer": "A",
+    "explanation": "Milli Mücadele'ye destek veren Ankara Müftüsü Rıfat Börekçi, ilk Diyanet İşleri Başkanı olmuştur."
+  },
+  {
+    "id": 193,
+    "category": "tarih",
+    "level": 2,
+    "question": "Cumhuriyet döneminin ilk özel bankası hangisidir?",
+    "options": [
+      "A) Ziraat Bankası",
+      "B) İş Bankası",
+      "C) Sanayi ve Maadin Bankası",
+      "D) Sümerbank"
+    ],
+    "answer": "B",
+    "explanation": "1924 yılında kurulan Türkiye İş Bankası, Cumhuriyetin ilk özel bankasıdır."
+  },
+  {
+    "id": 194,
+    "category": "tarih",
+    "level": 3,
+    "question": "1934 yılında imzalanan Balkan Antantı'na katılan devletler hangileridir?",
+    "options": [
+      "A) Türkiye, Yunanistan, Bulgaristan, Arnavutluk",
+      "B) Türkiye, Yunanistan, Yugoslavya, Romanya",
+      "C) Türkiye, Bulgaristan, Romanya, Macaristan",
+      "D) Türkiye, Yunanistan, Yugoslavya, Bulgaristan"
+    ],
+    "answer": "B",
+    "explanation": "Tayyare (T-Y-Y-R) kodlamasıyla bilinir: Türkiye, Yunanistan, Yugoslavya, Romanya."
+  },
+  {
+    "id": 195,
+    "category": "tarih",
+    "level": 3,
+    "question": "II. Dünya Savaşı sırasında Türkiye'de haksız kazançları önlemek için çıkarılan vergi kanunu hangisidir?",
+    "options": [
+      "A) Aşar Vergisi",
+      "B) Varlık Vergisi",
+      "C) Toprak Mahsulleri Vergisi",
+      "D) Ağnam Vergisi"
+    ],
+    "answer": "B",
+    "explanation": "1942 yılında olağanüstü servet edinenlerden bir defaya mahsus alınan vergi Varlık Vergisidir."
+  },
+  {
+    "id": 196,
+    "category": "tarih",
+    "level": 3,
+    "question": "1946 yılında Demokrat Parti'yi kuran 'Dörtlü Takrir' grubunda aşağıdakilerden hangisi yer almaz?",
+    "options": [
+      "A) Celal Bayar",
+      "B) Adnan Menderes",
+      "C) Fuat Köprülü",
+      "D) Fevzi Çakmak"
+    ],
+    "answer": "D",
+    "explanation": "Dörtlü Takrir: Celal Bayar, Adnan Menderes, Fuat Köprülü ve Refik Koraltan'dır. Fevzi Çakmak yoktur."
+  },
+  {
+    "id": 197,
+    "category": "tarih",
+    "level": 2,
+    "question": "1960 Darbesi sonrasında Yassıada yargılamaları sonucu idam edilen Başbakan kimdir?",
+    "options": [
+      "A) Fatin Rüştü Zorlu",
+      "B) Hasan Polatkan",
+      "C) Adnan Menderes",
+      "D) Nihat Erim"
+    ],
+    "answer": "C",
+    "explanation": "Adnan Menderes, 1961 yılında İmralı Adası'nda idam edilmiştir."
+  },
+  {
+    "id": 198,
+    "category": "tarih",
+    "level": 2,
+    "question": "1974 Kıbrıs Barış Harekatı sırasında Türkiye'nin Başbakanı kimdir?",
+    "options": [
+      "A) Süleyman Demirel",
+      "B) Necmettin Erbakan",
+      "C) Bülent Ecevit",
+      "D) Turgut Özal"
+    ],
+    "answer": "C",
+    "explanation": "Harekat emrini veren ve 'Ayşe tatile çıksın' parolasını kullanan Başbakan Bülent Ecevit'tir."
+  },
+  {
+    "id": 199,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de yerel saati en ileri olan ilimiz hangisidir?",
+    "options": [
+      "A) Kars",
+      "B) Hakkari",
+      "C) Iğdır",
+      "D) Artvin"
+    ],
+    "answer": "C",
+    "explanation": "Türkiye'nin en doğusunda yer alan Iğdır, güneşin en erken doğduğu ve yerel saatin en ileri olduğu ildir."
+  },
+  {
+    "id": 200,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de en uzun gündüzün yaşandığı tarih hangisidir?",
+    "options": [
+      "A) 21 Mart",
+      "B) 23 Eylül",
+      "C) 21 Aralık",
+      "D) 21 Haziran"
+    ],
+    "answer": "D",
+    "explanation": "Kuzey Yarımküre'de yaz başlangıcı olan 21 Haziran'da en uzun gündüz yaşanır."
+  },
+  {
+    "id": 201,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de sönmüş volkanik dağların en yoğun olduğu bölge hangisidir?",
+    "options": [
+      "A) İç Anadolu",
+      "B) Ege",
+      "C) Doğu Anadolu",
+      "D) Güneydoğu Anadolu"
+    ],
+    "answer": "C",
+    "explanation": "Ağrı, Tendürek, Süphan ve Nemrut gibi büyük volkanik dağlar Doğu Anadolu'da yer alır."
+  },
+  {
+    "id": 202,
+    "category": "cografya",
+    "level": 1,
+    "question": "Kalker, jips ve kaya tuzu gibi eriyebilen kayaçların bulunduğu 'Karstik' arazilerin en yaygın olduğu bölgemiz hangisidir?",
+    "options": [
+      "A) Karadeniz",
+      "B) Akdeniz",
+      "C) İç Anadolu",
+      "D) Doğu Anadolu"
+    ],
+    "answer": "B",
+    "explanation": "Teke ve Taşeli platoları başta olmak üzere Akdeniz Bölgesi karstik şekiller bakımından en zengindir."
+  },
+  {
+    "id": 203,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de yıllık yağış miktarının en az olduğu yer neresidir?",
+    "options": [
+      "A) Iğdır Ovası",
+      "B) Tuz Gölü ve Çevresi",
+      "C) Güneydoğu Anadolu Güneyi",
+      "D) Ergene Havzası"
+    ],
+    "answer": "B",
+    "explanation": "Etrafı dağlarla çevrili olduğu için Tuz Gölü çevresi ve Konya Karapınar Türkiye'nin en az yağış alan yeridir."
+  },
+  {
+    "id": 204,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de heyelan olaylarının en sık görüldüğü mevsim hangisidir?",
+    "options": [
+      "A) Kış",
+      "B) Sonbahar",
+      "C) Yaz",
+      "D) İlkbahar"
+    ],
+    "answer": "D",
+    "explanation": "Kar erimeleri ve yağışların toprağı suya doyurması nedeniyle heyelanlar en çok İlkbahar'da görülür."
+  },
+  {
+    "id": 205,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de su kaynaklarının azlığı ve yer şekillerinin düz olması nedeniyle 'Toplu Yerleşme'nin en yaygın olduğu bölge hangisidir?",
+    "options": [
+      "A) Karadeniz",
+      "B) İç Anadolu",
+      "C) Ege",
+      "D) Akdeniz"
+    ],
+    "answer": "B",
+    "explanation": "İç Anadolu'da su az olduğu için insanlar su kenarlarında toplanarak köyleri oluşturmuştur."
+  },
+  {
+    "id": 206,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'de en çok göç veren bölgemiz hangisidir?",
+    "options": [
+      "A) Karadeniz",
+      "B) Güneydoğu Anadolu",
+      "C) Doğu Anadolu",
+      "D) İç Anadolu"
+    ],
+    "answer": "C",
+    "explanation": "İş imkanlarının kısıtlı olması ve iklim şartları nedeniyle Doğu Anadolu en çok göç veren bölgedir."
+  },
+  {
+    "id": 207,
+    "category": "cografya",
+    "level": 2,
+    "question": "Yer şekillerinin engebeli olması nedeniyle tarımda makineleşmenin en zor olduğu bölge hangisidir?",
+    "options": [
+      "A) Marmara",
+      "B) İç Anadolu",
+      "C) Güneydoğu Anadolu",
+      "D) Karadeniz"
+    ],
+    "answer": "D",
+    "explanation": "Özellikle Doğu Karadeniz'in dağlık yapısı tarımda makine kullanımını engeller."
+  },
+  {
+    "id": 208,
+    "category": "cografya",
+    "level": 2,
+    "question": "Her mevsim yağışlı olduğu için 'Nadas' yönteminin en az uygulandığı bölge hangisidir?",
+    "options": [
+      "A) İç Anadolu",
+      "B) Güneydoğu Anadolu",
+      "C) Karadeniz",
+      "D) Ege"
+    ],
+    "answer": "C",
+    "explanation": "Toprağın nemli kalması nadas ihtiyacını ortadan kaldırır. Bu durum en çok Karadeniz'de görülür."
+  },
+  {
+    "id": 209,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'de zeytin üretiminde ilk sırada yer alan bölgemiz hangisidir?",
+    "options": [
+      "A) Marmara",
+      "B) Akdeniz",
+      "C) Ege",
+      "D) Güneydoğu Anadolu"
+    ],
+    "answer": "C",
+    "explanation": "Yağlık zeytin üretiminin yoğun olduğu Ege Bölgesi ilk sıradadır."
+  },
+  {
+    "id": 210,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de 'Beyaz Altın' olarak bilinen ve GAP ile birlikte üretimi Güneydoğu Anadolu'da zirveye çıkan ürün hangisidir?",
+    "options": [
+      "A) Mısır",
+      "B) Pamuk",
+      "C) Buğday",
+      "D) Şeker Pancarı"
+    ],
+    "answer": "B",
+    "explanation": "Sulama imkanlarının artmasıyla Şanlıurfa başta olmak üzere GAP bölgesi pamuk üretiminde liderdir."
+  },
+  {
+    "id": 211,
+    "category": "cografya",
+    "level": 2,
+    "question": "Yaz yağışlarına bağlı olarak gür çayırların bulunması nedeniyle 'Büyükbaş Mera Hayvancılığı'nın en yaygın olduğu bölge hangisidir?",
+    "options": [
+      "A) İç Anadolu",
+      "B) Karadeniz",
+      "C) Doğu Anadolu (Erzurum-Kars)",
+      "D) Ege"
+    ],
+    "answer": "C",
+    "explanation": "Erzurum-Kars platosunda yaz yağışları çayırları yeşertir, bu da büyükbaş hayvancılığı geliştirmiştir."
+  },
+  {
+    "id": 212,
+    "category": "cografya",
+    "level": 3,
+    "question": "Türkiye'de yaş koza üretimiyle 'İpek Böcekçiliği'nin en yoğun yapıldığı ilimiz hangisidir?",
+    "options": [
+      "A) Bursa",
+      "B) Bilecik",
+      "C) Diyarbakır",
+      "D) Antalya"
+    ],
+    "answer": "C",
+    "explanation": "Eskiden Bursa bilinse de günümüzde üretimde Diyarbakır (Kulp ilçesi) ilk sıradadır."
+  },
+  {
+    "id": 213,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'nin en zengin demir yataklarına sahip ili ve ilçesi hangisidir?",
+    "options": [
+      "A) Malatya - Hekimhan",
+      "B) Sivas - Divriği",
+      "C) Balıkesir - Hasançelebi",
+      "D) Elazığ - Keban"
+    ],
+    "answer": "B",
+    "explanation": "Sivas-Divriği, Türkiye'nin en önemli demir rezervine sahiptir."
+  },
+  {
+    "id": 214,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'de taş kömürü yataklarının bulunduğu tek havza neresidir?",
+    "options": [
+      "A) Soma",
+      "B) Elbistan",
+      "C) Zonguldak",
+      "D) Tavşanlı"
+    ],
+    "answer": "C",
+    "explanation": "I. Jeolojik zamanda oluşan taş kömürü sadece Zonguldak ve çevresinde çıkarılır."
+  },
+  {
+    "id": 215,
+    "category": "cografya",
+    "level": 2,
+    "question": "Kırıklı yer yapısı (fay hatları) nedeniyle 'Jeotermal Enerji' potansiyeli en yüksek bölge hangisidir?",
+    "options": [
+      "A) Marmara",
+      "B) Doğu Anadolu",
+      "C) Ege",
+      "D) İç Anadolu"
+    ],
+    "answer": "C",
+    "explanation": "Ege Bölgesi'ndeki graben alanları sıcak su kaynakları bakımından çok zengindir."
+  },
+  {
+    "id": 216,
+    "category": "cografya",
+    "level": 3,
+    "question": "Türkiye'nin ilk rüzgar enerji santrali (RES) nerede kurulmuştur?",
+    "options": [
+      "A) Çanakkale",
+      "B) Balıkesir",
+      "C) İzmir (Alaçatı)",
+      "D) Hatay"
+    ],
+    "answer": "C",
+    "explanation": "Türkiye'nin ilk rüzgar santrali 1998 yılında İzmir-Alaçatı'da kurulmuştur."
+  },
+  {
+    "id": 217,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'de sanayinin en fazla geliştiği ve nüfus yoğunluğunun en yüksek olduğu bölge hangisidir?",
+    "options": [
+      "A) Ege",
+      "B) İç Anadolu",
+      "C) Marmara",
+      "D) Akdeniz"
+    ],
+    "answer": "C",
+    "explanation": "İstanbul-Kocaeli-Bursa hattı nedeniyle Marmara Bölgesi sanayinin kalbidir."
+  },
+  {
+    "id": 218,
+    "category": "cografya",
+    "level": 2,
+    "question": "Hinterlandı (art bölgesi) en geniş olan ve en işlek limanımız hangisidir?",
+    "options": [
+      "A) İzmir",
+      "B) Mersin",
+      "C) İstanbul",
+      "D) Samsun"
+    ],
+    "answer": "C",
+    "explanation": "İstanbul Limanı, sanayi ve ticaret merkezlerine yakınlığı ile en geniş hinterlanda sahiptir."
+  },
+  {
+    "id": 219,
+    "category": "cografya",
+    "level": 2,
+    "question": "Yer şekillerinin engebeli olması nedeniyle demir yolu ulaşımının bulunmadığı bölüm hangisidir?",
+    "options": [
+      "A) Adana Bölümü",
+      "B) Doğu Karadeniz Bölümü",
+      "C) Yukarı Sakarya Bölümü",
+      "D) Kıyı Ege Bölümü"
+    ],
+    "answer": "B",
+    "explanation": "Doğu Karadeniz ve Hakkari yörelerine yer şekilleri nedeniyle demir yolu yapılamamıştır."
+  },
+  {
+    "id": 220,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'nin en kısa kara sınırı hangi ülkeyledir?",
+    "options": [
+      "A) Yunanistan",
+      "B) Bulgaristan",
+      "C) Nahçıvan (Azerbaycan)",
+      "D) Gürcistan"
+    ],
+    "answer": "C",
+    "explanation": "Dilucu Sınır Kapısı'nın bulunduğu Nahçıvan sınırı sadece 18 km'dir."
+  },
+  {
+    "id": 221,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'nin Avrupa'ya açılan en işlek sınır kapısı olan 'Kapıkule' hangi ülke ile aramızdadır?",
+    "options": [
+      "A) Yunanistan",
+      "B) Bulgaristan",
+      "C) Gürcistan",
+      "D) Romanya"
+    ],
+    "answer": "B",
+    "explanation": "Edirne'de bulunan Kapıkule Sınır Kapısı, Bulgaristan sınırımızdadır."
+  },
+  {
+    "id": 222,
+    "category": "cografya",
+    "level": 1,
+    "question": "Döviz getirisi yüksek olduğu için 'Bacasız Sanayi' olarak adlandırılan sektör hangisidir?",
+    "options": [
+      "A) Tarım",
+      "B) Madencilik",
+      "C) Turizm",
+      "D) Ulaşım"
+    ],
+    "answer": "C",
+    "explanation": "Turizm, ülkeye doğrudan döviz girdisi sağladığı için bacasız sanayi olarak bilinir."
+  },
+  {
+    "id": 223,
+    "category": "cografya",
+    "level": 1,
+    "question": "UNESCO Dünya Mirası Listesi'nde yer alan ve 'Tarihin Sıfır Noktası' olarak bilinen Göbeklitepe hangi ilimizdedir?",
+    "options": [
+      "A) Gaziantep",
+      "B) Mardin",
+      "C) Şanlıurfa",
+      "D) Diyarbakır"
+    ],
+    "answer": "C",
+    "explanation": "Dünyanın bilinen en eski tapınak merkezi olan Göbeklitepe Şanlıurfa'dadır."
+  },
+  {
+    "id": 224,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'de orman alanlarının en fazla olduğu bölge hangisidir?",
+    "options": [
+      "A) Akdeniz",
+      "B) Ege",
+      "C) Karadeniz",
+      "D) Marmara"
+    ],
+    "answer": "C",
+    "explanation": "Her mevsim yağışlı olması nedeniyle Karadeniz Bölgesi orman bakımından en zengindir."
+  },
+  {
+    "id": 225,
+    "category": "cografya",
+    "level": 2,
+    "question": "Eğimli arazilerde kar kütlesinin düşmesiyle oluşan 'Çığ' felaketinin en sık görüldüğü bölge hangisidir?",
+    "options": [
+      "A) Karadeniz",
+      "B) Doğu Anadolu",
+      "C) İç Anadolu",
+      "D) Akdeniz"
+    ],
+    "answer": "B",
+    "explanation": "Yüksek dağlık yapısı ve yoğun kar yağışı nedeniyle Doğu Anadolu çığ riskinin en yüksek olduğu yerdir."
+  },
+  {
+    "id": 226,
+    "category": "cografya",
+    "level": 2,
+    "question": "Doğu Anadolu Projesi'nin (DAP) temel amacı nedir?",
+    "options": [
+      "A) Sanayiyi geliştirmek",
+      "B) Turizmi canlandırmak",
+      "C) Hayvancılığı geliştirmek",
+      "D) Madenciliği artırmak"
+    ],
+    "answer": "C",
+    "explanation": "Bölgenin coğrafi şartları nedeniyle DAP'ın önceliği tarım ve özellikle hayvancılığı geliştirmektir."
+  },
+  {
+    "id": 227,
+    "category": "cografya",
+    "level": 1,
+    "question": "Dünya üretiminde birinci olduğumuz ve üretiminin tamamına yakınının Karadeniz'den karşılandığı ürün hangisidir?",
+    "options": [
+      "A) Çay",
+      "B) Fındık",
+      "C) Mısır",
+      "D) Kivi"
+    ],
+    "answer": "B",
+    "explanation": "Fındık, Türkiye'nin dünyada en çok ürettiği ve ihraç ettiği stratejik bir üründür."
+  },
+  {
+    "id": 228,
+    "category": "cografya",
+    "level": 2,
+    "question": "Akdeniz iklim bölgesinde kalkerli araziler üzerinde oluşan kırmızı renkli topraklara ne ad verilir?",
+    "options": [
+      "A) Çernezyom",
+      "B) Podzol",
+      "C) Terra Rossa",
+      "D) Alüvyal"
+    ],
+    "answer": "C",
+    "explanation": "İçindeki demir oksit nedeniyle kırmızı renk alan Terra Rossa, Akdeniz ikliminin karakteristik toprağıdır."
   }
 ]
