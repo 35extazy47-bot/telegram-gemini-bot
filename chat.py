@@ -1188,13 +1188,20 @@ def duel_bot(message):
         bot.reply_to(message, f"❌ Yetersiz EXP! Mevcut: {users[user_id]['exp']}")
         return
 
-    # Zar atma mantığı
-    user_roll = random.randint(1, 6)
-    bot_roll = random.randint(1, 6)
+    # Animasyonlu Zar Atma
+    bot.reply_to(message, f"⚔️ **DÜELLO BAŞLADI!** ⚔️\nOrtadaki Ödül: {amount * 2} EXP\nZarlar atılıyor... 🎲")
     
-    msg = f"⚔️ **DÜELLO BAŞLADI!** ⚔️\nOrtadaki Ödül: {amount * 2} EXP\n\n"
-    msg += f"👤 Senin Zarın: 🎲 {user_roll}\n"
-    msg += f"🤖 Botun Zarı: 🎲 {bot_roll}\n\n"
+    # Gerçek Telegram zarı gönder
+    msg_user = bot.send_dice(message.chat.id, emoji="🎲")
+    msg_bot = bot.send_dice(message.chat.id, emoji="🎲")
+    
+    # Zarların durması için biraz bekle (Animasyon efekti)
+    time.sleep(4)
+    
+    user_roll = msg_user.dice.value
+    bot_roll = msg_bot.dice.value
+    
+    msg = f"👤 Senin Zarın: {user_roll}\n🤖 Botun Zarı: {bot_roll}\n\n"
     
     if user_roll > bot_roll:
         users[user_id]["exp"] += amount
@@ -1273,6 +1280,9 @@ def daily_reward(message):
     users[user_id]["daily_streak"] = streak
     save_users()
 
+    # Slot makinesi animasyonu
+    bot.send_dice(message.chat.id, emoji="🎰")
+    
     bot.reply_to(message, f"🎁 **GÜNLÜK ÖDÜL ALINDI!**\n\n💰 Kazanç: +{total_reward} EXP\n🔥 Günlük Seri: {streak}. Gün\n\n_(Her gün gel, ödülünü katla!)_")
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("ans_"))
@@ -1465,6 +1475,9 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
     earned_exp_display = 0
     if answer == correct:
         # Eğer tekrar modundaysak veya normal modda yanlış listesindeyse sil
+        # Doğru cevap animasyonu (Dart)
+        bot.send_dice(chat_id, emoji="🎯")
+        
         if "current_question_id" in users[user_id]:
             q_id = users[user_id]["current_question_id"]
             if "wrong_answers" in users[user_id] and q_id in users[user_id]["wrong_answers"]:
