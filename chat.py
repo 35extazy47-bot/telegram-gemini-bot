@@ -12,6 +12,8 @@ from deep_translator import GoogleTranslator
 import io
 from urllib.parse import unquote
 from PIL import Image, ImageDraw, ImageFont
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 load_dotenv()
 
@@ -204,7 +206,7 @@ def get_question(level, category):
     return random.choice(uygun) if uygun else None
 
 def fetch_image(url):
-    """Resmi indirmeyi dener (Gelişmiş ve Hata Ayıklamalı)."""
+    """Resmi indirmeyi dener (Optimize Edilmiş ve Hata Korumalı)."""
     url = url.strip()
     
     # URL Decode
@@ -214,16 +216,15 @@ def fetch_image(url):
         except:
             pass
 
-    # Farklı User-Agent'lar (Engeli aşmak için rotasyon)
-    user_agents = [
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15",
-        "TelegramBot (like TwitterBot)"
-    ]
+    # Standart Tarayıcı Kimliği
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+    }
 
     urls_to_try = [url]
 
-    # Wikimedia Thumbnail Mantığı
+    # Wikimedia Thumbnail Mantığı (Boyut Alternatifleri)
     if "upload.wikimedia.org" in url and "/thumb/" in url:
         try:
             parts = url.split("/thumb/")
@@ -232,56 +233,52 @@ def fetch_image(url):
             path_parts = rest.split("/")
             original_path = "/".join(path_parts[:-1])
             
-            if ".svg" in original_path.lower():
-                filename = path_parts[-1]
-                clean_name = filename.split("px-", 1)[1] if "px-" in filename else filename
-                # Alternatif boyutlar
-                for size in ["1024px", "800px", "500px"]:
-                    new_url = f"{base}/thumb/{original_path}/{size}-{clean_name}"
-                    if new_url not in urls_to_try:
-                        urls_to_try.append(new_url)
-            else:
-                urls_to_try.append(f"{base}/{original_path}")
+            filename = path_parts[-1]
+            clean_name = filename.split("px-", 1)[1] if "px-" in filename else filename
+            
+            # Öncelikli boyutlar (Büyükten küçüğe)
+            sizes = ["1024px", "800px", "640px"]
+            for size in sizes:
+                new_url = f"{base}/thumb/{original_path}/{size}-{clean_name}"
+                if new_url not in urls_to_try:
+                    urls_to_try.append(new_url)
         except:
             pass
 
     for target in urls_to_try:
-        for ua in user_agents:
-            try:
-                headers = {
-                    "User-Agent": ua,
-                    "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
-                }
-                
-                print(f"📥 İndiriliyor: {target}")
-                response = requests.get(target, headers=headers, timeout=15)
-                
-                if response.status_code == 200:
-                    ct = response.headers.get("Content-Type", "").lower()
-                    if "text/html" in ct:
-                        print("⚠️ Resim yerine HTML geldi, atlanıyor.")
-                        continue
-                    return response.content
-                
-                elif response.status_code == 429:
-                    print("⚠️ Çok hızlı istek (429). Bekleniyor...")
-                    time.sleep(2)
-                    continue
-                else:
-                    print(f"❌ Başarısız (Kod {response.status_code})")
+        try:
+            print(f"📥 İndiriliyor: {target}")
+            # SSL doğrulamasını kapat (verify=False)
+            response = requests.get(target, headers=headers, timeout=20, verify=False)
             
-            except Exception as e:
-                print(f"❌ Bağlantı hatası: {e}")
-                # SSL Hatası durumunda verify=False dene
-                if "SSLError" in str(e) or "CertificateError" in str(e):
-                    try:
-                        print("⚠️ SSL Hatası, sertifika kontrolü kapatılıp deneniyor...")
-                        response = requests.get(target, headers=headers, timeout=15, verify=False)
-                        if response.status_code == 200: return response.content
-                    except:
-                        pass
+            if response.status_code == 200:
+                ct = response.headers.get("Content-Type", "").lower()
+                if "text/html" in ct:
+                    print("⚠️ Resim yerine HTML geldi, atlanıyor.")
+                    continue
+                return response.content
+            
+            elif response.status_code == 404:
+                print("❌ Dosya bulunamadı (404), diğer boyuta geçiliyor.")
+                continue
+            
+            elif response.status_code == 429:
+                print("⚠️ Çok fazla istek (429)! 5 saniye bekleniyor...")
+                time.sleep(5)
+                # Son bir şans
+                response = requests.get(target, headers=headers, timeout=20, verify=False)
+                if response.status_code == 200:
+                    return response.content
+                else:
+                    continue
+            
+            else:
+                print(f"❌ Başarısız (Kod {response.status_code})")
         
-        time.sleep(0.5)
+        except Exception as e:
+            print(f"❌ Bağlantı hatası: {e}")
+        
+        time.sleep(1)
             
     return None
 
