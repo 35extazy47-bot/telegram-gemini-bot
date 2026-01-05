@@ -2003,6 +2003,21 @@ def tarot_reading(message):
         bot.reply_to(message, "⛔ Onay bekleniyor...")
         return
 
+    msg = bot.reply_to(message, "🔮 **TAROT FALI**\n\nKartları seçmeden önce niyetini belirlemeliyiz.\nLütfen sorunu veya niyetini yaz: 👇")
+    bot.register_next_step_handler(msg, perform_tarot_reading)
+
+def perform_tarot_reading(message):
+    user_id = str(message.from_user.id)
+    
+    if not message.text:
+        bot.reply_to(message, "⚠️ Lütfen geçerli bir soru yaz.")
+        return
+
+    # Eğer kullanıcı vazgeçip komut yazdıysa iptal et
+    if message.text.startswith("/"):
+        bot.reply_to(message, "🔮 Tarot falı iptal edildi.")
+        return
+
     # 3 Hak Kontrolü (Burada limiti kontrol edip düşüyoruz)
     if not check_daily_limit(user_id):
         bot.reply_to(message, "⛔ Günlük Gemini mesaj hakkın (3/3) doldu! Yarın tekrar gel.")
@@ -2031,10 +2046,11 @@ def tarot_reading(message):
     drawn = random.sample(deck, 3)
     
     try:
-        prompt = f"Sen mistik, bilge ve sezgileri güçlü bir tarot yorumcususun. Kullanıcı için şu 3 kart çekildi: 1. {drawn[0]} (Geçmiş/Temel), 2. {drawn[1]} (Şimdi/Durum), 3. {drawn[2]} (Gelecek/Sonuç). Bu kartları birbiriyle bağlantılı olarak yorumla. Kullanıcıya tavsiyeler ver. Gizemli ve etkileyici bir dil kullan."
+        question = message.text
+        prompt = f"Sen mistik, bilge ve sezgileri güçlü bir tarot yorumcususun. Kullanıcı şu soruyu sordu: '{question}'. Çekilen kartlar: 1. {drawn[0]} (Geçmiş/Temel), 2. {drawn[1]} (Şimdi/Durum), 3. {drawn[2]} (Gelecek/Sonuç). Bu kartları soruyla bağlantılı olarak yorumla. Kullanıcıya tavsiyeler ver. Gizemli ve etkileyici bir dil kullan."
         response = safe_generate_content(prompt)
         
-        text = f"🃏 **TAROT FALI** 🃏\n\n1️⃣ **{drawn[0]}**\n2️⃣ **{drawn[1]}**\n3️⃣ **{drawn[2]}**\n\n🔮 **Yorum:**\n{response.text}"
+        text = f"🃏 **TAROT FALI** 🃏\n\n❓ **Soru:** {question}\n\n1️⃣ **{drawn[0]}**\n2️⃣ **{drawn[1]}**\n3️⃣ **{drawn[2]}**\n\n🔮 **Yorum:**\n{response.text}"
         bot.delete_message(message.chat.id, wait_msg.message_id)
         bot.reply_to(message, text, parse_mode="Markdown")
     except Exception as e:
