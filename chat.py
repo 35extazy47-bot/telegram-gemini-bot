@@ -417,6 +417,9 @@ def language_selected(call):
                 "🔹 `/burc` - Günlük Burç Yorumu ♈\n"
                 "🔹 `/tarihtebugun` - Tarihte Bugün 📅\n"
                 "🔹 `/bilgi` - İlginç Bilgiler 🧠\n\n"
+                "⚠️ **Yapay Zeka Limiti**\n"
+                "Günlük **3 hak** ile sınırlıdır. (Her gece yenilenir)\n"
+                "🤖 **AI Özellikleri:** /ruya, /tarot, /burc, /bilgi, /ozet ve Sohbet\n\n"
                 "👇 **İletişim & Destek**"
             ),
             "btn": "📩 Geliştiriciye Mesaj Gönder"
@@ -450,6 +453,9 @@ def language_selected(call):
                 "🔹 `/burc` - Daily Horoscope ♈\n"
                 "🔹 `/tarihtebugun` - On This Day 📅\n"
                 "🔹 `/bilgi` - Interesting Facts 🧠\n\n"
+                "⚠️ **AI Usage Limit**\n"
+                "Limited to **3 uses** per day. (Resets nightly)\n"
+                "🤖 **AI Features:** /ruya, /tarot, /burc, /bilgi, /ozet and Chat\n\n"
                 "👇 **Contact & Support**"
             ),
             "btn": "📩 Contact the Developer"
@@ -483,6 +489,9 @@ def language_selected(call):
                 "🔹 `/burc` - Дневен хороскоп ♈\n"
                 "🔹 `/tarihtebugun` - На този ден 📅\n"
                 "🔹 `/bilgi` - Интересни факти 🧠\n\n"
+                "⚠️ **Лимит за AI**\n"
+                "Ограничено до **3 използвания** на ден. (Нулира се всяка нощ)\n"
+                "🤖 **AI Функции:** /ruya, /tarot, /burc, /bilgi, /ozet и Чат\n\n"
                 "� **Контакт и Поддръжка**"
             ),
             "btn": "📩 Свържи се с разработчика"
