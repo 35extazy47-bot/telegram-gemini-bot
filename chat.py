@@ -978,43 +978,20 @@ def show_inventory(message):
         return
     if user_id not in users: return
     
-    u = users[user_id]
-    
-    # Eşyalar listesi
-    items = []
-    if u.get("has_pickaxe"):
-        items.append("⛏️ **Elmas Kazma** (Maden şansını artırır)")
-        
-    # Ticaret Malları
-    inv = u.get("inventory", {})
-    has_trade_items = False
-    
-    # Jokerleri Göster
-    if inv.get("joker_50", 0) > 0: items.append(f"💡 %50 Joker: {inv['joker_50']} adet")
-    if inv.get("joker_pass", 0) > 0: items.append(f"⏭ Pas Geçme: {inv['joker_pass']} adet")
-    if inv.get("joker_audience", 0) > 0: items.append(f"👥 Seyirci Jokeri: {inv['joker_audience']} adet")
-
-    # Ticaret Mallarını Göster
-    for code, count in inv.items():
-        if count > 0 and code in TRADE_GOODS:
-            items.append(f"📦 {TRADE_GOODS[code]['name']}: {count} adet")
-            has_trade_items = True
-    
-    # Eğer hiç eşya yoksa
-    if not items:
-        items_text = "💨 Çantan boş..."
-    else:
-        items_text = "\n".join(items)
-        
-    text = (
-        f"🎒 **ENVANTERİN**\n\n"
-        f"👤 **Sahibi:** {u.get('name', 'Bilinmiyor')}\n"
-        f"💰 **Varlık:** {u.get('exp', 0)} EXP\n"
-        f"❤️ **Can:** {u.get('lives', 3)}\n"
-        f"🎖 **Rütbe:** {get_rank(u.get('level', 1), u.get('username'))}\n\n"
-        f"📦 **Eşyalar:**\n{items_text}"
-    )
-    bot.send_message(message.chat.id, text, parse_mode="Markdown")
+    try:
+        photo = create_inventory_image(users[user_id])
+        bot.send_photo(message.chat.id, photo, caption="🎒 **Envanter Durumu**")
+    except Exception as e:
+        print(f"Envanter görsel hatası: {e}")
+        # Hata durumunda eski usul metin (Fallback)
+        u = users[user_id]
+        text = (
+            f"🎒 **ENVANTERİN**\n\n"
+            f"👤 **Sahibi:** {u.get('name', 'Bilinmiyor')}\n"
+            f"💰 **Varlık:** {u.get('exp', 0)} EXP\n"
+            f"❤️ **Can:** {u.get('lives', 3)}\n"
+        )
+        bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
 @bot.message_handler(commands=['duello'])
 def duel_bot(message):
@@ -1335,6 +1312,96 @@ def check_answer(message):
         send_wrong_question(message.chat.id, user_id)
     else:
         send_question(message.chat.id, user_id)
+
+def create_inventory_image(user_data):
+    width = 800
+    height = 600
+    bg_color = (35, 39, 42) # Koyu Gri
+    panel_color = (44, 47, 51) # Daha açık gri (Kutular için)
+    
+    img = Image.new('RGB', (width, height), color=bg_color)
+    draw = ImageDraw.Draw(img)
+    
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path):
+            candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "/System/Library/Fonts/Helvetica.ttc"]
+            for f in candidates:
+                if os.path.exists(f):
+                    font_path = f
+                    break
+        
+        title_font = ImageFont.truetype(font_path, 40)
+        header_font = ImageFont.truetype(font_path, 28)
+        item_font = ImageFont.truetype(font_path, 22)
+        small_font = ImageFont.truetype(font_path, 18)
+    except:
+        title_font = ImageFont.load_default()
+        header_font = ImageFont.load_default()
+        item_font = ImageFont.load_default()
+        small_font = ImageFont.load_default()
+
+    # Sol Panel: Oyuncu İstatistikleri
+    draw.rectangle([(20, 80), (300, 580)], fill=panel_color)
+    
+    name = user_data.get("name", "Bilinmiyor")
+    draw.text((30, 30), "🎒 OYUNCU ÇANTASI", font=title_font, fill=(255, 215, 0))
+    
+    y = 100
+    draw.text((40, y), "👤 Sahibi:", font=small_font, fill=(150, 150, 150))
+    draw.text((40, y+25), name[:15], font=header_font, fill=(255, 255, 255))
+    
+    y += 90
+    draw.text((40, y), "💰 Varlık:", font=small_font, fill=(150, 150, 150))
+    draw.text((40, y+25), f"{user_data.get('exp', 0)} EXP", font=header_font, fill=(46, 204, 113))
+    
+    y += 90
+    draw.text((40, y), "❤️ Can:", font=small_font, fill=(150, 150, 150))
+    draw.text((40, y+25), f"{user_data.get('lives', 3)} Adet", font=header_font, fill=(231, 76, 60))
+    
+    y += 90
+    draw.text((40, y), "⛏️ Ekipman:", font=small_font, fill=(150, 150, 150))
+    equip = "Elmas Kazma" if user_data.get("has_pickaxe") else "Yok"
+    draw.text((40, y+25), equip, font=item_font, fill=(52, 152, 219))
+
+    # Sağ Panel: Eşyalar (Grid Yapısı)
+    items = []
+    inv = user_data.get("inventory", {})
+    
+    # Jokerler
+    if inv.get("joker_50", 0) > 0: items.append({"name": "%50 Joker", "count": inv["joker_50"], "icon": "💡"})
+    if inv.get("joker_pass", 0) > 0: items.append({"name": "Pas Geç", "count": inv["joker_pass"], "icon": "⏭"})
+    if inv.get("joker_audience", 0) > 0: items.append({"name": "Seyirci", "count": inv["joker_audience"], "icon": "👥"})
+    
+    # Ticaret Malları
+    for code, count in inv.items():
+        if count > 0 and code in TRADE_GOODS:
+            items.append({"name": TRADE_GOODS[code]["name"].split()[0], "count": count, "icon": "📦"})
+
+    start_x = 340
+    start_y = 80
+    box_w = 210
+    box_h = 100
+    gap = 20
+    
+    if not items:
+        draw.text((start_x + 80, start_y + 200), "Çanta Boş... 🕸️", font=header_font, fill=(100, 100, 100))
+    
+    for i, item in enumerate(items):
+        col = i % 2
+        row = i // 2
+        x = start_x + (col * (box_w + gap))
+        y = start_y + (row * (box_h + gap))
+        
+        draw.rectangle([(x, y), (x + box_w, y + box_h)], fill=panel_color)
+        draw.text((x + 15, y + 30), item["icon"], font=header_font, fill=(255, 255, 255))
+        draw.text((x + 60, y + 20), item["name"], font=item_font, fill=(255, 255, 255))
+        draw.text((x + 60, y + 50), f"x{item['count']}", font=header_font, fill=(255, 215, 0))
+
+    bio = io.BytesIO()
+    img.save(bio, 'PNG')
+    bio.seek(0)
+    return bio
 
 def get_user_profile_image(user_id):
     """Kullanıcının profil fotoğrafını indirir ve PIL Image olarak döndürür."""
