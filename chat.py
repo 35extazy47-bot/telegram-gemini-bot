@@ -10,10 +10,7 @@ import requests
 import html
 from deep_translator import GoogleTranslator
 import io
-from urllib.parse import unquote
 from PIL import Image, ImageDraw, ImageFont
-import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 load_dotenv()
 
@@ -205,99 +202,6 @@ def get_question(level, category):
         ]
     return random.choice(uygun) if uygun else None
 
-def fetch_image(url):
-    """Resmi indirmeyi dener (Orijinal URL Destekli ve Hata Korumalı)."""
-    url = url.strip()
-    
-    # URL Decode
-    if "%" in url:
-        try:
-            url = unquote(url)
-        except:
-            pass
-
-    # Standart Tarayıcı Kimliği
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
-    }
-
-    urls_to_try = []
-    
-    # 1. Verilen URL'yi ekle
-    urls_to_try.append(url)
-
-    # 2. Wikimedia Thumbnail Mantığı (Orijinal ve Alternatifler)
-    if "upload.wikimedia.org" in url and "/thumb/" in url:
-        try:
-            parts = url.split("/thumb/")
-            base = parts[0] 
-            rest = parts[1] 
-            path_parts = rest.split("/")
-            
-            # Orijinal URL'yi bul
-            # Örn: .../thumb/a/ab/File.jpg/1024px-File.jpg -> .../a/ab/File.jpg
-            original_path = "/".join(path_parts[:-1])
-            original_url = f"{base}/{original_path}"
-            
-            # Orijinal URL'yi listeye ekle (İkinci sıraya)
-            if original_url not in urls_to_try:
-                urls_to_try.append(original_url)
-
-            filename = path_parts[-1]
-            # Dosya isminden px kısmını temizle (örn: 1024px-Dosya.jpg -> Dosya.jpg)
-            if "px-" in filename:
-                clean_name = filename.split("px-", 1)[1]
-            else:
-                clean_name = filename
-            
-            # Öncelikli boyutlar (Büyükten küçüğe)
-            sizes = ["1280px", "1024px", "800px", "640px"]
-            for size in sizes:
-                new_url = f"{base}/thumb/{original_path}/{size}-{clean_name}"
-                if new_url not in urls_to_try:
-                    urls_to_try.append(new_url)
-        except Exception as e:
-            print(f"URL oluşturma hatası: {e}")
-
-    for target in urls_to_try:
-        try:
-            print(f"📥 İndiriliyor: {target}")
-            # SSL doğrulamasını kapat (verify=False)
-            response = requests.get(target, headers=headers, timeout=20, verify=False)
-            
-            if response.status_code == 200:
-                ct = response.headers.get("Content-Type", "").lower()
-                if "text/html" in ct:
-                    print("⚠️ Resim yerine HTML geldi, atlanıyor.")
-                    continue
-                return response.content
-            
-            elif response.status_code == 404:
-                print("❌ Dosya bulunamadı (404), diğer boyuta geçiliyor.")
-                continue
-            
-            elif response.status_code == 429:
-                print("⚠️ Çok fazla istek (429)! 5 saniye bekleniyor...")
-                time.sleep(5)
-                # Son bir şans
-                response = requests.get(target, headers=headers, timeout=20, verify=False)
-                if response.status_code == 200:
-                    return response.content
-                else:
-                    print(f"❌ Tekrar deneme başarısız: {response.status_code}")
-                    continue
-            
-            else:
-                print(f"❌ Başarısız (Kod {response.status_code})")
-        
-        except Exception as e:
-            print(f"❌ Bağlantı hatası: {e}")
-        
-        time.sleep(1)
-            
-    return None
-
 def send_question(chat_id, user_id):
     level = users[user_id]["level"]
     category = users[user_id]["category"]
@@ -332,25 +236,7 @@ def send_question(chat_id, user_id):
         InlineKeyboardButton("👥 Seyirci (15 EXP)", callback_data="joker_audience")
     )
 
-    # Eğer soruda resim varsa fotoğraf olarak gönder
-    if q.get("image"):
-        try:
-            msg = bot.send_photo(chat_id, photo=q["image"], caption=text, reply_markup=markup)
-        except Exception as e:
-            print(f"⚠️ Resim URL hatası: {e}. İndirilip deneniyor...")
-            try:
-                img_data = fetch_image(q["image"])
-                if img_data:
-                    photo_data = io.BytesIO(img_data)
-                    photo_data.name = "image.jpg" # Telegram bazen dosya ismi ister
-                    msg = bot.send_photo(chat_id, photo=photo_data, caption=text, reply_markup=markup)
-                else:
-                    raise Exception("Resim indirilemedi")
-            except Exception as e2:
-                print(f"⚠️ Resim gönderilemedi: {e2}")
-                msg = bot.send_message(chat_id, text, reply_markup=markup)
-    else:
-        msg = bot.send_message(chat_id, text, reply_markup=markup)
+    msg = bot.send_message(chat_id, text, reply_markup=markup)
         
     users[user_id]["last_question_message_id"] = msg.message_id
     save_users()
@@ -382,25 +268,7 @@ def send_wrong_question(chat_id, user_id):
         "\n".join(q['options'])
     )
 
-    # Resim kontrolü (Tekrar soruları için)
-    if q.get("image"):
-        try:
-            msg = bot.send_photo(chat_id, photo=q["image"], caption=text)
-        except Exception as e:
-            print(f"⚠️ Resim URL hatası: {e}. İndirilip deneniyor...")
-            try:
-                img_data = fetch_image(q["image"])
-                if img_data:
-                    photo_data = io.BytesIO(img_data)
-                    photo_data.name = "image.jpg" # Telegram bazen dosya ismi ister
-                    msg = bot.send_photo(chat_id, photo=photo_data, caption=text)
-                else:
-                    raise Exception("Resim indirilemedi")
-            except Exception as e2:
-                print(f"⚠️ Resim gönderilemedi: {e2}")
-                msg = bot.send_message(chat_id, text)
-    else:
-        msg = bot.send_message(chat_id, text)
+    msg = bot.send_message(chat_id, text)
         
     users[user_id]["last_question_message_id"] = msg.message_id
     save_users()
