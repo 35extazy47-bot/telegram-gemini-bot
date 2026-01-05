@@ -2,7 +2,7 @@ import os
 import json
 import random
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 from flask import Flask
 from threading import Thread, Timer, Lock
@@ -204,32 +204,66 @@ def get_question(level, category):
     return random.choice(uygun) if uygun else None
 
 def fetch_image(url):
-    """Resmi indirmeyi dener, başarısız olursa alternatifleri (orijinal boyut vb.) dener."""
+    """Resmi indirmeyi dener, başarısız olursa alternatifleri dener (SVG korumalı)."""
     url = url.strip()
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    }
+    
+    # Farklı User-Agent'lar ile deneme (Wikimedia bazen engelliyor)
+    headers_list = [
+        {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"},
+        {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15"}
+    ]
     
     # 1. Decode edip dene (Örn: %2C -> ,)
     try:
         clean_url = unquote(url)
-        response = requests.get(clean_url, headers=headers, timeout=10)
-        if response.status_code == 200:
-            return response.content
     except:
-        pass
+        clean_url = url
 
-    # 2. Wikimedia Thumbnail Fallback (Küçük resim yoksa orijinali dene)
+    for headers in headers_list:
+        try:
+            response = requests.get(clean_url, headers=headers, timeout=15)
+            if response.status_code == 200:
+                # SVG ise indirme, çünkü Telegram desteklemiyor
+                if clean_url.endswith(".svg") or "image/svg" in response.headers.get("Content-Type", ""):
+                    print("⚠️ SVG tespit edildi, PNG alternatifi aranıyor...")
+                    break 
+                return response.content
+        except:
+            continue
+
+    # 2. Wikimedia Fallback (Farklı boyutları veya orijinali dene)
     if "upload.wikimedia.org" in url and "/thumb/" in url:
         try:
-            # .../commons/thumb/a/ab/File.jpg/600px-File.jpg -> .../commons/a/ab/File.jpg
-            base = url.replace("/thumb/", "/")
-            parts = base.split("/")
-            original_url = "/".join(parts[:-1])
-            print(f"🔄 Thumbnail hatası, orijinal deneniyor: {original_url}")
-            response = requests.get(original_url, headers=headers, timeout=10)
-            if response.status_code == 200:
-                return response.content
+            parts = clean_url.split("/")
+            filename = parts[-1]
+            
+            # A) Farklı boyutları dene (800px, 1024px, 400px)
+            if "px-" in filename:
+                current_width = filename.split("px-")[0]
+                alternatives = ["800", "1024", "400", "500"]
+                if current_width in alternatives: alternatives.remove(current_width)
+                
+                for alt_w in alternatives:
+                    try:
+                        new_filename = filename.replace(f"{current_width}px-", f"{alt_w}px-")
+                        new_url = "/".join(parts[:-1] + [new_filename])
+                        print(f"🔄 Farklı boyut deneniyor: {alt_w}px")
+                        res = requests.get(new_url, headers=headers_list[0], timeout=10)
+                        if res.status_code == 200:
+                            return res.content
+                    except:
+                        pass
+
+            # B) Orijinal dosyayı dene (Sadece SVG değilse!)
+            base = clean_url.replace("/thumb/", "/")
+            parts_base = base.split("/")
+            original_url = "/".join(parts_base[:-1])
+            
+            if not original_url.endswith(".svg"):
+                print(f"🔄 Orijinal deneniyor: {original_url}")
+                res = requests.get(original_url, headers=headers_list[0], timeout=10)
+                if res.status_code == 200:
+                    return res.content
         except:
             pass
     return None
@@ -2627,7 +2661,7 @@ def scheduler_thread():
     global last_market_update
     while True:
         # Türkiye Saati (UTC+3) hesaplama
-        now = datetime.utcnow() + timedelta(hours=3)
+        now = datetime.now(timezone.utc) + timedelta(hours=3)
         if now.hour == 8 and now.minute == 0:
             send_morning_broadcast()
             time.sleep(65) # 1 dakika bekle ki tekrar tekrar atmasın
