@@ -624,6 +624,12 @@ def language_selected(call):
     selected = messages.get(lang_code, messages["en"])
 
     keyboard = InlineKeyboardMarkup()
+    # Kategorili Menü Butonları
+    keyboard.row(InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
+                 InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy"))
+    keyboard.row(InlineKeyboardButton("🎓 KPSS & Araçlar", callback_data="help_tools"),
+                 InlineKeyboardButton("🔮 Mistik & AI", callback_data="help_ai"))
+    
     keyboard.add(
         InlineKeyboardButton(
             text=selected["btn"],
@@ -638,6 +644,65 @@ def language_selected(call):
         reply_markup=keyboard,
         parse_mode="Markdown"
     )
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("help_"))
+def help_callback(call):
+    category = call.data
+    text = ""
+    
+    if category == "help_games":
+        text = (
+            "🎮 **OYUN MODLARI**\n\n"
+            "🔹 `/quiz` - Kategorili KPSS soruları çöz.\n"
+            "🔹 `/maraton` - Tek canla ne kadar gidebilirsin?\n"
+            "🔹 `/clock` - Zamana karşı Global sorular.\n"
+            "🔹 `/duello <miktar>` - Botla zar atışı yap.\n"
+            "🔹 `/bahis <miktar>` - Sıradaki soruya bahis oyna."
+        )
+    elif category == "help_economy":
+        text = (
+            "💰 **EKONOMİ & TİCARET**\n\n"
+            "🔹 `/borsa` - Kapalıçarşı fiyatlarını gör.\n"
+            "🔹 `/al <mal> <adet>` - Ticaret malı al.\n"
+            "🔹 `/sat <mal> <adet>` - Ticaret malı sat.\n"
+            "🔹 `/kaz` - Madene in (15 dk arayla).\n"
+            "🔹 `/market` - Eşya ve Joker satın al.\n"
+            "🔹 `/transfer <kisi> <miktar>` - Para gönder (%5 vergi).\n"
+            "🔹 `/zenginler` - En zengin oyuncular listesi."
+        )
+    elif category == "help_tools":
+        text = (
+            "🎓 **KPSS & ARAÇLAR**\n\n"
+            "🔹 `/ozet <konu>` - Konu özeti çıkar.\n"
+            "🔹 `/dogruyanlis` - Bilgi yarışması.\n"
+            "🔹 `/yanlislarim` - Hatalarını tekrar et.\n"
+            "🔹 `/pomodoro` - 25 dk ders çalışma sayacı.\n"
+            "🔹 `/tarihtebugun` - Tarihte bugün ne oldu?\n"
+            "🔹 `/soruekle` - Soru önerisinde bulun."
+        )
+    elif category == "help_ai":
+        text = (
+            "🔮 **MİSTİK & YAPAY ZEKA**\n\n"
+            "🔹 `/ruya <metin>` - Rüya tabiri.\n"
+            "🔹 `/tarot` - 3 kart tarot falı.\n"
+            "🔹 `/burc` - Günlük burç yorumu.\n"
+            "🔹 `/bilgi` - İlginç bir bilgi öğren."
+        )
+    elif category == "help_back":
+        # Ana menüye dönüş (Dil seçimi sonrası ekrana benzer)
+        # Kullanıcının dilini alıp tekrar karşılama mesajını gönderiyoruz
+        user_id = str(call.from_user.id)
+        lang_code = users.get(user_id, {}).get("lang", "tr")
+        # language_selected fonksiyonunu simüle et
+        call.data = f"lang_{lang_code}"
+        language_selected(call)
+        return
+
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("🔙 Ana Menüye Dön", callback_data="help_back"))
+    
+    bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=markup, parse_mode="Markdown")
+
 @bot.message_handler(commands=['quiz'])
 def quiz(message):
     user_id = str(message.from_user.id)
@@ -1131,6 +1196,15 @@ def mine_resource(message):
     users[user_id]["last_mine_time"] = now.strftime("%Y-%m-%d %H:%M:%S")
     has_pickaxe = users[user_id].get("has_pickaxe", False)
     
+    # Jackpot Şansı (%1) - Kazma varsa %2
+    if random.random() < (0.02 if has_pickaxe else 0.01):
+        amount = 5000
+        users[user_id]["exp"] += amount
+        msg = "🏺 **EFSANEVİ KEŞİF!**\n\nToprağın derinliklerinde kayıp bir **Antik Hazine** buldun!\nDeğeri: 💰 +5000 EXP"
+        save_users()
+        bot.edit_message_text(msg, message.chat.id, wait_msg.message_id, parse_mode="Markdown")
+        return
+
     # Şans faktörü (1-100)
     roll = random.randint(1, 100)
     if has_pickaxe:
@@ -2940,12 +3014,15 @@ def transfer_money(message):
         bot.reply_to(message, "❌ Kendine para gönderemezsin.")
         return
 
-    # Transfer işlemi
+    # Transfer işlemi (%5 Vergi Kesintisi)
+    tax = int(amount * 0.05)
+    net_amount = amount - tax
+    
     users[user_id]["exp"] -= amount
-    users[target_id]["exp"] += amount
+    users[target_id]["exp"] += net_amount
     save_users()
 
-    bot.reply_to(message, f"✅ **Transfer Başarılı!**\n💸 Gönderilen: {amount} EXP\n👤 Alıcı: {users[target_id]['name']}")
+    bot.reply_to(message, f"✅ **Transfer Başarılı!**\n📤 Gönderilen: {amount} EXP\n🏛️ Vergi (%5): -{tax} EXP\n📥 Alıcıya Geçen: {net_amount} EXP\n👤 Alıcı: {users[target_id]['name']}")
     
     try:
         bot.send_message(target_id, f"💸 **PARA GELDİ!**\n\n@{users[user_id].get('username', 'Biri')} sana {amount} EXP gönderdi.")
