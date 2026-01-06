@@ -116,32 +116,32 @@ load_market_data()
 # 📰 Borsa Haber Şablonları
 NEWS_TEMPLATES = {
     "ipek": {
-        "up": ["Sarayda ipek modası başladı! Talep patladı! 👗", "İpek Yolu'nda kervanlar yağmalandı, arz düştü! ⚔️", "Avrupa'dan gelen tüccarlar tüm ipeği topladı! 💰"],
-        "down": ["Çin'den dev ipek kervanı ulaştı! Piyasada bolluk var. 🐫", "Halk pamuklu kumaşa yöneldi, ipeğe ilgi azaldı. 📉", "İpek böceği üretiminde rekor artış var! 🐛"]
+        "up": ["Sarayda ipek modası başladı! Talep patladı! 👗", "İpek Yolu'nda kervanlar yağmalandı, arz düştü! ⚔️", "Avrupa'dan gelen tüccarlar tüm ipeği topladı! 💰", "Dokuma tezgahlarında grev var, ipek kumaş karaborsada! 🧵"],
+        "down": ["Çin'den dev ipek kervanı ulaştı! Piyasada bolluk var. 🐫", "Halk pamuklu kumaşa yöneldi, ipeğe ilgi azaldı. 📉", "İpek böceği üretiminde rekor artış var! 🐛", "Saray depolarındaki eski ipekler halka dağıtıldı. 📦"]
     },
     "baharat": {
-        "up": ["Saray mutfağı için yüklü baharat siparişi verildi! 🍛", "Hint Okyanusu'nda fırtına! Baharat gemileri battı. 🌊", "Kış yaklaşıyor, şifalı baharatlara talep arttı! 🌡️"],
-        "down": ["Yeni baharat yolu keşfedildi! Fiyatlar düşüşte. 🗺️", "Baharat stokları doldu taştı, tüccarlar elden çıkarıyor. 📦", "Hindistan'dan gelen gemiler limana yanaştı! 🚢"]
+        "up": ["Saray mutfağı için yüklü baharat siparişi verildi! 🍛", "Hint Okyanusu'nda fırtına! Baharat gemileri battı. 🌊", "Kış yaklaşıyor, şifalı baharatlara talep arttı! 🌡️", "Doğudan gelen kervanlar eşkıyalarca kesildi! Karabiber altın değerinde. ⚔️"],
+        "down": ["Yeni baharat yolu keşfedildi! Fiyatlar düşüşte. 🗺️", "Baharat stokları doldu taştı, tüccarlar elden çıkarıyor. 📦", "Hindistan'dan gelen gemiler limana yanaştı! 🚢", "Halk baharat yerine yerel otlara yöneldi. 🌿"]
     },
     "cini": {
-        "up": ["Yeni cami inşaatı için binlerce çini aranıyor! 🕌", "Ünlü çini ustaları greve gitti! Üretim durdu. 🔨", "Saray dekorasyonu için özel çini siparişi verildi! 🏛️"],
-        "down": ["Çini atölyelerinde üretim rekoru kırıldı! 🏺", "Yabancı tüccarlar çini alımını durdurdu. ❌", "Piyasaya ucuz ve kalitesiz çiniler girdi. 📉"]
+        "up": ["Yeni cami inşaatı için binlerce çini aranıyor! 🕌", "Ünlü çini ustaları greve gitti! Üretim durdu. 🔨", "Saray dekorasyonu için özel çini siparişi verildi! 🏛️", "İznik çinileri Avrupa sosyetesinin gözdesi oldu! İhracat patladı. 🌍"],
+        "down": ["Çini atölyelerinde üretim rekoru kırıldı! 🏺", "Yabancı tüccarlar çini alımını durdurdu. ❌", "Piyasaya ucuz ve kalitesiz çiniler girdi. 📉", "Büyük bir atölye kapandı, stoklar ucuza satılıyor. 🏚️"]
     },
     "tuz": {
-        "up": ["Kış yaklaşıyor, halk tuz stokluyor! ❄️", "Tuz Gölü'nde kuraklık var, üretim düştü! ☀️", "Ordu sefer hazırlığında, tuz stokluyor! ⚔️"],
-        "down": ["Yeni tuz madeni keşfedildi! ⛏️", "Tuz vergileri düşürüldü, fiyatlar rahatladı. ⬇️", "Tuz Gölü'nde hasat mevsimi bereketli geçti! 🧂"]
+        "up": ["Kış yaklaşıyor, halk tuz stokluyor! ❄️", "Tuz Gölü'nde kuraklık var, üretim düştü! ☀️", "Ordu sefer hazırlığında, tuz stokluyor! ⚔️", "Balık sezonu açıldı, tuzlama için talep tavan yaptı! 🐟"],
+        "down": ["Yeni tuz madeni keşfedildi! ⛏️", "Tuz vergileri düşürüldü, fiyatlar rahatladı. ⬇️", "Tuz Gölü'nde hasat mevsimi bereketli geçti! 🧂", "Tüccarlar ellerindeki fazla tuzu piyasaya sürdü. 📉"]
     },
     "elmas": {
-        "up": ["Saray mücevherleri için dev elmas siparişi! 💍", "Elmas madeninde göçük! Arz durdu. ⚠️", "Yabancı bir prenses tüm elmasları satın aldı! 👸"],
-        "down": ["Yeni bir elmas rezervi bulundu! Fiyatlar çakıldı. 📉", "Sahte elmaslar piyasayı karıştırdı, güven düştü. 💎", "Zenginler altına yöneldi, elmas gözden düştü. 📉"]
+        "up": ["Saray mücevherleri için dev elmas siparişi! 💍", "Elmas madeninde göçük! Arz durdu. ⚠️", "Yabancı bir prenses tüm elmasları satın aldı! 👸", "Nadir bulunan siyah elmas söylentisi piyasayı hareketlendirdi! 💎"],
+        "down": ["Yeni bir elmas rezervi bulundu! Fiyatlar çakıldı. 📉", "Sahte elmaslar piyasayı karıştırdı, güven düştü. 💎", "Zenginler altına yöneldi, elmas gözden düştü. 📉", "Savaş korkusuyla halk mücevherlerini satıyor. 💍"]
     },
     "altin": {
-        "up": ["Savaş söylentileri halkı altına yöneltti! 🛡️", "Darphane yeni sikke basımı için altın topluyor. 💰", "Ekonomik belirsizlik altını güvenli liman yaptı! ⚓"],
-        "down": ["Yeni altın madeni işletmeye açıldı! ⛏️", "Tüccarlar nakit ihtiyacı için altın bozuyor. 📉", "Hazine yüklü miktarda altın dağıttı! 💸"]
+        "up": ["Savaş söylentileri halkı altına yöneltti! 🛡️", "Darphane yeni sikke basımı için altın topluyor. 💰", "Ekonomik belirsizlik altını güvenli liman yaptı! ⚓", "Komşu ülkede devalüasyon! Herkes altına hücum ediyor. 📉"],
+        "down": ["Yeni altın madeni işletmeye açıldı! ⛏️", "Tüccarlar nakit ihtiyacı için altın bozuyor. 📉", "Hazine yüklü miktarda altın dağıttı! 💸", "Savaş sona erdi, piyasalar rahatladı, altın düşüşte. 🕊️"]
     },
     "demir": {
-        "up": ["Ordu için yeni silah siparişi! Demire hücum. ⚔️", "Demir ocaklarında grev var! 🔥", "Yeni kale inşaatları demir talebini patlattı! 🏰"],
-        "down": ["Hurda demirler piyasaya sürüldü. ♻️", "İnşaat sektörü durgunlaştı, demir talebi az. 🏗️", "Yeni demir madeni rezervleri bulundu! ⛏️"]
+        "up": ["Ordu için yeni silah siparişi! Demire hücum. ⚔️", "Demir ocaklarında grev var! 🔥", "Yeni kale inşaatları demir talebini patlattı! 🏰", "Demirci loncası taban fiyat belirledi! ⚒️"],
+        "down": ["Hurda demirler piyasaya sürüldü. ♻️", "İnşaat sektörü durgunlaştı, demir talebi az. 🏗️", "Yeni demir madeni rezervleri bulundu! ⛏️", "Ordunun silah ihtiyacı karşılandı, talep durdu. 🛑"]
     }
 }
 
