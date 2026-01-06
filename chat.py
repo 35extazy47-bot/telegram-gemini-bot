@@ -1617,10 +1617,35 @@ def daily_reward(message):
     users[user_id]["daily_streak"] = streak
     save_users()
 
-    # Slot makinesi animasyonu
-    bot.send_dice(message.chat.id, emoji="🎰")
+    # Slot makinesi animasyonu ve Şans Faktörü
+    msg = bot.send_dice(message.chat.id, emoji="🎰")
+    time.sleep(3) # Animasyonun bitmesini bekle
     
-    bot.reply_to(message, f"🎁 **GÜNLÜK ÖDÜL ALINDI!**\n\n⭐️ EXP: +{total_reward}\n💵 Para: +{money_reward} $\n🔥 Günlük Seri: {streak}. Gün\n\n_(Her gün gel, ödülünü katla!)_")
+    dice_value = msg.dice.value
+    luck_msg = ""
+    
+    # 64 = 777 (Jackpot), 1, 22, 43 = Kazandıran kombinasyonlar
+    if dice_value == 64: # JACKPOT (777)
+        total_reward *= 5
+        money_reward *= 5
+        if "inventory" not in users[user_id]: users[user_id]["inventory"] = {}
+        users[user_id]["inventory"]["elmas"] = users[user_id]["inventory"].get("elmas", 0) + 1
+        luck_msg = "\n\n🎰 **JACKPOT! (777)**\n🚀 Ödüller 5'e katlandı!\n💎 +1 Elmas kazandın!"
+    elif dice_value in [1, 22, 43]: # Bar, Üzüm, Limon
+        total_reward *= 2
+        money_reward *= 2
+        luck_msg = "\n\n🎰 **Şanslı Çevirme!**\n🔥 Ödüller 2'ye katlandı!"
+    elif dice_value > 45: # Yüksek şans
+        total_reward = int(total_reward * 1.5)
+        money_reward = int(money_reward * 1.5)
+        luck_msg = "\n\n🎰 **Güzel Atış!**\n✨ Ödüller 1.5'e katlandı!"
+
+    # Güncellenmiş ödülleri kaydet
+    users[user_id]["exp"] += total_reward - (base_reward + bonus) # Farkı ekle (zaten eklemiştik, üzerine koyuyoruz)
+    users[user_id]["money"] += money_reward - (100 + (streak * 20))
+    save_users()
+    
+    bot.reply_to(message, f"🎁 **GÜNLÜK ÖDÜL ALINDI!**\n\n⭐️ EXP: +{total_reward}\n💵 Para: +{money_reward} $\n🔥 Günlük Seri: {streak}. Gün{luck_msg}\n\n_(Her gün gel, ödülünü katla!)_")
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("ans_"))
 def handle_quiz_answer_callback(call):
@@ -3023,16 +3048,19 @@ def rich_list(message):
                 if code in market_prices:
                     net_worth += count * market_prices[code]
             
-            leaderboard.append((u.get("name", "Gizli"), net_worth, u.get("username")))
+            badges = get_badges(u)
+            leaderboard.append((u.get("name", "Gizli"), net_worth, u.get("username"), badges))
 
     # Servete göre sırala (Çoktan aza)
     leaderboard.sort(key=lambda x: x[1], reverse=True)
     
     text = "💸 **KAPALIÇARŞI'NIN EN ZENGİNLERİ** 💸\n_(Nakit $ + Ürün Değeri)_\n\n"
-    for i, (name, wealth, uname) in enumerate(leaderboard[:10], 1):
+    for i, (name, wealth, uname, badges) in enumerate(leaderboard[:10], 1):
         icon = "🥇" if i == 1 else ("🥈" if i == 2 else ("🥉" if i == 3 else "▫️"))
         dev_tag = " 👨‍💻" if uname == DEVELOPER_USERNAME else ""
-        text += f"{icon} {i}. {name}{dev_tag}: **{wealth}** $\n"
+        
+        badge_str = f"\n   └ {badges}" if badges != "Yok" else ""
+        text += f"{icon} {i}. {name}{dev_tag}: **{wealth}** ${badge_str}\n"
         
     bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
