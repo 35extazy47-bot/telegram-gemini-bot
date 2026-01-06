@@ -823,7 +823,7 @@ def handle_jokers(call):
         bot.send_message(call.message.chat.id, msg_text, parse_mode="Markdown")
         # Yeni soru gönder
         if users[user_id].get("mode") == "global":
-            open_trivia_question(call.message)
+            send_global_question(call.message.chat.id, user_id)
         else:
             send_question(call.message.chat.id, user_id)
 
@@ -857,31 +857,15 @@ def handle_jokers(call):
         
         # Yeni soru göndermiyoruz, kullanıcı ipucunu okuyup cevaplayacak.
         if users[user_id].get("mode") == "global":
-            open_trivia_question(call.message)
+            send_global_question(call.message.chat.id, user_id)
         else:
             send_question(call.message.chat.id, user_id)
 
-@bot.message_handler(commands=['clock'])
-def open_trivia_question(message):
-    user_id = str(message.from_user.id)
-    if not users.get(user_id, {}).get("is_approved", True):
-        bot.reply_to(message, "⛔ Onay bekleniyor...")
-        return
-    
-    # Kullanıcı yoksa oluştur
-    if user_id not in users:
-        users[user_id] = {"level": 1, "exp": 0, "lives": 3, "category": "karisik", "lang": "tr"}
-    
-    users[user_id]["mode"] = "global"
-    users[user_id]["name"] = message.from_user.first_name
-    users[user_id]["username"] = message.from_user.username
-    users[user_id].pop("current_question_id", None) # Global sorularda ID takibi yok
-    save_users()
-    
+def send_global_question(chat_id, user_id):
     target_lang = users[user_id].get("lang", "tr")
     
     # Bekleme mesajı
-    wait_msg = bot.send_message(message.chat.id, "⏳ 🌍 ...")
+    wait_msg = bot.send_message(chat_id, "⏳ 🌍 ...")
 
     try:
         # 1. OpenTDB API'den soru çek
@@ -889,7 +873,7 @@ def open_trivia_question(message):
         data = response.json()
         
         if data["response_code"] != 0:
-            bot.edit_message_text("API Hatası / API Error", message.chat.id, wait_msg.message_id)
+            bot.edit_message_text("API Hatası / API Error", chat_id, wait_msg.message_id)
             return
 
         item = data["results"][0]
@@ -922,10 +906,7 @@ def open_trivia_question(message):
         users[user_id]["current_answer"] = correct_letter
         save_users()
         
-        options_text = "\n".join([f"{letters[i]}) {opt}" for i, opt in enumerate(all_options)])
-        
         # Görsel oluştur (Global Quiz için)
-        # options_text yerine listeyi verelim
         formatted_options = [f"{letters[i]}) {opt}" for i, opt in enumerate(all_options)]
         photo = create_quiz_image(question_text, formatted_options, "GLOBAL", users[user_id]["level"], users[user_id]['lives'])
         
@@ -955,19 +936,38 @@ def open_trivia_question(message):
             try: user_timers[user_id].cancel()
             except: pass
 
-        bot.delete_message(message.chat.id, wait_msg.message_id)
-        msg = bot.send_photo(message.chat.id, photo, caption=f"🌍 **Global Quiz** | {item['category']} (⏳ 30 sn)", reply_markup=markup)
+        bot.delete_message(chat_id, wait_msg.message_id)
+        msg = bot.send_photo(chat_id, photo, caption=f"🌍 **Global Quiz** | {item['category']} (⏳ 30 sn)", reply_markup=markup)
         users[user_id]["last_question_message_id"] = msg.message_id
         
         # Yeni zamanlayıcı başlat
-        t = Timer(30.0, question_timeout, args=[message.chat.id, user_id])
+        t = Timer(30.0, question_timeout, args=[chat_id, user_id])
         user_timers[user_id] = t
         t.start()
         
         save_users()
         
     except Exception as e:
-        bot.edit_message_text(f"Hata / Error: {str(e)}", message.chat.id, wait_msg.message_id)
+        bot.edit_message_text(f"Hata / Error: {str(e)}", chat_id, wait_msg.message_id)
+
+@bot.message_handler(commands=['clock'])
+def open_trivia_question(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True):
+        bot.reply_to(message, "⛔ Onay bekleniyor...")
+        return
+    
+    # Kullanıcı yoksa oluştur
+    if user_id not in users:
+        users[user_id] = {"level": 1, "exp": 0, "lives": 3, "category": "karisik", "lang": "tr"}
+    
+    users[user_id]["mode"] = "global"
+    users[user_id]["name"] = message.from_user.first_name
+    users[user_id]["username"] = message.from_user.username
+    users[user_id].pop("current_question_id", None) # Global sorularda ID takibi yok
+    save_users()
+    
+    send_global_question(message.chat.id, user_id)
 
 @bot.message_handler(commands=['market'])
 def market_menu(message):
@@ -1641,10 +1641,7 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
     # 🔁 Otomatik yeni soru
     # Not: send_question fonksiyonları chat_id istiyor, message objesi değil.
     if users[user_id].get("mode") == "global":
-        # Global mod için message objesi lazım (user bilgisi için), fake obje oluşturabiliriz veya fonksiyonu güncelleyebiliriz.
-        # Basitlik için sadece send_message yapalım, global modda otomatik geçiş biraz karmaşık olabilir çünkü open_trivia_question message bekliyor.
-        # Şimdilik kullanıcı tekrar /clock yazsın veya basit bir buton koyalım.
-        pass 
+        send_global_question(chat_id, user_id)
     elif users[user_id].get("mode") == "retry":
         send_wrong_question(chat_id, user_id)
     else:
