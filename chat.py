@@ -169,6 +169,45 @@ def check_daily_limit(user_id):
     save_users()
     return True
 
+def generate_daily_quests(user_id):
+    today = datetime.now().strftime("%Y-%m-%d")
+    user_quests = users[user_id].get("quests", {})
+    
+    # Eğer bugünün görevleri zaten varsa döndür
+    if user_quests.get("date") == today:
+        return
+        
+    # Yeni görevler oluştur
+    new_quests = {
+        "date": today,
+        "list": [
+            {"type": "quiz_correct", "target": 10, "current": 0, "desc": "10 Soru Doğru Bil", "reward": 150, "done": False},
+            {"type": "mine", "target": 3, "current": 0, "desc": "3 Kez Madene İn", "reward": 100, "done": False},
+            {"type": "duel_win", "target": 1, "current": 0, "desc": "1 Düello Kazan", "reward": 200, "done": False}
+        ]
+    }
+    users[user_id]["quests"] = new_quests
+    save_users()
+
+def update_quest_progress(user_id, q_type):
+    generate_daily_quests(user_id) # Emin olmak için
+    quests = users[user_id]["quests"]["list"]
+    updated = False
+    
+    for q in quests:
+        if q["type"] == q_type and not q["done"]:
+            q["current"] += 1
+            if q["current"] >= q["target"]:
+                q["done"] = True
+                users[user_id]["exp"] += q["reward"]
+                try:
+                    bot.send_message(user_id, f"✅ **GÖREV TAMAMLANDI!**\n\n📜 {q['desc']}\n💰 Ödül: +{q['reward']} EXP")
+                except: pass
+            updated = True
+            
+    if updated:
+        save_users()
+
 def create_quiz_image(question, options, category, level, lives):
     width = 800
     height = 600
@@ -655,6 +694,7 @@ def help_callback(call):
             "🎮 **OYUN MODLARI**\n\n"
             "🔹 `/quiz` - Kategorili KPSS soruları çöz.\n"
             "🔹 `/maraton` - Tek canla ne kadar gidebilirsin?\n"
+            "🔹 `/gorevler` - Günlük görevleri tamamla, ödül kazan! (Yeni!)\n"
             "🔹 `/clock` - Zamana karşı Global sorular.\n"
             "🔹 `/duello <miktar>` - Botla zar atışı yap.\n"
             "🔹 `/bahis <miktar>` - Sıradaki soruya bahis oyna."
@@ -1034,6 +1074,27 @@ def open_trivia_question(message):
     
     send_global_question(message.chat.id, user_id)
 
+@bot.message_handler(commands=['gorevler'])
+def show_daily_quests(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    
+    generate_daily_quests(user_id)
+    quests = users[user_id]["quests"]["list"]
+    
+    text = "📋 **GÜNLÜK GÖREVLER**\n_(Her gece yenilenir)_\n\n"
+    
+    all_done = True
+    for q in quests:
+        status = "✅" if q["done"] else f"{q['current']}/{q['target']}"
+        text += f"{status} **{q['desc']}** (Ödül: {q['reward']} EXP)\n"
+        if not q["done"]: all_done = False
+        
+    if all_done:
+        text += "\n🎉 **Tebrikler! Bugünün tüm görevlerini bitirdin!**"
+        
+    bot.reply_to(message, text, parse_mode="Markdown")
+
 @bot.message_handler(commands=['market'])
 def market_menu(message):
     user_id = str(message.from_user.id)
@@ -1198,6 +1259,7 @@ def mine_resource(message):
     
     # Jackpot Şansı (%1) - Kazma varsa %2
     if random.random() < (0.02 if has_pickaxe else 0.01):
+        update_quest_progress(user_id, "mine") # Görev ilerlemesi
         amount = 5000
         users[user_id]["exp"] += amount
         msg = "🏺 **EFSANEVİ KEŞİF!**\n\nToprağın derinliklerinde kayıp bir **Antik Hazine** buldun!\nDeğeri: 💰 +5000 EXP"
@@ -1231,6 +1293,7 @@ def mine_resource(message):
             users[user_id]["lives"] -= 1
             msg = "💥 **GÖÇÜK!** Maden üzerine çöktü.\nHasar: -1 Can ❤️"
             
+    update_quest_progress(user_id, "mine") # Görev ilerlemesi
     save_users()
     bot.edit_message_text(msg, message.chat.id, wait_msg.message_id, parse_mode="Markdown")
 
@@ -1296,6 +1359,7 @@ def duel_bot(message):
     
     if user_roll > bot_roll:
         users[user_id]["exp"] += amount
+        update_quest_progress(user_id, "duel_win") # Görev ilerlemesi
         msg += f"🎉 **KAZANDIN!** Botu ezip geçtin! (+{amount} EXP)"
     elif bot_roll > user_roll:
         users[user_id]["exp"] -= amount
@@ -1581,6 +1645,7 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
         if "cat_stats" not in users[user_id]: users[user_id]["cat_stats"] = {}
         users[user_id]["cat_stats"][cat] = users[user_id]["cat_stats"].get(cat, 0) + 1
         
+        update_quest_progress(user_id, "quiz_correct") # Görev ilerlemesi
         streak += 1
         
         # Puan Hesaplama
