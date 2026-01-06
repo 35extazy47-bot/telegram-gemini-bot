@@ -17,7 +17,7 @@ load_dotenv()
 
 with open("quiz_data.json", "r", encoding="utf-8") as f:
     QUIZ_QUESTIONS = json.load(f)
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton, BotCommand
 from telebot import TeleBot
 from google import genai
 DEVELOPER_USERNAME = "HuseyinAcar35" # 👈 Buraya kendi kullanıcı adını yaz (@ olmadan)
@@ -465,6 +465,11 @@ def start_message(message):
     else:
         user_text = message.from_user.first_name
 
+    # Sabit Menü Butonunu Ekle (ReplyKeyboard)
+    menu_markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
+    menu_markup.add(KeyboardButton("☰ Menü"))
+    bot.send_message(message.chat.id, "👇", reply_markup=menu_markup)
+
     text = (
         f"👋 **Hoş Geldin, {user_text}!**\n\n"
         "🌍 **Dil Seçimi / Language Selection / Избор на език**\n"
@@ -683,6 +688,11 @@ def language_selected(call):
         reply_markup=keyboard,
         parse_mode="Markdown"
     )
+
+    # Sabit menü hatırlatması
+    menu_markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
+    menu_markup.add(KeyboardButton("☰ Menü"))
+    bot.send_message(call.message.chat.id, "✅ Kurulum tamamlandı! Aşağıdaki **☰ Menü** butonunu kullanarak komutlara erişebilirsin.", reply_markup=menu_markup)
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("help_"))
 def help_callback(call):
@@ -3131,7 +3141,7 @@ def unban_user(message):
     except:
         bot.reply_to(message, "⚠️ Kullanım: /unban <ID>")
 
-@bot.message_handler(commands=['help', 'hakkinda'])
+@bot.message_handler(commands=['help', 'hakkinda', 'menu'])
 def help_guide(message):
     text = (
         "📚 **BOT REHBERİ & OYUN KURALLARI** 📚\n\n"
@@ -3331,6 +3341,17 @@ if __name__ == "__main__":
     s.daemon = True
     s.start()
     
+    # Komut menüsünü ayarla (Sol alttaki mavi menü butonu)
+    bot.set_my_commands([
+        BotCommand("menu", "Ana Menüyü Aç"),
+        BotCommand("quiz", "Soru Çöz"),
+        BotCommand("market", "Market"),
+        BotCommand("profil", "Profilim"),
+        BotCommand("kaz", "Maden Kaz"),
+        BotCommand("borsa", "Borsa Durumu"),
+        BotCommand("gunluk", "Günlük Ödül")
+    ])
+
     # Botu çalıştır
     print("Bot aktif ve Render üzerinde çalışıyor...")
     # Botu başlatmadan hemen önce eski webhookları ve takılı kalan mesajları siler
