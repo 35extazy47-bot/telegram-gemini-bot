@@ -511,11 +511,6 @@ def start_message(message):
     else:
         user_text = message.from_user.first_name
 
-    # Sabit Menü Butonunu Ekle (ReplyKeyboard)
-    menu_markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
-    menu_markup.add(KeyboardButton("☰ Menü"))
-    bot.send_message(message.chat.id, "👇", reply_markup=menu_markup)
-
     text = (
         f"👋 **Hoş Geldin, {user_text}!**\n\n"
         "🌍 **Dil Seçimi / Language Selection / Избор на език**\n"
@@ -728,10 +723,7 @@ def language_selected(call):
     )
 
     # Sabit menü hatırlatması
-    menu_markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
-    menu_markup.add(KeyboardButton("☰ Menü"))
-    bot.send_message(call.message.chat.id, "✅ Kurulum tamamlandı! Aşağıdaki **☰ Menü** butonunu kullanarak komutlara erişebilirsin.", reply_markup=menu_markup)
-
+    bot.send_message(call.message.chat.id, "✅ Kurulum tamamlandı! Sol alttaki **Menu** butonunu kullanarak komutlara erişebilirsin.")
 @bot.callback_query_handler(func=lambda c: c.data.startswith("help_"))
 def help_callback(call):
     category = call.data
