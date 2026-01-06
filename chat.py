@@ -2002,9 +2002,18 @@ def my_profile(message):
     filled = int(bar_len * percentage)
     bar = "█" * filled + "░" * (bar_len - filled)
 
+    # Kayıt Tarihi Formatlama
+    join_date = u.get("join_date", "Bilinmiyor")
+    if join_date != "Bilinmiyor":
+        try:
+            join_date = datetime.strptime(join_date, "%Y-%m-%d %H:%M:%S").strftime("%d.%m.%Y")
+        except:
+            pass
+
     text = (
         f"👤 **Profilin / Profile**\n\n"
         f"🏷 İsim: {u.get('name', 'Bilinmiyor')}{dev_icon}\n"
+        f"📅 Kayıt: {join_date}\n"
         f"💎 Statü: {status_text}\n"
         f"🎒 Ekipman: {equip}\n"
         f"📊 Level: {lvl}\n"
