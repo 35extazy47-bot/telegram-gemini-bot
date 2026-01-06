@@ -5,7 +5,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 from flask import Flask
-from threading import Thread, Timer, Lock
+from threading import Thread, Timer, Lock, RLock
 import requests
 import html
 from deep_translator import GoogleTranslator
@@ -29,6 +29,7 @@ bot = TeleBot(BOT_TOKEN)
 client = genai.Client(api_key=GEMINI_API_KEY)
 USERS_FILE = "users_data.json"
 data_lock = Lock()
+market_lock = RLock() # Borsa verileri için kilit (Reentrant Lock)
 
 def safe_generate_content(prompt_content):
     """Modeller arası geçiş yaparak hata riskini azaltır."""
@@ -45,7 +46,7 @@ def safe_generate_content(prompt_content):
     raise Exception("Tüm modeller başarısız oldu.")
 
 # Yasaklı Kelimeler Listesi (Burayı istediğin gibi genişletebilirsin)
-BANNED_WORDS = ["aptal", "salak", "gerizekalı", "mal", "ezik", "ahmak", "özürlü", "amq", "oruspu" ]
+BANNED_WORDS = ["aptal", "salak", "gerizekalı", "mal", "ezik", "ahmak", "özürlü", "amq", "orospu" ]
 
 #  Kapalıçarşı (Borsa) Verileri
 TRADE_GOODS = {
@@ -65,15 +66,16 @@ MARKET_FILE = "market_data.json"
 
 def save_market_data():
     try:
-        data = {
-            "prices": market_prices,
-            "volumes": market_volumes,
-            "last_prices": last_prices,
-            "news": market_news,
-            "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S")
-        }
-        with open(MARKET_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+        with market_lock:
+            data = {
+                "prices": market_prices,
+                "volumes": market_volumes,
+                "last_prices": last_prices,
+                "news": market_news,
+                "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S")
+            }
+            with open(MARKET_FILE, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
     except Exception as e:
         print(f"Piyasa kaydetme hatası: {e}")
 
@@ -83,16 +85,17 @@ def load_market_data():
         return
 
     try:
-        with open(MARKET_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        with market_lock:
+            with open(MARKET_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
             
-        market_prices = data.get("prices", market_prices)
-        market_volumes = data.get("volumes", market_volumes)
-        last_prices = data.get("last_prices", last_prices)
-        market_news = data.get("news", market_news)
-        
-        if "last_update" in data:
-            last_market_update = datetime.strptime(data["last_update"], "%Y-%m-%d %H:%M:%S")
+            market_prices = data.get("prices", market_prices)
+            market_volumes = data.get("volumes", market_volumes)
+            last_prices = data.get("last_prices", last_prices)
+            market_news = data.get("news", market_news)
+            
+            if "last_update" in data:
+                last_market_update = datetime.strptime(data["last_update"], "%Y-%m-%d %H:%M:%S")
             
     except Exception as e:
         print(f"Piyasa yükleme hatası: {e}")
@@ -2471,9 +2474,10 @@ def check_market(message):
         return
 
     try:
-        photo = create_market_image()
-        text = "🛒 **İşlemler:**\n`/al <mal> <adet>` (Örn: `/al ipek 5`)\n`/sat <mal> <adet>` (Örn: `/sat ipek 5`)"
-        bot.send_photo(message.chat.id, photo, caption=text, parse_mode="Markdown")
+        with market_lock:
+            photo = create_market_image()
+            text = "🛒 **İşlemler:**\n`/al <mal> <adet>` (Örn: `/al ipek 5`)\n`/sat <mal> <adet>` (Örn: `/sat ipek 5`)"
+            bot.send_photo(message.chat.id, photo, caption=text, parse_mode="Markdown")
     except Exception as e:
         print(f"Borsa görsel hatası: {e}")
         # Hata durumunda eski usul metin
@@ -2504,7 +2508,8 @@ def buy_item(message):
         bot.reply_to(message, "❌ Geçersiz miktar.")
         return
 
-    price = market_prices[item_code]
+    with market_lock:
+        price = market_prices[item_code]
     total_cost = price * amount
 
     if users[user_id].get("exp", 0) < total_cost:
@@ -2519,8 +2524,9 @@ def buy_item(message):
     users[user_id]["inventory"][item_code] = current_stock + amount
     
     # Hacim güncelle (Talep arttı)
-    if item_code in market_volumes:
-        market_volumes[item_code] += amount
+    with market_lock:
+        if item_code in market_volumes:
+            market_volumes[item_code] += amount
     
     save_users()
     save_market_data()
@@ -2548,15 +2554,17 @@ def sell_item(message):
         bot.reply_to(message, "❌ Envanterinde bu kadar mal yok!")
         return
 
-    price = market_prices[item_code]
+    with market_lock:
+        price = market_prices[item_code]
     total_gain = price * amount
 
     users[user_id]["inventory"][item_code] -= amount
     users[user_id]["exp"] += total_gain
     
     # Hacim güncelle (Satış baskısı)
-    if item_code in market_volumes:
-        market_volumes[item_code] -= amount
+    with market_lock:
+        if item_code in market_volumes:
+            market_volumes[item_code] -= amount
 
     save_users()
     save_market_data()
@@ -2959,71 +2967,72 @@ def update_market():
     """Piyasa fiyatlarını arz-talep ve sürpriz olaylara göre günceller."""
     global market_prices, market_volumes, last_prices, market_news
     
-    # Mevcut fiyatları "eski" olarak kaydet
-    last_prices = market_prices.copy()
-    
-    print(f"📊 Piyasa Öncesi Hacimler: {market_volumes}")
-    
-    biggest_change = 0
-    news_item = None
-    news_direction = None
+    with market_lock:
+        # Mevcut fiyatları "eski" olarak kaydet
+        last_prices = market_prices.copy()
+        
+        print(f"📊 Piyasa Öncesi Hacimler: {market_volumes}")
+        
+        biggest_change = 0
+        news_item = None
+        news_direction = None
 
-    for code, data in TRADE_GOODS.items():
-        current_price = market_prices[code]
-        volume = market_volumes.get(code, 0)
-        
-        # 1. Arz-Talep Etkisi (Hacme Duyarlı)
-        # Temel rastgele dalgalanma (-%3 ile +%3 arası)
-        change_percent = random.uniform(-0.03, 0.03)
-        
-        # Hacim Etkisi: Her 1 birim alım %0.5 artırır, satım düşürür.
-        # Örn: 50 tane alındıysa -> +0.25 (%25 artış)
-        volume_impact = volume * 0.005
-        
-        # Toplam değişim
-        change_percent += volume_impact
-        
-        # Normal şartlarda değişimi %30 ile sınırla
-        change_percent = max(-0.30, min(change_percent, 0.30))
+        for code, data in TRADE_GOODS.items():
+            current_price = market_prices[code]
+            volume = market_volumes.get(code, 0)
             
-        # 2. Sürpriz Olaylar (Manipülasyon)
-        # %10 ihtimalle piyasa ters köşe yapar
-        surprise_roll = random.random()
-        
-        if surprise_roll < 0.10: # %10 şansla sürpriz
-            if volume > 10: # Çok alınan mal çakılır (Balon patladı)
-                change_percent = random.uniform(-0.40, -0.20) # Sert düşüş
-                print(f"📉 SÜRPRİZ: {data['name']} balon yaptı ve patladı!")
-            elif volume < -10: # Çok satılan mal fırlar (Tepki alımı)
-                change_percent = random.uniform(0.20, 0.40) # Sert yükseliş
-                print(f"🚀 SÜRPRİZ: {data['name']} dip fiyattan toplandı!")
-        
-        # Yeni fiyatı hesapla
-        new_price = int(current_price * (1 + change_percent))
-        
-        # Sınırları kontrol et
-        new_price = max(data["min"], min(new_price, data["max"]))
-        market_prices[code] = new_price
-        
-        # En büyük değişimi takip et (Haber için)
-        if current_price > 0:
-            pct_change = (new_price - current_price) / current_price
-            if abs(pct_change) > abs(biggest_change):
-                biggest_change = pct_change
-                news_item = code
-                news_direction = "up" if pct_change > 0 else "down"
+            # 1. Arz-Talep Etkisi (Hacme Duyarlı)
+            # Temel rastgele dalgalanma (-%3 ile +%3 arası)
+            change_percent = random.uniform(-0.03, 0.03)
+            
+            # Hacim Etkisi: Her 1 birim alım %0.5 artırır, satım düşürür.
+            # Örn: 50 tane alındıysa -> +0.25 (%25 artış)
+            volume_impact = volume * 0.005
+            
+            # Toplam değişim
+            change_percent += volume_impact
+            
+            # Normal şartlarda değişimi %30 ile sınırla
+            change_percent = max(-0.30, min(change_percent, 0.30))
+                
+            # 2. Sürpriz Olaylar (Manipülasyon)
+            # %10 ihtimalle piyasa ters köşe yapar
+            surprise_roll = random.random()
+            
+            if surprise_roll < 0.10: # %10 şansla sürpriz
+                if volume > 10: # Çok alınan mal çakılır (Balon patladı)
+                    change_percent = random.uniform(-0.40, -0.20) # Sert düşüş
+                    print(f"📉 SÜRPRİZ: {data['name']} balon yaptı ve patladı!")
+                elif volume < -10: # Çok satılan mal fırlar (Tepki alımı)
+                    change_percent = random.uniform(0.20, 0.40) # Sert yükseliş
+                    print(f"🚀 SÜRPRİZ: {data['name']} dip fiyattan toplandı!")
+            
+            # Yeni fiyatı hesapla
+            new_price = int(current_price * (1 + change_percent))
+            
+            # Sınırları kontrol et
+            new_price = max(data["min"], min(new_price, data["max"]))
+            market_prices[code] = new_price
+            
+            # En büyük değişimi takip et (Haber için)
+            if current_price > 0:
+                pct_change = (new_price - current_price) / current_price
+                if abs(pct_change) > abs(biggest_change):
+                    biggest_change = pct_change
+                    news_item = code
+                    news_direction = "up" if pct_change > 0 else "down"
 
-    # Haber Oluştur
-    if news_item and abs(biggest_change) > 0.05: # %5'ten büyük değişim varsa haber yap
-        market_news = random.choice(NEWS_TEMPLATES[news_item][news_direction])
-    else:
-        market_news = "Piyasa sakin seyrediyor, belirgin bir hareketlilik yok. ☁️"
+        # Haber Oluştur
+        if news_item and abs(biggest_change) > 0.05: # %5'ten büyük değişim varsa haber yap
+            market_news = random.choice(NEWS_TEMPLATES[news_item][news_direction])
+        else:
+            market_news = "Piyasa sakin seyrediyor, belirgin bir hareketlilik yok. ☁️"
 
-    # Hacimleri sıfırla (Bir sonraki döngü için)
-    market_volumes = {k: 0 for k in TRADE_GOODS.keys()}
-    
-    print(f"📉 Piyasa Güncellendi: {market_prices}")
-    print(f"📰 Haber: {market_news}")
+        # Hacimleri sıfırla (Bir sonraki döngü için)
+        market_volumes = {k: 0 for k in TRADE_GOODS.keys()}
+        
+        print(f"📉 Piyasa Güncellendi: {market_prices}")
+        print(f"📰 Haber: {market_news}")
 
 def scheduler_thread():
     global last_market_update

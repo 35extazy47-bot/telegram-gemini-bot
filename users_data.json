@@ -1,15 +1,15 @@
 {
   "1089288022": {
-    "level": 75,
-    "exp": 698,
-    "lives": 1,
+    "level": 85,
+    "exp": 2120,
+    "lives": 3,
     "category": "karisik",
     "lang": "tr",
     "name": "HÜSEYİN :)",
-    "last_mine_time": "2026-01-03 11:46:07",
+    "last_mine_time": "2026-01-05 18:56:19",
     "username": "HuseyinAcar35",
-    "mode": "global",
-    "last_question_message_id": 1623,
+    "mode": "local",
+    "last_question_message_id": 2474,
     "wrong_answers": [
       24,
       71,
@@ -18,10 +18,8 @@
       75,
       39,
       77,
-      58,
       132,
       140,
-      110,
       105,
       97,
       127,
@@ -30,11 +28,34 @@
       5,
       49,
       139,
-      95
+      95,
+      173,
+      88,
+      196,
+      33,
+      171,
+      129,
+      96,
+      111,
+      200,
+      208,
+      206,
+      189,
+      106,
+      160,
+      11,
+      8,
+      78,
+      45,
+      192,
+      65,
+      185,
+      48,
+      115
     ],
     "streak": 0,
-    "total_questions": 101,
-    "total_correct": 64,
+    "total_questions": 281,
+    "total_correct": 201,
     "is_approved": true,
     "cards": [
       4,
@@ -48,7 +69,7 @@
       5
     ],
     "inventory": {
-      "cini": 630,
+      "cini": 130,
       "tuz": 1610,
       "baharat": 205,
       "ipek": 455
@@ -69,7 +90,10 @@
       "kazanc_mesaji": "Akıllıca bir karardı! Topçular gediği genişletirken, Yeniçeriler ve azaplar tam bir koordinasyon içinde taarruza geçti. Genişleyen gedik ve farklı noktalardan yapılan eş zamanlı hücumlar Bizans savunmasını çökertti. Nihayetinde, 29 Mayıs 1453'te Konstantinopolis düştü ve Fatih Sultan Mehmet, 'Fatih' unvanını alarak tarihe geçti. Bu strateji, Osmanlı ordusunun güçlü disiplini ve Fatih'in planlı kuşatma taktikleriyle birleşince zaferi kaçınılmaz kıldı.",
       "kayip_mesaji": "Ne yazık ki, bu karar feci sonuçlar doğurdu. Dar gedikten yapılan hücum, Bizanslılar için kolay bir hedef haline geldi ve askerlerin çoğu surlara ulaşamadan ok ve taş yağmuru altında kaldı. Ya da tünel kazma girişimi çok zaman aldı ve düşman tarafından kolayca fark edilerek boşa çıkarıldı. Kuşatma uzadı, ordu morali düştü ve Konstantinopolis'in fethi imkansız hale geldi. Tarihin akışı değişti."
     },
-    "current_answer": "A"
+    "current_question_id": 115,
+    "active_bet": 0,
+    "last_daily_reward": "2026-01-05",
+    "daily_streak": 1
   },
   "8423482808": {
     "level": 1,
@@ -92,5 +116,37 @@
     "username": null,
     "name": "Tuna",
     "join_date": "2026-01-03 15:01:27"
+  },
+  "8499772236": {
+    "level": 1,
+    "exp": 12,
+    "lives": 3,
+    "category": "karisik",
+    "is_approved": true,
+    "username": null,
+    "name": "Dilara",
+    "join_date": "2026-01-04 19:36:50",
+    "lang": "tr",
+    "mode": "local",
+    "current_question_id": 71,
+    "last_question_message_id": 1809,
+    "wrong_answers": [
+      34,
+      74,
+      75,
+      27,
+      117,
+      71
+    ],
+    "streak": 0,
+    "total_questions": 7,
+    "total_correct": 1,
+    "beylik": {
+      "level": 1,
+      "soldiers": 0,
+      "last_tax": "2026-01-04 19:39:57"
+    },
+    "last_gemini_date": "2026-01-05",
+    "daily_gemini_count": 2
   }
 }
