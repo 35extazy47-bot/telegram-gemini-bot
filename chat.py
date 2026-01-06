@@ -53,7 +53,10 @@ TRADE_GOODS = {
     "ipek": {"name": "İpek 🧶", "base": 100, "min": 50, "max": 250},
     "baharat": {"name": "Baharat 🌶️", "base": 80, "min": 40, "max": 200},
     "cini": {"name": "Çini 🏺", "base": 150, "min": 100, "max": 400},
-    "tuz": {"name": "Tuz 🧂", "base": 30, "min": 10, "max": 100}
+    "tuz": {"name": "Tuz 🧂", "base": 30, "min": 10, "max": 100},
+    "elmas": {"name": "Elmas 💎", "base": 500, "min": 300, "max": 800},
+    "altin": {"name": "Altın 🥇", "base": 250, "min": 150, "max": 400},
+    "demir": {"name": "Demir ⛓️", "base": 50, "min": 20, "max": 100}
 }
 market_prices = {k: v["base"] for k, v in TRADE_GOODS.items()}
 market_volumes = {k: 0 for k in TRADE_GOODS.keys()} # Alım-Satım hacmini takip eder
@@ -89,8 +92,14 @@ def load_market_data():
             with open(MARKET_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
             
-            market_prices = data.get("prices", market_prices)
-            market_volumes = data.get("volumes", market_volumes)
+            loaded_prices = data.get("prices", {})
+            for k, v in loaded_prices.items():
+                if k in market_prices: market_prices[k] = v
+            
+            loaded_volumes = data.get("volumes", {})
+            for k, v in loaded_volumes.items():
+                if k in market_volumes: market_volumes[k] = v
+
             last_prices = data.get("last_prices", last_prices)
             market_news = data.get("news", market_news)
             
@@ -119,6 +128,18 @@ NEWS_TEMPLATES = {
     "tuz": {
         "up": ["Kış yaklaşıyor, halk tuz stokluyor! ❄️", "Tuz Gölü'nde kuraklık var, üretim düştü! ☀️"],
         "down": ["Yeni tuz madeni keşfedildi! ⛏️", "Tuz vergileri düşürüldü, fiyatlar rahatladı. ⬇️"]
+    },
+    "elmas": {
+        "up": ["Saray mücevherleri için dev elmas siparişi! 💍", "Elmas madeninde göçük! Arz durdu. ⚠️"],
+        "down": ["Yeni bir elmas rezervi bulundu! Fiyatlar çakıldı. 📉", "Sahte elmaslar piyasayı karıştırdı, güven düştü. 💎"]
+    },
+    "altin": {
+        "up": ["Savaş söylentileri halkı altına yöneltti! 🛡️", "Darphane yeni sikke basımı için altın topluyor. 💰"],
+        "down": ["Yeni altın madeni işletmeye açıldı! ⛏️", "Tüccarlar nakit ihtiyacı için altın bozuyor. 📉"]
+    },
+    "demir": {
+        "up": ["Ordu için yeni silah siparişi! Demire hücum. ⚔️", "Demir ocaklarında grev var! 🔥"],
+        "down": ["Hurda demirler piyasaya sürüldü. ♻️", "İnşaat sektörü durgunlaştı, demir talebi az. 🏗️"]
     }
 }
 
@@ -430,6 +451,11 @@ def start_message(message):
             users[user_id]["is_approved"] = True
             save_users()
 
+    # Eski kullanıcılar için Para Birimi (Dolar) Göçü
+    if user_id in users and "money" not in users[user_id]:
+        users[user_id]["money"] = 1000 # Başlangıç hediyesi
+        save_users()
+
     # Ban Kontrolü
     if users.get(user_id, {}).get("is_banned"):
         bot.reply_to(message, "🚫 Hesabınız yasaklanmıştır.")
@@ -443,7 +469,8 @@ def start_message(message):
             "is_approved": False, 
             "username": username,
             "name": message.from_user.first_name,
-            "join_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            "join_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "money": 1000 # Yeni üyelere başlangıç parası
         }
         save_users()
         
@@ -1113,15 +1140,15 @@ def market_menu(message):
         return
     markup = InlineKeyboardMarkup()
     # Jokerler
-    markup.add(InlineKeyboardButton("💡 %50 Joker (10 EXP)", callback_data="buy_joker_50"))
-    markup.add(InlineKeyboardButton("⏭ Pas Geç (5 EXP)", callback_data="buy_joker_pass"))
-    markup.add(InlineKeyboardButton("👥 Seyirci (15 EXP)", callback_data="buy_joker_audience"))
-    markup.add(InlineKeyboardButton("🤖 AI İpucu (20 EXP)", callback_data="buy_joker_ai"))
+    markup.add(InlineKeyboardButton("💡 %50 Joker (100 $)", callback_data="buy_joker_50"))
+    markup.add(InlineKeyboardButton("⏭ Pas Geç (50 $)", callback_data="buy_joker_pass"))
+    markup.add(InlineKeyboardButton("👥 Seyirci (150 $)", callback_data="buy_joker_audience"))
+    markup.add(InlineKeyboardButton("🤖 AI İpucu (200 $)", callback_data="buy_joker_ai"))
     # Diğer Eşyalar
-    markup.add(InlineKeyboardButton("❤️ +1 Can (100 EXP)", callback_data="buy_life"))
-    markup.add(InlineKeyboardButton("🎁 Şans Kutusu (50 EXP)", callback_data="buy_box"))
-    markup.add(InlineKeyboardButton("⛏️ Elmas Kazma (500 EXP)", callback_data="buy_pickaxe"))
-    markup.add(InlineKeyboardButton("🛡️ Seri Koruyucu (200 EXP)", callback_data="buy_streak_saver"))
+    markup.add(InlineKeyboardButton("❤️ +1 Can (1000 $)", callback_data="buy_life"))
+    markup.add(InlineKeyboardButton("🎁 Şans Kutusu (500 $)", callback_data="buy_box"))
+    markup.add(InlineKeyboardButton("⛏️ Elmas Kazma (5000 $)", callback_data="buy_pickaxe"))
+    markup.add(InlineKeyboardButton("🛡️ Seri Koruyucu (2000 $)", callback_data="buy_streak_saver"))
     bot.send_message(message.chat.id, "🛒 **MARKET**\n\nPuanlarını harcayarak güçlenebilirsin!", reply_markup=markup, parse_mode="Markdown")
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("buy_"))
@@ -1129,19 +1156,21 @@ def market_buy(call):
     user_id = str(call.from_user.id)
     if user_id not in users: return
     
+    user_money = users[user_id].get("money", 0)
+
     # Joker Satın Alma
     if call.data.startswith("buy_joker_"):
         joker_type = call.data.replace("buy_", "") # joker_50, joker_pass, joker_audience, joker_ai
-        prices = {"joker_50": 10, "joker_pass": 5, "joker_audience": 15, "joker_ai": 20}
+        prices = {"joker_50": 100, "joker_pass": 50, "joker_audience": 150, "joker_ai": 200}
         names = {"joker_50": "%50 Joker", "joker_pass": "Pas Geçme", "joker_audience": "Seyirci Jokeri", "joker_ai": "AI İpucu"}
         
         cost = prices.get(joker_type, 9999)
         
-        if users[user_id]["exp"] < cost:
-            bot.answer_callback_query(call.id, f"❌ Yetersiz EXP! ({cost} EXP gerekli)", show_alert=True)
+        if user_money < cost:
+            bot.answer_callback_query(call.id, f"❌ Yetersiz Bakiye! ({cost} $ gerekli)", show_alert=True)
             return
             
-        users[user_id]["exp"] -= cost
+        users[user_id]["money"] -= cost
         
         if "inventory" not in users[user_id]:
             users[user_id]["inventory"] = {}
@@ -1153,29 +1182,29 @@ def market_buy(call):
         return
 
     if call.data == "buy_life":
-        cost = 100
-        if users[user_id]["exp"] < cost:
-            bot.answer_callback_query(call.id, "❌ Yetersiz EXP!", show_alert=True)
+        cost = 1000
+        if user_money < cost:
+            bot.answer_callback_query(call.id, "❌ Yetersiz Bakiye!", show_alert=True)
             return
-        users[user_id]["exp"] -= cost
+        users[user_id]["money"] -= cost
         users[user_id]["lives"] += 1
         bot.answer_callback_query(call.id, "✅ +1 Can satın alındı!")
         
     elif call.data == "buy_box":
-        cost = 50
-        if users[user_id]["exp"] < cost:
-            bot.answer_callback_query(call.id, "❌ Yetersiz EXP!", show_alert=True)
+        cost = 500
+        if user_money < cost:
+            bot.answer_callback_query(call.id, "❌ Yetersiz Bakiye!", show_alert=True)
             return
-        users[user_id]["exp"] -= cost
+        users[user_id]["money"] -= cost
         
         # Rastgele ödül mantığı
-        reward = random.choice(["exp_20", "exp_100", "life_1", "empty"])
-        if reward == "exp_20":
-            users[user_id]["exp"] += 20
-            msg = "kutudan 20 EXP çıktı! (Zarar ettin 😅)"
-        elif reward == "exp_100":
-            users[user_id]["exp"] += 100
-            msg = "🎉 TEBRİKLER! Kutudan 100 EXP çıktı!"
+        reward = random.choice(["money_200", "money_1000", "life_1", "empty"])
+        if reward == "money_200":
+            users[user_id]["money"] += 200
+            msg = "kutudan 200 $ çıktı! (Zarar ettin 😅)"
+        elif reward == "money_1000":
+            users[user_id]["money"] += 1000
+            msg = "🎉 TEBRİKLER! Kutudan 1000 $ çıktı!"
         elif reward == "life_1":
             users[user_id]["lives"] += 1
             msg = "❤️ Kutudan 1 Can çıktı!"
@@ -1189,20 +1218,20 @@ def market_buy(call):
         if users[user_id].get("has_pickaxe"):
             bot.answer_callback_query(call.id, "⚠️ Zaten en iyi kazmaya sahipsin!", show_alert=True)
             return
-        cost = 500
-        if users[user_id]["exp"] < cost:
-            bot.answer_callback_query(call.id, "❌ Yetersiz EXP! (500 Gerekli)", show_alert=True)
+        cost = 5000
+        if user_money < cost:
+            bot.answer_callback_query(call.id, "❌ Yetersiz Bakiye! (5000 $ Gerekli)", show_alert=True)
             return
-        users[user_id]["exp"] -= cost
+        users[user_id]["money"] -= cost
         users[user_id]["has_pickaxe"] = True
         bot.answer_callback_query(call.id, "✅ Elmas Kazma satın alındı! Artık madende daha şanslısın.")
         
     elif call.data == "buy_streak_saver":
-        cost = 200
-        if users[user_id]["exp"] < cost:
-            bot.answer_callback_query(call.id, "❌ Yetersiz EXP!", show_alert=True)
+        cost = 2000
+        if user_money < cost:
+            bot.answer_callback_query(call.id, "❌ Yetersiz Bakiye!", show_alert=True)
             return
-        users[user_id]["exp"] -= cost
+        users[user_id]["money"] -= cost
         users[user_id]["inventory"]["streak_saver"] = users[user_id]["inventory"].get("streak_saver", 0) + 1
         bot.answer_callback_query(call.id, "✅ Seri Koruyucu alındı! Yanlış bilsen de serin bozulmayacak.")
 
@@ -1271,8 +1300,8 @@ def mine_resource(message):
     if random.random() < (0.02 if has_pickaxe else 0.01):
         update_quest_progress(user_id, "mine") # Görev ilerlemesi
         amount = 5000
-        users[user_id]["exp"] += amount
-        msg = "🏺 **EFSANEVİ KEŞİF!**\n\nToprağın derinliklerinde kayıp bir **Antik Hazine** buldun!\nDeğeri: 💰 +5000 EXP"
+        users[user_id]["money"] = users[user_id].get("money", 0) + amount
+        msg = "🏺 **EFSANEVİ KEŞİF!**\n\nToprağın derinliklerinde kayıp bir **Antik Hazine** buldun!\nDeğeri: 💰 +5000 $"
         save_users()
         bot.edit_message_text(msg, message.chat.id, wait_msg.message_id, parse_mode="Markdown")
         return
@@ -1281,19 +1310,20 @@ def mine_resource(message):
     roll = random.randint(1, 100)
     if has_pickaxe:
         roll += 10 # Kazma varsa şans artar
+    
+    if "inventory" not in users[user_id]: users[user_id]["inventory"] = {}
         
     if roll > 95: # Elmas
-        amount = random.randint(200, 300)
-        users[user_id]["exp"] += amount
-        msg = f"💎 **İNANILMAZ!** Bir ELMAS buldun!\nDeğeri: +{amount} EXP"
+        users[user_id]["inventory"]["elmas"] = users[user_id]["inventory"].get("elmas", 0) + 1
+        msg = f"💎 **İNANILMAZ!** Bir **Elmas** buldun!\nBorsada iyi fiyata satabilirsin."
     elif roll > 75: # Altın
-        amount = random.randint(50, 100)
-        users[user_id]["exp"] += amount
-        msg = f"✨ **Parıl parıl!** Altın damarı buldun.\nKazanç: +{amount} EXP"
+        amount = random.randint(1, 2)
+        users[user_id]["inventory"]["altin"] = users[user_id]["inventory"].get("altin", 0) + amount
+        msg = f"✨ **Parıl parıl!** {amount} adet **Altın** buldun."
     elif roll > 40: # Kömür/Demir
-        amount = random.randint(15, 40)
-        users[user_id]["exp"] += amount
-        msg = f"⛏️ Demir ve Kömür çıkardın.\nKazanç: +{amount} EXP"
+        amount = random.randint(2, 5)
+        users[user_id]["inventory"]["demir"] = users[user_id]["inventory"].get("demir", 0) + amount
+        msg = f"⛏️ {amount} adet **Demir** çıkardın."
     elif roll > 15: # Boş
         msg = "💨 Maalesef bu sefer sadece toz ve toprak çıktı..."
     else: # Göçük (Risk)
@@ -1325,7 +1355,7 @@ def show_inventory(message):
         text = (
             f"🎒 **ENVANTERİN**\n\n"
             f"👤 **Sahibi:** {u.get('name', 'Bilinmiyor')}\n"
-            f"💰 **Varlık:** {u.get('exp', 0)} EXP\n"
+            f"💰 **Bakiye:** {u.get('money', 0)} $\n"
             f"❤️ **Can:** {u.get('lives', 3)}\n"
         )
         bot.send_message(message.chat.id, text, parse_mode="Markdown")
@@ -1435,12 +1465,14 @@ def daily_reward(message):
     else:
         streak = 1
 
-    # Ödül Hesaplama (Temel 50 + Seri Başına 10)
+    # Ödül Hesaplama (Hem EXP hem Para)
     base_reward = 50
     bonus = min(streak * 10, 150) # Maksimum 150 bonus
     total_reward = base_reward + bonus
+    money_reward = 100 + (streak * 20) # Para ödülü
 
     users[user_id]["exp"] += total_reward
+    users[user_id]["money"] = users[user_id].get("money", 0) + money_reward
     users[user_id]["last_daily_reward"] = today
     users[user_id]["daily_streak"] = streak
     save_users()
@@ -1448,7 +1480,7 @@ def daily_reward(message):
     # Slot makinesi animasyonu
     bot.send_dice(message.chat.id, emoji="🎰")
     
-    bot.reply_to(message, f"🎁 **GÜNLÜK ÖDÜL ALINDI!**\n\n💰 Kazanç: +{total_reward} EXP\n🔥 Günlük Seri: {streak}. Gün\n\n_(Her gün gel, ödülünü katla!)_")
+    bot.reply_to(message, f"🎁 **GÜNLÜK ÖDÜL ALINDI!**\n\n⭐️ EXP: +{total_reward}\n💵 Para: +{money_reward} $\n🔥 Günlük Seri: {streak}. Gün\n\n_(Her gün gel, ödülünü katla!)_")
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("ans_"))
 def handle_quiz_answer_callback(call):
@@ -1848,8 +1880,8 @@ def create_inventory_image(user_data):
     draw.text((40, y+25), name[:15], font=header_font, fill=(255, 255, 255))
     
     y += 90
-    draw.text((40, y), "💰 Varlık:", font=small_font, fill=(150, 150, 150))
-    draw.text((40, y+25), f"{user_data.get('exp', 0)} EXP", font=header_font, fill=(46, 204, 113))
+    draw.text((40, y), "💵 Bakiye:", font=small_font, fill=(150, 150, 150))
+    draw.text((40, y+25), f"{user_data.get('money', 0)} $", font=header_font, fill=(46, 204, 113))
     
     y += 90
     draw.text((40, y), "❤️ Can:", font=small_font, fill=(150, 150, 150))
@@ -1948,6 +1980,7 @@ def create_profile_image(user_id, user_data):
     name = user_data.get('name', 'Bilinmiyor')[:20]
     level = user_data.get('level', 1)
     exp = user_data.get('exp', 0)
+    money = user_data.get('money', 0)
     target_xp = level * 100
     rank = get_rank(level, user_data.get('username'))
     
@@ -1981,7 +2014,8 @@ def create_profile_image(user_id, user_data):
     draw.text((text_x, 75), rank, font=header_font, fill=accent_color)
     
     # Sağ üstte Level
-    draw.text((450, 30), f"Level {level}", font=name_font, fill=(255, 215, 0))
+    draw.text((450, 20), f"Level {level}", font=name_font, fill=(255, 215, 0))
+    draw.text((450, 60), f"{money} $", font=header_font, fill=(46, 204, 113)) # Para gösterimi
 
     # İlerleme Çubuğu (Progress Bar)
     bar_x, bar_y = 30, 130
@@ -2071,6 +2105,7 @@ def my_profile(message):
     # İlerleme Çubuğu Hesaplama
     lvl = u.get('level', 1)
     xp = u.get('exp', 0)
+    money = u.get('money', 0)
     target_xp = lvl * 100
     percentage = min(xp / target_xp, 1.0)
     bar_len = 10
@@ -2091,6 +2126,7 @@ def my_profile(message):
         f"📅 Kayıt: {join_date}\n"
         f"💎 Statü: {status_text}\n"
         f"🎒 Ekipman: {equip}\n"
+        f"💵 Bakiye: {money} $\n"
         f"📊 Level: {lvl}\n"
         f"🎖 Rütbe: {get_rank(lvl, u.get('username'))}\n"
         f"🧠 Uzmanlık: {best_cat}\n"
@@ -2350,13 +2386,13 @@ def admin_callbacks(call):
         bot.answer_callback_query(call.id)
 
     elif call.data == "admin_economy_stats":
-        total_exp = sum(u.get("exp", 0) for u in users.values())
-        avg_exp = total_exp // len(users) if users else 0
+        total_money = sum(u.get("money", 0) for u in users.values())
+        avg_money = total_money // len(users) if users else 0
         
         text = (
             f"📊 **EKONOMİ İSTATİSTİKLERİ**\n\n"
-            f"💰 **Toplam Piyasa Değeri:** {total_exp} EXP\n"
-            f"👤 **Kişi Başı Ortalama:** {avg_exp} EXP\n"
+            f"💰 **Toplam Piyasa Değeri:** {total_money} $\n"
+            f"👤 **Kişi Başı Ortalama:** {avg_money} $\n"
         )
         bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
         bot.answer_callback_query(call.id)
@@ -2629,7 +2665,7 @@ def create_market_image():
         draw.text((50, y), name_clean, font=row_font, fill=(255, 255, 255))
         
         # Fiyat
-        draw.text((250, y), f"{price} EXP", font=row_font, fill=(255, 215, 0))
+        draw.text((250, y), f"{price} $", font=row_font, fill=(46, 204, 113))
         
         # Değişim
         if diff > 0:
@@ -2688,7 +2724,7 @@ def check_market(message):
         text = f"📰 **SON DAKİKA:** {market_news}\n\n"
         for code, price in market_prices.items():
             item = TRADE_GOODS[code]
-            text += f"▫️ **{item['name']}:** {price} EXP\n"
+            text += f"▫️ **{item['name']}:** {price} $\n"
         text += "\n🛒 **İşlemler:**\n`/al <mal> <adet>`\n`/sat <mal> <adet>`"
         bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
@@ -2716,11 +2752,11 @@ def buy_item(message):
         price = market_prices[item_code]
     total_cost = price * amount
 
-    if users[user_id].get("exp", 0) < total_cost:
-        bot.reply_to(message, f"❌ Yetersiz EXP! Gerekli: {total_cost}")
+    if users[user_id].get("money", 0) < total_cost:
+        bot.reply_to(message, f"❌ Yetersiz Bakiye! Gerekli: {total_cost} $")
         return
 
-    users[user_id]["exp"] -= total_cost
+    users[user_id]["money"] -= total_cost
     
     # Envantere ekle
     if "inventory" not in users[user_id]: users[user_id]["inventory"] = {}
@@ -2734,7 +2770,7 @@ def buy_item(message):
     
     save_users()
     save_market_data()
-    bot.reply_to(message, f"✅ **İşlem Başarılı!**\n📥 Alınan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Ödenen: {total_cost} EXP")
+    bot.reply_to(message, f"✅ **İşlem Başarılı!**\n📥 Alınan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Ödenen: {total_cost} $")
 
 @bot.message_handler(commands=['sat'])
 def sell_item(message):
@@ -2763,7 +2799,7 @@ def sell_item(message):
     total_gain = price * amount
 
     users[user_id]["inventory"][item_code] -= amount
-    users[user_id]["exp"] += total_gain
+    users[user_id]["money"] = users[user_id].get("money", 0) + total_gain
     
     # Hacim güncelle (Satış baskısı)
     with market_lock:
@@ -2772,7 +2808,7 @@ def sell_item(message):
 
     save_users()
     save_market_data()
-    bot.reply_to(message, f"✅ **Satış Başarılı!**\n📤 Satılan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Kazanılan: {total_gain} EXP")
+    bot.reply_to(message, f"✅ **Satış Başarılı!**\n📤 Satılan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Kazanılan: {total_gain} $")
 
 @bot.message_handler(commands=['zenginler'])
 def rich_list(message):
@@ -2781,26 +2817,27 @@ def rich_list(message):
         return
 
     leaderboard = []
-    for uid, u in users.items():
-        # Nakit Varlık
-        net_worth = u.get("exp", 0)
-        
-        # Envanter Değeri (Güncel Fiyatlarla)
-        inv = u.get("inventory", {})
-        for code, count in inv.items():
-            if code in market_prices:
-                net_worth += count * market_prices[code]
-        
-        leaderboard.append((u.get("name", "Gizli"), net_worth, u.get("username")))
+    with market_lock:
+        for uid, u in list(users.items()):
+            # Nakit Varlık
+            net_worth = u.get("money", 0)
+            
+            # Envanter Değeri (Güncel Fiyatlarla)
+            inv = u.get("inventory", {})
+            for code, count in inv.items():
+                if code in market_prices:
+                    net_worth += count * market_prices[code]
+            
+            leaderboard.append((u.get("name", "Gizli"), net_worth, u.get("username")))
 
     # Servete göre sırala (Çoktan aza)
     leaderboard.sort(key=lambda x: x[1], reverse=True)
     
-    text = "💸 **KAPALIÇARŞI'NIN EN ZENGİNLERİ** 💸\n_(Nakit + Mal Varlığı)_\n\n"
+    text = "💸 **KAPALIÇARŞI'NIN EN ZENGİNLERİ** 💸\n_(Nakit $ + Ürün Değeri)_\n\n"
     for i, (name, wealth, uname) in enumerate(leaderboard[:10], 1):
         icon = "🥇" if i == 1 else ("🥈" if i == 2 else ("🥉" if i == 3 else "▫️"))
         dev_tag = " 👨‍💻" if uname == DEVELOPER_USERNAME else ""
-        text += f"{icon} {i}. {name}{dev_tag}: **{wealth}** EXP\n"
+        text += f"{icon} {i}. {name}{dev_tag}: **{wealth}** $\n"
         
     bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
@@ -3075,8 +3112,8 @@ def transfer_money(message):
         bot.reply_to(message, "❌ Pozitif bir miktar girmelisin.")
         return
 
-    if users[user_id]["exp"] < amount:
-        bot.reply_to(message, f"❌ Yetersiz bakiye! Mevcut: {users[user_id]['exp']} EXP")
+    if users[user_id].get("money", 0) < amount:
+        bot.reply_to(message, f"❌ Yetersiz bakiye! Mevcut: {users[user_id].get('money', 0)} $")
         return
 
     # Alıcıyı bul
@@ -3102,14 +3139,14 @@ def transfer_money(message):
     tax = int(amount * 0.05)
     net_amount = amount - tax
     
-    users[user_id]["exp"] -= amount
-    users[target_id]["exp"] += net_amount
+    users[user_id]["money"] -= amount
+    users[target_id]["money"] = users[target_id].get("money", 0) + net_amount
     save_users()
 
-    bot.reply_to(message, f"✅ **Transfer Başarılı!**\n📤 Gönderilen: {amount} EXP\n🏛️ Vergi (%5): -{tax} EXP\n📥 Alıcıya Geçen: {net_amount} EXP\n👤 Alıcı: {users[target_id]['name']}")
+    bot.reply_to(message, f"✅ **Transfer Başarılı!**\n📤 Gönderilen: {amount} $\n🏛️ Vergi (%5): -{tax} $\n📥 Alıcıya Geçen: {net_amount} $\n👤 Alıcı: {users[target_id]['name']}")
     
     try:
-        bot.send_message(target_id, f"💸 **PARA GELDİ!**\n\n@{users[user_id].get('username', 'Biri')} sana {amount} EXP gönderdi.")
+        bot.send_message(target_id, f"💸 **PARA GELDİ!**\n\n@{users[user_id].get('username', 'Biri')} sana {amount} $ gönderdi.")
     except:
         pass
 
