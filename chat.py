@@ -985,6 +985,7 @@ def market_menu(message):
     markup.add(InlineKeyboardButton("❤️ +1 Can (100 EXP)", callback_data="buy_life"))
     markup.add(InlineKeyboardButton("🎁 Şans Kutusu (50 EXP)", callback_data="buy_box"))
     markup.add(InlineKeyboardButton("⛏️ Elmas Kazma (500 EXP)", callback_data="buy_pickaxe"))
+    markup.add(InlineKeyboardButton("🛡️ Seri Koruyucu (200 EXP)", callback_data="buy_streak_saver"))
     bot.send_message(message.chat.id, "🛒 **MARKET**\n\nPuanlarını harcayarak güçlenebilirsin!", reply_markup=markup, parse_mode="Markdown")
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("buy_"))
@@ -1060,6 +1061,15 @@ def market_buy(call):
         users[user_id]["has_pickaxe"] = True
         bot.answer_callback_query(call.id, "✅ Elmas Kazma satın alındı! Artık madende daha şanslısın.")
         
+    elif call.data == "buy_streak_saver":
+        cost = 200
+        if users[user_id]["exp"] < cost:
+            bot.answer_callback_query(call.id, "❌ Yetersiz EXP!", show_alert=True)
+            return
+        users[user_id]["exp"] -= cost
+        users[user_id]["inventory"]["streak_saver"] = users[user_id]["inventory"].get("streak_saver", 0) + 1
+        bot.answer_callback_query(call.id, "✅ Seri Koruyucu alındı! Yanlış bilsen de serin bozulmayacak.")
+
     save_users()
 
 @bot.message_handler(commands=['bahis'])
@@ -1114,6 +1124,10 @@ def mine_resource(message):
             bot.reply_to(message, f"⏳ Maden yorgun knk! İşçiler dinleniyor.\n{remaining} dakika sonra tekrar gel.")
             return
 
+    # Animasyonlu mesaj
+    wait_msg = bot.reply_to(message, "⛏️ **Madenciler iş başında...**\nKayalar kırılıyor, toz duman kalkıyor... 🌫️")
+    time.sleep(2) # Heyecan için bekleme
+
     users[user_id]["last_mine_time"] = now.strftime("%Y-%m-%d %H:%M:%S")
     has_pickaxe = users[user_id].get("has_pickaxe", False)
     
@@ -1144,7 +1158,7 @@ def mine_resource(message):
             msg = "💥 **GÖÇÜK!** Maden üzerine çöktü.\nHasar: -1 Can ❤️"
             
     save_users()
-    bot.reply_to(message, msg, parse_mode="Markdown")
+    bot.edit_message_text(msg, message.chat.id, wait_msg.message_id, parse_mode="Markdown")
 
 @bot.message_handler(commands=['envanter'])
 def show_inventory(message):
@@ -1487,6 +1501,12 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
                 users[user_id]["wrong_answers"].remove(q_id)
 
         users[user_id]["total_correct"] = users[user_id].get("total_correct", 0) + 1
+        
+        # Kategori İstatistiği Kaydet
+        cat = question_data.get("category", "Genel")
+        if "cat_stats" not in users[user_id]: users[user_id]["cat_stats"] = {}
+        users[user_id]["cat_stats"][cat] = users[user_id]["cat_stats"].get(cat, 0) + 1
+        
         streak += 1
         
         # Puan Hesaplama
@@ -1518,6 +1538,17 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
         exp += total_points
         earned_exp_display = total_points
     else:
+        # Seri Koruyucu Kontrolü
+        has_saver = users[user_id].get("inventory", {}).get("streak_saver", 0) > 0
+        streak_saved = False
+        
+        if has_saver and streak > 0:
+            users[user_id]["inventory"]["streak_saver"] -= 1
+            streak_saved = True
+            # Streak sıfırlanmaz, aynen kalır
+        else:
+            streak = 0 # Koruyucu yoksa sıfırla
+
         # Yanlış yapıldıysa listeye ekle (Sadece local modda)
         if users[user_id].get("mode") == "local" and "current_question_id" in users[user_id]:
             q_id = users[user_id]["current_question_id"]
@@ -1526,7 +1557,6 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
             if q_id not in users[user_id]["wrong_answers"]:
                 users[user_id]["wrong_answers"].append(q_id)
 
-        streak = 0
         users[user_id]["lives"] -= 1
         exp = max(0, exp - 10)
         earned_exp_display = -10
@@ -1537,6 +1567,9 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
             selected_msg = random.choice(wrong_msgs)
             
         result = f"{selected_msg}\nDoğru Cevap: {correct}\n❤️ Kalan Can: {users[user_id]['lives']}"
+        
+        if streak_saved:
+            result += "\n🛡️ **Seri Koruyucu Devrede!** Combon bozulmadı."
         
         if bet_amount > 0:
             result += f"\n💸 **BAHİS KAYBETTİN!** (-{bet_amount} EXP)"
@@ -1690,6 +1723,7 @@ def create_inventory_image(user_data):
     if inv.get("joker_pass", 0) > 0: items.append({"name": "Pas Geç", "count": inv["joker_pass"], "icon": "⏭"})
     if inv.get("joker_audience", 0) > 0: items.append({"name": "Seyirci", "count": inv["joker_audience"], "icon": "👥"})
     if inv.get("joker_ai", 0) > 0: items.append({"name": "AI İpucu", "count": inv["joker_ai"], "icon": "🤖"})
+    if inv.get("streak_saver", 0) > 0: items.append({"name": "Koruyucu", "count": inv["streak_saver"], "icon": "🛡️"})
     
     # Ticaret Malları
     for code, count in inv.items():
@@ -1776,6 +1810,12 @@ def create_profile_image(user_id, user_data):
     success_rate = (correct / total * 100) if total > 0 else 0
     best_marathon = user_data.get('best_marathon', 0)
     lives = user_data.get('lives', 3)
+    
+    # En İyi Kategori
+    cat_stats = user_data.get("cat_stats", {})
+    best_cat = "Yok"
+    if cat_stats:
+        best_cat = max(cat_stats, key=cat_stats.get).capitalize()
 
     # İsim ve Rütbe
     # Profil Resmi Varsa Ekle
@@ -1827,6 +1867,9 @@ def create_profile_image(user_id, user_data):
     draw.text((col2, y_start), "❤️ Can", font=normal_font, fill=(170, 170, 170))
     draw.text((col2, y_start + 25), str(lives), font=header_font, fill=text_color)
 
+    draw.text((450, y_start), "🧠 Uzmanlık", font=normal_font, fill=(170, 170, 170))
+    draw.text((450, y_start + 25), best_cat, font=header_font, fill=(255, 215, 0))
+
     # Alt Bilgi (Ekipman)
     equip = "⛏️ Elmas Kazma" if user_data.get("has_pickaxe") else "Yok"
     draw.line([(30, 350), (570, 350)], fill=(60, 60, 60), width=1)
@@ -1874,6 +1917,11 @@ def my_profile(message):
     
     equip = "⛏️ Elmas Kazma" if u.get("has_pickaxe") else "Yok"
 
+    cat_stats = u.get("cat_stats", {})
+    best_cat = "Yok"
+    if cat_stats:
+        best_cat = max(cat_stats, key=cat_stats.get).capitalize()
+
     # İlerleme Çubuğu Hesaplama
     lvl = u.get('level', 1)
     xp = u.get('exp', 0)
@@ -1890,6 +1938,7 @@ def my_profile(message):
         f"🎒 Ekipman: {equip}\n"
         f"📊 Level: {lvl}\n"
         f"🎖 Rütbe: {get_rank(lvl, u.get('username'))}\n"
+        f"🧠 Uzmanlık: {best_cat}\n"
         f"📈 İlerleme: `{bar}` %{int(percentage * 100)}\n"
         f"� Çözülen Soru: {total}\n"
         f"🏃‍♂️ En Uzun Maraton: {u.get('best_marathon', 0)}\n"
@@ -2854,6 +2903,58 @@ def admin_gift(message):
     except:
         bot.reply_to(message, "⚠️ Kullanım: /hediye <KullanıcıAdı veya ID> <Miktar>\nÖrnek: /hediye @HuseyinAcar35 1000")
 
+@bot.message_handler(commands=['transfer'])
+def transfer_money(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    try:
+        args = message.text.split()
+        target_input = args[1]
+        amount = int(args[2])
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: `/transfer <@KullanıcıAdı veya ID> <Miktar>`\nÖrnek: `/transfer @Ali 100`")
+        return
+
+    if amount <= 0:
+        bot.reply_to(message, "❌ Pozitif bir miktar girmelisin.")
+        return
+
+    if users[user_id]["exp"] < amount:
+        bot.reply_to(message, f"❌ Yetersiz bakiye! Mevcut: {users[user_id]['exp']} EXP")
+        return
+
+    # Alıcıyı bul
+    target_id = None
+    if target_input in users:
+        target_id = target_input
+    else:
+        search_name = target_input.lstrip("@")
+        for uid, u in users.items():
+            if u.get("username") == search_name:
+                target_id = uid
+                break
+    
+    if not target_id:
+        bot.reply_to(message, "❌ Kullanıcı bulunamadı.")
+        return
+
+    if target_id == user_id:
+        bot.reply_to(message, "❌ Kendine para gönderemezsin.")
+        return
+
+    # Transfer işlemi
+    users[user_id]["exp"] -= amount
+    users[target_id]["exp"] += amount
+    save_users()
+
+    bot.reply_to(message, f"✅ **Transfer Başarılı!**\n💸 Gönderilen: {amount} EXP\n👤 Alıcı: {users[target_id]['name']}")
+    
+    try:
+        bot.send_message(target_id, f"💸 **PARA GELDİ!**\n\n@{users[user_id].get('username', 'Biri')} sana {amount} EXP gönderdi.")
+    except:
+        pass
+
 @bot.message_handler(commands=['ban'])
 def ban_user(message):
     if message.from_user.username != DEVELOPER_USERNAME: return
@@ -2902,6 +3003,7 @@ def help_guide(message):
         "🔹 `/tarihtebugun` - Bugün tarihte ne olduğunu öğren. 📅\n"
         "🔹 `/borsa` - Kapalıçarşı'da ticaret yap, servetine servet kat! (Yeni! 📈)\n"
         "🔹 `/zenginler` - Piyasanın en zenginlerini gör. 💸\n"
+        "🔹 `/transfer` - Arkadaşına EXP gönder. 💸\n"
         "🔹 `/clock` - Dünya genelinden zor sorular (Global).\n"
         "🔹 `/duello <miktar>` - Botla zar atışına gir. Kazanan hepsini alır!\n\n"
         "⛏️ **Madencilik & Ekonomi:**\n"
@@ -3013,6 +3115,14 @@ def update_market():
             # Sınırları kontrol et
             new_price = max(data["min"], min(new_price, data["max"]))
             market_prices[code] = new_price
+            
+            # 3. Flaş İndirim (Flash Sale) Şansı
+            # %5 ihtimalle bir üründe büyük indirim olur (Fiyat düşer)
+            if random.random() < 0.05:
+                discount_price = int(new_price * 0.6) # %40 İndirim
+                discount_price = max(data["min"], discount_price)
+                market_prices[code] = discount_price
+                market_news = f"🏷️ **FLAŞ İNDİRİM!** {data['name']} fiyatı çakıldı! Alım fırsatı! 📉"
             
             # En büyük değişimi takip et (Haber için)
             if current_price > 0:
