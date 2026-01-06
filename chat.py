@@ -116,32 +116,32 @@ load_market_data()
 # 📰 Borsa Haber Şablonları
 NEWS_TEMPLATES = {
     "ipek": {
-        "up": ["Sarayda ipek modası başladı! Talep patladı! 👗", "İpek Yolu'nda kervanlar yağmalandı, arz düştü! ⚔️"],
-        "down": ["Çin'den dev ipek kervanı ulaştı! Piyasada bolluk var. 🐫", "Halk pamuklu kumaşa yöneldi, ipeğe ilgi azaldı. 📉"]
+        "up": ["Sarayda ipek modası başladı! Talep patladı! 👗", "İpek Yolu'nda kervanlar yağmalandı, arz düştü! ⚔️", "Avrupa'dan gelen tüccarlar tüm ipeği topladı! 💰"],
+        "down": ["Çin'den dev ipek kervanı ulaştı! Piyasada bolluk var. 🐫", "Halk pamuklu kumaşa yöneldi, ipeğe ilgi azaldı. 📉", "İpek böceği üretiminde rekor artış var! 🐛"]
     },
     "baharat": {
-        "up": ["Saray mutfağı için yüklü baharat siparişi verildi! 🍛", "Hint Okyanusu'nda fırtına! Baharat gemileri battı. 🌊"],
-        "down": ["Yeni baharat yolu keşfedildi! Fiyatlar düşüşte. 🗺️", "Baharat stokları doldu taştı, tüccarlar elden çıkarıyor. 📦"]
+        "up": ["Saray mutfağı için yüklü baharat siparişi verildi! 🍛", "Hint Okyanusu'nda fırtına! Baharat gemileri battı. 🌊", "Kış yaklaşıyor, şifalı baharatlara talep arttı! 🌡️"],
+        "down": ["Yeni baharat yolu keşfedildi! Fiyatlar düşüşte. 🗺️", "Baharat stokları doldu taştı, tüccarlar elden çıkarıyor. 📦", "Hindistan'dan gelen gemiler limana yanaştı! 🚢"]
     },
     "cini": {
-        "up": ["Yeni cami inşaatı için binlerce çini aranıyor! 🕌", "Ünlü çini ustaları greve gitti! Üretim durdu. 🔨"],
-        "down": ["Çini atölyelerinde üretim rekoru kırıldı! 🏺", "Yabancı tüccarlar çini alımını durdurdu. ❌"]
+        "up": ["Yeni cami inşaatı için binlerce çini aranıyor! 🕌", "Ünlü çini ustaları greve gitti! Üretim durdu. 🔨", "Saray dekorasyonu için özel çini siparişi verildi! 🏛️"],
+        "down": ["Çini atölyelerinde üretim rekoru kırıldı! 🏺", "Yabancı tüccarlar çini alımını durdurdu. ❌", "Piyasaya ucuz ve kalitesiz çiniler girdi. 📉"]
     },
     "tuz": {
-        "up": ["Kış yaklaşıyor, halk tuz stokluyor! ❄️", "Tuz Gölü'nde kuraklık var, üretim düştü! ☀️"],
-        "down": ["Yeni tuz madeni keşfedildi! ⛏️", "Tuz vergileri düşürüldü, fiyatlar rahatladı. ⬇️"]
+        "up": ["Kış yaklaşıyor, halk tuz stokluyor! ❄️", "Tuz Gölü'nde kuraklık var, üretim düştü! ☀️", "Ordu sefer hazırlığında, tuz stokluyor! ⚔️"],
+        "down": ["Yeni tuz madeni keşfedildi! ⛏️", "Tuz vergileri düşürüldü, fiyatlar rahatladı. ⬇️", "Tuz Gölü'nde hasat mevsimi bereketli geçti! 🧂"]
     },
     "elmas": {
-        "up": ["Saray mücevherleri için dev elmas siparişi! 💍", "Elmas madeninde göçük! Arz durdu. ⚠️"],
-        "down": ["Yeni bir elmas rezervi bulundu! Fiyatlar çakıldı. 📉", "Sahte elmaslar piyasayı karıştırdı, güven düştü. 💎"]
+        "up": ["Saray mücevherleri için dev elmas siparişi! 💍", "Elmas madeninde göçük! Arz durdu. ⚠️", "Yabancı bir prenses tüm elmasları satın aldı! 👸"],
+        "down": ["Yeni bir elmas rezervi bulundu! Fiyatlar çakıldı. 📉", "Sahte elmaslar piyasayı karıştırdı, güven düştü. 💎", "Zenginler altına yöneldi, elmas gözden düştü. 📉"]
     },
     "altin": {
-        "up": ["Savaş söylentileri halkı altına yöneltti! 🛡️", "Darphane yeni sikke basımı için altın topluyor. 💰"],
-        "down": ["Yeni altın madeni işletmeye açıldı! ⛏️", "Tüccarlar nakit ihtiyacı için altın bozuyor. 📉"]
+        "up": ["Savaş söylentileri halkı altına yöneltti! 🛡️", "Darphane yeni sikke basımı için altın topluyor. 💰", "Ekonomik belirsizlik altını güvenli liman yaptı! ⚓"],
+        "down": ["Yeni altın madeni işletmeye açıldı! ⛏️", "Tüccarlar nakit ihtiyacı için altın bozuyor. 📉", "Hazine yüklü miktarda altın dağıttı! 💸"]
     },
     "demir": {
-        "up": ["Ordu için yeni silah siparişi! Demire hücum. ⚔️", "Demir ocaklarında grev var! 🔥"],
-        "down": ["Hurda demirler piyasaya sürüldü. ♻️", "İnşaat sektörü durgunlaştı, demir talebi az. 🏗️"]
+        "up": ["Ordu için yeni silah siparişi! Demire hücum. ⚔️", "Demir ocaklarında grev var! 🔥", "Yeni kale inşaatları demir talebini patlattı! 🏰"],
+        "down": ["Hurda demirler piyasaya sürüldü. ♻️", "İnşaat sektörü durgunlaştı, demir talebi az. 🏗️", "Yeni demir madeni rezervleri bulundu! ⛏️"]
     }
 }
 
@@ -3567,68 +3567,62 @@ def update_market():
         
         print(f"📊 Piyasa Öncesi Hacimler: {market_volumes}")
         
-        biggest_change = 0
-        news_item = None
-        news_direction = None
+        # 1. HABER VE TREND BELİRLEME (Haber fiyatı doğrudan etkilesin)
+        # Rastgele bir ürünü haber manşetine taşı
+        news_item_code = random.choice(list(TRADE_GOODS.keys()))
+        news_direction = random.choice(["up", "down"])
+        
+        # Haberi seç
+        market_news = random.choice(NEWS_TEMPLATES[news_item_code][news_direction])
+        
+        # Haber etkisi katsayısı (Ciddi etki: %15 ile %35 arası)
+        news_impact = random.uniform(0.15, 0.35)
+        if news_direction == "down":
+            news_impact *= -1
 
         for code, data in TRADE_GOODS.items():
             current_price = market_prices[code]
             volume = market_volumes.get(code, 0)
             
-            # 1. Arz-Talep Etkisi (Hacme Duyarlı)
-            # Temel rastgele dalgalanma (-%3 ile +%3 arası)
-            change_percent = random.uniform(-0.03, 0.03)
+            # 1. Temel Dalgalanma (Volatiliteyi artırdık: %2 - %10 arası)
+            # Her ürün mutlaka biraz oynasın
+            change_percent = random.uniform(0.02, 0.10)
+            if random.random() < 0.5: change_percent *= -1
             
-            # Hacim Etkisi: Her 1 birim alım %0.5 artırır, satım düşürür.
-            # Örn: 50 tane alındıysa -> +0.25 (%25 artış)
-            volume_impact = volume * 0.005
+            # 2. Hacim Etkisi (Arz/Talep)
+            # Hacim etkisini biraz daha agresif yapalım
+            volume_impact = volume * 0.003 # Her birim %0.3 etkilesin
             
             # Toplam değişim
             change_percent += volume_impact
             
-            # Normal şartlarda değişimi %30 ile sınırla
-            change_percent = max(-0.30, min(change_percent, 0.30))
-                
-            # 2. Sürpriz Olaylar (Manipülasyon)
-            # %10 ihtimalle piyasa ters köşe yapar
-            surprise_roll = random.random()
-            
-            if surprise_roll < 0.10: # %10 şansla sürpriz
-                if volume > 10: # Çok alınan mal çakılır (Balon patladı)
-                    change_percent = random.uniform(-0.40, -0.20) # Sert düşüş
-                    print(f"📉 SÜRPRİZ: {data['name']} balon yaptı ve patladı!")
-                elif volume < -10: # Çok satılan mal fırlar (Tepki alımı)
-                    change_percent = random.uniform(0.20, 0.40) # Sert yükseliş
-                    print(f"🚀 SÜRPRİZ: {data['name']} dip fiyattan toplandı!")
+            # 3. Haber Etkisi (Eğer haber bu ürünle ilgiliyse)
+            if code == news_item_code:
+                change_percent += news_impact
+            else:
+                # Diğer ürünler de piyasa genelinden hafif etkilensin (Korelasyon)
+                # Haber pozitifse diğerleri de azıcık artabilir, negatifse düşebilir
+                # Amaç piyasanın canlı durması
+                change_percent += (news_impact * 0.1) 
+
+            # Değişimi sınırla (Çok aşırı uçmasın, max %50)
+            change_percent = max(-0.50, min(change_percent, 0.50))
             
             # Yeni fiyatı hesapla
-            new_price = int(current_price * (1 + change_percent))
+            price_change = int(current_price * change_percent)
+            
+            # Düşük fiyatlı ürünlerde (Tuz, Demir) değişim 0 olmasın diye zorla
+            # Eğer fiyat değişimi 0 ise, rastgele +/- 1-3 ekle
+            if price_change == 0:
+                force_change = random.randint(1, 3)
+                if change_percent < 0: force_change *= -1
+                price_change = force_change
+
+            new_price = current_price + price_change
             
             # Sınırları kontrol et
             new_price = max(data["min"], min(new_price, data["max"]))
             market_prices[code] = new_price
-            
-            # 3. Flaş İndirim (Flash Sale) Şansı
-            # %5 ihtimalle bir üründe büyük indirim olur (Fiyat düşer)
-            if random.random() < 0.05:
-                discount_price = int(new_price * 0.6) # %40 İndirim
-                discount_price = max(data["min"], discount_price)
-                market_prices[code] = discount_price
-                market_news = f"🏷️ **FLAŞ İNDİRİM!** {data['name']} fiyatı çakıldı! Alım fırsatı! 📉"
-            
-            # En büyük değişimi takip et (Haber için)
-            if current_price > 0:
-                pct_change = (new_price - current_price) / current_price
-                if abs(pct_change) > abs(biggest_change):
-                    biggest_change = pct_change
-                    news_item = code
-                    news_direction = "up" if pct_change > 0 else "down"
-
-        # Haber Oluştur
-        if news_item and abs(biggest_change) > 0.05: # %5'ten büyük değişim varsa haber yap
-            market_news = random.choice(NEWS_TEMPLATES[news_item][news_direction])
-        else:
-            market_news = "Piyasa sakin seyrediyor, belirgin bir hareketlilik yok. ☁️"
 
         # Hacimleri sıfırla (Bir sonraki döngü için)
         market_volumes = {k: 0 for k in TRADE_GOODS.keys()}
