@@ -2789,5 +2789,565 @@
     ],
     "answer": "C",
     "explanation": "İçindeki demir oksit nedeniyle kırmızı renk alan Terra Rossa, Akdeniz ikliminin karakteristik toprağıdır."
+  },
+  {
+    "id": 229,
+    "category": "tarih",
+    "level": 1,
+    "question": "İslamiyet öncesi Türk devletlerinde ölüler için yapılan cenaze törenine ne ad verilir?",
+    "options": [
+      "A) Toy",
+      "B) Yuğ",
+      "C) Şölen",
+      "D) Kurgan"
+    ],
+    "answer": "B",
+    "explanation": "Eski Türklerde ölü gömme törenlerine 'Yuğ' adı verilirdi. Kurgan ise mezardır."
+  },
+  {
+    "id": 230,
+    "category": "tarih",
+    "level": 2,
+    "question": "Büyük Selçuklu Devleti'nin en parlak dönemi hangi hükümdar zamanında yaşanmıştır?",
+    "options": [
+      "A) Tuğrul Bey",
+      "B) Alparslan",
+      "C) Melikşah",
+      "D) Sultan Sencer"
+    ],
+    "answer": "C",
+    "explanation": "Büyük Selçuklu Devleti, Sultan Melikşah döneminde sınırlarını en geniş hale getirmiş ve en parlak dönemini yaşamıştır."
+  },
+  {
+    "id": 231,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde 'Esham' (İç Borçlanma) sistemi ilk kez hangi padişah döneminde uygulanmıştır?",
+    "options": [
+      "A) I. Abdülhamit",
+      "B) III. Mustafa",
+      "C) III. Selim",
+      "D) II. Mahmut"
+    ],
+    "answer": "A",
+    "explanation": "Esham sistemi (Hazine bonosu), I. Abdülhamit döneminde uygulanmaya başlanmıştır."
+  },
+  {
+    "id": 232,
+    "category": "tarih",
+    "level": 2,
+    "question": "II. Abdülhamit döneminde yoksullar, kimsesizler ve yaşlılar için kurulan kurum hangisidir?",
+    "options": [
+      "A) Darüşşafaka",
+      "B) Darülaceze",
+      "C) Hilal-i Ahmer",
+      "D) Himaye-i Etfal"
+    ],
+    "answer": "B",
+    "explanation": "1895 yılında II. Abdülhamit tarafından kurulan Darülaceze, din ve ırk ayrımı yapmaksızın düşkünlere yardım eder."
+  },
+  {
+    "id": 233,
+    "category": "tarih",
+    "level": 1,
+    "question": "Amasya Genelgesi'nde yer alan 'Milletin bağımsızlığını yine milletin azim ve kararı kurtaracaktır' maddesi neyi ifade eder?",
+    "options": [
+      "A) Milli Mücadelenin Gerekçesi",
+      "B) Milli Mücadelenin Yöntemi ve Amacı",
+      "C) İstanbul Hükümeti'nin Yok Sayılması",
+      "D) Bölgesel Kurtuluş"
+    ],
+    "answer": "B",
+    "explanation": "Bu madde, Kurtuluş Savaşı'nın hem amacını (bağımsızlık) hem de yöntemini (milletin azmi) ortaya koyar."
+  },
+  {
+    "id": 234,
+    "category": "tarih",
+    "level": 3,
+    "question": "Lozan Barış Antlaşması'na göre Boğazlar Komisyonu'nun başkanının hangi ülkeden olması kararlaştırılmıştır?",
+    "options": [
+      "A) İngiltere",
+      "B) Fransa",
+      "C) Türkiye",
+      "D) İtalya"
+    ],
+    "answer": "C",
+    "explanation": "Lozan'da Boğazlar Komisyonu devam etmiş ancak başkanının Türk olması karara bağlanmıştır (Montrö ile komisyon tamamen kalktı)."
+  },
+  {
+    "id": 235,
+    "category": "tarih",
+    "level": 2,
+    "question": "Cumhuriyet döneminde çok partili hayata geçiş denemelerinin başarısızlıkla sonuçlanmasına neden olan olay hangisidir?",
+    "options": [
+      "A) Şeyh Sait İsyanı",
+      "B) Menemen Olayı (Kubilay Olayı)",
+      "C) İzmir Suikastı",
+      "D) Çerkez Ethem İsyanı"
+    ],
+    "answer": "B",
+    "explanation": "1930 yılında Serbest Cumhuriyet Fırkası'nın kapanmasının ardından çıkan Menemen Olayı, çok partili hayata geçişi erteletmiştir."
+  },
+  {
+    "id": 236,
+    "category": "tarih",
+    "level": 3,
+    "question": "Türkiye, İran, Irak ve Afganistan arasında 1937 yılında imzalanan 'Sadabat Paktı' nerede imzalanmıştır?",
+    "options": [
+      "A) Ankara",
+      "B) Bağdat",
+      "C) Tahran",
+      "D) Kabil"
+    ],
+    "answer": "C",
+    "explanation": "Sadabat Paktı, Tahran'daki Sadabat Sarayı'nda imzalanmıştır."
+  },
+  {
+    "id": 237,
+    "category": "tarih",
+    "level": 1,
+    "question": "Mustafa Kemal Atatürk'ün en büyük eseri olarak nitelendirdiği eseri hangisidir?",
+    "options": [
+      "A) Nutuk",
+      "B) Türkiye Cumhuriyeti",
+      "C) Gençliğe Hitabe",
+      "D) Onuncu Yıl Nutku"
+    ],
+    "answer": "B",
+    "explanation": "Atatürk, 'Benim naçiz vücudum elbet bir gün toprak olacaktır, fakat Türkiye Cumhuriyeti ilelebet payidar kalacaktır' diyerek Cumhuriyeti en büyük eseri saymıştır."
+  },
+  {
+    "id": 238,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde padişahın yetkilerini kısıtlayan ilk demokratikleşme hareketi hangisidir?",
+    "options": [
+      "A) Tanzimat Fermanı",
+      "B) Islahat Fermanı",
+      "C) Sened-i İttifak",
+      "D) Kanun-i Esasi"
+    ],
+    "answer": "C",
+    "explanation": "1808 Sened-i İttifak, padişahın yetkilerini ayanlar karşısında kısıtlayan ilk belgedir."
+  },
+  {
+    "id": 239,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'nin matematik konumu (Orta Kuşak) gereği aşağıdakilerden hangisi görülür?",
+    "options": [
+      "A) Dört mevsimin belirgin yaşanması",
+      "B) Deprem riskinin fazla olması",
+      "C) Maden çeşitliliğinin fazla olması",
+      "D) Ortalama yükseltinin fazla olması"
+    ],
+    "answer": "A",
+    "explanation": "Orta kuşakta yer almamızın sonucu olarak dört mevsim belirgin olarak yaşanır ve Batı rüzgarları görülür."
+  },
+  {
+    "id": 240,
+    "category": "cografya",
+    "level": 2,
+    "question": "Aşağıdakilerden hangisi Türkiye'deki 'Masif' (eski, sertleşmiş) arazilerden biridir?",
+    "options": [
+      "A) Çukurova",
+      "B) Erzurum Platosu",
+      "C) Mardin Eşiği",
+      "D) Bafra Ovası"
+    ],
+    "answer": "C",
+    "explanation": "Mardin Eşiği, Yıldız Dağları, Menteşe Yöresi gibi alanlar I. jeolojik zamanda oluşmuş masif arazilerdir."
+  },
+  {
+    "id": 241,
+    "category": "cografya",
+    "level": 2,
+    "question": "Yeşilırmak nehrinin taşıdığı alüvyonlarla oluşturduğu delta ovası hangisidir?",
+    "options": [
+      "A) Bafra Ovası",
+      "B) Çarşamba Ovası",
+      "C) Silifke Ovası",
+      "D) Menemen Ovası"
+    ],
+    "answer": "B",
+    "explanation": "Yeşilırmak -> Çarşamba Ovası, Kızılırmak -> Bafra Ovası'nı oluşturur."
+  },
+  {
+    "id": 242,
+    "category": "cografya",
+    "level": 2,
+    "question": "Erzurum-Kars çevresinde görülen, dünyanın en verimli yerli toprağı hangisidir?",
+    "options": [
+      "A) Terra Rossa",
+      "B) Podzol",
+      "C) Çernezyom (Kara Toprak)",
+      "D) Laterit"
+    ],
+    "answer": "C",
+    "explanation": "Çernezyomlar humus bakımından çok zengindir ancak iklim sert olduğu için tarımdan çok çayır/hayvancılıkta kullanılır."
+  },
+  {
+    "id": 243,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'de devlet kontrolünde üretilen ve uyuşturucu yapımında da kullanılabilen tarım ürünü hangisidir?",
+    "options": [
+      "A) Tütün",
+      "B) Haşhaş",
+      "C) Şeker Pancarı",
+      "D) Pamuk"
+    ],
+    "answer": "B",
+    "explanation": "Haşhaş ve Kenevir, uyuşturucu yapımında kullanılabileceği için devlet kontrolünde ekilir."
+  },
+  {
+    "id": 244,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de arıcılığın en fazla geliştiği ve bal üretiminde önde gelen illerimiz hangileridir?",
+    "options": [
+      "A) Konya - Ankara",
+      "B) Edirne - Tekirdağ",
+      "C) Ordu - Muğla",
+      "D) Antalya - Mersin"
+    ],
+    "answer": "C",
+    "explanation": "Ordu (çiçek balı) ve Muğla (çam balı) Türkiye'nin en önemli bal üretim merkezleridir."
+  },
+  {
+    "id": 245,
+    "category": "cografya",
+    "level": 3,
+    "question": "Alüminyumun hammaddesi olan ve Konya-Seydişehir'de işlenen maden hangisidir?",
+    "options": [
+      "A) Boksit",
+      "B) Krom",
+      "C) Bakır",
+      "D) Barit"
+    ],
+    "answer": "A",
+    "explanation": "Boksit madeni alüminyum yapımında kullanılır ve en önemli tesis Seydişehir Alüminyum Tesisleri'dir."
+  },
+  {
+    "id": 246,
+    "category": "cografya",
+    "level": 2,
+    "question": "Kağıt fabrikalarının genellikle kıyı kesimlerde (Giresun, Zonguldak, Mersin, Muğla) kurulmasının temel nedeni nedir?",
+    "options": [
+      "A) Ulaşım kolaylığı",
+      "B) Hammaddeye yakınlık",
+      "C) Enerji kaynağına yakınlık",
+      "D) Pazar alanına yakınlık"
+    ],
+    "answer": "B",
+    "explanation": "Kağıt sanayisinin hammaddesi ormandır. Ormanlar kıyılarda yoğun olduğu için fabrikalar da buradadır."
+  },
+  {
+    "id": 247,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'nin kış turizmi merkezlerinden biri olan 'Palandöken' hangi ilimizdedir?",
+    "options": [
+      "A) Bursa",
+      "B) Kayseri",
+      "C) Erzurum",
+      "D) Kars"
+    ],
+    "answer": "C",
+    "explanation": "Palandöken Kayak Merkezi Erzurum'dadır."
+  },
+  {
+    "id": 248,
+    "category": "cografya",
+    "level": 2,
+    "question": "İstanbul Boğazı ve Çanakkale Boğazı hangi kıyı tipine örnektir?",
+    "options": [
+      "A) Dalmaçya",
+      "B) Ria",
+      "C) Enine",
+      "D) Boyuna"
+    ],
+    "answer": "B",
+    "explanation": "Eski akarsu vadilerinin deniz suları altında kalmasıyla oluşan kıyı tipine Ria denir (Boğazlar ve Haliç)."
+  },
+  {
+    "id": 249,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Aşağıdakilerden hangisi 'Sosyal Haklar' (İsteme Hakları) grubunda yer alır?",
+    "options": [
+      "A) Seçme ve seçilme hakkı",
+      "B) Mülkiyet hakkı",
+      "C) Eğitim ve öğrenim hakkı",
+      "D) Kişi dokunulmazlığı"
+    ],
+    "answer": "C",
+    "explanation": "Eğitim, sağlık, çalışma gibi haklar devletten istenebilecek sosyal ve ekonomik haklardır."
+  },
+  {
+    "id": 250,
+    "category": "vatandaslik",
+    "level": 2,
+    "question": "Milletvekillerinin meclis çalışmalarındaki oy ve sözlerinden dolayı sorumlu tutulmamasına ne ad verilir?",
+    "options": [
+      "A) Yasama Dokunulmazlığı",
+      "B) Yasama Sorumsuzluğu",
+      "C) Parti Disiplini",
+      "D) Yüce Divan"
+    ],
+    "answer": "B",
+    "explanation": "Yasama sorumsuzluğu (Kürsü dokunulmazlığı) mutlaktır ve ömür boyu sürer."
+  },
+  {
+    "id": 251,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Savaş ilanına karar verme yetkisi kime aittir?",
+    "options": [
+      "A) Cumhurbaşkanı",
+      "B) Genelkurmay Başkanı",
+      "C) TBMM",
+      "D) Milli Güvenlik Kurulu"
+    ],
+    "answer": "C",
+    "explanation": "Anayasaya göre savaş ilanına Türkiye Büyük Millet Meclisi karar verir."
+  },
+  {
+    "id": 252,
+    "category": "vatandaslik",
+    "level": 2,
+    "question": "Cumhurbaşkanlığına aday gösterebilmek için en az kaç seçmenin imzası gerekir?",
+    "options": [
+      "A) 20 bin",
+      "B) 50 bin",
+      "C) 100 bin",
+      "D) 1 milyon"
+    ],
+    "answer": "C",
+    "explanation": "Siyasi parti grupları dışında, en az 100.000 seçmen de Cumhurbaşkanı adayı gösterebilir."
+  },
+  {
+    "id": 253,
+    "category": "vatandaslik",
+    "level": 2,
+    "question": "Devlet Denetleme Kurulu (DDK) aşağıdakilerden hangisini denetleyemez?",
+    "options": [
+      "A) Kamu kurumu niteliğindeki meslek kuruluşları",
+      "B) Yargı organları",
+      "C) İşçi ve işveren sendikaları",
+      "D) Dernekler ve vakıflar"
+    ],
+    "answer": "B",
+    "explanation": "Yargı bağımsızlığı gereği DDK, mahkemeleri ve yargı organlarını denetleyemez."
+  },
+  {
+    "id": 254,
+    "category": "vatandaslik",
+    "level": 2,
+    "question": "İl Özel İdaresi'nin karar organı hangisidir?",
+    "options": [
+      "A) İl Genel Meclisi",
+      "B) Belediye Meclisi",
+      "C) İl İdare Kurulu",
+      "D) Encümen"
+    ],
+    "answer": "A",
+    "explanation": "İl Özel İdaresi'nin karar organı, üyeleri halk tarafından seçilen İl Genel Meclisi'dir."
+  },
+  {
+    "id": 255,
+    "category": "vatandaslik",
+    "level": 2,
+    "question": "Devlet memurluğunda adaylık süresi en az 1 yıl, en çok kaç yıldır?",
+    "options": [
+      "A) 1.5 yıl",
+      "B) 2 yıl",
+      "C) 3 yıl",
+      "D) 4 yıl"
+    ],
+    "answer": "B",
+    "explanation": "Aday memurluk süresi 1 yıldan az, 2 yıldan çok olamaz."
+  },
+  {
+    "id": 256,
+    "category": "vatandaslik",
+    "level": 2,
+    "question": "Türkiye aşağıdaki uluslararası kuruluşlardan hangisinin kurucu üyesidir?",
+    "options": [
+      "A) Avrupa Birliği (AB)",
+      "B) Avrupa Konseyi",
+      "C) NATO",
+      "D) Şanghay İşbirliği Örgütü"
+    ],
+    "answer": "B",
+    "explanation": "Türkiye, 1949'da kurulan Avrupa Konseyi'nin kurucu üyeleri arasındadır. (NATO'ya sonradan girmiştir)."
+  },
+  {
+    "id": 257,
+    "category": "vatandaslik",
+    "level": 2,
+    "question": "Anayasa Mahkemesi, Cumhurbaşkanı ve Bakanları yargılarken hangi sıfatı kullanır?",
+    "options": [
+      "A) Yargıtay Ceza Genel Kurulu",
+      "B) Yüce Divan",
+      "C) Danıştay İdari Dava Daireleri",
+      "D) Uyuşmazlık Mahkemesi"
+    ],
+    "answer": "B",
+    "explanation": "Anayasa Mahkemesi, üst düzey devlet görevlilerini yargılarken 'Yüce Divan' sıfatıyla çalışır."
+  },
+  {
+    "id": 258,
+    "category": "vatandaslik",
+    "level": 1,
+    "question": "Temel hak ve hürriyetlerin tamamen veya kısmen durdurulabileceği durum hangisidir?",
+    "options": [
+      "A) Ekonomik kriz",
+      "B) Savaş hali",
+      "C) Seçim dönemi",
+      "D) Hükümet değişikliği"
+    ],
+    "answer": "B",
+    "explanation": "Savaş, seferberlik veya olağanüstü hallerde temel haklar durdurulabilir (Yaşama hakkı hariç)."
+  },
+  {
+    "id": 259,
+    "category": "guncel",
+    "level": 1,
+    "question": "UNESCO Dünya Mirası Listesi'ne 2021 yılında eklenen 'Arslantepe Höyüğü' hangi ilimizdedir?",
+    "options": [
+      "A) Çorum",
+      "B) Malatya",
+      "C) Şanlıurfa",
+      "D) Konya"
+    ],
+    "answer": "B",
+    "explanation": "Arslantepe Höyüğü, Malatya'da yer alır ve ilk devlet şeklinin ortaya çıktığı yerlerden biridir."
+  },
+  {
+    "id": 260,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye'nin ilk 'Cittaslow' (Sakin Şehir) unvanını alan ilçesi hangisidir?",
+    "options": [
+      "A) Akyaka (Muğla)",
+      "B) Gökçeada (Çanakkale)",
+      "C) Seferihisar (İzmir)",
+      "D) Halfeti (Şanlıurfa)"
+    ],
+    "answer": "C",
+    "explanation": "İzmir'in Seferihisar ilçesi, Türkiye'nin ilk sakin şehridir."
+  },
+  {
+    "id": 261,
+    "category": "guncel",
+    "level": 1,
+    "question": "Nobel Kimya Ödülü'nü kazanarak bu ödülü alan ilk Türk bilim insanı kimdir?",
+    "options": [
+      "A) Aziz Sancar",
+      "B) Oktay Sinanoğlu",
+      "C) Gazi Yaşargil",
+      "D) Celal Şengör"
+    ],
+    "answer": "A",
+    "explanation": "Aziz Sancar, DNA onarımı çalışmalarıyla 2015 Nobel Kimya Ödülü'nü kazanmıştır."
+  },
+  {
+    "id": 262,
+    "category": "guncel",
+    "level": 1,
+    "question": "Tokyo 2020 Olimpiyatları'nda okçuluk dalında altın madalya kazanan milli sporcumuz kimdir?",
+    "options": [
+      "A) Rıza Kayaalp",
+      "B) Mete Gazoz",
+      "C) Busenaz Sürmeneli",
+      "D) Ferhat Arıcan"
+    ],
+    "answer": "B",
+    "explanation": "Mete Gazoz, okçulukta Türkiye'ye tarihindeki ilk olimpiyat altın madalyasını getirmiştir."
+  },
+  {
+    "id": 263,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye'nin en büyük tatlı su gölü hangisidir?",
+    "options": [
+      "A) Van Gölü",
+      "B) Tuz Gölü",
+      "C) Beyşehir Gölü",
+      "D) Eğirdir Gölü"
+    ],
+    "answer": "C",
+    "explanation": "Van Gölü en büyük göldür ancak sodalıdır. En büyük 'tatlı su' gölü Beyşehir Gölü'dür."
+  },
+  {
+    "id": 264,
+    "category": "guncel",
+    "level": 1,
+    "question": "İstiklal Marşı'nın bestecisi kimdir?",
+    "options": [
+      "A) Mehmet Akif Ersoy",
+      "B) Osman Zeki Üngör",
+      "C) Ali Rıfat Çağatay",
+      "D) Adnan Saygun"
+    ],
+    "answer": "B",
+    "explanation": "Şiiri Mehmet Akif Ersoy yazmış, günümüzdeki bestesini Osman Zeki Üngör yapmıştır."
+  },
+  {
+    "id": 265,
+    "category": "guncel",
+    "level": 1,
+    "question": "Edebiyatımızda 'Bayrak Şairi' olarak bilinen şairimiz kimdir?",
+    "options": [
+      "A) Necip Fazıl Kısakürek",
+      "B) Arif Nihat Asya",
+      "C) Yahya Kemal Beyatlı",
+      "D) Mehmet Emin Yurdakul"
+    ],
+    "answer": "B",
+    "explanation": "Arif Nihat Asya, ünlü 'Bayrak' şiiri nedeniyle bu unvanla anılır."
+  },
+  {
+    "id": 266,
+    "category": "guncel",
+    "level": 1,
+    "question": "Türkiye Cumhuriyeti'nin ilk ve tek kadın başbakanı kimdir?",
+    "options": [
+      "A) Tansu Çiller",
+      "B) Meral Akşener",
+      "C) Behice Boran",
+      "D) İmren Aykut"
+    ],
+    "answer": "A",
+    "explanation": "Tansu Çiller, 1993-1996 yılları arasında başbakanlık yapmıştır."
+  },
+  {
+    "id": 267,
+    "category": "guncel",
+    "level": 1,
+    "question": "Kuzey Atlantik Antlaşması Örgütü'nün (NATO) merkezi hangi şehirdedir?",
+    "options": [
+      "A) Washington",
+      "B) Paris",
+      "C) Brüksel",
+      "D) Londra"
+    ],
+    "answer": "C",
+    "explanation": "NATO'nun genel merkezi Belçika'nın başkenti Brüksel'dedir."
+  },
+  {
+    "id": 268,
+    "category": "guncel",
+    "level": 1,
+    "question": "Birleşmiş Milletler (BM) Genel Merkezi hangi şehirdedir?",
+    "options": [
+      "A) Cenevre",
+      "B) New York",
+      "C) Viyana",
+      "D) Lahey"
+    ],
+    "answer": "B",
+    "explanation": "Birleşmiş Milletler'in ana merkezi ABD'nin New York şehrindedir."
   }
 ]
