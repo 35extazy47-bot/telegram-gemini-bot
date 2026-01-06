@@ -601,37 +601,32 @@ def language_selected(call):
         "tr": {
             "text": (
                 f"👋 **Hoş Geldin, {user_text}!**\n\n"
-                "Ben, senin için geliştirilmiş yapay zeka destekli bir asistanım. Hem eğlenip hem öğrenebileceğin harika özelliklerim var! 🚀\n\n"
+                "Ben, senin için geliştirilmiş yapay zeka destekli bir asistanım. Hem eğlenip hem öğrenebileceğin harika özelliklerim var! 🚀\n"
+                "Aşağıdaki **☰ Menü** butonundan tüm komutlara erişebilirsin.\n\n"
                 "🎮 **Oyun & Yarışma**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
                 "🔹 `/quiz` - KPSS Soruları Çöz 📚\n"
                 "🔹 `/maraton` - Tek Hakla İlerle 🏃‍♂️\n"
                 "🔹 `/clock` - Global Yarışma (Zamanlı) 🌍\n"
-                "🔹 `/duello` - Botla Zar Atışı ⚔️\n\n"
+                "🔹 `/duello <@kisi> <para>` - PvP Düello ⚔️\n"
+                "🔹 `/gorevler` - Günlük Görevleri Yap 📜\n\n"
                 "💰 **Ekonomi & Ticaret**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
                 "🔹 `/banka` - Banka & Faiz İşlemleri 🏦\n"
                 "🔹 `/borsa` - Kapalıçarşı Ticaret 📈\n"
-                "🔹 `/market` - Eşya Satın Al 🛒\n"
+                "🔹 `/al <mal> <hepsi|adet>` - Mal Al 🛍️\n"
+                "🔹 `/sat <mal> <hepsi|adet>` - Mal Sat 💰\n"
                 "🔹 `/kaz` - Maden Kaz (Elmas Bul!) ⛏️\n"
-                "🔹 `/zenginler` - En Zenginler Listesi 💸\n\n"
+                "🔹 `/transfer <@kisi> <para>` - Para Gönder 💸\n\n"
                 "👤 **Profil & Araçlar**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
-                "🔹 `/profil` - İstatistiklerin 📊\n"
+                "🔹 `/profil` - İstatistiklerin ve Rozetlerin 📊\n"
                 "🔹 `/envanter` - Çantanı Gör 🎒\n"
                 "🔹 `/top10` - Liderlik Tablosu 🏆\n"
-                "🔹 `/soruekle` - Soru Gönder 📝\n\n"
+                "🔹 `/market` - Eşya Satın Al 🛒\n\n"
                 "🔮 **Ekstra Özellikler**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
-                "🔹 `/ruya` - Rüya Tabiri 🌙\n"
-                "🔹 `/tarot` - Tarot Falı 🃏\n"
-                "🔹 `/burc` - Günlük Burç Yorumu ♈\n"
-                "🔹 `/ozet` - Konu Özeti Çıkar 📝\n"
-                "🔹 `/tarihtebugun` - Tarihte Bugün 📅\n"
-                "🔹 `/bilgi` - İlginç Bilgiler 🧠\n\n"
-                "⚠️ **Yapay Zeka Limiti**\n"
-                "Günlük **3 hak** ile sınırlıdır. (Her gece yenilenir)\n"
-                "🤖 **AI Özellikleri:** /ruya, /tarot, /burc, /bilgi, /ozet, /tarihtebugun ve Sohbet\n\n"
+                "🔹 `/ruya`, `/tarot`, `/burc`, `/ozet`, `/bilgi`\n\n"
                 "👇 **İletişim & Destek**"
             ),
             "btn": "📩 Geliştiriciye Mesaj Gönder"
@@ -639,37 +634,32 @@ def language_selected(call):
         "en": {
             "text": (
                 f"👋 **Welcome, {user_text}!**\n\n"
-                "I am an AI-powered assistant developed for you. I have great features for you to learn and have fun! 🚀\n\n"
+                "I am an AI-powered assistant developed for you. I have great features for you to learn and have fun! 🚀\n"
+                "You can access all commands from the **☰ Menu** button below.\n\n"
                 "🎮 **Games & Quiz**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
                 "🔹 `/quiz` - Solve Questions 📚\n"
                 "🔹 `/maraton` - Marathon Mode 🏃‍♂️\n"
                 "🔹 `/clock` - Global Trivia 🌍\n"
-                "🔹 `/duello` - Dice Duel ⚔️\n\n"
+                "🔹 `/duello <@user> <money>` - PvP Duel ⚔️\n"
+                "🔹 `/gorevler` - Do Daily Quests 📜\n\n"
                 "💰 **Economy & Trade**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
                 "🔹 `/banka` - Bank & Interest 🏦\n"
                 "🔹 `/borsa` - Grand Bazaar Trading 📈\n"
-                "🔹 `/market` - Buy Items 🛒\n"
+                "🔹 `/al <item> <all|amount>` - Buy Item 🛍️\n"
+                "🔹 `/sat <item> <all|amount>` - Sell Item 💰\n"
                 "🔹 `/kaz` - Mine Resources ⛏️\n"
-                "🔹 `/zenginler` - Richest Players 💸\n\n"
+                "🔹 `/transfer <@user> <money>` - Send Money 💸\n\n"
                 "👤 **Profile & Tools**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
-                "🔹 `/profil` - Your Stats 📊\n"
+                "🔹 `/profil` - Your Stats and Badges 📊\n"
                 "🔹 `/envanter` - Inventory 🎒\n"
                 "🔹 `/top10` - Leaderboard 🏆\n"
-                "🔹 `/soruekle` - Submit Question 📝\n\n"
+                "🔹 `/market` - Buy Items 🛒\n\n"
                 "🔮 **Extra Features**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
-                "🔹 `/ruya` - Dream Interpretation 🌙\n"
-                "🔹 `/tarot` - Tarot Reading 🃏\n"
-                "🔹 `/burc` - Daily Horoscope ♈\n"
-                "🔹 `/ozet` - Topic Summary 📝\n"
-                "🔹 `/tarihtebugun` - On This Day 📅\n"
-                "🔹 `/bilgi` - Interesting Facts 🧠\n\n"
-                "⚠️ **AI Usage Limit**\n"
-                "Limited to **3 uses** per day. (Resets nightly)\n"
-                "🤖 **AI Features:** /ruya, /tarot, /burc, /bilgi, /ozet, /tarihtebugun and Chat\n\n"
+                "🔹 `/ruya`, `/tarot`, `/burc`, `/ozet`, `/bilgi`\n\n"
                 "👇 **Contact & Support**"
             ),
             "btn": "📩 Contact the Developer"
@@ -677,37 +667,32 @@ def language_selected(call):
         "bg": {
             "text": (
                 f"👋 **Добре дошъл, {user_text}!**\n\n"
-                "Аз съм AI асистент, създаден за теб. Имам страхотни функции за забавление и учене! 🚀\n\n"
+                "Аз съм AI асистент, създаден за теб. Имам страхотни функции за забавление и учене! 🚀\n"
+                "Можете да получите достъп до всички команди от бутона **☰ Меню** по-долу.\n\n"
                 "🎮 **Игри и Викторини**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
                 "🔹 `/quiz` - Решаване на въпроси 📚\n"
                 "🔹 `/maraton` - Маратон режим 🏃‍♂️\n"
                 "🔹 `/clock` - Глобален тест 🌍\n"
-                "🔹 `/duello` - Дуел със зарове ⚔️\n\n"
+                "🔹 `/duello <@user> <money>` - PvP Дуел ⚔️\n"
+                "🔹 `/gorevler` - Изпълнявайте ежедневни куестове 📜\n\n"
                 "💰 **Икономика и Търговия**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
                 "🔹 `/banka` - Банка и лихви 🏦\n"
                 "🔹 `/borsa` - Търговия на пазара 📈\n"
-                "🔹 `/market` - Купи предмети 🛒\n"
+                "🔹 `/al <item> <all|amount>` - Купи предмет 🛍️\n"
+                "🔹 `/sat <item> <all|amount>` - Продай предмет 💰\n"
                 "🔹 `/kaz` - Копаене (Намери диаманти!) ⛏️\n"
-                "🔹 `/zenginler` - Най-богатите играчи 💸\n\n"
+                "🔹 `/transfer <@user> <money>` - Изпрати пари 💸\n\n"
                 "👤 **Профил и Инструменти**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
-                "🔹 `/profil` - Твоята статистика 📊\n"
+                "🔹 `/profil` - Вашата статистика и значки 📊\n"
                 "🔹 `/envanter` - Инвентар 🎒\n"
                 "🔹 `/top10` - Класация 🏆\n"
-                "🔹 `/soruekle` - Добави въпрос 📝\n\n"
+                "🔹 `/market` - Купи предмети 🛒\n\n"
                 "🔮 **Екстра Функции**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
-                "🔹 `/ruya` - Тълкуване на сънища 🌙\n"
-                "🔹 `/tarot` - Таро четене 🃏\n"
-                "🔹 `/burc` - Дневен хороскоп ♈\n"
-                "🔹 `/ozet` - Резюме на тема 📝\n"
-                "🔹 `/tarihtebugun` - На този ден 📅\n"
-                "🔹 `/bilgi` - Интересни факти 🧠\n\n"
-                "⚠️ **Лимит за AI**\n"
-                "Ограничено до **3 използвания** на ден. (Нулира се всяка нощ)\n"
-                "🤖 **AI Функции:** /ruya, /tarot, /burc, /bilgi, /ozet, /tarihtebugun и Чат\n\n"
+                "🔹 `/ruya`, `/tarot`, `/burc`, `/ozet`, `/bilgi`\n\n"
                 "� **Контакт и Поддръжка**"
             ),
             "btn": "📩 Свържи се с разработчика"
@@ -718,10 +703,14 @@ def language_selected(call):
 
     keyboard = InlineKeyboardMarkup()
     # Kategorili Menü Butonları
-    keyboard.row(InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
-                 InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy"))
-    keyboard.row(InlineKeyboardButton("🎓 KPSS & Araçlar", callback_data="help_tools"),
-                 InlineKeyboardButton("🔮 Mistik & AI", callback_data="help_ai"))
+    keyboard.row(
+        InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
+        InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy")
+    )
+    keyboard.row(
+        InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile"),
+        InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai")
+    )
     
     keyboard.add(
         InlineKeyboardButton(
@@ -753,10 +742,11 @@ def help_callback(call):
             "🎮 **OYUN MODLARI**\n\n"
             "🔹 `/quiz` - Kategorili KPSS soruları çöz.\n"
             "🔹 `/maraton` - Tek canla ne kadar gidebilirsin?\n"
-            "🔹 `/gorevler` - Günlük görevleri tamamla, ödül kazan! (Yeni!)\n"
+            "🔹 `/gorevler` - Günlük görevleri tamamla, ödül kazan.\n"
             "🔹 `/clock` - Zamana karşı Global sorular.\n"
-            "🔹 `/duello <miktar>` - Botla zar atışı yap.\n"
-            "🔹 `/bahis <miktar>` - Sıradaki soruya bahis oyna."
+            "🔹 `/duello <@kisi> <para>` - Oyuncuya meydan oku.\n"
+            "🔹 `/duello <para>` - Botla zar atışı yap.\n"
+            "🔹 `/bahis <para>` - Sıradaki soruya bahis oyna (EXP)."
         )
     elif category == "help_economy":
         text = (
@@ -765,39 +755,49 @@ def help_callback(call):
             "🔹 `/yatir <miktar>` - Bankaya para yatır.\n"
             "🔹 `/cek <miktar>` - Bankadan para çek.\n"
             "🔹 `/borsa` - Kapalıçarşı fiyatlarını gör.\n"
-            "🔹 `/al <mal> <adet>` - Ticaret malı al.\n"
-            "🔹 `/sat <mal> <adet>` - Ticaret malı sat.\n"
+            "🔹 `/al <mal> <hepsi|adet>` - Ticaret malı al.\n"
+            "🔹 `/sat <mal> <hepsi|adet>` - Ticaret malı sat.\n"
             "🔹 `/kaz` - Madene in (15 dk arayla).\n"
             "🔹 `/market` - Eşya ve Joker satın al.\n"
-            "🔹 `/transfer <kisi> <miktar>` - Para gönder (%5 vergi).\n"
+            "🔹 `/transfer <@kisi> <para>` - Para gönder (%5 vergi).\n"
             "🔹 `/zenginler` - En zengin oyuncular listesi."
         )
-    elif category == "help_tools":
+    elif category == "help_profile":
         text = (
-            "🎓 **KPSS & ARAÇLAR**\n\n"
-            "🔹 `/ozet <konu>` - Konu özeti çıkar.\n"
-            "🔹 `/dogruyanlis` - Bilgi yarışması.\n"
+            "👤 **PROFİL & ARAÇLAR**\n\n"
+            "🔹 `/profil` - Profil kartını ve rozetlerini gör.\n"
+            "🔹 `/envanter` - Çantanı ve paranın dökümünü gör.\n"
+            "🔹 `/top10` - En yüksek seviyeli oyuncuları gör.\n"
             "🔹 `/yanlislarim` - Hatalarını tekrar et.\n"
             "🔹 `/pomodoro` - 25 dk ders çalışma sayacı.\n"
-            "🔹 `/tarihtebugun` - Tarihte bugün ne oldu?\n"
             "🔹 `/soruekle` - Soru önerisinde bulun."
         )
     elif category == "help_ai":
         text = (
-            "🔮 **MİSTİK & YAPAY ZEKA**\n\n"
+            "🔮 **AI & DİĞER ARAÇLAR**\n\n"
+            "🔹 `/ozet <konu>` - Konu özeti çıkar.\n"
+            "🔹 `/dogruyanlis` - Bilgi yarışması.\n"
             "🔹 `/ruya <metin>` - Rüya tabiri.\n"
             "🔹 `/tarot` - 3 kart tarot falı.\n"
             "🔹 `/burc` - Günlük burç yorumu.\n"
-            "🔹 `/bilgi` - İlginç bir bilgi öğren."
+            "🔹 `/bilgi` - İlginç bir bilgi öğren.\n"
+            "🔹 `/tarihtebugun` - Tarihte bugün ne oldu?"
         )
     elif category == "help_back":
-        # Ana menüye dönüş (Dil seçimi sonrası ekrana benzer)
-        # Kullanıcının dilini alıp tekrar karşılama mesajını gönderiyoruz
-        user_id = str(call.from_user.id)
-        lang_code = users.get(user_id, {}).get("lang", "tr")
-        # language_selected fonksiyonunu simüle et
-        call.data = f"lang_{lang_code}"
-        language_selected(call)
+        # Ana menüye geri dön
+        markup = InlineKeyboardMarkup()
+        markup.row(
+            InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
+            InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy")
+        )
+        markup.row(
+            InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile"),
+            InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai")
+        )
+        bot.edit_message_text(
+            "📚 **BOT YARDIM MENÜSÜ**\n\nLütfen bilgi almak istediğin kategoriyi seç: 👇",
+            call.message.chat.id, call.message.message_id, reply_markup=markup, parse_mode="Markdown"
+        )
         return
 
     markup = InlineKeyboardMarkup()
@@ -3469,45 +3469,16 @@ def unban_user(message):
 
 @bot.message_handler(commands=['help', 'hakkinda', 'menu'])
 def help_guide(message):
-    text = (
-        "📚 **BOT REHBERİ & OYUN KURALLARI** 📚\n\n"
-        "🎮 **Nasıl Oynanır?**\n"
-        "Amacın soruları bilerek EXP kazanmak, seviye atlamak ve en güçlü oyuncu olmak!\n\n"
-        "🎓 **KPSS Çalışma Araçları:**\n"
-        "🔹 `/ozet <konu>` - İstediğin konunun özetini çıkarır.\n"
-        "🔹 `/dogruyanlis` - Doğru/Yanlış oyunu ile bilgilerini sına.\n"
-        "🔹 `/yanlislarim` - Yanlış yaptığın soruları tekrar çöz.\n"
-        "🔹 `/gunluk` - Günlük EXP ödülünü al (Seri yap, çok kazan!).\n"
-        "🔹 `/pomodoro` - 25 dakikalık ders çalışma sayacı başlat.\n\n"
-        "⚔️ **Oyun Modları:**\n"
-        "🔹 `/quiz` - Kategorili sorular çöz.\n"
-        "🔹 `/maraton` - Tek hakla ne kadar gidebilirsin? (Yeni! 🏃‍♂️)\n"
-        "🔹 `/soruekle` - Kendi sorunu gönder (Yeni! 📝)\n"
-        "🔹 `/sorudurumu` - Soru bankası istatistiklerini gör. 📊\n"
-        "🔹 `/tarihtebugun` - Bugün tarihte ne olduğunu öğren. 📅\n"
-        "🔹 `/borsa` - Kapalıçarşı'da ticaret yap, servetine servet kat! (Yeni! 📈)\n"
-        "🔹 `/zenginler` - Piyasanın en zenginlerini gör. 💸\n"
-        "🔹 `/transfer` - Arkadaşına EXP gönder. 💸\n"
-        "🔹 `/clock` - Dünya genelinden zor sorular (Global).\n"
-        "🔹 `/duello <miktar>` - Botla zar atışına gir. Kazanan hepsini alır!\n\n"
-        "⛏️ **Madencilik & Ekonomi:**\n"
-        "🔹 `/kaz` - Madene in (15 dk'da bir). Elmas, Altın veya Kömür bulabilirsin. Dikkat et göçük olabilir!\n"
-        "🔹 `/market` - Kazandığın EXP ile Can, Şans Kutusu veya **Elmas Kazma** al.\n"
-        "🔹 `/envanter` - Çantana, parana ve eşyalarına bak.\n\n"
-        "🔮 **Eğlence & Mistik:**\n"
-        "🔹 `/tarot` - 3 kart seç ve geleceğini öğren. 🃏\n"
-        "🔹 `/burc` - Günlük burç yorumunu al. ♈\n"
-        "🔹 `/ruya <metin>` - Rüyalarını yapay zekaya yorumlat. 🌙\n"
-        "🎲 **Risk & Ödül:**\n"
-        "🔹 `/bahis <miktar>` - Kendine güveniyorsan sıradaki soruya bahis oyna. Doğru bilirsen 2 katı!\n"
-        "🔹 **Happy Hour:** Her akşam 20:00-22:00 arası 2 kat EXP!\n\n"
-        "🏆 **Rütbeler:**\n"
-        "👶 Acemi -> 🛠️ Çırak -> ⚔️ Usta -> 🧙‍♂️ Bilge\n"
-        "👑 **VIP:** Level 15 olursan isminin yanına taç gelir!\n\n"
-        "💡 **Jokerler:**\n"
-        "Sorularda %50, Pas Geç ve Seyirci jokerlerini kullanabilirsin."
+    markup = InlineKeyboardMarkup()
+    markup.row(
+        InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
+        InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy")
     )
-    bot.send_message(message.chat.id, text, parse_mode="Markdown")
+    markup.row(
+        InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile"),
+        InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai")
+    )
+    bot.send_message(message.chat.id, "📚 **BOT YARDIM MENÜSÜ**\n\nLütfen bilgi almak istediğin kategoriyi seç: 👇", reply_markup=markup, parse_mode="Markdown")
 
 @bot.message_handler(func=lambda message: not message.text.startswith("/"))
 def handle_message(message):
