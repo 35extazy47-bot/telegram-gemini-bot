@@ -591,6 +591,7 @@ def language_selected(call):
                 "🔹 `/duello` - Botla Zar Atışı ⚔️\n\n"
                 "💰 **Ekonomi & Ticaret**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
+                "🔹 `/banka` - Banka & Faiz İşlemleri 🏦\n"
                 "🔹 `/borsa` - Kapalıçarşı Ticaret 📈\n"
                 "🔹 `/market` - Eşya Satın Al 🛒\n"
                 "🔹 `/kaz` - Maden Kaz (Elmas Bul!) ⛏️\n"
@@ -628,6 +629,7 @@ def language_selected(call):
                 "🔹 `/duello` - Dice Duel ⚔️\n\n"
                 "💰 **Economy & Trade**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
+                "🔹 `/banka` - Bank & Interest 🏦\n"
                 "🔹 `/borsa` - Grand Bazaar Trading 📈\n"
                 "🔹 `/market` - Buy Items 🛒\n"
                 "🔹 `/kaz` - Mine Resources ⛏️\n"
@@ -665,6 +667,7 @@ def language_selected(call):
                 "🔹 `/duello` - Дуел със зарове ⚔️\n\n"
                 "💰 **Икономика и Търговия**\n"
                 "━━━━━━━━━━━━━━━━━━━━\n"
+                "🔹 `/banka` - Банка и лихви 🏦\n"
                 "🔹 `/borsa` - Търговия на пазара 📈\n"
                 "🔹 `/market` - Купи предмети 🛒\n"
                 "🔹 `/kaz` - Копаене (Намери диаманти!) ⛏️\n"
@@ -739,6 +742,9 @@ def help_callback(call):
     elif category == "help_economy":
         text = (
             "💰 **EKONOMİ & TİCARET**\n\n"
+            "🔹 `/banka` - Banka hesabını yönet (Günlük %5 Faiz).\n"
+            "🔹 `/yatir <miktar>` - Bankaya para yatır.\n"
+            "🔹 `/cek <miktar>` - Bankadan para çek.\n"
             "🔹 `/borsa` - Kapalıçarşı fiyatlarını gör.\n"
             "🔹 `/al <mal> <adet>` - Ticaret malı al.\n"
             "🔹 `/sat <mal> <adet>` - Ticaret malı sat.\n"
@@ -2387,19 +2393,23 @@ def admin_callbacks(call):
 
     elif call.data == "admin_economy_stats":
         total_money = sum(u.get("money", 0) for u in users.values())
-        avg_money = total_money // len(users) if users else 0
+        total_bank = sum(u.get("bank_balance", 0) for u in users.values())
+        total_wealth = total_money + total_bank
+        avg_wealth = total_wealth // len(users) if users else 0
         
         text = (
             f"📊 **EKONOMİ İSTATİSTİKLERİ**\n\n"
-            f"💰 **Toplam Piyasa Değeri:** {total_money} $\n"
-            f"👤 **Kişi Başı Ortalama:** {avg_money} $\n"
+            f"💵 **Cüzdanlardaki Para:** {total_money} $\n"
+            f"🏦 **Bankadaki Para:** {total_bank} $\n"
+            f"💰 **Toplam Para Arzı:** {total_wealth} $\n"
+            f"👤 **Kişi Başı Ortalama:** {avg_wealth} $\n"
         )
         bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
         bot.answer_callback_query(call.id)
 
     elif call.data == "admin_help_hediye":
         bot.answer_callback_query(call.id)
-        bot.send_message(call.message.chat.id, "🎁 **Hediye Kullanımı:**\n`/hediye <USER_ID> <MİKTAR>`\nÖrnek: `/hediye 123456789 500`", parse_mode="Markdown")
+        bot.send_message(call.message.chat.id, "🎁 **Hediye & Dağıtım:**\n`/hediye <ID> <Miktar>` - Kişiye özel\n`/dagit <Miktar>` - Herkese dağıt", parse_mode="Markdown")
         
     elif call.data == "admin_help_ban":
         bot.answer_callback_query(call.id)

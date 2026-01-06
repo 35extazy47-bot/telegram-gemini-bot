@@ -128,7 +128,9 @@
           "done": false
         }
       ]
-    }
+    },
+    "money": 0,
+    "bank_balance": 1000
   },
   "8423482808": {
     "level": 1,
