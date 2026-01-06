@@ -129,7 +129,7 @@
         }
       ]
     },
-    "money": 0,
+    "money": 1000,
     "bank_balance": 1000
   },
   "8423482808": {
@@ -142,7 +142,8 @@
     "name": "Tırtıl",
     "username": "YELKOVANBOT",
     "current_answer": "D",
-    "last_question_message_id": 1614
+    "last_question_message_id": 1614,
+    "money": 1000
   },
   "7353714016": {
     "level": 1,
@@ -152,7 +153,8 @@
     "is_approved": true,
     "username": null,
     "name": "Tuna",
-    "join_date": "2026-01-03 15:01:27"
+    "join_date": "2026-01-03 15:01:27",
+    "money": 1000
   },
   "8499772236": {
     "level": 1,
@@ -184,6 +186,7 @@
       "last_tax": "2026-01-04 19:39:57"
     },
     "last_gemini_date": "2026-01-05",
-    "daily_gemini_count": 2
+    "daily_gemini_count": 2,
+    "money": 1000
   }
 }

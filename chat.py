@@ -2619,9 +2619,17 @@ def history_today(message):
         bot.reply_to(message, "Tarih kitapları şu an tozlu... Daha sonra bak.")
 
 def create_market_image():
-    width = 800
-    height = 500
-    bg_color = (35, 39, 42) # Koyu Gri
+    # Dinamik boyutlandırma (Ürün sayısına göre uzar)
+    num_items = len(TRADE_GOODS)
+    row_height = 70
+    header_height = 180
+    footer_height = 60
+    
+    width = 1000
+    height = header_height + (num_items * row_height) + footer_height
+    
+    bg_color = (25, 28, 36) # Modern Koyu Tema
+    card_bg = (38, 43, 54)
     
     img = Image.new('RGB', (width, height), color=bg_color)
     draw = ImageDraw.Draw(img)
@@ -2635,47 +2643,50 @@ def create_market_image():
                     font_path = f
                     break
         
-        title_font = ImageFont.truetype(font_path, 36)
-        header_font = ImageFont.truetype(font_path, 24)
-        row_font = ImageFont.truetype(font_path, 22)
-        small_font = ImageFont.truetype(font_path, 16)
+        title_font = ImageFont.truetype(font_path, 42)
+        header_font = ImageFont.truetype(font_path, 26)
+        row_font = ImageFont.truetype(font_path, 24)
+        small_font = ImageFont.truetype(font_path, 18)
     except:
         title_font = ImageFont.load_default()
         header_font = ImageFont.load_default()
         row_font = ImageFont.load_default()
         small_font = ImageFont.load_default()
 
-    # Başlık
-    draw.rectangle([(0, 0), (width, 80)], fill=(44, 47, 51))
-    draw.text((200, 20), "📈 KAPALIÇARŞI BORSASI", font=title_font, fill=(255, 215, 0))
+    # Başlık Alanı
+    draw.rectangle([(0, 0), (width, 100)], fill=(46, 204, 113))
+    draw.text((40, 25), "📈 KAPALIÇARŞI BORSASI", font=title_font, fill=(255, 255, 255))
     
     # Haber Kutusu
-    draw.rectangle([(20, 100), (width-20, 150)], fill=(50, 50, 50))
+    draw.rectangle([(30, 120), (width-30, 170)], fill=card_bg)
     news_text = f"📰 {market_news}"
-    if len(news_text) > 75: news_text = news_text[:72] + "..."
-    draw.text((30, 115), news_text, font=row_font, fill=(200, 200, 200))
+    if len(news_text) > 90: news_text = news_text[:87] + "..."
+    draw.text((45, 135), news_text, font=row_font, fill=(220, 220, 220))
     
     # Tablo Başlıkları
-    y_start = 180
+    y_start = 200
     draw.text((50, y_start), "ÜRÜN", font=header_font, fill=(150, 150, 150))
-    draw.text((250, y_start), "FİYAT", font=header_font, fill=(150, 150, 150))
-    draw.text((400, y_start), "DEĞİŞİM", font=header_font, fill=(150, 150, 150))
-    draw.text((600, y_start), "DURUM", font=header_font, fill=(150, 150, 150))
+    draw.text((350, y_start), "FİYAT", font=header_font, fill=(150, 150, 150))
+    draw.text((550, y_start), "DEĞİŞİM", font=header_font, fill=(150, 150, 150))
+    draw.text((750, y_start), "PİYASA DURUMU", font=header_font, fill=(150, 150, 150))
     
-    draw.line([(40, y_start + 35), (width-40, y_start + 35)], fill=(100, 100, 100), width=1)
+    draw.line([(40, y_start + 40), (width-40, y_start + 40)], fill=(80, 80, 80), width=2)
     
-    y = y_start + 50
-    for code, price in market_prices.items():
-        item = TRADE_GOODS[code]
+    y = y_start + 60
+    for code, data in TRADE_GOODS.items():
+        price = market_prices.get(code, data["base"])
         old_price = last_prices.get(code, price)
         diff = price - old_price
         
+        # Satır Arkaplanı
+        draw.rectangle([(40, y), (width-40, y+50)], fill=card_bg)
+        
         # İsim (Emojiyi at)
-        name_clean = item['name'].split()[0]
-        draw.text((50, y), name_clean, font=row_font, fill=(255, 255, 255))
+        name_clean = data['name']
+        draw.text((60, y+10), name_clean, font=row_font, fill=(255, 255, 255))
         
         # Fiyat
-        draw.text((250, y), f"{price} $", font=row_font, fill=(46, 204, 113))
+        draw.text((350, y+10), f"{price} $", font=row_font, fill=(255, 215, 0))
         
         # Değişim
         if diff > 0:
@@ -2687,21 +2698,21 @@ def create_market_image():
         else:
             diff_str = "➖ 0"
             color = (149, 165, 166)
-        draw.text((400, y), diff_str, font=row_font, fill=color)
+        draw.text((550, y+10), diff_str, font=row_font, fill=color)
         
-        # Görsel Bar
-        p_min = item['min']
-        p_max = item['max']
+        # Görsel Bar (Range)
+        p_min = data['min']
+        p_max = data['max']
         ratio = (price - p_min) / (p_max - p_min) if p_max > p_min else 0
         ratio = max(0, min(1, ratio))
         
-        bar_x = 600
-        bar_w = 150
-        bar_h = 12
-        draw.rectangle([(bar_x, y+5), (bar_x + bar_w, y+5+bar_h)], fill=(60, 60, 60))
-        draw.rectangle([(bar_x, y+5), (bar_x + int(bar_w * ratio), y+5+bar_h)], fill=color)
+        bar_x = 750
+        bar_w = 200
+        bar_h = 15
+        draw.rectangle([(bar_x, y+18), (bar_x + bar_w, y+18+bar_h)], fill=(60, 60, 60))
+        draw.rectangle([(bar_x, y+18), (bar_x + int(bar_w * ratio), y+18+bar_h)], fill=color)
         
-        y += 50
+        y += row_height
 
     # Alt Bilgi
     time_diff = datetime.now() - last_market_update
@@ -2710,7 +2721,7 @@ def create_market_image():
     mins = int(seconds_left // 60)
     secs = int(seconds_left % 60)
     
-    draw.text((width - 250, height - 30), f"⏳ Yenilenme: {mins}dk {secs}sn", font=small_font, fill=(100, 100, 100))
+    draw.text((width - 350, height - 40), f"⏳ Yenilenme: {mins}dk {secs}sn", font=small_font, fill=(100, 100, 100))
 
     bio = io.BytesIO()
     img.save(bio, 'PNG')
