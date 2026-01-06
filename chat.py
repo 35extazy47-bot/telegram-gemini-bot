@@ -3044,6 +3044,76 @@ def perform_horoscope_reading(message):
         print(f"Burc Hatasi: {e}")
         bot.edit_message_text("Yıldızlar şu an bulutlu... Daha sonra tekrar dene.", message.chat.id, wait_msg.message_id)
 
+@bot.message_handler(commands=['banka'])
+def bank_menu(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    u = users[user_id]
+    wallet = u.get("money", 0)
+    bank = u.get("bank_balance", 0)
+    
+    text = (
+        "🏦 **MERKEZ BANKASI** 🏦\n\n"
+        f"👛 **Cüzdan:** {wallet} $\n"
+        f"💳 **Banka Hesabı:** {bank} $\n\n"
+        "📈 **Günlük Faiz:** %5 (Her sabah 09:00'da)\n\n"
+        "**İşlemler:**\n"
+        "🔹 `/yatir <miktar>` - Bankaya para yatır\n"
+        "🔹 `/cek <miktar>` - Bankadan para çek"
+    )
+    bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+@bot.message_handler(commands=['yatir'])
+def deposit_money(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    try:
+        amount = int(message.text.split()[1])
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: `/yatir <miktar>`\nÖrnek: `/yatir 1000`")
+        return
+
+    if amount <= 0:
+        bot.reply_to(message, "❌ Pozitif bir miktar girmelisin.")
+        return
+
+    if users[user_id].get("money", 0) < amount:
+        bot.reply_to(message, "❌ Cüzdanında bu kadar para yok!")
+        return
+
+    users[user_id]["money"] -= amount
+    users[user_id]["bank_balance"] = users[user_id].get("bank_balance", 0) + amount
+    save_users()
+    
+    bot.reply_to(message, f"✅ **İşlem Başarılı!**\nBankaya {amount} $ yatırıldı.\n💳 Yeni Banka Bakiyesi: {users[user_id]['bank_balance']} $")
+
+@bot.message_handler(commands=['cek'])
+def withdraw_money(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    try:
+        amount = int(message.text.split()[1])
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: `/cek <miktar>`\nÖrnek: `/cek 500`")
+        return
+
+    if amount <= 0:
+        bot.reply_to(message, "❌ Pozitif bir miktar girmelisin.")
+        return
+
+    if users[user_id].get("bank_balance", 0) < amount:
+        bot.reply_to(message, "❌ Bankada bu kadar paran yok!")
+        return
+
+    users[user_id]["bank_balance"] -= amount
+    users[user_id]["money"] = users[user_id].get("money", 0) + amount
+    save_users()
+    
+    bot.reply_to(message, f"✅ **İşlem Başarılı!**\nBankadan {amount} $ çekildi.\n👛 Yeni Cüzdan Bakiyesi: {users[user_id]['money']} $")
+
 @bot.message_handler(commands=['hediye'])
 def admin_gift(message):
     # Sadece geliştirici kullanabilir
@@ -3070,30 +3140,46 @@ def admin_gift(message):
                     break
         
         if target_id:
-            users[target_id]["exp"] += amount
-            
-            # Level atlama kontrolü (Hediye sonrası)
-            lvl = users[target_id].get("level", 1)
-            xp = users[target_id]["exp"]
-            while xp >= lvl * 100:
-                xp -= lvl * 100
-                lvl += 1
-            
-            users[target_id]["level"] = lvl
-            users[target_id]["exp"] = xp
+            # ARTIK PARA VERİYORUZ (EXP DEĞİL)
+            users[target_id]["money"] = users[target_id].get("money", 0) + amount
             
             save_users()
-            bot.reply_to(message, f"✅ {users[target_id]['name']} kullanıcısına {amount} EXP gönderildi. (Yeni Level: {lvl})")
+            bot.reply_to(message, f"✅ {users[target_id]['name']} kullanıcısına {amount} $ gönderildi.")
             
             # Kullanıcıya da müjdeyi verelim
             try:
-                bot.send_message(target_id, f"🎁 **YÖNETİCİ HEDİYESİ!**\n\nHesabına {amount} EXP yüklendi. İyi oyunlar! 🚀")
+                bot.send_message(target_id, f"🎁 **YÖNETİCİ HEDİYESİ!**\n\nHesabına {amount} $ yüklendi. İyi harcamalar! 💸")
             except:
                 pass
         else:
             bot.reply_to(message, "❌ Kullanıcı bulunamadı! (Doğru ID veya Kullanıcı Adı girdiğinden emin ol)")
     except:
         bot.reply_to(message, "⚠️ Kullanım: /hediye <KullanıcıAdı veya ID> <Miktar>\nÖrnek: /hediye @HuseyinAcar35 1000")
+
+@bot.message_handler(commands=['dagit'])
+def admin_distribute_money(message):
+    # Sadece geliştirici kullanabilir
+    if message.from_user.username != DEVELOPER_USERNAME:
+        return
+
+    try:
+        amount = int(message.text.split()[1])
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: `/dagit <miktar>`\nÖrnek: `/dagit 5000`")
+        return
+
+    count = 0
+    with data_lock:
+        for uid in users:
+            users[uid]["money"] = users[uid].get("money", 0) + amount
+            count += 1
+            try:
+                bot.send_message(uid, f"💸 **DEVLET DESTEĞİ!**\n\nYönetici tarafından herkese {amount} $ dağıtıldı! Güle güle harca. 🚀")
+            except:
+                pass
+    
+    save_users()
+    bot.reply_to(message, f"✅ Toplam {count} kullanıcıya {amount} $ dağıtıldı.")
 
 @bot.message_handler(commands=['transfer'])
 def transfer_money(message):
@@ -3260,6 +3346,23 @@ def send_morning_broadcast():
         except:
             pass # Kullanıcı botu engellemiş olabilir, devam et
 
+def apply_bank_interest():
+    """Bankadaki paralara günlük faiz uygular."""
+    rate = 0.05 # %5 Faiz
+    count = 0
+    with data_lock:
+        for uid, u in users.items():
+            bank_balance = u.get("bank_balance", 0)
+            if bank_balance > 0:
+                interest = int(bank_balance * rate)
+                if interest > 0:
+                    u["bank_balance"] += interest
+                    count += 1
+                    try:
+                        bot.send_message(uid, f"🏦 **GÜNLÜK FAİZ GELDİ!**\n\nBankadaki paran değerlendi.\nKazanç: +{interest} $\nYeni Banka Bakiyesi: {u['bank_balance']} $")
+                    except: pass
+    print(f"🏦 {count} kişiye faiz dağıtıldı.")
+
 def update_market():
     """Piyasa fiyatlarını arz-talep ve sürpriz olaylara göre günceller."""
     global market_prices, market_volumes, last_prices, market_news
@@ -3347,6 +3450,10 @@ def scheduler_thread():
         if now.hour == 8 and now.minute == 0:
             send_morning_broadcast()
             time.sleep(65) # 1 dakika bekle ki tekrar tekrar atmasın
+        
+        if now.hour == 9 and now.minute == 0:
+            apply_bank_interest()
+            time.sleep(65)
             
         # Market Güncellemesi (5 dakikada bir)
         if (datetime.now() - last_market_update).total_seconds() > 300:
@@ -3384,6 +3491,7 @@ if __name__ == "__main__":
         BotCommand("quiz", "Soru Çöz"),
         BotCommand("market", "Market"),
         BotCommand("profil", "Profilim"),
+        BotCommand("banka", "Banka İşlemleri"),
         BotCommand("kaz", "Maden Kaz"),
         BotCommand("borsa", "Borsa Durumu"),
         BotCommand("gunluk", "Günlük Ödül")
