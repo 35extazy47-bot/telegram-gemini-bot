@@ -12,6 +12,7 @@ from deep_translator import GoogleTranslator
 import io
 from PIL import Image, ImageDraw, ImageFont
 import textwrap
+import uuid
 
 load_dotenv()
 
@@ -30,6 +31,7 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 USERS_FILE = "users_data.json"
 data_lock = Lock()
 market_lock = RLock() # Borsa verileri için kilit (Reentrant Lock)
+pending_duels = {} # Bekleyen düellolar için geçici hafıza
 
 def safe_generate_content(prompt_content):
     """Modeller arası geçiş yaparak hata riskini azaltır."""
@@ -166,6 +168,23 @@ def get_rank(level, username=None):
         return "Çırak 🛠️"
     else:
         return "Acemi 👶"
+
+def get_badges(user_data):
+    """Kullanıcı istatistiklerine göre rozetler döndürür."""
+    badges = []
+    # Madenci Rozeti (50+ Kazı)
+    if user_data.get("total_mines", 0) >= 50:
+        badges.append("⛏️ Madenci")
+    # Savaşçı Rozeti (10+ Düello Zaferi)
+    if user_data.get("duel_wins", 0) >= 10:
+        badges.append("⚔️ Gladyatör")
+    # Bilgin Rozeti (50+ Doğru Cevap)
+    if user_data.get("total_correct", 0) >= 50:
+        badges.append("🧠 Bilgin")
+    # Baron Rozeti (100.000+ $)
+    if user_data.get("money", 0) >= 100000:
+        badges.append("💸 Baron")
+    return " | ".join(badges) if badges else "Yok"
 
 def check_daily_limit(user_id):
     """Kullanıcının günlük Gemini kullanım hakkını kontrol eder ve günceller."""
@@ -1301,6 +1320,7 @@ def mine_resource(message):
 
     users[user_id]["last_mine_time"] = now.strftime("%Y-%m-%d %H:%M:%S")
     has_pickaxe = users[user_id].get("has_pickaxe", False)
+    users[user_id]["total_mines"] = users[user_id].get("total_mines", 0) + 1
     
     # Jackpot Şansı (%1) - Kazma varsa %2
     if random.random() < (0.02 if has_pickaxe else 0.01):
@@ -1373,23 +1393,84 @@ def duel_bot(message):
         bot.reply_to(message, "⛔ Onay bekleniyor...")
         return
     if user_id not in users: return
+    
+    args = message.text.split()
+    
+    # --- PvP DÜELLO (Kullanıcıya Meydan Okuma) ---
+    if len(args) >= 3 and args[1].startswith("@"):
+        target_username = args[1][1:] # @ işaretini kaldır
+        try:
+            amount = int(args[2])
+        except:
+            bot.reply_to(message, "⚠️ Geçersiz miktar.")
+            return
+            
+        if amount <= 0:
+            bot.reply_to(message, "❌ Pozitif bir miktar girmelisin.")
+            return
+            
+        if users[user_id].get("money", 0) < amount:
+            bot.reply_to(message, "❌ Yetersiz bakiyen var!")
+            return
 
+        # Rakibi bul
+        target_id = None
+        for uid, u in users.items():
+            if u.get("username") == target_username:
+                target_id = uid
+                break
+        
+        if not target_id:
+            bot.reply_to(message, "❌ Kullanıcı bulunamadı.")
+            return
+            
+        if target_id == user_id:
+            bot.reply_to(message, "❌ Kendinle düello atamazsın delikanlı.")
+            return
+            
+        if users[target_id].get("money", 0) < amount:
+            bot.reply_to(message, "❌ Rakibinin parası yetersiz!")
+            return
+
+        # Düello teklifi oluştur
+        duel_id = str(uuid.uuid4())[:8]
+        pending_duels[duel_id] = {
+            "challenger": user_id,
+            "target": target_id,
+            "amount": amount
+        }
+        
+        markup = InlineKeyboardMarkup()
+        markup.add(
+            InlineKeyboardButton("✅ Kabul Et", callback_data=f"duel_accept_{duel_id}"),
+            InlineKeyboardButton("❌ Reddet", callback_data=f"duel_reject_{duel_id}")
+        )
+        
+        bot.send_message(
+            message.chat.id, 
+            f"⚔️ **DÜELLO TEKLİFİ!** ⚔️\n\n👤 @{users[user_id]['username']} sana meydan okuyor!\n💰 Bahis: {amount} $\n\n@{target_username}, kabul ediyor musun?", 
+            reply_markup=markup
+        )
+        return
+
+    # --- BOT DÜELLO (Mevcut Sistem) ---
     try:
-        amount = int(message.text.split()[1])
+        amount = int(args[1])
     except:
-        bot.reply_to(message, "⚠️ Kullanım: /duello <miktar>\nÖrnek: /duello 100")
+        bot.reply_to(message, "⚠️ Kullanım:\n🤖 Botla: `/duello <miktar>`\n👤 Oyuncuyla: `/duello <@kullanici> <miktar>`", parse_mode="Markdown")
         return
 
     if amount <= 0:
         bot.reply_to(message, "❌ Pozitif bir sayı girmelisin.")
         return
 
-    if users[user_id]["exp"] < amount:
-        bot.reply_to(message, f"❌ Yetersiz EXP! Mevcut: {users[user_id]['exp']}")
+    # Bot düellosu artık Para ($) ile olsun, EXP değil (Ekonomi bütünlüğü için)
+    if users[user_id].get("money", 0) < amount:
+        bot.reply_to(message, f"❌ Yetersiz Bakiye! Mevcut: {users[user_id].get('money', 0)} $")
         return
 
     # Animasyonlu Zar Atma
-    bot.reply_to(message, f"⚔️ **DÜELLO BAŞLADI!** ⚔️\nOrtadaki Ödül: {amount * 2} EXP\nZarlar atılıyor... 🎲")
+    bot.reply_to(message, f"⚔️ **DÜELLO BAŞLADI!** ⚔️\nOrtadaki Ödül: {amount * 2} $\nZarlar atılıyor... 🎲")
     
     # Gerçek Telegram zarı gönder
     msg_user = bot.send_dice(message.chat.id, emoji="🎲")
@@ -1404,17 +1485,78 @@ def duel_bot(message):
     msg = f"👤 Senin Zarın: {user_roll}\n🤖 Botun Zarı: {bot_roll}\n\n"
     
     if user_roll > bot_roll:
-        users[user_id]["exp"] += amount
+        users[user_id]["money"] += amount
+        users[user_id]["duel_wins"] = users[user_id].get("duel_wins", 0) + 1
         update_quest_progress(user_id, "duel_win") # Görev ilerlemesi
-        msg += f"🎉 **KAZANDIN!** Botu ezip geçtin! (+{amount} EXP)"
+        msg += f"🎉 **KAZANDIN!** Botu ezip geçtin! (+{amount} $)"
     elif bot_roll > user_roll:
-        users[user_id]["exp"] -= amount
-        msg += f"💀 **KAYBETTİN!** Bot seni yendi... (-{amount} EXP)"
+        users[user_id]["money"] -= amount
+        msg += f"💀 **KAYBETTİN!** Bot seni yendi... (-{amount} $)"
     else:
         msg += "🤝 **BERABERE!** Zarlar aynı geldi, puanın iade edildi."
         
     save_users()
     bot.send_message(message.chat.id, msg, parse_mode="Markdown")
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("duel_"))
+def duel_response(call):
+    action, duel_id = call.data.split("_")[1], call.data.split("_")[2]
+    
+    if duel_id not in pending_duels:
+        bot.answer_callback_query(call.id, "⚠️ Bu düello teklifi zaman aşımına uğradı veya iptal edildi.")
+        return
+        
+    duel = pending_duels[duel_id]
+    user_id = str(call.from_user.id)
+    
+    if user_id != duel["target"]:
+        bot.answer_callback_query(call.id, "⛔ Bu teklif sana yapılmadı!")
+        return
+        
+    if action == "reject":
+        bot.edit_message_text(f"❌ Düello reddedildi.", call.message.chat.id, call.message.message_id)
+        del pending_duels[duel_id]
+        return
+        
+    # Kabul edildi, paraları kontrol et (tekrar)
+    challenger = duel["challenger"]
+    amount = duel["amount"]
+    
+    if users[challenger]["money"] < amount or users[user_id]["money"] < amount:
+        bot.edit_message_text("❌ Bakiyeler yetersiz, düello iptal.", call.message.chat.id, call.message.message_id)
+        del pending_duels[duel_id]
+        return
+        
+    # Paraları kes
+    users[challenger]["money"] -= amount
+    users[user_id]["money"] -= amount
+    
+    # Zarları at
+    bot.send_message(call.message.chat.id, f"⚔️ **DÜELLO KABUL EDİLDİ!** ⚔️\nOrtadaki Ödül: {amount * 2} $\n\n🎲 {users[challenger]['name']} atıyor...")
+    dice1 = bot.send_dice(call.message.chat.id)
+    time.sleep(3)
+    bot.send_message(call.message.chat.id, f"🎲 {users[user_id]['name']} atıyor...")
+    dice2 = bot.send_dice(call.message.chat.id)
+    time.sleep(3)
+    
+    val1 = dice1.dice.value
+    val2 = dice2.dice.value
+    
+    if val1 > val2:
+        users[challenger]["money"] += amount * 2
+        users[challenger]["duel_wins"] = users[challenger].get("duel_wins", 0) + 1
+        bot.send_message(call.message.chat.id, f"🏆 **KAZANAN:** {users[challenger]['name']}! (+{amount} $)")
+    elif val2 > val1:
+        users[user_id]["money"] += amount * 2
+        users[user_id]["duel_wins"] = users[user_id].get("duel_wins", 0) + 1
+        bot.send_message(call.message.chat.id, f"🏆 **KAZANAN:** {users[user_id]['name']}! (+{amount} $)")
+    else:
+        users[challenger]["money"] += amount
+        users[user_id]["money"] += amount
+        bot.send_message(call.message.chat.id, "🤝 **BERABERE!** Paralar iade edildi.")
+        
+    del pending_duels[duel_id]
+    save_users()
 
 @bot.message_handler(commands=['yanlislarim'])
 def retry_wrongs(message):
@@ -2001,6 +2143,9 @@ def create_profile_image(user_id, user_data):
     best_cat = "Yok"
     if cat_stats:
         best_cat = max(cat_stats, key=cat_stats.get).capitalize()
+        
+    # Rozetler
+    badges = get_badges(user_data)
 
     # İsim ve Rütbe
     # Profil Resmi Varsa Ekle
@@ -2055,6 +2200,10 @@ def create_profile_image(user_id, user_data):
 
     draw.text((450, y_start), "🧠 Uzmanlık", font=normal_font, fill=(170, 170, 170))
     draw.text((450, y_start + 25), best_cat, font=header_font, fill=(255, 215, 0))
+    
+    # Rozetler Satırı
+    draw.text((col1, y_start + 70), "🏅 Rozetler", font=normal_font, fill=(170, 170, 170))
+    draw.text((col1, y_start + 95), badges, font=small_font, fill=(255, 215, 0))
 
     # Alt Bilgi (Ekipman)
     equip = "⛏️ Elmas Kazma" if user_data.get("has_pickaxe") else "Yok"
@@ -2107,6 +2256,8 @@ def my_profile(message):
     best_cat = "Yok"
     if cat_stats:
         best_cat = max(cat_stats, key=cat_stats.get).capitalize()
+    
+    badges = get_badges(u)
 
     # İlerleme Çubuğu Hesaplama
     lvl = u.get('level', 1)
@@ -2136,6 +2287,7 @@ def my_profile(message):
         f"📊 Level: {lvl}\n"
         f"🎖 Rütbe: {get_rank(lvl, u.get('username'))}\n"
         f"🧠 Uzmanlık: {best_cat}\n"
+        f"🏅 Rozetler: {badges}\n"
         f"📈 İlerleme: `{bar}` %{int(percentage * 100)}\n"
         f"� Çözülen Soru: {total}\n"
         f"🏃‍♂️ En Uzun Maraton: {u.get('best_marathon', 0)}\n"
@@ -2757,7 +2909,7 @@ def buy_item(message):
     try:
         args = message.text.lower().split()
         item_code = args[1]
-        amount = int(args[2])
+        amount_str = args[2]
     except:
         bot.reply_to(message, "⚠️ Kullanım: `/al ipek 5`")
         return
@@ -2765,12 +2917,28 @@ def buy_item(message):
     if item_code not in TRADE_GOODS:
         bot.reply_to(message, "❌ Böyle bir mal yok! (ipek, baharat, cini, tuz)")
         return
-    if amount <= 0:
-        bot.reply_to(message, "❌ Geçersiz miktar.")
-        return
 
     with market_lock:
         price = market_prices[item_code]
+        
+    # "hepsi" mantığı
+    if amount_str == "hepsi":
+        user_money = users[user_id].get("money", 0)
+        amount = user_money // price
+        if amount <= 0:
+            bot.reply_to(message, "❌ Paran yetmiyor knk.")
+            return
+    else:
+        try:
+            amount = int(amount_str)
+        except:
+            bot.reply_to(message, "❌ Geçersiz miktar.")
+            return
+            
+    if amount <= 0:
+        bot.reply_to(message, "❌ Pozitif miktar gir.")
+        return
+        
     total_cost = price * amount
 
     if users[user_id].get("money", 0) < total_cost:
@@ -2801,7 +2969,7 @@ def sell_item(message):
     try:
         args = message.text.lower().split()
         item_code = args[1]
-        amount = int(args[2])
+        amount_str = args[2]
     except:
         bot.reply_to(message, "⚠️ Kullanım: `/sat ipek 5`")
         return
@@ -2811,6 +2979,20 @@ def sell_item(message):
         return
     
     user_inv = users[user_id].get("inventory", {})
+    
+    # "hepsi" mantığı
+    if amount_str == "hepsi":
+        amount = user_inv.get(item_code, 0)
+        if amount <= 0:
+            bot.reply_to(message, "❌ Satacak malın yok.")
+            return
+    else:
+        try:
+            amount = int(amount_str)
+        except:
+            bot.reply_to(message, "❌ Geçersiz miktar.")
+            return
+
     if user_inv.get(item_code, 0) < amount:
         bot.reply_to(message, "❌ Envanterinde bu kadar mal yok!")
         return

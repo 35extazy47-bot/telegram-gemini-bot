@@ -1,12 +1,12 @@
 {
   "1089288022": {
     "level": 95,
-    "exp": 1812,
+    "exp": 1912,
     "lives": 3,
     "category": "karisik",
     "lang": "tr",
     "name": "HÜSEYİN :)",
-    "last_mine_time": "2026-01-06 12:15:26",
+    "last_mine_time": "2026-01-06 12:53:00",
     "username": "HuseyinAcar35",
     "mode": "global",
     "last_question_message_id": 2662,
@@ -74,7 +74,8 @@
       "tuz": 0,
       "baharat": 0,
       "ipek": 0,
-      "demir": 4
+      "demir": 4,
+      "elmas": 2
     },
     "beylik": {
       "level": 10,
@@ -114,10 +115,10 @@
         {
           "type": "mine",
           "target": 3,
-          "current": 2,
+          "current": 3,
           "desc": "3 Kez Madene İn",
           "reward": 100,
-          "done": false
+          "done": true
         },
         {
           "type": "duel_win",
@@ -129,7 +130,7 @@
         }
       ]
     },
-    "money": 1000,
+    "money": 6,
     "bank_balance": 1000
   },
   "8423482808": {
