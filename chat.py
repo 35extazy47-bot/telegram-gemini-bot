@@ -3154,24 +3154,24 @@ def order_history(message):
         bot.reply_to(message, "📜 Henüz bir işlem veya bekleyen emir yok.")
         return
 
-    text = "📋 **BEKLEYEN LİMİT EMİRLER**\n"
+    text = "📋 BEKLEYEN LİMİT EMİRLER\n"
     if limit_orders:
         for lo in limit_orders:
             item_name = TRADE_GOODS.get(lo['item'], {}).get('name', lo['item'])
-            text += f"🔹 `{lo['id']}` | {escape_md(lo['type'])} {escape_md(item_name)} | Hedef: {lo['target']}$ | Adet: {lo['amount']}\n"
-        text += "\n_(İptal için: /emir_iptal <ID>)_\n"
+            text += f"🔹 {lo['id']} | {lo['type']} {item_name} | Hedef: {lo['target']}$ | Adet: {lo['amount']}\n"
+        text += "\n(İptal için: /emir_iptal <ID>)\n"
     else:
-        text += "_(Yok)_\n"
+        text += "(Yok)\n"
 
-    text += "\n📜 **GEÇMİŞ İŞLEMLER**\n"
+    text += "\n📜 GEÇMİŞ İŞLEMLER\n"
     for order in reversed(orders):
-        icon = "🟢" if order["type"] == "ALIM" else "🔴"
-        text += f"{icon} **{escape_md(order['type'])}** - {order['date']}\n"
-        text += f"📦 {escape_md(order['item'])} x{order['amount']}\n"
+        icon = "🟢" if "ALIM" in order["type"] else "🔴"
+        text += f"{icon} {order['type']} - {order['date']}\n"
+        text += f"📦 {order['item']} x{order['amount']}\n"
         text += f"💵 Fiyat: {order['price']} $ | Toplam: {order['total']} $\n"
         text += "───────────────\n"
     
-    bot.send_message(message.chat.id, text, parse_mode="Markdown")
+    bot.send_message(message.chat.id, text)
 
 @bot.message_handler(commands=['emir_iptal'])
 def cancel_order(message):
