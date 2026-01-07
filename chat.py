@@ -3001,12 +3001,14 @@ def buy_item(message):
         return
         
     total_cost = price * amount
+    tax = int(total_cost * 0.02) # %2 Komisyon
+    total_payment = total_cost + tax
 
-    if users[user_id].get("money", 0) < total_cost:
-        bot.reply_to(message, f"❌ Yetersiz Bakiye! Gerekli: {total_cost} $")
+    if users[user_id].get("money", 0) < total_payment:
+        bot.reply_to(message, f"❌ Yetersiz Bakiye! \nÜrün Tutarı: {total_cost} $\nKomisyon (%2): {tax} $\n------------------\nToplam Gerekli: {total_payment} $")
         return
 
-    users[user_id]["money"] -= total_cost
+    users[user_id]["money"] -= total_payment
     
     # Envantere ekle
     if "inventory" not in users[user_id]: users[user_id]["inventory"] = {}
@@ -3032,7 +3034,13 @@ def buy_item(message):
     
     save_users()
     save_market_data()
-    bot.reply_to(message, f"✅ **İşlem Başarılı!**\n📥 Alınan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Ödenen: {total_cost} $")
+    bot.reply_to(message, f"✅ **İşlem Başarılı!**\n📥 Alınan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Ürün Tutarı: {total_cost} $\n🏛️ Komisyon: -{tax} $\n📉 Toplam Ödenen: {total_payment} $")
+
+    # 🚨 BALİNA ALARMI (5000$ üzeri alımlarda)
+    if total_cost >= 5000:
+        whale_msg = f"🚨 **BALİNA ALARMI!** 🚨\n\n🐋 **{users[user_id]['name']}** piyasayı salladı!\n📥 **{amount} adet {TRADE_GOODS[item_code]['name']}** topladı!\n💸 İşlem Hacmi: {total_cost} $"
+        # O anki sohbete gönder
+        bot.send_message(message.chat.id, whale_msg)
 
 @bot.message_handler(commands=['sat'])
 def sell_item(message):
@@ -3072,10 +3080,13 @@ def sell_item(message):
 
     with market_lock:
         price = market_prices[item_code]
+        
     total_gain = price * amount
+    tax = int(total_gain * 0.02) # %2 Komisyon
+    net_gain = total_gain - tax
 
     users[user_id]["inventory"][item_code] -= amount
-    users[user_id]["money"] = users[user_id].get("money", 0) + total_gain
+    users[user_id]["money"] = users[user_id].get("money", 0) + net_gain
     
     # İşlem Geçmişine Ekle
     if "orders" not in users[user_id]: users[user_id]["orders"] = []
@@ -3096,7 +3107,13 @@ def sell_item(message):
 
     save_users()
     save_market_data()
-    bot.reply_to(message, f"✅ **Satış Başarılı!**\n📤 Satılan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Kazanılan: {total_gain} $")
+    bot.reply_to(message, f"✅ **Satış Başarılı!**\n📤 Satılan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Satış Tutarı: {total_gain} $\n🏛️ Komisyon: -{tax} $\n💵 Net Kazanç: {net_gain} $")
+
+    # 🚨 BALİNA ALARMI (5000$ üzeri satışlarda)
+    if total_gain >= 5000:
+        whale_msg = f"🚨 **BALİNA ALARMI!** 🚨\n\n🐋 **{users[user_id]['name']}** piyasayı boşaltıyor!\n📤 **{amount} adet {TRADE_GOODS[item_code]['name']}** sattı!\n💸 İşlem Hacmi: {total_gain} $"
+        # O anki sohbete gönder
+        bot.send_message(message.chat.id, whale_msg)
 
 @bot.message_handler(commands=['emir_ver'])
 def set_limit_order(message):
@@ -3800,6 +3817,17 @@ def update_market():
         news_direction = random.choice(["up", "down"])
         market_news = random.choice(NEWS_TEMPLATES[news_item_code][news_direction])
         
+        # 🔥 SÜRPRİZ OLAYLAR (CRASH & RALLY)
+        event_roll = random.randint(1, 100)
+        global_modifier = 0.0
+
+        if event_roll <= 3: # %3 İhtimalle BÜYÜK ÇÖKÜŞ
+            market_news = "📉 **KARA GÜN!** Küresel ekonomik kriz patlak verdi! Tüm piyasalar çakılıyor! 😱"
+            global_modifier = -0.25 # Fiyatlar %25 düşer
+        elif event_roll >= 97: # %3 İhtimalle RALLİ
+            market_news = "🚀 **ALTIN ÇAĞ!** Yabancı yatırımcılar ülkeye akın etti! Fiyatlar uçuşa geçti! 🌕"
+            global_modifier = 0.25 # Fiyatlar %25 artar
+
         print(f"📊 Piyasa Trendi: {market_trend}, Haber: {market_news}")
 
         for code, data in TRADE_GOODS.items():
@@ -3813,23 +3841,28 @@ def update_market():
             # B. Genel Pazar Trendi Etkisi
             change_percent += (market_trend * trend_strength)
             
-            # C. Hacim Etkisi (Arz/Talep)
+            # C. Global Modifier (Kriz/Ralli)
+            change_percent += global_modifier
+
+            # D. Hacim Etkisi (Arz/Talep)
             # Alım çoksa fiyat artar, satış çoksa düşer
             if volume != 0:
                 change_percent += (volume * 0.002) 
             
-            # D. Haber Etkisi
+            # E. Haber Etkisi
             if code == news_item_code:
                 impact = random.uniform(0.05, 0.15) # %5 - %15 arası haber etkisi
                 if news_direction == "down": impact *= -1
                 change_percent += impact
 
-            # E. Devre Kesici (Circuit Breaker) - %10 Sınırı
+            # F. Devre Kesici (Circuit Breaker) - %10 Sınırı (Kriz anında %30'a çıkar)
             # BIST100'de olduğu gibi aşırı ani hareketleri sınırlar
-            if change_percent > 0.10:
-                change_percent = 0.10
-            elif change_percent < -0.10:
-                change_percent = -0.10
+            limit = 0.30 if global_modifier != 0 else 0.10
+            
+            if change_percent > limit:
+                change_percent = limit
+            elif change_percent < -limit:
+                change_percent = -limit
             
             # Yeni fiyatı hesapla
             price_change = int(current_price * change_percent)
