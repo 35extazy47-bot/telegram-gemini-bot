@@ -52,13 +52,13 @@ BANNED_WORDS = ["aptal", "salak", "gerizekalı", "mal", "ezik", "ahmak", "özür
 
 #  Kapalıçarşı (Borsa) Verileri
 TRADE_GOODS = {
-    "ipek": {"name": "İpek 🧶", "base": 100, "min": 50, "max": 250},
-    "baharat": {"name": "Baharat 🌶️", "base": 80, "min": 40, "max": 200},
-    "cini": {"name": "Çini 🏺", "base": 150, "min": 100, "max": 400},
-    "tuz": {"name": "Tuz 🧂", "base": 30, "min": 10, "max": 100},
-    "elmas": {"name": "Elmas 💎", "base": 500, "min": 300, "max": 800},
-    "altin": {"name": "Altın 🥇", "base": 250, "min": 150, "max": 400},
-    "demir": {"name": "Demir ⛓️", "base": 50, "min": 20, "max": 100}
+    "ipek": {"name": "İpek 🧶", "base": 100, "min": 50, "max": 250, "volatility": 0.05},
+    "baharat": {"name": "Baharat 🌶️", "base": 80, "min": 40, "max": 200, "volatility": 0.04},
+    "cini": {"name": "Çini 🏺", "base": 150, "min": 100, "max": 400, "volatility": 0.06},
+    "tuz": {"name": "Tuz 🧂", "base": 30, "min": 10, "max": 100, "volatility": 0.02},
+    "elmas": {"name": "Elmas 💎", "base": 500, "min": 300, "max": 800, "volatility": 0.08},
+    "altin": {"name": "Altın 🥇", "base": 250, "min": 150, "max": 400, "volatility": 0.03},
+    "demir": {"name": "Demir ⛓️", "base": 50, "min": 20, "max": 100, "volatility": 0.03}
 }
 market_prices = {k: v["base"] for k, v in TRADE_GOODS.items()}
 market_volumes = {k: 0 for k in TRADE_GOODS.keys()} # Alım-Satım hacmini takip eder
@@ -2826,6 +2826,18 @@ def create_market_image():
     draw.rectangle([(0, 0), (width, 100)], fill=(46, 204, 113))
     draw.text((40, 25), "📈 KAPALIÇARŞI BORSASI", font=title_font, fill=(255, 255, 255))
     
+    # Endeks Göstergesi (BIST100 Mantığı)
+    current_index = sum(market_prices.values())
+    last_index = sum(last_prices.values())
+    idx_diff = current_index - last_index
+    idx_pct = (idx_diff / last_index * 100) if last_index > 0 else 0
+    
+    idx_arrow = "➖"
+    if idx_diff > 0: idx_arrow = "▲"
+    elif idx_diff < 0: idx_arrow = "▼"
+    
+    draw.text((600, 35), f"ENDEKS: {current_index} {idx_arrow} %{abs(idx_pct):.2f}", font=header_font, fill=(240, 240, 240))
+    
     # Haber Kutusu
     draw.rectangle([(30, 120), (width-30, 170)], fill=card_bg)
     news_text = f"📰 {market_news}"
@@ -3562,60 +3574,57 @@ def update_market():
     global market_prices, market_volumes, last_prices, market_news
     
     with market_lock:
-        # Mevcut fiyatları "eski" olarak kaydet
         last_prices = market_prices.copy()
         
-        print(f"📊 Piyasa Öncesi Hacimler: {market_volumes}")
-        
-        # 1. HABER VE TREND BELİRLEME (Haber fiyatı doğrudan etkilesin)
-        # Rastgele bir ürünü haber manşetine taşı
+        # 1. GENEL PİYASA TRENDİ (Endeks Etkisi)
+        # -1: Ayı (Düşüş), 0: Yatay, 1: Boğa (Yükseliş)
+        market_trend = random.choices([-1, 0, 1], weights=[0.3, 0.4, 0.3])[0]
+        trend_strength = random.uniform(0.01, 0.03) # %1 ile %3 arası genel etki
+
+        # 2. HABER ETKİSİ
         news_item_code = random.choice(list(TRADE_GOODS.keys()))
         news_direction = random.choice(["up", "down"])
-        
-        # Haberi seç
         market_news = random.choice(NEWS_TEMPLATES[news_item_code][news_direction])
         
-        # Haber etkisi katsayısı (Ciddi etki: %15 ile %35 arası)
-        news_impact = random.uniform(0.15, 0.35)
-        if news_direction == "down":
-            news_impact *= -1
+        print(f"📊 Piyasa Trendi: {market_trend}, Haber: {market_news}")
 
         for code, data in TRADE_GOODS.items():
             current_price = market_prices[code]
+            volatility = data.get("volatility", 0.05)
             volume = market_volumes.get(code, 0)
             
-            # 1. Temel Dalgalanma (Volatiliteyi artırdık: %2 - %10 arası)
-            # Her ürün mutlaka biraz oynasın
-            change_percent = random.uniform(0.02, 0.10)
-            if random.random() < 0.5: change_percent *= -1
+            # A. Rastgele Dalgalanma (Volatilite bazlı - Normal Dağılım)
+            change_percent = random.gauss(0, volatility)
             
-            # 2. Hacim Etkisi (Arz/Talep)
-            # Hacim etkisini biraz daha agresif yapalım
-            volume_impact = volume * 0.003 # Her birim %0.3 etkilesin
+            # B. Genel Pazar Trendi Etkisi
+            change_percent += (market_trend * trend_strength)
             
-            # Toplam değişim
-            change_percent += volume_impact
+            # C. Hacim Etkisi (Arz/Talep)
+            # Alım çoksa fiyat artar, satış çoksa düşer
+            if volume != 0:
+                change_percent += (volume * 0.002) 
             
-            # 3. Haber Etkisi (Eğer haber bu ürünle ilgiliyse)
+            # D. Haber Etkisi
             if code == news_item_code:
-                change_percent += news_impact
-            else:
-                # Diğer ürünler de piyasa genelinden hafif etkilensin (Korelasyon)
-                # Haber pozitifse diğerleri de azıcık artabilir, negatifse düşebilir
-                # Amaç piyasanın canlı durması
-                change_percent += (news_impact * 0.1) 
+                impact = random.uniform(0.05, 0.15) # %5 - %15 arası haber etkisi
+                if news_direction == "down": impact *= -1
+                change_percent += impact
 
-            # Değişimi sınırla (Çok aşırı uçmasın, max %50)
-            change_percent = max(-0.50, min(change_percent, 0.50))
+            # E. Devre Kesici (Circuit Breaker) - %10 Sınırı
+            # BIST100'de olduğu gibi aşırı ani hareketleri sınırlar
+            if change_percent > 0.10:
+                change_percent = 0.10
+            elif change_percent < -0.10:
+                change_percent = -0.10
             
             # Yeni fiyatı hesapla
             price_change = int(current_price * change_percent)
             
-            # Düşük fiyatlı ürünlerde (Tuz, Demir) değişim 0 olmasın diye zorla
-            # Eğer fiyat değişimi 0 ise, rastgele +/- 1-3 ekle
+            # Fiyat değişimi 0 ise rastgele ufak hareket ver (Canlılık için)
             if price_change == 0:
                 force_change = random.randint(1, 3)
-                if change_percent < 0: force_change *= -1
+                if change_percent < 0: 
+                    force_change *= -1
                 price_change = force_change
 
             new_price = current_price + price_change
@@ -3627,8 +3636,7 @@ def update_market():
         # Hacimleri sıfırla (Bir sonraki döngü için)
         market_volumes = {k: 0 for k in TRADE_GOODS.keys()}
         
-        print(f"📉 Piyasa Güncellendi: {market_prices}")
-        print(f"📰 Haber: {market_news}")
+        save_market_data()
 
 def scheduler_thread():
     global last_market_update
