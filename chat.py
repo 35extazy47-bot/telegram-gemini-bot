@@ -3066,17 +3066,71 @@ def sell_item(message):
     save_market_data()
     bot.reply_to(message, f"✅ **Satış Başarılı!**\n📤 Satılan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Kazanılan: {total_gain} $")
 
+@bot.message_handler(commands=['emir_ver'])
+def set_limit_order(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    # Kullanım: /emir_ver <al/sat> <mal> <fiyat> <adet>
+    try:
+        args = message.text.lower().split()
+        order_type = args[1] # al veya sat
+        item_code = args[2]
+        target_price = int(args[3])
+        amount = int(args[4])
+    except:
+        bot.reply_to(message, "⚠️ **Kullanım:** `/emir_ver <al/sat> <mal> <fiyat> <adet>`\n\nÖrnek (Altın 200$ olunca 5 tane al):\n`/emir_ver al altin 200 5`", parse_mode="Markdown")
+        return
+
+    if order_type not in ["al", "sat"]:
+        bot.reply_to(message, "❌ İşlem tipi 'al' veya 'sat' olmalı.")
+        return
+    
+    if item_code not in TRADE_GOODS:
+        bot.reply_to(message, "❌ Geçersiz ürün kodu.")
+        return
+        
+    if target_price <= 0 or amount <= 0:
+        bot.reply_to(message, "❌ Fiyat ve adet pozitif olmalı.")
+        return
+
+    # Emri Kaydet
+    if "limit_orders" not in users[user_id]: users[user_id]["limit_orders"] = []
+    
+    order_id = str(uuid.uuid4())[:6]
+    users[user_id]["limit_orders"].append({
+        "id": order_id,
+        "type": order_type.upper(),
+        "item": item_code,
+        "target": target_price,
+        "amount": amount,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M")
+    })
+    save_users()
+    
+    bot.reply_to(message, f"✅ **Limit Emir Girildi!**\n🆔 ID: `{order_id}`\n📉 Şart: {TRADE_GOODS[item_code]['name']} {target_price}$ olunca {order_type.upper()} yapılacak.", parse_mode="Markdown")
+
 @bot.message_handler(commands=['emir', 'emirler'])
 def order_history(message):
     user_id = str(message.from_user.id)
     if not users.get(user_id, {}).get("is_approved", True): return
 
     orders = users[user_id].get("orders", [])
-    if not orders:
-        bot.reply_to(message, "📜 Henüz bir işlem geçmişin yok.")
+    limit_orders = users[user_id].get("limit_orders", [])
+
+    if not orders and not limit_orders:
+        bot.reply_to(message, "📜 Henüz bir işlem veya bekleyen emir yok.")
         return
 
-    text = "📜 **SON İŞLEMLERİN (Emir Geçmişi)**\n\n"
+    text = "📋 **BEKLEYEN LİMİT EMİRLER**\n"
+    if limit_orders:
+        for lo in limit_orders:
+            text += f"🔹 `{lo['id']}` | {lo['type']} {lo['item']} | Hedef: {lo['target']}$ | Adet: {lo['amount']}\n"
+        text += "\n_(İptal için: /emir_iptal <ID>)_\n"
+    else:
+        text += "_(Yok)_\n"
+
+    text += "\n📜 **GEÇMİŞ İŞLEMLER**\n"
     for order in reversed(orders):
         icon = "🟢" if order["type"] == "ALIM" else "🔴"
         text += f"{icon} **{order['type']}** - {order['date']}\n"
@@ -3085,6 +3139,27 @@ def order_history(message):
         text += "───────────────\n"
     
     bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+@bot.message_handler(commands=['emir_iptal'])
+def cancel_order(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    
+    try:
+        order_id = message.text.split()[1]
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: `/emir_iptal <ID>`")
+        return
+        
+    user_orders = users[user_id].get("limit_orders", [])
+    for i, order in enumerate(user_orders):
+        if order["id"] == order_id:
+            del users[user_id]["limit_orders"][i]
+            save_users()
+            bot.reply_to(message, f"✅ `{order_id}` nolu emir iptal edildi.", parse_mode="Markdown")
+            return
+            
+    bot.reply_to(message, "❌ Emir bulunamadı.")
 
 @bot.message_handler(commands=['zenginler'])
 def rich_list(message):
@@ -3613,6 +3688,68 @@ def apply_bank_interest():
                     except: pass
     print(f"🏦 {count} kişiye faiz dağıtıldı.")
 
+def check_limit_orders():
+    """Piyasa güncellendiğinde bekleyen emirleri kontrol eder ve gerçekleştirir."""
+    executed_count = 0
+    
+    for uid, user in users.items():
+        if "limit_orders" not in user or not user["limit_orders"]:
+            continue
+            
+        # Listeyi kopyalayarak dönüyoruz ki silme işlemi sorun çıkarmasın
+        for order in list(user["limit_orders"]):
+            item = order["item"]
+            target = order["target"]
+            amount = order["amount"]
+            o_type = order["type"] # AL veya SAT
+            
+            current_price = market_prices.get(item)
+            if not current_price: continue
+            
+            executed = False
+            
+            # ALIM EMRİ: Fiyat hedefin altına veya eşite düştüyse
+            if o_type == "AL" and current_price <= target:
+                cost = current_price * amount
+                if user.get("money", 0) >= cost:
+                    user["money"] -= cost
+                    if "inventory" not in user: user["inventory"] = {}
+                    user["inventory"][item] = user["inventory"].get(item, 0) + amount
+                    executed = True
+            
+            # SATIM EMRİ: Fiyat hedefin üstüne veya eşite çıktıysa
+            elif o_type == "SAT" and current_price >= target:
+                if user.get("inventory", {}).get(item, 0) >= amount:
+                    gain = current_price * amount
+                    user["inventory"][item] -= amount
+                    user["money"] = user.get("money", 0) + gain
+                    executed = True
+            
+            if executed:
+                # Geçmişe ekle
+                if "orders" not in user: user["orders"] = []
+                user["orders"].append({
+                    "type": "OTOMATİK " + ("ALIM" if o_type == "AL" else "SATIM"),
+                    "item": TRADE_GOODS[item]['name'],
+                    "amount": amount,
+                    "price": current_price,
+                    "total": (current_price * amount),
+                    "date": datetime.now().strftime("%Y-%m-%d %H:%M")
+                })
+                if len(user["orders"]) > 20: user["orders"].pop(0)
+                
+                # Emri sil
+                user["limit_orders"].remove(order)
+                executed_count += 1
+                
+                try:
+                    bot.send_message(uid, f"🔔 **LİMİT EMİR GERÇEKLEŞTİ!**\n\n{o_type} {TRADE_GOODS[item]['name']} x{amount}\nFiyat: {current_price} $")
+                except: pass
+                
+    if executed_count > 0:
+        save_users()
+        print(f"🤖 {executed_count} adet limit emir tetiklendi.")
+
 def update_market():
     """Piyasa fiyatlarını arz-talep ve sürpriz olaylara göre günceller."""
     global market_prices, market_volumes, last_prices, market_news
@@ -3679,6 +3816,9 @@ def update_market():
 
         # Hacimleri sıfırla (Bir sonraki döngü için)
         market_volumes = {k: 0 for k in TRADE_GOODS.keys()}
+        
+        # Limit emirleri kontrol et
+        check_limit_orders()
         
         save_market_data()
 
