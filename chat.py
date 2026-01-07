@@ -4139,21 +4139,39 @@ if __name__ == "__main__":
     s.daemon = True
     s.start()
     
-    # Komut menüsünü ayarla (Sol alttaki mavi menü butonu)
-    bot.set_my_commands([
-        BotCommand("menu", "Ana Menüyü Aç"),
-        BotCommand("quiz", "Soru Çöz"),
-        BotCommand("market", "Market"),
-        BotCommand("profil", "Profilim"),
-        BotCommand("banka", "Banka İşlemleri"),
-        BotCommand("kaz", "Maden Kaz"),
-        BotCommand("borsa", "Borsa Durumu"),
-        BotCommand("gunluk", "Günlük Ödül"),
-        BotCommand("emir", "Emir Geçmişi")
-    ])
+    # Botu çalıştırmadan önce ağa bağımlı işlemleri dene
+    try:
+        # Komut menüsünü ayarla (Sol alttaki mavi menü butonu)
+        print("Bot komutları ayarlanıyor...")
+        bot.set_my_commands([
+            BotCommand("menu", "Ana Menüyü Aç"),
+            BotCommand("quiz", "Soru Çöz"),
+            BotCommand("market", "Market"),
+            BotCommand("profil", "Profilim"),
+            BotCommand("banka", "Banka İşlemleri"),
+            BotCommand("kaz", "Maden Kaz"),
+            BotCommand("borsa", "Borsa Durumu"),
+            BotCommand("gunluk", "Günlük Ödül"),
+            BotCommand("emir", "Emir Geçmişi")
+        ])
+        print("Bot komutları başarıyla ayarlandı.")
+        
+        # Botu başlatmadan hemen önce eski webhookları ve takılı kalan mesajları siler
+        bot.delete_webhook(drop_pending_updates=True)
+        print("Bekleyen güncellemeler temizlendi.")
+
+    except requests.exceptions.RequestException as e:
+        print(f"UYARI: Başlangıç ayarları yapılamadı. Ağ hatası: {e}")
+        print("Bot yine de başlatılmaya çalışılacak...")
 
     # Botu çalıştır
     print("Bot aktif ve Render üzerinde çalışıyor...")
-    # Botu başlatmadan hemen önce eski webhookları ve takılı kalan mesajları siler
-    bot.delete_webhook(drop_pending_updates=True)
-    bot.infinity_polling()
+    while True:
+        try:
+            bot.infinity_polling(timeout=60)
+        except requests.exceptions.RequestException as e:
+            print(f"AĞ HATASI: Telegram API'ye bağlanılamıyor. 15 saniye sonra tekrar denenecek. Hata: {e}")
+            time.sleep(15)
+        except Exception as e:
+            print(f"KRİTİK HATA: Polling çöktü. 15 saniye sonra yeniden başlatılacak. Hata: {e}")
+            time.sleep(15)
