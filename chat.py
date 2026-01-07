@@ -2579,7 +2579,7 @@ def admin_callbacks(call):
                 for order in u["limit_orders"]:
                     count += 1
                     item_name = TRADE_GOODS.get(order['item'], {}).get('name', order['item'])
-                    line = f"👤 {escape_md(name)}: {order['type']} {escape_md(item_name)} | Hedef: {order['target']}$ | Adet: {order['amount']}\n"
+                    line = f"👤 {escape_md(name)}: {escape_md(order['type'])} {escape_md(item_name)} | Hedef: {order['target']}$ | Adet: {order['amount']}\n"
                     
                     if len(text + line) > 4000:
                         bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
@@ -3157,7 +3157,8 @@ def order_history(message):
     text = "📋 **BEKLEYEN LİMİT EMİRLER**\n"
     if limit_orders:
         for lo in limit_orders:
-            text += f"🔹 `{lo['id']}` | {lo['type']} {escape_md(lo['item'])} | Hedef: {lo['target']}$ | Adet: {lo['amount']}\n"
+            item_name = TRADE_GOODS.get(lo['item'], {}).get('name', lo['item'])
+            text += f"🔹 `{lo['id']}` | {escape_md(lo['type'])} {escape_md(item_name)} | Hedef: {lo['target']}$ | Adet: {lo['amount']}\n"
         text += "\n_(İptal için: /emir_iptal <ID>)_\n"
     else:
         text += "_(Yok)_\n"
