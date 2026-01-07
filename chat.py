@@ -768,6 +768,7 @@ def help_callback(call):
             "🔹 `/borsa` - Kapalıçarşı fiyatlarını gör.\n"
             "🔹 `/analiz` - Piyasa analizi satın al (200$).\n"
             "🔹 `/grafik` - Fiyatların konumunu gör.\n"
+            "🔹 `/portfoyum` - Yatırımlarının durumunu gör.\n"
             "🔹 `/grafik_detay <mal>` - Detaylı çizgi grafik.\n"
             "🔹 `/dedikodu` - İçeriden bilgi satın al (Trend).\n"
             "🔹 `/kara_borsa` - Riskli ama ucuz pazar.\n"
@@ -2977,6 +2978,46 @@ def create_market_image(user_data=None):
     bio.seek(0)
     return bio
 
+def calculate_indicators(prices):
+    """Fiyat geçmişine göre RSI ve SMA teknik indikatörlerini hesaplar."""
+    if not prices: return {"rsi": 50, "sma": 0, "trend": "Nötr"}
+    
+    current = prices[-1]
+    
+    # SMA (Simple Moving Average) - 5 periyotluk
+    sma_period = 5
+    sma = sum(prices[-sma_period:]) / sma_period if len(prices) >= sma_period else current
+    
+    # RSI (Relative Strength Index) - 14 periyotluk
+    period = 14
+    if len(prices) < period + 1:
+        return {"rsi": 50, "sma": sma, "trend": "Veri Yetersiz"}
+        
+    gains = []
+    losses = []
+    
+    # Son 14 değişime bak
+    relevant_prices = prices[-(period+1):]
+    for i in range(1, len(relevant_prices)):
+        change = relevant_prices[i] - relevant_prices[i-1]
+        if change > 0:
+            gains.append(change)
+            losses.append(0)
+        else:
+            gains.append(0)
+            losses.append(abs(change))
+            
+    avg_gain = sum(gains) / period
+    avg_loss = sum(losses) / period
+    
+    if avg_loss == 0:
+        rsi = 100
+    else:
+        rs = avg_gain / avg_loss
+        rsi = 100 - (100 / (1 + rs))
+        
+    return {"rsi": rsi, "sma": sma}
+
 @bot.message_handler(commands=['borsa'])
 def check_market(message):
     user_id = str(message.from_user.id)
@@ -3087,12 +3128,21 @@ def buy_item(message):
         bot.reply_to(message, f"❌ Yetersiz Bakiye! \nÜrün Tutarı: {total_cost} $\nKomisyon (%2): {tax} $\n------------------\nToplam Gerekli: {total_payment} $")
         return
 
-    users[user_id]["money"] -= total_payment
-    
     # Envantere ekle
     if "inventory" not in users[user_id]: users[user_id]["inventory"] = {}
     current_stock = users[user_id]["inventory"].get(item_code, 0)
     users[user_id]["inventory"][item_code] = current_stock + amount
+
+    # Portföyü güncelle (Maliyet takibi için)
+    if "portfolio" not in users[user_id]:
+        users[user_id]["portfolio"] = {}
+    if item_code not in users[user_id]["portfolio"]:
+        users[user_id]["portfolio"][item_code] = {"amount": 0, "total_cost": 0}
+    
+    users[user_id]["portfolio"][item_code]["amount"] += amount
+    users[user_id]["portfolio"][item_code]["total_cost"] += total_cost # Komisyonsuz maliyet
+
+    users[user_id]["money"] -= total_payment
     
     # İşlem Geçmişine Ekle
     if "orders" not in users[user_id]: users[user_id]["orders"] = []
@@ -3163,6 +3213,20 @@ def sell_item(message):
     total_gain = price * amount
     tax = int(total_gain * 0.02) # %2 Komisyon
     net_gain = total_gain - tax
+
+    # Portföyü güncelle
+    if "portfolio" in users[user_id] and item_code in users[user_id]["portfolio"]:
+        p_item = users[user_id]["portfolio"][item_code]
+        if p_item["amount"] > 0:
+            # Ortalama maliyeti koruyarak satılan malın maliyetini düş
+            avg_cost_per_item = p_item["total_cost"] / p_item["amount"]
+            cost_of_sold_items = avg_cost_per_item * amount
+            
+            p_item["total_cost"] -= cost_of_sold_items
+            p_item["amount"] -= amount
+            
+            if p_item["amount"] < 1: # Float hatalarını önlemek için
+                del users[user_id]["portfolio"][item_code]
 
     users[user_id]["inventory"][item_code] -= amount
     users[user_id]["money"] = users[user_id].get("money", 0) + net_gain
@@ -3290,24 +3354,26 @@ def market_analysis(message):
     users[user_id]["money"] -= cost
     save_users()
 
-    # Basit bir analiz mantığı
-    analysis_text = "🧠 **PİYASA ANALİZ RAPORU**\n\n"
+    # Teknik Analiz Mantığı
+    analysis_text = "🧠 **PROFESYONEL PİYASA ANALİZİ**\n_(Teknik Göstergeler: RSI & SMA)_\n\n"
     
     with market_lock:
-        suggestions = []
         for code, data in TRADE_GOODS.items():
-            price = market_prices.get(code, data["base"])
-            avg = (data["min"] + data["max"]) / 2
+            history = price_history.get(code, [])
+            if not history: continue
             
-            if price < avg * 0.8:
-                suggestions.append(f"🟢 **{data['name']}**: Fiyat çok DÜŞÜK! Alım fırsatı olabilir.")
-            elif price > avg * 1.2:
-                suggestions.append(f"🔴 **{data['name']}**: Fiyat çok YÜKSEK! Satış zamanı gelmiş olabilir.")
-        
-        if not suggestions:
-            analysis_text += "Piyasa şu an dengeli görünüyor. Ani hareketler beklenmiyor."
-        else:
-            analysis_text += "\n".join(random.sample(suggestions, min(3, len(suggestions))))
+            ind = calculate_indicators(history)
+            price = market_prices.get(code, data["base"])
+            
+            signal = "⚪ Nötr"
+            if ind["rsi"] < 30: signal = "🟢 **GÜÇLÜ AL** (Aşırı Satım)"
+            elif ind["rsi"] > 70: signal = "🔴 **GÜÇLÜ SAT** (Aşırı Alım)"
+            elif price > ind["sma"]: signal = "📈 **AL** (Trend Yukarı)"
+            elif price < ind["sma"]: signal = "📉 **SAT** (Trend Aşağı)"
+            
+            analysis_text += f"🔸 **{data['name']}** ({price}$)\n"
+            analysis_text += f"   └ RSI: {ind['rsi']:.1f} | SMA: {ind['sma']:.1f}\n"
+            analysis_text += f"   └ Sinyal: {signal}\n\n"
             
     bot.reply_to(message, analysis_text, parse_mode="Markdown")
 
@@ -3364,46 +3430,84 @@ def show_detailed_graph(message):
         bot.reply_to(message, "📉 Yeterli veri yok.")
         return
 
-    # Grafik Çizimi (PIL ile)
-    w, h = 600, 300
-    bg_color = (30, 30, 30)
-    line_color = (46, 204, 113) # Yeşil
+    # --- GELİŞMİŞ GRAFİK ÇİZİMİ ---
+    width = 800
+    height = 500
+    bg_color = (20, 23, 30) # Koyu Lacivert/Siyah
+    grid_color = (50, 50, 70)
+    text_color = (200, 200, 200)
     
-    img = Image.new('RGB', (w, h), bg_color)
+    img = Image.new('RGB', (width, height), bg_color)
     draw = ImageDraw.Draw(img)
     
-    # Min-Max bul
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+        title_font = ImageFont.truetype(font_path, 24)
+        label_font = ImageFont.truetype(font_path, 16)
+    except:
+        title_font = ImageFont.load_default()
+        label_font = ImageFont.load_default()
+
+    # Veri Hazırlığı
     min_p = min(history)
     max_p = max(history)
-    if min_p == max_p: 
-        min_p -= 10
-        max_p += 10
-        
-    # Çizim alanı
-    padding = 40
-    graph_w = w - (padding * 2)
-    graph_h = h - (padding * 2)
+    padding_y = (max_p - min_p) * 0.2 if max_p != min_p else 10
+    min_y = min_p - padding_y
+    max_y = max_p + padding_y
     
-    # Noktaları hesapla
+    # Çizim Alanı
+    margin_left = 60
+    margin_right = 40
+    margin_top = 60
+    margin_bottom = 40
+    
+    graph_w = width - margin_left - margin_right
+    graph_h = height - margin_top - margin_bottom
+    
+    # Grid Çizimi (Yatay)
+    steps = 5
+    for i in range(steps + 1):
+        y_val = min_y + (max_y - min_y) * (i / steps)
+        y_pos = height - margin_bottom - ((y_val - min_y) / (max_y - min_y) * graph_h)
+        draw.line([(margin_left, y_pos), (width - margin_right, y_pos)], fill=grid_color, width=1)
+        draw.text((10, y_pos - 10), f"{int(y_val)}", fill=text_color, font=label_font)
+        
+    # Grafik Çizgisi Noktaları
     points = []
-    step_x = graph_w / (len(history) - 1) if len(history) > 1 else graph_w
+    num_points = len(history)
+    step_x = graph_w / (num_points - 1) if num_points > 1 else graph_w
     
     for i, price in enumerate(history):
-        x = padding + (i * step_x)
-        # Y ekseni ters (0 üstte)
-        # Normalize et: (price - min) / (max - min)
-        ratio = (price - min_p) / (max_p - min_p)
-        y = (h - padding) - (ratio * graph_h)
+        x = margin_left + (i * step_x)
+        y = height - margin_bottom - ((price - min_y) / (max_y - min_y) * graph_h)
         points.append((x, y))
         
-    # Çizgiyi çiz
+    # Renk Belirleme (Yükseliş/Düşüş)
+    start_p = history[0]
+    end_p = history[-1]
+    line_color = (46, 204, 113) if end_p >= start_p else (231, 76, 60) # Yeşil / Kırmızı
+    fill_color = (20, 60, 30) if end_p >= start_p else (60, 20, 20) # Koyu Yeşil / Koyu Kırmızı
+    
+    # Altını Doldurma (Polygon)
     if len(points) > 1:
+        poly_points = [(margin_left, height - margin_bottom)] + points + [(points[-1][0], height - margin_bottom)]
+        draw.polygon(poly_points, fill=fill_color)
         draw.line(points, fill=line_color, width=3)
         
-    # Başlangıç ve Bitiş değerlerini yaz
-    draw.text((10, 10), f"{TRADE_GOODS[item_code]['name']} Fiyat Grafiği (Son 20)", fill=(255, 255, 255))
-    draw.text((points[0][0], points[0][1]-20), str(history[0]), fill=(200, 200, 200))
-    draw.text((points[-1][0], points[-1][1]-20), str(history[-1]), fill=(255, 215, 0))
+        # Son Noktayı İşaretle
+        lx, ly = points[-1]
+        draw.ellipse((lx-4, ly-4, lx+4, ly+4), fill=(255, 255, 255))
+        draw.text((lx - 20, ly - 25), str(end_p), fill=(255, 215, 0), font=label_font)
+
+    # Başlık ve RSI
+    item_name = TRADE_GOODS[item_code]['name']
+    draw.text((margin_left, 15), f"{item_name} - Fiyat Analizi", fill=(255, 255, 255), font=title_font)
+    
+    ind = calculate_indicators(history)
+    rsi_val = ind['rsi']
+    rsi_color = (46, 204, 113) if 30 < rsi_val < 70 else ((231, 76, 60) if rsi_val > 70 else (52, 152, 219))
+    draw.text((width - 150, 20), f"RSI: {rsi_val:.1f}", fill=rsi_color, font=title_font)
 
     bio = io.BytesIO()
     img.save(bio, 'PNG')
@@ -3484,6 +3588,7 @@ def declare_bankruptcy(message):
     u["money"] = 1000
     u["bank_balance"] = 0
     u["loan"] = 0
+    u["portfolio"] = {}
     u["inventory"] = {}
     u["orders"] = []
     u["limit_orders"] = []
@@ -3620,6 +3725,126 @@ def rich_list(message):
         text += f"{icon} {i}. {name}{dev_tag}: **{wealth}** ${badge_str}\n"
         
     bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+def create_portfolio_image(user_data):
+    """Kullanıcının portföyünü gösteren bir görsel oluşturur."""
+    width = 800
+    portfolio = user_data.get("portfolio", {})
+    
+    # Dinamik yükseklik
+    num_items = len([v for v in portfolio.values() if v.get("amount", 0) > 0])
+    height = 200 + (num_items * 50)
+    
+    bg_color = (25, 28, 36)
+    text_color = (255, 255, 255)
+    
+    img = Image.new('RGB', (width, height), color=bg_color)
+    draw = ImageDraw.Draw(img)
+    
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+        title_font = ImageFont.truetype(font_path, 36)
+        header_font = ImageFont.truetype(font_path, 20)
+        row_font = ImageFont.truetype(font_path, 18)
+    except:
+        title_font = ImageFont.load_default()
+        header_font = ImageFont.load_default()
+        row_font = ImageFont.load_default()
+
+    draw.text((40, 20), f"💼 {user_data.get('name', '')} Portföyü", font=title_font, fill=(255, 215, 0))
+
+    if not num_items:
+        draw.text((40, 100), "Portföyün boş. /al komutuyla yatırım yapmaya başla!", font=header_font, fill=(150, 150, 150))
+        bio = io.BytesIO()
+        img.save(bio, 'PNG')
+        bio.seek(0)
+        return bio, 0, 0
+
+    y = 90
+    headers = ["ÜRÜN", "ADET", "ORT. MALİYET", "P&L", "GÜNCEL DEĞER"]
+    x_pos = [40, 250, 400, 550, 680]
+    for i, h in enumerate(headers):
+        draw.text((x_pos[i], y), h, font=header_font, fill=(150, 150, 150))
+    
+    y += 30
+    total_portfolio_value = 0
+    total_initial_cost = 0
+
+    with market_lock:
+        for code, data in portfolio.items():
+            if data.get("amount", 0) <= 0: continue
+            
+            item_info = TRADE_GOODS.get(code)
+            if not item_info: continue
+            
+            current_price = market_prices.get(code, 0)
+            amount = data["amount"]
+            total_cost = data["total_cost"]
+            
+            avg_cost = total_cost / amount if amount > 0 else 0
+            current_value = current_price * amount
+            profit_loss = current_value - total_cost
+            
+            total_portfolio_value += current_value
+            total_initial_cost += total_cost
+            
+            draw.line([(40, y-5), (width-40, y-5)], fill=(50, 50, 70), width=1)
+            
+            draw.text((x_pos[0], y), item_info["name"], font=row_font, fill=text_color)
+            draw.text((x_pos[1], y), str(int(amount)), font=row_font, fill=text_color)
+            draw.text((x_pos[2], y), f"{avg_cost:.1f} $", font=row_font, fill=text_color)
+            
+            pl_color = (46, 204, 113) if profit_loss >= 0 else (231, 76, 60)
+            pl_sign = "+" if profit_loss >= 0 else ""
+            draw.text((x_pos[3], y), f"{pl_sign}{profit_loss:.0f} $", font=row_font, fill=pl_color)
+            
+            draw.text((x_pos[4], y), f"{current_value:.0f} $", font=row_font, fill=(255, 215, 0))
+            
+            y += 50
+
+    total_profit_loss = total_portfolio_value - total_initial_cost
+    
+    draw.line([(40, y+10), (width-40, y+10)], fill=(80, 80, 80), width=2)
+    y += 30
+    
+    draw.text((400, y), "Toplam Değer:", font=header_font, fill=(150, 150, 150))
+    draw.text((680, y), f"{total_portfolio_value:.0f} $", font=header_font, fill=(255, 215, 0))
+    
+    y += 40
+    pl_color = (46, 204, 113) if total_profit_loss >= 0 else (231, 76, 60)
+    pl_sign = "+" if total_profit_loss >= 0 else ""
+    draw.text((400, y), "Toplam Kar/Zarar:", font=header_font, fill=(150, 150, 150))
+    draw.text((680, y), f"{pl_sign}{total_profit_loss:.0f} $", font=header_font, fill=pl_color)
+
+    bio = io.BytesIO()
+    img.save(bio, 'PNG')
+    bio.seek(0)
+    return bio, total_portfolio_value, total_profit_loss
+
+@bot.message_handler(commands=['portfoyum'])
+def show_portfolio(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    if user_id not in users: return
+
+    try:
+        # Portföyde olmayan kullanıcılar için başlangıç
+        if "portfolio" not in users[user_id]:
+            users[user_id]["portfolio"] = {}
+            save_users()
+
+        photo, total_value, total_pl = create_portfolio_image(users[user_id])
+        
+        initial_cost = total_value - total_pl
+        pl_percent = (total_pl / initial_cost * 100) if initial_cost != 0 else 0
+        pl_sign = "+" if total_pl >= 0 else ""
+        
+        caption = f"💰 **Portföy Özeti**\n\n**Toplam Değer:** {total_value:.0f} $\n**Toplam Kar/Zarar:** {pl_sign}{total_pl:.0f} $ ({pl_sign}{pl_percent:.2f}%)"
+        
+        bot.send_photo(message.chat.id, photo, caption=caption, parse_mode="Markdown")
+    except Exception as e:
+        bot.reply_to(message, f"Portföy görüntülenirken bir hata oluştu: {e}")
 
 @bot.message_handler(commands=['ruya'])
 def dream_interpret(message):
@@ -4137,6 +4362,7 @@ def check_limit_orders():
             if not current_price: continue
             
             executed = False
+            total_value = 0 # İşlem tutarını saklamak için
             
             # ALIM EMRİ: Fiyat hedefin altına veya eşite düştüyse
             if o_type == "AL" and current_price <= target:
@@ -4146,6 +4372,13 @@ def check_limit_orders():
                     if "inventory" not in user: user["inventory"] = {}
                     user["inventory"][item] = user["inventory"].get(item, 0) + amount
                     executed = True
+                    total_value = cost
+
+                    # Portföy güncelle
+                    if "portfolio" not in user: user["portfolio"] = {}
+                    if item not in user["portfolio"]: user["portfolio"][item] = {"amount": 0, "total_cost": 0}
+                    user["portfolio"][item]["amount"] += amount
+                    user["portfolio"][item]["total_cost"] += cost
             
             # SATIM EMRİ: Fiyat hedefin üstüne veya eşite çıktıysa
             elif o_type == "SAT" and current_price >= target:
@@ -4154,6 +4387,18 @@ def check_limit_orders():
                     user["inventory"][item] -= amount
                     user["money"] = user.get("money", 0) + gain
                     executed = True
+                    total_value = gain
+
+                    # Portföy güncelle
+                    if "portfolio" in user and item in user["portfolio"]:
+                        p_item = user["portfolio"][item]
+                        if p_item["amount"] > 0:
+                            avg_cost_per_item = p_item["total_cost"] / p_item["amount"]
+                            cost_of_sold_items = avg_cost_per_item * amount
+                            p_item["total_cost"] -= cost_of_sold_items
+                            p_item["amount"] -= amount
+                            if p_item["amount"] < 1:
+                                del user["portfolio"][item]
             
             if executed:
                 # Geçmişe ekle
@@ -4173,7 +4418,13 @@ def check_limit_orders():
                 executed_count += 1
                 
                 try:
-                    bot.send_message(uid, f"🔔 **LİMİT EMİR GERÇEKLEŞTİ!**\n\n{o_type} {TRADE_GOODS[item]['name']} x{amount}\nFiyat: {current_price} $")
+                    # Geliştirilmiş Bildirim
+                    if o_type == "AL":
+                        msg_body = f"✅ **Alım Emri Gerçekleşti**\n\n📦 Ürün: {TRADE_GOODS[item]['name']}\n🔢 Adet: {amount}\n📉 Fiyat: {current_price} $\n\n💰 **Toplam Maliyet: {total_value} $**"
+                    else: # SAT
+                        msg_body = f"✅ **Satış Emri Gerçekleşti**\n\n📦 Ürün: {TRADE_GOODS[item]['name']}\n🔢 Adet: {amount}\n📈 Fiyat: {current_price} $\n\n💵 **Toplam Kazanç: {total_value} $**"
+                    
+                    bot.send_message(uid, msg_body, parse_mode="Markdown")
                 except: pass
                 
     if executed_count > 0:
@@ -4330,6 +4581,7 @@ if __name__ == "__main__":
             BotCommand("quiz", "Soru Çöz"),
             BotCommand("market", "Market"),
             BotCommand("profil", "Profilim"),
+            BotCommand("portfoyum", "Portföyüm"),
             BotCommand("banka", "Banka İşlemleri"),
             BotCommand("kaz", "Maden Kaz"),
             BotCommand("borsa", "Borsa Durumu"),
