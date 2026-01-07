@@ -67,8 +67,10 @@ TRADE_GOODS = {
 market_prices = {k: v["base"] for k, v in TRADE_GOODS.items()}
 market_volumes = {k: 0 for k in TRADE_GOODS.keys()} # Alım-Satım hacmini takip eder
 last_prices = market_prices.copy() # Önceki fiyatları tutar
+price_history = {k: [v["base"]] * 20 for k, v in TRADE_GOODS.items()} # Son 20 fiyatı tutar
 market_news = "Borsa işlemleri başladı. Piyasa sakin. ☁️"
 last_market_update = datetime.now()
+market_trend = 0 # 0: Nötr, 1: Boğa, -1: Ayı (Global erişim için)
 
 # 💾 Borsa Verilerini Kaydetme/Yükleme
 MARKET_FILE = "market_data.json"
@@ -80,7 +82,9 @@ def save_market_data():
                 "prices": market_prices,
                 "volumes": market_volumes,
                 "last_prices": last_prices,
+                "price_history": price_history,
                 "news": market_news,
+                "trend": market_trend,
                 "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S")
             }
             with open(MARKET_FILE, "w", encoding="utf-8") as f:
@@ -89,7 +93,7 @@ def save_market_data():
         print(f"Piyasa kaydetme hatası: {e}")
 
 def load_market_data():
-    global market_prices, market_volumes, last_prices, market_news, last_market_update
+    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, market_trend
     if not os.path.exists(MARKET_FILE):
         return
 
@@ -107,7 +111,9 @@ def load_market_data():
                 if k in market_volumes: market_volumes[k] = v
 
             last_prices = data.get("last_prices", last_prices)
+            price_history = data.get("price_history", price_history)
             market_news = data.get("news", market_news)
+            market_trend = data.get("trend", 0)
             
             if "last_update" in data:
                 last_market_update = datetime.strptime(data["last_update"], "%Y-%m-%d %H:%M:%S")
@@ -758,6 +764,8 @@ def help_callback(call):
             "🔹 `/borsa` - Kapalıçarşı fiyatlarını gör.\n"
             "🔹 `/analiz` - Piyasa analizi satın al (200$).\n"
             "🔹 `/grafik` - Fiyatların konumunu gör.\n"
+            "🔹 `/grafik_detay <mal>` - Detaylı çizgi grafik.\n"
+            "🔹 `/dedikodu` - İçeriden bilgi satın al (Trend).\n"
             "🔹 `/kara_borsa` - Riskli ama ucuz pazar.\n"
             "🔹 `/al <mal> <hepsi|adet>` - Ticaret malı al.\n"
             "🔹 `/sat <mal> <hepsi|adet>` - Ticaret malı sat.\n"
@@ -2825,14 +2833,14 @@ def history_today(message):
         print(f"Tarih Hatasi: {e}")
         bot.reply_to(message, "Tarih kitapları şu an tozlu... Daha sonra bak.")
 
-def create_market_image():
+def create_market_image(user_data=None):
     # Dinamik boyutlandırma (Ürün sayısına göre uzar)
     num_items = len(TRADE_GOODS)
-    row_height = 70
+    row_height = 80 # Satır yüksekliğini artırdık (Bar için)
     header_height = 180
     footer_height = 60
     
-    width = 1000
+    width = 1100 # Genişliği artırdık (Varlık sütunu için)
     height = header_height + (num_items * row_height) + footer_height
     
     bg_color = (25, 28, 36) # Modern Koyu Tema
@@ -2884,10 +2892,11 @@ def create_market_image():
     
     # Tablo Başlıkları
     y_start = 200
-    draw.text((50, y_start), "ÜRÜN", font=header_font, fill=(150, 150, 150))
-    draw.text((350, y_start), "FİYAT", font=header_font, fill=(150, 150, 150))
-    draw.text((550, y_start), "DEĞİŞİM", font=header_font, fill=(150, 150, 150))
-    draw.text((750, y_start), "PİYASA DURUMU", font=header_font, fill=(150, 150, 150))
+    draw.text((40, y_start), "ÜRÜN", font=header_font, fill=(150, 150, 150))
+    draw.text((280, y_start), "FİYAT", font=header_font, fill=(150, 150, 150))
+    draw.text((450, y_start), "DEĞİŞİM", font=header_font, fill=(150, 150, 150))
+    draw.text((650, y_start), "VARLIK", font=header_font, fill=(150, 150, 150))
+    draw.text((850, y_start), "DERİNLİK", font=header_font, fill=(150, 150, 150))
     
     draw.line([(40, y_start + 40), (width-40, y_start + 40)], fill=(80, 80, 80), width=2)
     
@@ -2898,14 +2907,14 @@ def create_market_image():
         diff = price - old_price
         
         # Satır Arkaplanı
-        draw.rectangle([(40, y), (width-40, y+50)], fill=card_bg)
+        draw.rectangle([(40, y), (width-40, y+60)], fill=card_bg)
         
         # İsim (Emojiyi at)
         name_clean = data['name']
-        draw.text((60, y+10), name_clean, font=row_font, fill=(255, 255, 255))
+        draw.text((50, y+15), name_clean, font=row_font, fill=(255, 255, 255))
         
         # Fiyat
-        draw.text((350, y+10), f"{price} $", font=row_font, fill=(255, 215, 0))
+        draw.text((280, y+15), f"{price} $", font=row_font, fill=(255, 215, 0))
         
         # Değişim
         if diff > 0:
@@ -2917,19 +2926,36 @@ def create_market_image():
         else:
             diff_str = "➖ 0"
             color = (149, 165, 166)
-        draw.text((550, y+10), diff_str, font=row_font, fill=color)
+        draw.text((450, y+15), diff_str, font=row_font, fill=color)
         
-        # Görsel Bar (Range)
-        p_min = data['min']
-        p_max = data['max']
-        ratio = (price - p_min) / (p_max - p_min) if p_max > p_min else 0
-        ratio = max(0, min(1, ratio))
+        # Varlık (Kullanıcının Elindeki)
+        user_stock = 0
+        if user_data and "inventory" in user_data:
+            user_stock = user_data["inventory"].get(code, 0)
         
-        bar_x = 750
+        stock_color = (255, 255, 255) if user_stock > 0 else (100, 100, 100)
+        draw.text((650, y+15), f"{user_stock} Adet", font=row_font, fill=stock_color)
+
+        # Piyasa Derinliği (Volume Bar)
+        # Hacim pozitifse (Alım ağırlıklı) Yeşil, negatifse (Satış ağırlıklı) Kırmızı
+        vol = market_volumes.get(code, 0)
+        
+        # Barın ortası 0 noktası olsun
+        bar_x = 850
         bar_w = 200
         bar_h = 15
-        draw.rectangle([(bar_x, y+18), (bar_x + bar_w, y+18+bar_h)], fill=(60, 60, 60))
-        draw.rectangle([(bar_x, y+18), (bar_x + int(bar_w * ratio), y+18+bar_h)], fill=color)
+        center_x = bar_x + (bar_w // 2)
+        
+        # Arkaplan çizgisi
+        draw.rectangle([(bar_x, y+25), (bar_x + bar_w, y+25+bar_h)], fill=(50, 50, 50))
+        draw.line([(center_x, y+20), (center_x, y+45)], fill=(150, 150, 150), width=1)
+        
+        # Hacim barı (Max hacim 100 varsayalım görsel için)
+        bar_len = min(abs(vol) * 2, 100) # Ölçekleme
+        if vol >= 0:
+            draw.rectangle([(center_x, y+25), (center_x + bar_len, y+25+bar_h)], fill=(46, 204, 113)) # Yeşil (Alım)
+        else:
+            draw.rectangle([(center_x - bar_len, y+25), (center_x, y+25+bar_h)], fill=(231, 76, 60)) # Kırmızı (Satış)
         
         y += row_height
 
@@ -2953,11 +2979,27 @@ def check_market(message):
     if not users.get(user_id, {}).get("is_approved", True):
         return
 
+    # Eski mesajı silmeye çalış (Yenile butonu için)
+    if hasattr(message, 'message') and message.message: # CallbackQuery ise
+        chat_id = message.message.chat.id
+        try: bot.delete_message(chat_id, message.message.message_id)
+        except: pass
+    else: # Normal mesaj ise
+        chat_id = message.chat.id
+
     try:
         with market_lock:
-            photo = create_market_image()
-            text = "🛒 **İşlemler:**\n`/al <mal> <adet>` | `/sat <mal> <adet>`\n`/analiz` (Tahmin) | `/grafik` (Durum)\n`/kara_borsa` (Riskli Ucuzluk)"
-            bot.send_photo(message.chat.id, photo, caption=text, parse_mode="Markdown")
+            photo = create_market_image(users[user_id])
+            text = "🛒 **İşlemler:**\n`/al <mal> <adet>` | `/sat <mal> <adet>`\n`/grafik_detay <mal>` | `/dedikodu`\n`/kara_borsa` (Riskli Ucuzluk)"
+            
+            markup = InlineKeyboardMarkup()
+            markup.add(InlineKeyboardButton("🔄 Yenile", callback_data="market_refresh"))
+            markup.add(
+                InlineKeyboardButton("🤫 Dedikodu Al (100$)", callback_data="market_rumor"),
+                InlineKeyboardButton("📊 Detaylı Grafik", callback_data="market_graph_menu")
+            )
+            
+            bot.send_photo(chat_id, photo, caption=text, reply_markup=markup, parse_mode="Markdown")
     except Exception as e:
         print(f"Borsa görsel hatası: {e}")
         # Hata durumunda eski usul metin
@@ -2966,7 +3008,34 @@ def check_market(message):
             item = TRADE_GOODS[code]
             text += f"▫️ **{item['name']}:** {price} $\n"
         text += "\n🛒 **İşlemler:**\n`/al <mal> <adet>`\n`/sat <mal> <adet>`"
-        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+        bot.send_message(chat_id, text, parse_mode="Markdown")
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("market_"))
+def market_actions(call):
+    user_id = str(call.from_user.id)
+    action = call.data
+    
+    if action == "market_refresh":
+        check_market(call) # Yeniden yükle
+        
+    elif action == "market_rumor":
+        # Dedikodu fonksiyonunu çağır (mesaj objesi simüle ederek)
+        call.message.from_user.id = call.from_user.id # ID düzeltmesi
+        buy_rumor(call.message)
+        
+    elif action == "market_graph_menu":
+        markup = InlineKeyboardMarkup()
+        for code, data in TRADE_GOODS.items():
+            markup.add(InlineKeyboardButton(data["name"], callback_data=f"show_graph_{code}"))
+        bot.send_message(call.message.chat.id, "📊 Hangi ürünün grafiğini görmek istersin?", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("show_graph_"))
+def show_graph_callback(call):
+    item_code = call.data.replace("show_graph_", "")
+    # Mesaj objesini simüle et
+    call.message.text = f"/grafik_detay {item_code}"
+    call.message.from_user.id = call.from_user.id
+    show_detailed_graph(call.message)
 
 @bot.message_handler(commands=['al'])
 def buy_item(message):
@@ -3237,6 +3306,105 @@ def market_analysis(message):
             analysis_text += "\n".join(random.sample(suggestions, min(3, len(suggestions))))
             
     bot.reply_to(message, analysis_text, parse_mode="Markdown")
+
+@bot.message_handler(commands=['dedikodu'])
+def buy_rumor(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    cost = 100
+    if users[user_id].get("money", 0) < cost:
+        bot.reply_to(message, f"❌ Dedikodu için {cost} $ gerekli.")
+        return
+
+    users[user_id]["money"] -= cost
+    save_users()
+
+    # Trende göre dedikodu üret
+    trend_text = "Piyasa kararsız görünüyor..."
+    if market_trend > 0:
+        trend_text = "🐂 **Kuşlar diyor ki:** Büyük tüccarlar alım yapıyor! Piyasa YÜKSELİŞ trendinde olabilir."
+    elif market_trend < 0:
+        trend_text = "🐻 **Kuşlar diyor ki:** Limanda mallar birikmiş, alıcı yok! Piyasa DÜŞÜŞ trendinde olabilir."
+    
+    # Rastgele bir ürün hakkında spesifik tüyo
+    item = random.choice(list(TRADE_GOODS.keys()))
+    item_name = TRADE_GOODS[item]["name"]
+    
+    # Geleceği "biraz" bil (Volatiliteye bakarak)
+    hint = "sabit kalacak gibi."
+    if random.random() > 0.5:
+        hint = "değerlenecek gibi duruyor! 📈"
+    else:
+        hint = "ucuzlayabilir! 📉"
+        
+    bot.reply_to(message, f"🤫 **KAPALIÇARŞI FISILTISI**\n\n{trend_text}\n\nÖzel Tüyo: **{item_name}** yakında {hint}", parse_mode="Markdown")
+
+@bot.message_handler(commands=['grafik_detay'])
+def show_detailed_graph(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    try:
+        item_code = message.text.split()[1].lower()
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: `/grafik_detay altin`")
+        return
+
+    if item_code not in TRADE_GOODS:
+        bot.reply_to(message, "❌ Geçersiz ürün.")
+        return
+
+    history = price_history.get(item_code, [])
+    if not history:
+        bot.reply_to(message, "📉 Yeterli veri yok.")
+        return
+
+    # Grafik Çizimi (PIL ile)
+    w, h = 600, 300
+    bg_color = (30, 30, 30)
+    line_color = (46, 204, 113) # Yeşil
+    
+    img = Image.new('RGB', (w, h), bg_color)
+    draw = ImageDraw.Draw(img)
+    
+    # Min-Max bul
+    min_p = min(history)
+    max_p = max(history)
+    if min_p == max_p: 
+        min_p -= 10
+        max_p += 10
+        
+    # Çizim alanı
+    padding = 40
+    graph_w = w - (padding * 2)
+    graph_h = h - (padding * 2)
+    
+    # Noktaları hesapla
+    points = []
+    step_x = graph_w / (len(history) - 1) if len(history) > 1 else graph_w
+    
+    for i, price in enumerate(history):
+        x = padding + (i * step_x)
+        # Y ekseni ters (0 üstte)
+        # Normalize et: (price - min) / (max - min)
+        ratio = (price - min_p) / (max_p - min_p)
+        y = (h - padding) - (ratio * graph_h)
+        points.append((x, y))
+        
+    # Çizgiyi çiz
+    if len(points) > 1:
+        draw.line(points, fill=line_color, width=3)
+        
+    # Başlangıç ve Bitiş değerlerini yaz
+    draw.text((10, 10), f"{TRADE_GOODS[item_code]['name']} Fiyat Grafiği (Son 20)", fill=(255, 255, 255))
+    draw.text((points[0][0], points[0][1]-20), str(history[0]), fill=(200, 200, 200))
+    draw.text((points[-1][0], points[-1][1]-20), str(history[-1]), fill=(255, 215, 0))
+
+    bio = io.BytesIO()
+    img.save(bio, 'PNG')
+    bio.seek(0)
+    bot.send_photo(message.chat.id, bio, caption=f"📊 **{TRADE_GOODS[item_code]['name']}** Fiyat Hareketleri")
 
 @bot.message_handler(commands=['kara_borsa'])
 def black_market_menu(message):
@@ -4010,7 +4178,7 @@ def check_limit_orders():
 
 def update_market():
     """Piyasa fiyatlarını arz-talep ve sürpriz olaylara göre günceller."""
-    global market_prices, market_volumes, last_prices, market_news
+    global market_prices, market_volumes, last_prices, market_news, market_trend, price_history
     
     with market_lock:
         last_prices = market_prices.copy()
@@ -4088,6 +4256,11 @@ def update_market():
             new_price = max(data["min"], min(new_price, data["max"]))
             market_prices[code] = new_price
 
+            # Geçmişe ekle
+            if code not in price_history: price_history[code] = []
+            price_history[code].append(new_price)
+            if len(price_history[code]) > 20: price_history[code].pop(0) # Son 20 veri
+
         # Hacimleri sıfırla (Bir sonraki döngü için)
         market_volumes = {k: 0 for k in TRADE_GOODS.keys()}
         
@@ -4151,6 +4324,8 @@ if __name__ == "__main__":
             BotCommand("banka", "Banka İşlemleri"),
             BotCommand("kaz", "Maden Kaz"),
             BotCommand("borsa", "Borsa Durumu"),
+            BotCommand("grafik_detay", "Fiyat Grafiği"),
+            BotCommand("dedikodu", "Piyasa Tüyosu"),
             BotCommand("gunluk", "Günlük Ödül"),
             BotCommand("emir", "Emir Geçmişi")
         ])
