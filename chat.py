@@ -71,6 +71,10 @@ price_history = {k: [v["base"]] * 20 for k, v in TRADE_GOODS.items()} # Son 20 f
 market_news = "Borsa işlemleri başladı. Piyasa sakin. ☁️"
 last_market_update = datetime.now()
 market_trend = 0 # 0: Nötr, 1: Boğa, -1: Ayı (Global erişim için)
+last_news_update = datetime.now() - timedelta(minutes=6) # İlk açılışta haber üretmesi için
+active_news_item = None
+active_news_direction = None
+active_global_modifier = 0.0
 
 # 💾 Borsa Verilerini Kaydetme/Yükleme
 MARKET_FILE = "market_data.json"
@@ -2961,7 +2965,7 @@ def create_market_image(user_data=None):
 
     # Alt Bilgi
     time_diff = datetime.now() - last_market_update
-    seconds_left = 300 - time_diff.total_seconds()
+    seconds_left = 90 - time_diff.total_seconds()
     if seconds_left < 0: seconds_left = 0
     mins = int(seconds_left // 60)
     secs = int(seconds_left % 60)
@@ -4179,32 +4183,37 @@ def check_limit_orders():
 def update_market():
     """Piyasa fiyatlarını arz-talep ve sürpriz olaylara göre günceller."""
     global market_prices, market_volumes, last_prices, market_news, market_trend, price_history
+    global last_news_update, active_news_item, active_news_direction, active_global_modifier
     
     with market_lock:
         last_prices = market_prices.copy()
         
-        # 1. GENEL PİYASA TRENDİ (Endeks Etkisi)
-        # -1: Ayı (Düşüş), 0: Yatay, 1: Boğa (Yükseliş)
-        market_trend = random.choices([-1, 0, 1], weights=[0.3, 0.4, 0.3])[0]
+        # Haber güncelleme kontrolü (5 dakika)
+        if active_news_item is None or (datetime.now() - last_news_update).total_seconds() > 300:
+            last_news_update = datetime.now()
+            
+            # 1. GENEL PİYASA TRENDİ
+            market_trend = random.choices([-1, 0, 1], weights=[0.3, 0.4, 0.3])[0]
+            
+            # 2. HABER ETKİSİ
+            active_news_item = random.choice(list(TRADE_GOODS.keys()))
+            active_news_direction = random.choice(["up", "down"])
+            market_news = random.choice(NEWS_TEMPLATES[active_news_item][active_news_direction])
+            
+            # 🔥 SÜRPRİZ OLAYLAR (CRASH & RALLY)
+            event_roll = random.randint(1, 100)
+            active_global_modifier = 0.0
+
+            if event_roll <= 3: # %3 İhtimalle BÜYÜK ÇÖKÜŞ
+                market_news = "📉 **KARA GÜN!** Küresel ekonomik kriz patlak verdi! Tüm piyasalar çakılıyor! 😱"
+                active_global_modifier = -0.25 # Fiyatlar %25 düşer
+            elif event_roll >= 97: # %3 İhtimalle RALLİ
+                market_news = "🚀 **ALTIN ÇAĞ!** Yabancı yatırımcılar ülkeye akın etti! Fiyatlar uçuşa geçti! 🌕"
+                active_global_modifier = 0.25 # Fiyatlar %25 artar
+
+            print(f"📊 Piyasa Trendi: {market_trend}, Haber: {market_news}")
+
         trend_strength = random.uniform(0.01, 0.03) # %1 ile %3 arası genel etki
-
-        # 2. HABER ETKİSİ
-        news_item_code = random.choice(list(TRADE_GOODS.keys()))
-        news_direction = random.choice(["up", "down"])
-        market_news = random.choice(NEWS_TEMPLATES[news_item_code][news_direction])
-        
-        # 🔥 SÜRPRİZ OLAYLAR (CRASH & RALLY)
-        event_roll = random.randint(1, 100)
-        global_modifier = 0.0
-
-        if event_roll <= 3: # %3 İhtimalle BÜYÜK ÇÖKÜŞ
-            market_news = "📉 **KARA GÜN!** Küresel ekonomik kriz patlak verdi! Tüm piyasalar çakılıyor! 😱"
-            global_modifier = -0.25 # Fiyatlar %25 düşer
-        elif event_roll >= 97: # %3 İhtimalle RALLİ
-            market_news = "🚀 **ALTIN ÇAĞ!** Yabancı yatırımcılar ülkeye akın etti! Fiyatlar uçuşa geçti! 🌕"
-            global_modifier = 0.25 # Fiyatlar %25 artar
-
-        print(f"📊 Piyasa Trendi: {market_trend}, Haber: {market_news}")
 
         for code, data in TRADE_GOODS.items():
             current_price = market_prices[code]
@@ -4218,7 +4227,7 @@ def update_market():
             change_percent += (market_trend * trend_strength)
             
             # C. Global Modifier (Kriz/Ralli)
-            change_percent += global_modifier
+            change_percent += active_global_modifier
 
             # D. Hacim Etkisi (Arz/Talep)
             # Alım çoksa fiyat artar, satış çoksa düşer
@@ -4226,14 +4235,14 @@ def update_market():
                 change_percent += (volume * 0.002) 
             
             # E. Haber Etkisi
-            if code == news_item_code:
+            if code == active_news_item:
                 impact = random.uniform(0.05, 0.15) # %5 - %15 arası haber etkisi
-                if news_direction == "down": impact *= -1
+                if active_news_direction == "down": impact *= -1
                 change_percent += impact
 
             # F. Devre Kesici (Circuit Breaker) - %10 Sınırı (Kriz anında %30'a çıkar)
             # BIST100'de olduğu gibi aşırı ani hareketleri sınırlar
-            limit = 0.30 if global_modifier != 0 else 0.10
+            limit = 0.30 if active_global_modifier != 0 else 0.10
             
             if change_percent > limit:
                 change_percent = limit
@@ -4282,8 +4291,8 @@ def scheduler_thread():
             apply_bank_interest()
             time.sleep(65)
             
-        # Market Güncellemesi (5 dakikada bir)
-        if (datetime.now() - last_market_update).total_seconds() > 300:
+        # Market Güncellemesi (1.5 dakikada bir)
+        if (datetime.now() - last_market_update).total_seconds() > 90:
             update_market()
             last_market_update = datetime.now()
             save_market_data()
