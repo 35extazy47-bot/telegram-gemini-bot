@@ -751,9 +751,14 @@ def help_callback(call):
         text = (
             "💰 **EKONOMİ & TİCARET**\n\n"
             "🔹 `/banka` - Banka hesabını yönet (Günlük %5 Faiz).\n"
+            "🔹 `/kredi <miktar>` - Bankadan kredi çek.\n"
+            "🔹 `/kredi_ode <miktar>` - Kredi borcunu öde.\n"
             "🔹 `/yatir <miktar>` - Bankaya para yatır.\n"
             "🔹 `/cek <miktar>` - Bankadan para çek.\n"
             "🔹 `/borsa` - Kapalıçarşı fiyatlarını gör.\n"
+            "🔹 `/analiz` - Piyasa analizi satın al (200$).\n"
+            "🔹 `/grafik` - Fiyatların konumunu gör.\n"
+            "🔹 `/kara_borsa` - Riskli ama ucuz pazar.\n"
             "🔹 `/al <mal> <hepsi|adet>` - Ticaret malı al.\n"
             "🔹 `/sat <mal> <hepsi|adet>` - Ticaret malı sat.\n"
             "🔹 `/emir_ver <al/sat> <mal> <fiyat> <adet>` - Otomatik limit emir gir.\n"
@@ -761,6 +766,7 @@ def help_callback(call):
             "🔹 `/kaz` - Madene in (15 dk arayla).\n"
             "🔹 `/market` - Eşya ve Joker satın al.\n"
             "🔹 `/transfer <@kisi> <para>` - Para gönder (%5 vergi).\n"
+            "🔹 `/iflas` - Batarsan her şeyi sıfırla.\n"
             "🔹 `/zenginler` - En zengin oyuncular listesi."
         )
     elif category == "help_profile":
@@ -2950,7 +2956,7 @@ def check_market(message):
     try:
         with market_lock:
             photo = create_market_image()
-            text = "🛒 **İşlemler:**\n`/al <mal> <adet>` (Örn: `/al ipek 5`)\n`/sat <mal> <adet>` (Örn: `/sat ipek 5`)"
+            text = "🛒 **İşlemler:**\n`/al <mal> <adet>` | `/sat <mal> <adet>`\n`/analiz` (Tahmin) | `/grafik` (Durum)\n`/kara_borsa` (Riskli Ucuzluk)"
             bot.send_photo(message.chat.id, photo, caption=text, parse_mode="Markdown")
     except Exception as e:
         print(f"Borsa görsel hatası: {e}")
@@ -3114,6 +3120,204 @@ def sell_item(message):
         whale_msg = f"🚨 **BALİNA ALARMI!** 🚨\n\n🐋 **{users[user_id]['name']}** piyasayı boşaltıyor!\n📤 **{amount} adet {TRADE_GOODS[item_code]['name']}** sattı!\n💸 İşlem Hacmi: {total_gain} $"
         # O anki sohbete gönder
         bot.send_message(message.chat.id, whale_msg)
+
+@bot.message_handler(commands=['kredi'])
+def take_loan(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    try:
+        amount = int(message.text.split()[1])
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: `/kredi <miktar>`")
+        return
+
+    if amount <= 0:
+        bot.reply_to(message, "❌ Pozitif miktar gir.")
+        return
+
+    level = users[user_id].get("level", 1)
+    max_loan = level * 5000
+    current_loan = users[user_id].get("loan", 0)
+
+    if current_loan + amount > max_loan:
+        bot.reply_to(message, f"❌ Kredi limitin yetersiz!\nSeviyen ({level}) için Maksimum Borç: {max_loan} $\nMevcut Borç: {current_loan} $")
+        return
+
+    users[user_id]["loan"] = current_loan + amount
+    users[user_id]["money"] = users[user_id].get("money", 0) + amount
+    save_users()
+
+    bot.reply_to(message, f"✅ **Kredi Onaylandı!**\n💰 Hesaba Geçen: {amount} $\n📉 Toplam Borç: {users[user_id]['loan']} $\n_(Borcunu /kredi_ode ile kapatabilirsin)_")
+
+@bot.message_handler(commands=['kredi_ode'])
+def pay_loan(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    current_loan = users[user_id].get("loan", 0)
+    if current_loan <= 0:
+        bot.reply_to(message, "🎉 Borcun yok ki knk!")
+        return
+
+    try:
+        amount = int(message.text.split()[1])
+    except:
+        # Miktar girilmezse tamamını ödemeye çalış
+        amount = current_loan
+
+    if amount <= 0: return
+    if amount > current_loan: amount = current_loan
+
+    if users[user_id].get("money", 0) < amount:
+        bot.reply_to(message, f"❌ Yetersiz Bakiye! Cüzdan: {users[user_id].get('money', 0)} $")
+        return
+
+    users[user_id]["money"] -= amount
+    users[user_id]["loan"] -= amount
+    save_users()
+
+    bot.reply_to(message, f"✅ **Ödeme Başarılı!**\n💸 Ödenen: {amount} $\n📉 Kalan Borç: {users[user_id]['loan']} $")
+
+@bot.message_handler(commands=['grafik'])
+def show_market_graph(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    text = "📊 **PİYASA FİYAT KONUMU**\n_(Min - Max Aralığı)_\n\n"
+    
+    with market_lock:
+        for code, data in TRADE_GOODS.items():
+            price = market_prices.get(code, data["base"])
+            p_min = data["min"]
+            p_max = data["max"]
+            
+            # Konumu hesapla (0 ile 10 arası)
+            if p_max > p_min:
+                ratio = (price - p_min) / (p_max - p_min)
+                filled = int(ratio * 10)
+            else:
+                filled = 5
+            
+            bar = "🟦" * filled + "⬜" * (10 - filled)
+            text += f"**{data['name']}**: {price} $\n{bar} (%{int(ratio*100)})\n\n"
+
+    bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+@bot.message_handler(commands=['analiz'])
+def market_analysis(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    cost = 200
+    if users[user_id].get("money", 0) < cost:
+        bot.reply_to(message, f"❌ Analiz için {cost} $ gerekli.")
+        return
+
+    users[user_id]["money"] -= cost
+    save_users()
+
+    # Basit bir analiz mantığı
+    analysis_text = "🧠 **PİYASA ANALİZ RAPORU**\n\n"
+    
+    with market_lock:
+        suggestions = []
+        for code, data in TRADE_GOODS.items():
+            price = market_prices.get(code, data["base"])
+            avg = (data["min"] + data["max"]) / 2
+            
+            if price < avg * 0.8:
+                suggestions.append(f"🟢 **{data['name']}**: Fiyat çok DÜŞÜK! Alım fırsatı olabilir.")
+            elif price > avg * 1.2:
+                suggestions.append(f"🔴 **{data['name']}**: Fiyat çok YÜKSEK! Satış zamanı gelmiş olabilir.")
+        
+        if not suggestions:
+            analysis_text += "Piyasa şu an dengeli görünüyor. Ani hareketler beklenmiyor."
+        else:
+            analysis_text += "\n".join(random.sample(suggestions, min(3, len(suggestions))))
+            
+    bot.reply_to(message, analysis_text, parse_mode="Markdown")
+
+@bot.message_handler(commands=['kara_borsa'])
+def black_market_menu(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    text = "🕵️ **KARA BORSA** 🕵️\n\nBurada mallar piyasanın **%60** fiyatına satılır.\n⚠️ **RİSK:** Polis basarsa paran yanar ve malı alamazsın!\n\n**Fiyatlar:**\n"
+    
+    with market_lock:
+        for code, data in TRADE_GOODS.items():
+            market_price = market_prices.get(code, data["base"])
+            black_price = int(market_price * 0.6)
+            text += f"▫️ {data['name']}: {black_price} $ (Normal: {market_price})\n"
+            
+    text += "\n🛒 **Alım:** `/kacak_al <mal> <adet>`"
+    bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+@bot.message_handler(commands=['kacak_al'])
+def buy_illegal(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    try:
+        args = message.text.lower().split()
+        item_code = args[1]
+        amount = int(args[2])
+    except:
+        bot.reply_to(message, "⚠️ Kullanım: `/kacak_al ipek 5`")
+        return
+
+    if item_code not in TRADE_GOODS:
+        bot.reply_to(message, "❌ Geçersiz mal.")
+        return
+    if amount <= 0: return
+
+    with market_lock:
+        market_price = market_prices.get(item_code, TRADE_GOODS[item_code]["base"])
+        
+    black_price = int(market_price * 0.6)
+    total_cost = black_price * amount
+
+    if users[user_id].get("money", 0) < total_cost:
+        bot.reply_to(message, "❌ Paran yetmiyor!")
+        return
+
+    # RİSK HESAPLAMA (%30 Yakalanma)
+    if random.random() < 0.30:
+        users[user_id]["money"] -= total_cost # Parayı kaptırır
+        save_users()
+        bot.reply_to(message, f"🚨 **POLİS BASKINI!** 🚨\n\nKaçakçılar kaçtı, paranı da alıp götürdüler!\n💸 Kayıp: {total_cost} $")
+        return
+
+    # Başarılı İşlem
+    users[user_id]["money"] -= total_cost
+    if "inventory" not in users[user_id]: users[user_id]["inventory"] = {}
+    users[user_id]["inventory"][item_code] = users[user_id]["inventory"].get(item_code, 0) + amount
+    save_users()
+
+    bot.reply_to(message, f"🕵️ **İşlem Tamam...**\nKimse görmeden malları zulaladın.\n📦 Alınan: {amount} {TRADE_GOODS[item_code]['name']}\n💰 Ödenen: {total_cost} $")
+
+@bot.message_handler(commands=['iflas'])
+def declare_bankruptcy(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    args = message.text.split()
+    if len(args) < 2 or args[1] != "ONAY":
+        bot.reply_to(message, "⚠️ **DİKKAT!** İflas edersen:\n- Tüm paran ve banka hesabın sıfırlanır (1000$ verilir).\n- Tüm borçların silinir.\n- Tüm envanterin ve eşyaların silinir.\n- Levelin düşmez.\n\nEmin misin? Onaylamak için:\n`/iflas ONAY` yaz.", parse_mode="Markdown")
+        return
+
+    # İflas İşlemi
+    u = users[user_id]
+    u["money"] = 1000
+    u["bank_balance"] = 0
+    u["loan"] = 0
+    u["inventory"] = {}
+    u["orders"] = []
+    u["limit_orders"] = []
+    
+    save_users()
+    bot.reply_to(message, "🏳️ **İFLAS BAYRAĞI ÇEKİLDİ!**\n\nBorçlarından kurtuldun ama her şeyini kaybettin.\nDevlet sana yeni bir başlangıç için 1000 $ hibe etti.\nİyi şanslar! 🍀")
 
 @bot.message_handler(commands=['emir_ver'])
 def set_limit_order(message):
@@ -3456,6 +3660,7 @@ def bank_menu(message):
     u = users[user_id]
     wallet = u.get("money", 0)
     bank = u.get("bank_balance", 0)
+    loan = u.get("loan", 0)
     
     text = (
         "🏦 **MERKEZ BANKASI** 🏦\n\n"
@@ -3463,6 +3668,9 @@ def bank_menu(message):
         f"💳 **Banka Hesabı:** {bank} $\n\n"
         "📈 **Günlük Faiz:** %5 (Her sabah 09:00'da)\n\n"
         "**İşlemler:**\n"
+        f"📉 **Mevcut Kredi Borcu:** {loan} $\n"
+        "🔹 `/kredi <miktar>` - Kredi çek\n"
+        "🔹 `/kredi_ode <miktar>` - Borç öde\n"
         "🔹 `/yatir <miktar>` - Bankaya para yatır\n"
         "🔹 `/cek <miktar>` - Bankadan para çek"
     )
