@@ -4,3 +4,4 @@ flask
 google-genai
 requests
 deep-translator
+pillow
