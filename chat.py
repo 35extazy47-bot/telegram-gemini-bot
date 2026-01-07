@@ -2981,6 +2981,18 @@ def buy_item(message):
     current_stock = users[user_id]["inventory"].get(item_code, 0)
     users[user_id]["inventory"][item_code] = current_stock + amount
     
+    # İşlem Geçmişine Ekle
+    if "orders" not in users[user_id]: users[user_id]["orders"] = []
+    users[user_id]["orders"].append({
+        "type": "ALIM",
+        "item": TRADE_GOODS[item_code]['name'],
+        "amount": amount,
+        "price": price,
+        "total": total_cost,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M")
+    })
+    if len(users[user_id]["orders"]) > 20: users[user_id]["orders"].pop(0)
+
     # Hacim güncelle (Talep arttı)
     with market_lock:
         if item_code in market_volumes:
@@ -3033,6 +3045,18 @@ def sell_item(message):
     users[user_id]["inventory"][item_code] -= amount
     users[user_id]["money"] = users[user_id].get("money", 0) + total_gain
     
+    # İşlem Geçmişine Ekle
+    if "orders" not in users[user_id]: users[user_id]["orders"] = []
+    users[user_id]["orders"].append({
+        "type": "SATIM",
+        "item": TRADE_GOODS[item_code]['name'],
+        "amount": amount,
+        "price": price,
+        "total": total_gain,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M")
+    })
+    if len(users[user_id]["orders"]) > 20: users[user_id]["orders"].pop(0)
+
     # Hacim güncelle (Satış baskısı)
     with market_lock:
         if item_code in market_volumes:
@@ -3041,6 +3065,26 @@ def sell_item(message):
     save_users()
     save_market_data()
     bot.reply_to(message, f"✅ **Satış Başarılı!**\n📤 Satılan: {amount} adet {TRADE_GOODS[item_code]['name']}\n💰 Kazanılan: {total_gain} $")
+
+@bot.message_handler(commands=['emir', 'emirler'])
+def order_history(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+
+    orders = users[user_id].get("orders", [])
+    if not orders:
+        bot.reply_to(message, "📜 Henüz bir işlem geçmişin yok.")
+        return
+
+    text = "📜 **SON İŞLEMLERİN (Emir Geçmişi)**\n\n"
+    for order in reversed(orders):
+        icon = "🟢" if order["type"] == "ALIM" else "🔴"
+        text += f"{icon} **{order['type']}** - {order['date']}\n"
+        text += f"📦 {order['item']} x{order['amount']}\n"
+        text += f"💵 Fiyat: {order['price']} $ | Toplam: {order['total']} $\n"
+        text += "───────────────\n"
+    
+    bot.send_message(message.chat.id, text, parse_mode="Markdown")
 
 @bot.message_handler(commands=['zenginler'])
 def rich_list(message):
@@ -3690,7 +3734,8 @@ if __name__ == "__main__":
         BotCommand("banka", "Banka İşlemleri"),
         BotCommand("kaz", "Maden Kaz"),
         BotCommand("borsa", "Borsa Durumu"),
-        BotCommand("gunluk", "Günlük Ödül")
+        BotCommand("gunluk", "Günlük Ödül"),
+        BotCommand("emir", "Emir Geçmişi")
     ])
 
     # Botu çalıştır
