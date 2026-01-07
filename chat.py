@@ -47,6 +47,10 @@ def safe_generate_content(prompt_content):
             print(f"⚠️ {model} hatası: {e} -> Diğer modele geçiliyor...")
     raise Exception("Tüm modeller başarısız oldu.")
 
+def escape_md(text):
+    """Markdown için özel karakterleri kaçış karakteriyle sarmalar."""
+    return str(text).replace("_", "\\_").replace("*", "\\*").replace("`", "\\`").replace("[", "\\[")
+
 # Yasaklı Kelimeler Listesi (Burayı istediğin gibi genişletebilirsin)
 BANNED_WORDS = ["aptal", "salak", "gerizekalı", "mal", "ezik", "ahmak", "özürlü", "amq", "orospu" ]
 
@@ -2529,7 +2533,7 @@ def admin_callbacks(call):
             name = u.get("name", "Bilinmiyor")
             username = u.get("username", "Yok")
             level = u.get("level", 1)
-            line = f"{i}. {name} (@{username}) - ID: `{uid}` - Lvl: {level}\n"
+            line = f"{i}. {escape_md(name)} (@{escape_md(username)}) - ID: `{uid}` - Lvl: {level}\n"
             
             if len(text + line) > 4000:
                 bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
@@ -2575,7 +2579,7 @@ def admin_callbacks(call):
                 for order in u["limit_orders"]:
                     count += 1
                     item_name = TRADE_GOODS.get(order['item'], {}).get('name', order['item'])
-                    line = f"👤 {name}: {order['type']} {item_name} | Hedef: {order['target']}$ | Adet: {order['amount']}\n"
+                    line = f"👤 {escape_md(name)}: {order['type']} {escape_md(item_name)} | Hedef: {order['target']}$ | Adet: {order['amount']}\n"
                     
                     if len(text + line) > 4000:
                         bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
@@ -3153,7 +3157,7 @@ def order_history(message):
     text = "📋 **BEKLEYEN LİMİT EMİRLER**\n"
     if limit_orders:
         for lo in limit_orders:
-            text += f"🔹 `{lo['id']}` | {lo['type']} {lo['item']} | Hedef: {lo['target']}$ | Adet: {lo['amount']}\n"
+            text += f"🔹 `{lo['id']}` | {lo['type']} {escape_md(lo['item'])} | Hedef: {lo['target']}$ | Adet: {lo['amount']}\n"
         text += "\n_(İptal için: /emir_iptal <ID>)_\n"
     else:
         text += "_(Yok)_\n"
@@ -3161,8 +3165,8 @@ def order_history(message):
     text += "\n📜 **GEÇMİŞ İŞLEMLER**\n"
     for order in reversed(orders):
         icon = "🟢" if order["type"] == "ALIM" else "🔴"
-        text += f"{icon} **{order['type']}** - {order['date']}\n"
-        text += f"📦 {order['item']} x{order['amount']}\n"
+        text += f"{icon} **{escape_md(order['type'])}** - {order['date']}\n"
+        text += f"📦 {escape_md(order['item'])} x{order['amount']}\n"
         text += f"💵 Fiyat: {order['price']} $ | Toplam: {order['total']} $\n"
         text += "───────────────\n"
     
