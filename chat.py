@@ -611,6 +611,7 @@ def language_selected(call):
                 "🔹 `/borsa` - Kapalıçarşı Ticaret 📈\n"
                 "🔹 `/al <mal> <hepsi|adet>` - Mal Al 🛍️\n"
                 "🔹 `/sat <mal> <hepsi|adet>` - Mal Sat 💰\n"
+                "🔹 `/emir_ver <al/sat> ...` - Otomatik Emir 📉\n"
                 "🔹 `/kaz` - Maden Kaz (Elmas Bul!) ⛏️\n"
                 "🔹 `/transfer <@kisi> <para>` - Para Gönder 💸\n\n"
                 "👤 **Profil & Araçlar**\n"
@@ -644,6 +645,7 @@ def language_selected(call):
                 "🔹 `/borsa` - Grand Bazaar Trading 📈\n"
                 "🔹 `/al <item> <all|amount>` - Buy Item 🛍️\n"
                 "🔹 `/sat <item> <all|amount>` - Sell Item 💰\n"
+                "🔹 `/emir_ver <buy/sell> ...` - Limit Order 📉\n"
                 "🔹 `/kaz` - Mine Resources ⛏️\n"
                 "🔹 `/transfer <@user> <money>` - Send Money 💸\n\n"
                 "👤 **Profile & Tools**\n"
@@ -677,6 +679,7 @@ def language_selected(call):
                 "🔹 `/borsa` - Търговия на пазара 📈\n"
                 "🔹 `/al <item> <all|amount>` - Купи предмет 🛍️\n"
                 "🔹 `/sat <item> <all|amount>` - Продай предмет 💰\n"
+                "🔹 `/emir_ver <buy/sell> ...` - Лимит поръчка 📉\n"
                 "🔹 `/kaz` - Копаене (Намери диаманти!) ⛏️\n"
                 "🔹 `/transfer <@user> <money>` - Изпрати пари 💸\n\n"
                 "👤 **Профил и Инструменти**\n"
@@ -749,6 +752,8 @@ def help_callback(call):
             "🔹 `/borsa` - Kapalıçarşı fiyatlarını gör.\n"
             "🔹 `/al <mal> <hepsi|adet>` - Ticaret malı al.\n"
             "🔹 `/sat <mal> <hepsi|adet>` - Ticaret malı sat.\n"
+            "🔹 `/emir_ver <al/sat> <mal> <fiyat> <adet>` - Otomatik limit emir gir.\n"
+            "🔹 `/emir` - Bekleyen emirlerini ve geçmişini gör.\n"
             "🔹 `/kaz` - Madene in (15 dk arayla).\n"
             "🔹 `/market` - Eşya ve Joker satın al.\n"
             "🔹 `/transfer <@kisi> <para>` - Para gönder (%5 vergi).\n"
@@ -2462,6 +2467,7 @@ def admin_panel(message):
     markup.add(InlineKeyboardButton(f"⏳ Onay ({pending_count})", callback_data="admin_pending_list"), InlineKeyboardButton("👥 Üyeler", callback_data="admin_user_list"))
     # Satır 2: Özel Listeler
     markup.add(InlineKeyboardButton("🚫 Yasaklılar", callback_data="admin_banned_list"), InlineKeyboardButton("👑 VIP'ler", callback_data="admin_vip_list"))
+    markup.add(InlineKeyboardButton("📉 Tüm Emirler", callback_data="admin_all_orders"))
     # Satır 3: Ekonomi & Sistem
     markup.add(InlineKeyboardButton("📊 Eko. Analiz", callback_data="admin_economy_stats"), InlineKeyboardButton("💾 Yedek Al", callback_data="admin_backup"))
     # Satır 4: İletişim & Anket
@@ -2558,6 +2564,28 @@ def admin_callbacks(call):
             text += f"• {u.get('name')} (Lvl {u.get('level')})\n"
             
         bot.send_message(call.message.chat.id, text)
+        bot.answer_callback_query(call.id)
+
+    elif call.data == "admin_all_orders":
+        text = "📉 **PİYASADAKİ TÜM BEKLEYEN EMİRLER**\n\n"
+        count = 0
+        for uid, u in users.items():
+            if "limit_orders" in u and u["limit_orders"]:
+                name = u.get("name", "Bilinmiyor")
+                for order in u["limit_orders"]:
+                    count += 1
+                    item_name = TRADE_GOODS.get(order['item'], {}).get('name', order['item'])
+                    line = f"👤 {name}: {order['type']} {item_name} | Hedef: {order['target']}$ | Adet: {order['amount']}\n"
+                    
+                    if len(text + line) > 4000:
+                        bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
+                        text = ""
+                    text += line
+        
+        if count == 0:
+            text += "📭 Şu an bekleyen hiç emir yok."
+            
+        bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
         bot.answer_callback_query(call.id)
 
     elif call.data == "admin_economy_stats":
