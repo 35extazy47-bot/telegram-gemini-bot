@@ -160,16 +160,22 @@ NEWS_TEMPLATES = {
 }
 
 def load_users():
+    if not os.path.exists(USERS_FILE):
+        return {}
     try:
         with open(USERS_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
-    except:
+    except Exception as e:
+        print(f"Kullanıcı verileri yüklenirken hata: {e}")
         return {}
 
 def save_users():
-    with data_lock:
-        with open(USERS_FILE, "w", encoding="utf-8") as f:
-            json.dump(users, f, ensure_ascii=False, indent=2)
+    try:
+        with data_lock:
+            with open(USERS_FILE, "w", encoding="utf-8") as f:
+                json.dump(users, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"Kullanıcı verileri kaydedilirken hata: {e}")
 users = load_users()
 def get_rank(level, username=None):
     if username == DEVELOPER_USERNAME:
