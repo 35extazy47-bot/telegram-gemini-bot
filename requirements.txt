@@ -5,3 +5,5 @@ google-genai
 requests
 deep-translator
 pillow
+pymongo
+dnspython

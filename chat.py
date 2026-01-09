@@ -13,6 +13,8 @@ import io
 from PIL import Image, ImageDraw, ImageFont
 import textwrap
 import uuid
+import pymongo
+from pymongo import MongoClient
 
 load_dotenv()
 
@@ -25,10 +27,36 @@ DEVELOPER_USERNAME = "HuseyinAcar35" # 👈 Buraya kendi kullanıcı adını yaz
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+MONGO_URI = os.getenv("MONGO_URI")
 
 bot = TeleBot(BOT_TOKEN)
 client = genai.Client(api_key=GEMINI_API_KEY)
 USERS_FILE = "users_data.json"
+
+mongo_client = None
+if MONGO_URI:
+    try:
+        mongo_client = pymongo.MongoClient(MONGO_URI)
+        print("✅ MongoDB Bağlantısı Başarılı!")
+    except Exception as e:
+        print(f"⚠️ MongoDB Bağlantı Hatası: {e}")
+# 43. satırdan itibaren burayı ekle:
+        db = mongo_client["geminibot_db"]
+        users_collection = db["users"]
+
+        # JSON verilerini MongoDB'ye aktarma (Eğer MongoDB boşsa)
+        if users_collection.count_documents({}) == 0:
+            try:
+                with open(USERS_FILE, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if data:
+                        if isinstance(data, list):
+                            users_collection.insert_many(data)
+                        else:
+                            users_collection.insert_one(data)
+                        print("✅ JSON verileri buluta başarıyla taşındı!")
+            except Exception as e:
+                print(f"⚠️ JSON aktarma hatası: {e}")
 data_lock = Lock()
 market_lock = RLock() # Borsa verileri için kilit (Reentrant Lock)
 pending_duels = {} # Bekleyen düellolar için geçici hafıza
@@ -80,32 +108,59 @@ active_global_modifier = 0.0
 MARKET_FILE = "market_data.json"
 
 def save_market_data():
+    global market_prices, market_volumes, last_prices, price_history, market_news, market_trend, last_market_update
+    data = {
+        "prices": market_prices,
+        "volumes": market_volumes,
+        "last_prices": last_prices,
+        "price_history": price_history,
+        "news": market_news,
+        "trend": market_trend,
+        "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S") if last_market_update else None
+    }
+    
+    # 1. MongoDB'ye Kaydet (Bulut)
+    if mongo_client:
+        try:
+            db = mongo_client["telegram_bot_db"]
+            collection = db["market"]
+            collection.replace_one({"_id": "market_data"}, data, upsert=True)
+        except Exception as e:
+            print(f"❌ MongoDB Market Kayıt Hatası: {e}")
+            
+    # 2. Yerel Dosyaya Kaydet (Yedek)
     try:
-        with market_lock:
-            data = {
-                "prices": market_prices,
-                "volumes": market_volumes,
-                "last_prices": last_prices,
-                "price_history": price_history,
-                "news": market_news,
-                "trend": market_trend,
-                "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S")
-            }
-            with open(MARKET_FILE, "w", encoding="utf-8") as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
+        with open(MARKET_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
     except Exception as e:
-        print(f"Piyasa kaydetme hatası: {e}")
+        print(f"❌ Yerel Dosya Kayıt Hatası: {e}")
 
 def load_market_data():
     global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, market_trend
-    if not os.path.exists(MARKET_FILE):
-        return
+    
+    data = None
+    
+    # Önce MongoDB'den çekmeyi dene
+    if mongo_client:
+        try:
+            db = mongo_client["telegram_bot_db"]
+            collection = db["market"]
+            doc = collection.find_one({"_id": "market_data"})
+            if doc:
+                data = doc
+        except Exception as e:
+            print(f"MongoDB Market Yükleme Hatası: {e}")
 
-    try:
-        with market_lock:
+    # MongoDB boşsa veya yoksa yerel dosyadan dene
+    if not data and os.path.exists(MARKET_FILE):
+        try:
             with open(MARKET_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            
+        except:
+            pass
+
+    if data:
+        with market_lock:
             loaded_prices = data.get("prices", {})
             for k, v in loaded_prices.items():
                 if k in market_prices: market_prices[k] = v
@@ -122,9 +177,6 @@ def load_market_data():
             if "last_update" in data:
                 last_market_update = datetime.strptime(data["last_update"], "%Y-%m-%d %H:%M:%S")
             
-    except Exception as e:
-        print(f"Piyasa yükleme hatası: {e}")
-
 load_market_data()
 
 # 📰 Borsa Haber Şablonları
@@ -160,20 +212,41 @@ NEWS_TEMPLATES = {
 }
 
 def load_users():
-    if not os.path.exists(USERS_FILE):
-        return {}
-    try:
-        with open(USERS_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception as e:
-        print(f"Kullanıcı verileri yüklenirken hata: {e}")
-        return {}
+    # 1. MongoDB'den yüklemeyi dene
+    if mongo_client:
+        try:
+            db = mongo_client["telegram_bot_db"]
+            collection = db["users"]
+            doc = collection.find_one({"_id": "users_data"})
+            if doc and "data" in doc:
+                return doc["data"]
+        except Exception as e:
+            print(f"MongoDB Users Yükleme Hatası: {e}")
+
+    # 2. MongoDB boşsa veya yoksa yerel dosyadan yükle (Migration için önemli)
+    if os.path.exists(USERS_FILE):
+        try:
+            with open(USERS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Yerel dosya yükleme hatası: {e}")
+    
+    return {}
 
 def save_users():
     try:
         with data_lock:
-            with open(USERS_FILE, "w", encoding="utf-8") as f:
-                json.dump(users, f, ensure_ascii=False, indent=2)
+            # MongoDB'ye kaydet
+            if mongo_client:
+                db = mongo_client["telegram_bot_db"]
+                collection = db["users"]
+                # Tüm kullanıcı verisini tek bir döküman olarak saklıyoruz (Basit yapı)
+                collection.replace_one({"_id": "users_data"}, {"data": users}, upsert=True)
+            
+            # Yerel dosyaya da kaydet (Yedek/Local Dev için)
+            else:
+                with open(USERS_FILE, "w", encoding="utf-8") as f:
+                    json.dump(users, f, ensure_ascii=False, indent=2)
     except Exception as e:
         print(f"Kullanıcı verileri kaydedilirken hata: {e}")
 users = load_users()

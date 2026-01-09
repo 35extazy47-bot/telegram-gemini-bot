@@ -1,15 +1,15 @@
 {
   "1089288022": {
     "level": 95,
-    "exp": 2328,
+    "exp": 2497,
     "lives": 3,
     "category": "karisik",
     "lang": "tr",
     "name": "HÜSEYİN :)",
-    "last_mine_time": "2026-01-07 10:46:30",
+    "last_mine_time": "2026-01-07 15:45:27",
     "username": "HuseyinAcar35",
     "mode": "local",
-    "last_question_message_id": 2923,
+    "last_question_message_id": 3163,
     "wrong_answers": [
       24,
       71,
@@ -58,11 +58,15 @@
       216,
       177,
       220,
-      119
+      119,
+      254,
+      183,
+      236,
+      92
     ],
     "streak": 0,
-    "total_questions": 318,
-    "total_correct": 224,
+    "total_questions": 329,
+    "total_correct": 229,
     "is_approved": true,
     "cards": [
       4,
@@ -77,12 +81,12 @@
     ],
     "inventory": {
       "cini": 0,
-      "tuz": 0,
-      "baharat": 1,
+      "tuz": 6,
+      "baharat": 0,
       "ipek": 0,
       "demir": 0,
-      "elmas": 5,
-      "altin": 1
+      "elmas": 3,
+      "altin": 2
     },
     "beylik": {
       "level": 10,
@@ -105,9 +109,9 @@
     "daily_streak": 3,
     "cat_stats": {
       "tarih": 3,
-      "cografya": 10,
+      "cografya": 13,
       "guncel": 3,
-      "vatandaslik": 4
+      "vatandaslik": 6
     },
     "quests": {
       "date": "2026-01-07",
@@ -115,7 +119,7 @@
         {
           "type": "quiz_correct",
           "target": 10,
-          "current": 0,
+          "current": 5,
           "desc": "10 Soru Doğru Bil",
           "reward": 150,
           "done": false
@@ -123,10 +127,10 @@
         {
           "type": "mine",
           "target": 3,
-          "current": 1,
+          "current": 3,
           "desc": "3 Kez Madene İn",
           "reward": 100,
-          "done": false
+          "done": true
         },
         {
           "type": "duel_win",
@@ -138,28 +142,112 @@
         }
       ]
     },
-    "money": 18,
+    "money": 3962,
     "bank_balance": 0,
-    "total_mines": 2,
-    "current_question_id": 119,
+    "total_mines": 5,
+    "current_question_id": 92,
     "limit_orders": [
       {
-        "id": "5ef8de",
+        "id": "81ca55",
         "type": "AL",
-        "item": "ipek",
-        "target": 300,
-        "amount": 5,
-        "date": "2026-01-07 14:55"
+        "item": "tuz",
+        "target": 12,
+        "amount": 15,
+        "date": "2026-01-07 17:40"
       },
       {
-        "id": "39965f",
-        "type": "SAT",
+        "id": "c17918",
+        "type": "AL",
         "item": "elmas",
-        "target": 700,
-        "amount": 5,
-        "date": "2026-01-07 16:31"
+        "target": 500,
+        "amount": 6,
+        "date": "2026-01-07 19:22"
       }
-    ]
+    ],
+    "orders": [
+      {
+        "type": "ALIM",
+        "item": "Tuz 🧂",
+        "amount": 1,
+        "price": 17,
+        "total": 17,
+        "date": "2026-01-07 16:56"
+      },
+      {
+        "type": "ALIM",
+        "item": "Baharat 🌶️",
+        "amount": 10,
+        "price": 47,
+        "total": 470,
+        "date": "2026-01-07 18:08"
+      },
+      {
+        "type": "SATIM",
+        "item": "Elmas 💎",
+        "amount": 5,
+        "price": 316,
+        "total": 1580,
+        "date": "2026-01-07 18:11"
+      },
+      {
+        "type": "SATIM",
+        "item": "Tuz 🧂",
+        "amount": 1,
+        "price": 22,
+        "total": 22,
+        "date": "2026-01-07 18:11"
+      },
+      {
+        "type": "SATIM",
+        "item": "Altın 🥇",
+        "amount": 2,
+        "price": 283,
+        "total": 566,
+        "date": "2026-01-07 18:11"
+      },
+      {
+        "type": "SATIM",
+        "item": "Baharat 🌶️",
+        "amount": 11,
+        "price": 42,
+        "total": 462,
+        "date": "2026-01-07 18:11"
+      },
+      {
+        "type": "ALIM",
+        "item": "Elmas 💎",
+        "amount": 8,
+        "price": 300,
+        "total": 2400,
+        "date": "2026-01-07 18:12"
+      },
+      {
+        "type": "ALIM",
+        "item": "Tuz 🧂",
+        "amount": 6,
+        "price": 24,
+        "total": 144,
+        "date": "2026-01-07 18:12"
+      },
+      {
+        "type": "OTOMATİK SATIM",
+        "item": "Elmas 💎",
+        "amount": 5,
+        "price": 791,
+        "total": 3955,
+        "date": "2026-01-07 19:21"
+      }
+    ],
+    "portfolio": {
+      "elmas": {
+        "amount": 3,
+        "total_cost": 900.0
+      },
+      "tuz": {
+        "amount": 6,
+        "total_cost": 144
+      }
+    }
   },
   "8423482808": {
     "level": 1,
