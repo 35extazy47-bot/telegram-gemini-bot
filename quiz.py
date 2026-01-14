@@ -510,3 +510,39 @@ def register_quiz_handlers(bot, tirtil_utils):
             bot.send_message(call.message.chat.id, "🤝 **BERABERE!** Paralar iade edildi.")
             
         del pending_duels[duel_id]; save_users()
+
+    @bot.message_handler(commands=['bahis'])
+    def set_bet(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        try: amount = int(message.text.split()[1])
+        except: bot.reply_to(message, "⚠️ Kullanım: /bahis <miktar>"); return
+        if amount <= 0: bot.reply_to(message, "❌ Pozitif sayı gir."); return
+        if users[user_id]["exp"] < amount: bot.reply_to(message, f"❌ Yetersiz EXP! ({users[user_id]['exp']})"); return
+        if users[user_id].get("active_bet", 0) > 0: bot.reply_to(message, "⚠️ Zaten bahsin var!"); return
+        
+        users[user_id]["exp"] -= amount; users[user_id]["active_bet"] = amount; save_users()
+        bot.reply_to(message, f"🎲 **BAHİS OYNANDI!**\nMasaya {amount} EXP koydun. Doğru bilirsen 2 katı!")
+
+    @bot.message_handler(commands=['soruekle'])
+    def suggest_question(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        if len(message.text) < 15: bot.reply_to(message, "⚠️ Lütfen soruyu tam yaz.\nÖrnek: `/soruekle Soru... A)... B)... Cevap:A`", parse_mode="Markdown"); return
+        
+        suggestion = message.text.replace("/soruekle", "").strip()
+        target_id = next((uid for uid, u in users.items() if u.get("username") == DEVELOPER_USERNAME), None)
+        if target_id:
+            bot.send_message(target_id, f"📩 **SORU ÖNERİSİ**\n👤 @{message.from_user.username}\n📝 {suggestion}")
+            bot.reply_to(message, "✅ Önerin iletildi!")
+
+    @bot.message_handler(commands=['sorudurumu'])
+    def question_stats(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        stats = {}
+        for q in QUIZ_QUESTIONS:
+            cat = q["category"].capitalize()
+            stats[cat] = stats.get(cat, 0) + 1
+        text = f"📊 **SORU BANKASI**\n🗂 Toplam: {len(QUIZ_QUESTIONS)}\n" + "\n".join([f"🔹 {k}: {v}" for k, v in stats.items()])
+        bot.reply_to(message, text)

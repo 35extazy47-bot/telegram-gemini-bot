@@ -231,6 +231,50 @@ def create_portfolio_image(user_data):
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio, total_portfolio_value, total_profit_loss
 
+def create_inventory_image(user_data):
+    width, height = 800, 600
+    img = Image.new('RGB', (width, height), color=(35, 39, 42))
+    draw = ImageDraw.Draw(img)
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+        title_font, header_font, item_font = ImageFont.truetype(font_path, 40), ImageFont.truetype(font_path, 28), ImageFont.truetype(font_path, 22)
+    except:
+        title_font, header_font, item_font = ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default()
+
+    draw.rectangle([(20, 80), (300, 580)], fill=(44, 47, 51))
+    draw.text((30, 30), "🎒 OYUNCU ÇANTASI", font=title_font, fill=(255, 215, 0))
+    
+    y = 100
+    draw.text((40, y), "👤 Sahibi:", font=item_font, fill=(150, 150, 150)); draw.text((40, y+25), user_data.get("name", "Bilinmiyor")[:15], font=header_font, fill=(255, 255, 255)); y += 90
+    draw.text((40, y), "💵 Bakiye:", font=item_font, fill=(150, 150, 150)); draw.text((40, y+25), f"{user_data.get('money', 0)} $", font=header_font, fill=(46, 204, 113)); y += 90
+    draw.text((40, y), "❤️ Can:", font=item_font, fill=(150, 150, 150)); draw.text((40, y+25), f"{user_data.get('lives', 3)}", font=header_font, fill=(231, 76, 60)); y += 90
+    draw.text((40, y), "⛏️ Ekipman:", font=item_font, fill=(150, 150, 150)); draw.text((40, y+25), "Elmas Kazma" if user_data.get("has_pickaxe") else "Yok", font=item_font, fill=(52, 152, 219))
+
+    items = []
+    inv = user_data.get("inventory", {})
+    if inv.get("joker_50", 0) > 0: items.append({"name": "%50 Joker", "count": inv["joker_50"], "icon": "💡"})
+    if inv.get("joker_pass", 0) > 0: items.append({"name": "Pas Geç", "count": inv["joker_pass"], "icon": "⏭"})
+    if inv.get("joker_audience", 0) > 0: items.append({"name": "Seyirci", "count": inv["joker_audience"], "icon": "👥"})
+    if inv.get("joker_ai", 0) > 0: items.append({"name": "AI İpucu", "count": inv["joker_ai"], "icon": "🤖"})
+    if inv.get("streak_saver", 0) > 0: items.append({"name": "Koruyucu", "count": inv["streak_saver"], "icon": "🛡️"})
+    for code, count in inv.items():
+        if count > 0 and code in TRADE_GOODS: items.append({"name": TRADE_GOODS[code]["name"].split()[0], "count": count, "icon": "📦"})
+
+    start_x, start_y, box_w, box_h, gap = 340, 80, 210, 100, 20
+    if not items: draw.text((start_x + 80, start_y + 200), "Çanta Boş... 🕸️", font=header_font, fill=(100, 100, 100))
+    
+    for i, item in enumerate(items):
+        col, row = i % 2, i // 2
+        x, y = start_x + (col * (box_w + gap)), start_y + (row * (box_h + gap))
+        draw.rectangle([(x, y), (x + box_w, y + box_h)], fill=(44, 47, 51))
+        draw.text((x + 15, y + 30), item["icon"], font=header_font, fill=(255, 255, 255))
+        draw.text((x + 60, y + 20), item["name"], font=item_font, fill=(255, 255, 255))
+        draw.text((x + 60, y + 50), f"x{item['count']}", font=header_font, fill=(255, 215, 0))
+
+    bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
+    return bio
+
 def register_market_handlers(bot, tirtil_utils):
     """Ekonomi ile ilgili tüm komutları ve callback'leri bota kaydeder."""
     global get_badges, update_quest_progress
@@ -512,3 +556,45 @@ def register_market_handlers(bot, tirtil_utils):
         save_users()
         bot.reply_to(message, "🏳️ **İFLAS BAYRAĞI ÇEKİLDİ!**\nSana yeni bir başlangıç için 1000 $ verildi.")
 
+    @bot.message_handler(commands=['market'])
+    def market_menu(message):
+        if not users.get(str(message.from_user.id), {}).get("is_approved", True): return
+        markup = InlineKeyboardMarkup()
+        markup.add(InlineKeyboardButton("💡 %50 Joker (100 $)", callback_data="buy_joker_50"))
+        markup.add(InlineKeyboardButton("⏭ Pas Geç (50 $)", callback_data="buy_joker_pass"))
+        markup.add(InlineKeyboardButton("👥 Seyirci (150 $)", callback_data="buy_joker_audience"))
+        markup.add(InlineKeyboardButton("🤖 AI İpucu (200 $)", callback_data="buy_joker_ai"))
+        markup.add(InlineKeyboardButton("❤️ +1 Can (1000 $)", callback_data="buy_life"))
+        markup.add(InlineKeyboardButton("🎁 Şans Kutusu (500 $)", callback_data="buy_box"))
+        markup.add(InlineKeyboardButton("⛏️ Elmas Kazma (5000 $)", callback_data="buy_pickaxe"))
+        markup.add(InlineKeyboardButton("🛡️ Seri Koruyucu (2000 $)", callback_data="buy_streak_saver"))
+        bot.send_message(message.chat.id, "🛒 **MARKET**\nPuanlarını harcayarak güçlenebilirsin!", reply_markup=markup)
+
+    @bot.callback_query_handler(func=lambda c: c.data.startswith("buy_"))
+    def market_buy(call):
+        user_id = str(call.from_user.id)
+        if user_id not in users: return
+        item, money = call.data.replace("buy_", ""), users[user_id].get("money", 0)
+        prices = {"joker_50": 100, "joker_pass": 50, "joker_audience": 150, "joker_ai": 200, "life": 1000, "box": 500, "pickaxe": 5000, "streak_saver": 2000}
+        
+        if money < prices.get(item, 0): bot.answer_callback_query(call.id, "❌ Yetersiz Bakiye!", show_alert=True); return
+        users[user_id]["money"] -= prices[item]
+        
+        if item == "life": users[user_id]["lives"] += 1; msg = "✅ +1 Can alındı!"
+        elif item == "pickaxe": users[user_id]["has_pickaxe"] = True; msg = "✅ Elmas Kazma alındı!"
+        elif item == "box":
+            reward = random.choice(["money_200", "money_1000", "life_1", "empty"])
+            if reward == "money_200": users[user_id]["money"] += 200; msg = "🎁 Kutudan 200$ çıktı!"
+            elif reward == "money_1000": users[user_id]["money"] += 1000; msg = "🎁 TEBRİKLER! 1000$ çıktı!"
+            elif reward == "life_1": users[user_id]["lives"] += 1; msg = "🎁 Kutudan 1 Can çıktı!"
+            else: msg = "🎁 Kutu boş çıktı..."
+            bot.send_message(call.message.chat.id, msg)
+        else:
+            users[user_id].setdefault("inventory", {})[item] = users[user_id].get("inventory", {}).get(item, 0) + 1
+            msg = f"✅ {item} alındı!"
+        save_users(); bot.answer_callback_query(call.id, msg)
+
+    @bot.message_handler(commands=['envanter'])
+    def show_inventory(message):
+        try: bot.send_photo(message.chat.id, create_inventory_image(users[str(message.from_user.id)]), caption="🎒 **Envanter Durumu**")
+        except: bot.reply_to(message, "Envanter görüntülenemedi.")

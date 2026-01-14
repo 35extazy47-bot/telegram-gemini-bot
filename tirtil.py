@@ -1,6 +1,7 @@
 import os
 import json
 import threading
+from threading import Timer
 import time
 import random
 from datetime import datetime, timedelta, timezone
@@ -126,6 +127,167 @@ def create_profile_image(user_id, user_data):
     
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio
+
+def create_tarot_image(cards):
+    width, height = 800, 450
+    img = Image.new('RGB', (width, height), color=(25, 20, 40))
+    draw = ImageDraw.Draw(img)
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+        title_font, label_font = ImageFont.truetype(font_path, 36), ImageFont.truetype(font_path, 20)
+    except: title_font, label_font = ImageFont.load_default(), ImageFont.load_default()
+
+    draw.text((260, 30), "🔮 TAROT FALI 🔮", font=title_font, fill=(186, 85, 211))
+    positions = ["GEÇMİŞ", "ŞİMDİ", "GELECEK"]
+    for i, card_name in enumerate(cards):
+        x = 80 + (i * 240)
+        draw.rectangle([(x, 100), (x + 180, 380)], fill=(48, 25, 52), outline=(255, 215, 0), width=3)
+        draw.text((x + 50, 115), positions[i], font=label_font, fill=(200, 200, 200))
+        draw.text((x + 20, 200), card_name, font=label_font, fill=(255, 255, 255))
+
+    bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
+    return bio
+
+# --- Admin & Genel Komutlar ---
+@bot.message_handler(commands=['admin_panel'])
+def admin_panel(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.add(InlineKeyboardButton("👥 Üyeler", callback_data="admin_user_list"), InlineKeyboardButton("🚫 Yasaklılar", callback_data="admin_banned_list"))
+    markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("📊 Anket", callback_data="admin_help_anket"))
+    markup.add(InlineKeyboardButton("🎁 Hediye", callback_data="admin_help_hediye"), InlineKeyboardButton("💾 Yedek", callback_data="admin_backup"))
+    bot.send_message(message.chat.id, "👑 **YÖNETİCİ PANELİ**", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("admin_"))
+def admin_callbacks(call):
+    if call.from_user.username != DEVELOPER_USERNAME: return
+    if call.data == "admin_user_list":
+        text = "📋 **Üyeler:**\n" + "\n".join([f"{i+1}. {u.get('name')} (@{u.get('username')}) ID: {uid}" for i, (uid, u) in enumerate(users.items())])
+        if len(text) > 4000: text = text[:4000] + "..."
+        bot.send_message(call.message.chat.id, text)
+    elif call.data == "admin_backup":
+        try:
+            with open(USERS_FILE, "rb") as f: bot.send_document(call.message.chat.id, f, caption=f"💾 Yedek: {datetime.now()}")
+        except: bot.send_message(call.message.chat.id, "Yedek alınamadı.")
+    elif "help" in call.data:
+        bot.answer_callback_query(call.id, "Komut kullanımı için koda bakınız.", show_alert=True)
+
+@bot.message_handler(commands=['duyuru'])
+def admin_broadcast(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+    text = message.text.replace("/duyuru", "").strip()
+    if not text: return
+    count = 0
+    for uid in users:
+        try: bot.send_message(uid, f"📢 **DUYURU**\n\n{text}"); count += 1
+        except: pass
+    bot.reply_to(message, f"✅ {count} kişiye iletildi.")
+
+@bot.message_handler(commands=['hediye'])
+def admin_gift(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+    try:
+        target, amount = message.text.split()[1], int(message.text.split()[2])
+        uid = target if target in users else next((u for u, d in users.items() if d.get("username") == target.replace("@", "")), None)
+        if uid:
+            users[uid]["money"] = users[uid].get("money", 0) + amount; save_users()
+            bot.send_message(uid, f"🎁 **HEDİYE!** Hesabına {amount} $ yüklendi."); bot.reply_to(message, "✅ Gönderildi.")
+    except: bot.reply_to(message, "Hata: /hediye <ID/@User> <Miktar>")
+
+@bot.message_handler(commands=['ban', 'unban'])
+def ban_manager(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+    try:
+        cmd, target = message.text.split()[0], message.text.split()[1]
+        if target in users:
+            users[target]["is_banned"] = (cmd == "/ban"); save_users()
+            bot.reply_to(message, f"✅ İşlem tamam: {cmd} {target}")
+    except: pass
+
+@bot.message_handler(commands=['gunluk'])
+def daily_reward(message):
+    user_id = str(message.from_user.id)
+    today = datetime.now().strftime("%Y-%m-%d")
+    if users[user_id].get("last_daily_reward") == today: bot.reply_to(message, "⏳ Bugünün ödülünü zaten aldın!"); return
+    
+    streak = users[user_id].get("daily_streak", 0) + 1 if users[user_id].get("last_daily_reward") == (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d") else 1
+    reward = 100 + (streak * 20)
+    users[user_id].update({"money": users[user_id].get("money", 0) + reward, "last_daily_reward": today, "daily_streak": streak})
+    save_users()
+    bot.reply_to(message, f"🎁 **GÜNLÜK ÖDÜL!**\n💰 +{reward} $\n🔥 Seri: {streak} Gün")
+
+@bot.message_handler(commands=['ozet'])
+def get_summary(message):
+    if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
+    try:
+        topic = message.text.replace("/ozet", "").strip()
+        if not topic: bot.reply_to(message, "⚠️ Konu yazmalısın."); return
+        res = safe_generate_content(f"'{topic}' konusunu KPSS öğrencisi için maddeler halinde özetle.")
+        bot.reply_to(message, f"📝 **ÖZET: {topic.upper()}**\n\n{res.text}", parse_mode="Markdown")
+    except: bot.reply_to(message, "Hata oluştu.")
+
+@bot.message_handler(commands=['ruya'])
+def dream_interpret(message):
+    if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
+    try:
+        dream = message.text.replace("/ruya", "").strip()
+        if not dream: bot.reply_to(message, "⚠️ Rüyayı yazmalısın."); return
+        res = safe_generate_content(f"Rüya tabircisi gibi konuş. Şu rüyayı yorumla: '{dream}'")
+        bot.reply_to(message, f"🌙 **RÜYA TABİRİ**\n\n{res.text}")
+    except: bot.reply_to(message, "Hata oluştu.")
+
+@bot.message_handler(commands=['tarot'])
+def tarot_reading(message):
+    if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
+    msg = bot.reply_to(message, "🔮 Niyetini yaz...")
+    bot.register_next_step_handler(msg, perform_tarot_reading)
+
+def perform_tarot_reading(message):
+    try:
+        cards = ["Deli", "Büyücü", "Azize", "İmparatoriçe", "İmparator", "Aşıklar", "Savaş Arabası", "Güç", "Ermiş", "Kader Çarkı", "Adalet", "Asılan Adam", "Ölüm", "Denge", "Şeytan", "Yıkılan Kule", "Yıldız", "Ay", "Güneş", "Mahkeme", "Dünya"]
+        drawn = random.sample(cards, 3)
+        res = safe_generate_content(f"Tarot falı bak. Soru: '{message.text}'. Kartlar: {drawn}. Yorumla.")
+        photo = create_tarot_image(drawn)
+        bot.send_photo(message.chat.id, photo, caption=f"🔮 **TAROT FALI**\n\n{res.text[:900]}")
+    except: bot.reply_to(message, "Fal bakılamadı.")
+
+@bot.message_handler(commands=['burc'])
+def daily_horoscope(message):
+    if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
+    msg = bot.reply_to(message, "♈ Burcunu yaz...")
+    bot.register_next_step_handler(msg, lambda m: bot.reply_to(m, safe_generate_content(f"{m.text} burcu için günlük yorum yap.").text))
+
+@bot.message_handler(commands=['bilgi'])
+def random_fact(message):
+    if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
+    bot.reply_to(message, safe_generate_content("İlginç bir genel kültür bilgisi ver.").text)
+
+@bot.message_handler(commands=['tarihtebugun'])
+def history_today(message):
+    bot.reply_to(message, safe_generate_content(f"Tarihte bugün ({datetime.now().strftime('%d %B')}) ne oldu?").text)
+
+@bot.message_handler(commands=['pomodoro'])
+def start_pomodoro(message):
+    bot.reply_to(message, "🍅 **Pomodoro Başladı!** 25 dk odaklan.")
+    Timer(1500, lambda: bot.send_message(message.chat.id, "⏰ **Süre Doldu!** Mola ver.")).start()
+
+@bot.message_handler(commands=['help', 'yardim', 'menu'])
+def help_guide(message):
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.add(InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"), InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy"))
+    markup.add(InlineKeyboardButton("👤 Profil", callback_data="help_profile"), InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai"))
+    bot.send_message(message.chat.id, "📚 **YARDIM MENÜSÜ**", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("help_"))
+def help_callback(call):
+    cat = call.data
+    if cat == "help_games": text = "🎮 **OYUNLAR**\n/quiz - Soru Çöz\n/maraton - Maraton Modu\n/duello - Düello At\n/bahis - Bahis Oyna\n/soruekle - Soru Öner"
+    elif cat == "help_economy": text = "💰 **EKONOMİ**\n/borsa - Borsa\n/al - /sat\n/banka - Banka\n/kaz - Maden\n/market - Eşya Al\n/envanter - Çanta\n/zenginler - Sıralama"
+    elif cat == "help_profile": text = "👤 **PROFİL**\n/profil - Profilin\n/top10 - Liderlik\n/gorevler - Görevler"
+    else: text = "🔮 **DİĞER**\n/ozet - Konu Özeti\n/ruya - Rüya Tabiri\n/tarot - Fal\n/burc - Burç\n/bilgi - İlginç Bilgi"
+    bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("🔙 Geri", callback_data="help_back")))
+    if cat == "help_back": help_guide(call.message)
 
 # --- Ana Komut Handler'ları ---
 @bot.message_handler(commands=['start'])
@@ -255,6 +417,7 @@ if __name__ == "__main__":
         types.BotCommand("banka", "Banka İşlemleri"),
         types.BotCommand("kaz", "Maden Kaz"),
         types.BotCommand("top10", "Liderlik Tablosu"),
+        types.BotCommand("market", "Eşya Marketi"),
         types.BotCommand("gorevler", "Günlük Görevler"),
     ])
     
