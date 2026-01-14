@@ -14,6 +14,7 @@ MONGO_URI = os.getenv("MONGO_URI")
 DEVELOPER_USERNAME = "HuseyinAcar35"
 USERS_FILE = "users_data.json"
 MARKET_FILE = "market_data.json"
+BANNED_WORDS = ["aptal", "salak", "gerizekalı", "mal", "ezik", "amq", "orospu"]
 
 # --- Quiz Data ---
 try:
@@ -30,7 +31,7 @@ db = None
 if MONGO_URI is not None:
     try:
         mongo_client = pymongo.MongoClient(MONGO_URI)
-        db = mongo_client["geminibot_db"]
+        db = mongo_client["telegram_bot_db"]
         users_collection = db["users"]
         print("✅ MongoDB Bağlantısı Başarılı!")
 

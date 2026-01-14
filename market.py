@@ -12,7 +12,7 @@ from database import (
     users, save_users, market_prices, market_volumes, last_prices,
     price_history, market_news, market_trend, last_market_update,
     TRADE_GOODS, save_market_data, market_lock, data_lock, active_news_item,
-    active_news_direction, active_global_modifier, last_news_update
+    active_news_direction, active_global_modifier, last_news_update, DEVELOPER_USERNAME
 )
 
 # Bu fonksiyonlar tirtil.py'den register fonksiyonu aracılığıyla alınacak
@@ -113,7 +113,7 @@ def apply_bank_interest(bot):
                     u["bank_balance"] += interest; count += 1
                     try: bot.send_message(uid, f"🏦 **GÜNLÜK FAİZ GELDİ!**\nKazanç: +{interest} $\nYeni Bakiye: {u['bank_balance']} $")
                     except: pass
-    if count > 0: print(f"🏦 {count} kişiye faiz dağıtıldı.")
+    if count > 0: save_users(); print(f"🏦 {count} kişiye faiz dağıtıldı.")
 
 def create_market_image(user_data=None):
     num_items, row_height, header_height, footer_height = len(TRADE_GOODS), 80, 180, 60
@@ -162,6 +162,75 @@ def create_market_image(user_data=None):
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio
 
+def create_portfolio_image(user_data):
+    width = 800
+    portfolio = user_data.get("portfolio", {})
+    num_items = len([v for v in portfolio.values() if v.get("amount", 0) > 0])
+    height = 200 + (num_items * 50)
+    
+    img = Image.new('RGB', (width, height), color=(25, 28, 36))
+    draw = ImageDraw.Draw(img)
+    
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+        title_font, header_font, row_font = ImageFont.truetype(font_path, 36), ImageFont.truetype(font_path, 20), ImageFont.truetype(font_path, 18)
+    except:
+        title_font, header_font, row_font = ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default()
+
+    draw.text((40, 20), f"💼 {user_data.get('name', '')} Portföyü", font=title_font, fill=(255, 215, 0))
+
+    if not num_items:
+        draw.text((40, 100), "Portföyün boş...", font=header_font, fill=(150, 150, 150))
+        bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
+        return bio, 0, 0
+
+    y = 90
+    headers = ["ÜRÜN", "ADET", "ORT. MALİYET", "P&L", "GÜNCEL DEĞER"]
+    x_pos = [40, 250, 400, 550, 680]
+    for i, h in enumerate(headers): draw.text((x_pos[i], y), h, font=header_font, fill=(150, 150, 150))
+    
+    y += 30
+    total_portfolio_value, total_initial_cost = 0, 0
+
+    with market_lock:
+        for code, data in portfolio.items():
+            if data.get("amount", 0) <= 0: continue
+            item_info = TRADE_GOODS.get(code)
+            if not item_info: continue
+            
+            current_price, amount, total_cost = market_prices.get(code, 0), data["amount"], data["total_cost"]
+            avg_cost, current_value = total_cost / amount if amount > 0 else 0, current_price * amount
+            profit_loss = current_value - total_cost
+            
+            total_portfolio_value += current_value; total_initial_cost += total_cost
+            
+            draw.line([(40, y-5), (width-40, y-5)], fill=(50, 50, 70), width=1)
+            draw.text((x_pos[0], y), item_info["name"], font=row_font, fill=(255,255,255))
+            draw.text((x_pos[1], y), str(int(amount)), font=row_font, fill=(255,255,255))
+            draw.text((x_pos[2], y), f"{avg_cost:.1f} $", font=row_font, fill=(255,255,255))
+            
+            pl_color = (46, 204, 113) if profit_loss >= 0 else (231, 76, 60)
+            pl_sign = "+" if profit_loss >= 0 else ""
+            draw.text((x_pos[3], y), f"{pl_sign}{profit_loss:.0f} $", font=row_font, fill=pl_color)
+            draw.text((x_pos[4], y), f"{current_value:.0f} $", font=row_font, fill=(255, 215, 0))
+            y += 50
+
+    total_profit_loss = total_portfolio_value - total_initial_cost
+    draw.line([(40, y+10), (width-40, y+10)], fill=(80, 80, 80), width=2); y += 30
+    
+    draw.text((400, y), "Toplam Değer:", font=header_font, fill=(150, 150, 150))
+    draw.text((680, y), f"{total_portfolio_value:.0f} $", font=header_font, fill=(255, 215, 0))
+    y += 40
+    
+    pl_color = (46, 204, 113) if total_profit_loss >= 0 else (231, 76, 60)
+    pl_sign = "+" if total_profit_loss >= 0 else ""
+    draw.text((400, y), "Toplam Kar/Zarar:", font=header_font, fill=(150, 150, 150))
+    draw.text((680, y), f"{pl_sign}{total_profit_loss:.0f} $", font=header_font, fill=pl_color)
+
+    bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
+    return bio, total_portfolio_value, total_profit_loss
+
 def register_market_handlers(bot, tirtil_utils):
     """Ekonomi ile ilgili tüm komutları ve callback'leri bota kaydeder."""
     global get_badges, update_quest_progress
@@ -171,10 +240,19 @@ def register_market_handlers(bot, tirtil_utils):
     @bot.message_handler(commands=['borsa'])
     def check_market(message):
         chat_id = message.chat.id
-        if hasattr(message, 'message'): chat_id = message.message.chat.id; bot.delete_message(chat_id, message.message.message_id)
+        user_id = str(message.from_user.id)
+        if hasattr(message, 'message'): 
+            chat_id = message.message.chat.id
+            user_id = str(message.from_user.id)
+            bot.delete_message(chat_id, message.message.message_id)
+        
         try:
-            photo = create_market_image(users.get(str(message.from_user.id)))
-            markup = InlineKeyboardMarkup().add(InlineKeyboardButton("🔄 Yenile", callback_data="market_refresh"), InlineKeyboardButton("🤫 Dedikodu Al (100$)", callback_data="market_rumor"), InlineKeyboardButton("📊 Detaylı Grafik", callback_data="market_graph_menu"))
+            photo = create_market_image(users.get(user_id))
+            markup = InlineKeyboardMarkup().add(
+                InlineKeyboardButton("🔄 Yenile", callback_data="market_refresh"), 
+                InlineKeyboardButton("🤫 Dedikodu Al (100$)", callback_data="market_rumor"), 
+                InlineKeyboardButton("📊 Detaylı Grafik", callback_data="market_graph_menu")
+            )
             bot.send_photo(chat_id, photo, caption="🛒 **İşlemler:**\n`/al <mal> <adet>` | `/sat <mal> <adet>`\n`/emir_ver` | `/portfoyum`", reply_markup=markup)
         except Exception as e:
             bot.send_message(chat_id, f"Borsa görseli oluşturulurken hata: {e}")
@@ -182,9 +260,11 @@ def register_market_handlers(bot, tirtil_utils):
     @bot.callback_query_handler(func=lambda c: c.data.startswith("market_"))
     def market_actions(call):
         if call.data == "market_refresh": check_market(call)
-        elif call.data == "market_rumor": call.message.from_user.id = call.from_user.id; buy_rumor(call.message)
+        elif call.data == "market_rumor": 
+            call.message.from_user.id = call.from_user.id
+            buy_rumor(call.message)
         elif call.data == "market_graph_menu":
-            markup = InlineKeyboardMarkup().add(*[InlineKeyboardButton(d["name"], callback_data=f"show_graph_{c}") for c, d in TRADE_GOODS.items()])
+            markup = InlineKeyboardMarkup(row_width=2).add(*[InlineKeyboardButton(d["name"], callback_data=f"show_graph_{c}") for c, d in TRADE_GOODS.items()])
             bot.send_message(call.message.chat.id, "📊 Hangi ürünün grafiğini görmek istersin?", reply_markup=markup)
 
     @bot.callback_query_handler(func=lambda c: c.data.startswith("show_graph_"))
@@ -269,4 +349,166 @@ def register_market_handlers(bot, tirtil_utils):
         update_quest_progress(user_id, "mine"); save_users()
         bot.edit_message_text(msg, message.chat.id, wait_msg.message_id)
 
-    # Diğer market komutları (banka, kredi, portfoy, vs.) buraya eklenecek...
+    @bot.message_handler(commands=['banka'])
+    def bank_menu(message):
+        u = users[str(message.from_user.id)]
+        text = f"🏦 **MERKEZ BANKASI** 🏦\n\n👛 Cüzdan: {u.get('money', 0)} $\n💳 Banka Hesabı: {u.get('bank_balance', 0)} $\n\n📈 Günlük Faiz: %5\n\n📉 Kredi Borcu: {u.get('loan', 0)} $\n\n**İşlemler:**\n`/kredi <miktar>` | `/kredi_ode <miktar>`\n`/yatir <miktar>` | `/cek <miktar>`"
+        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['yatir'])
+    def deposit_money(message):
+        user_id = str(message.from_user.id)
+        try: amount = int(message.text.split()[1])
+        except: bot.reply_to(message, "⚠️ Kullanım: `/yatir <miktar>`"); return
+        if amount <= 0: return
+        if users[user_id].get("money", 0) < amount: bot.reply_to(message, "❌ Cüzdanında bu kadar para yok!"); return
+        users[user_id]["money"] -= amount
+        users[user_id]["bank_balance"] = users[user_id].get("bank_balance", 0) + amount
+        save_users()
+        bot.reply_to(message, f"✅ Bankaya {amount} $ yatırıldı.\nYeni Banka Bakiyesi: {users[user_id]['bank_balance']} $")
+
+    @bot.message_handler(commands=['cek'])
+    def withdraw_money(message):
+        user_id = str(message.from_user.id)
+        try: amount = int(message.text.split()[1])
+        except: bot.reply_to(message, "⚠️ Kullanım: `/cek <miktar>`"); return
+        if amount <= 0: return
+        if users[user_id].get("bank_balance", 0) < amount: bot.reply_to(message, "❌ Bankada bu kadar paran yok!"); return
+        users[user_id]["bank_balance"] -= amount
+        users[user_id]["money"] = users[user_id].get("money", 0) + amount
+        save_users()
+        bot.reply_to(message, f"✅ Bankadan {amount} $ çekildi.\nYeni Cüzdan Bakiyesi: {users[user_id]['money']} $")
+
+    @bot.message_handler(commands=['kredi'])
+    def take_loan(message):
+        user_id = str(message.from_user.id)
+        try: amount = int(message.text.split()[1])
+        except: bot.reply_to(message, "⚠️ Kullanım: `/kredi <miktar>`"); return
+        if amount <= 0: return
+        level, max_loan, current_loan = users[user_id].get("level", 1), users[user_id].get("level", 1) * 5000, users[user_id].get("loan", 0)
+        if current_loan + amount > max_loan: bot.reply_to(message, f"❌ Kredi limitin yetersiz! (Maks: {max_loan} $)"); return
+        users[user_id]["loan"] = current_loan + amount
+        users[user_id]["money"] = users[user_id].get("money", 0) + amount
+        save_users()
+        bot.reply_to(message, f"✅ Kredi Onaylandı! Hesaba geçen: {amount} $\nToplam Borç: {users[user_id]['loan']} $")
+
+    @bot.message_handler(commands=['kredi_ode'])
+    def pay_loan(message):
+        user_id = str(message.from_user.id)
+        current_loan = users[user_id].get("loan", 0)
+        if current_loan <= 0: bot.reply_to(message, "🎉 Borcun yok!"); return
+        try: amount = int(message.text.split()[1])
+        except: amount = current_loan
+        if amount <= 0: return
+        if amount > current_loan: amount = current_loan
+        if users[user_id].get("money", 0) < amount: bot.reply_to(message, f"❌ Yetersiz Bakiye!"); return
+        users[user_id]["money"] -= amount
+        users[user_id]["loan"] -= amount
+        save_users()
+        bot.reply_to(message, f"✅ Ödeme Başarılı! Ödenen: {amount} $\nKalan Borç: {users[user_id]['loan']} $")
+
+    @bot.message_handler(commands=['transfer'])
+    def transfer_money(message):
+        user_id = str(message.from_user.id)
+        try:
+            args = message.text.split()
+            target_input, amount = args[1], int(args[2])
+        except: bot.reply_to(message, "⚠️ Kullanım: `/transfer <@KullanıcıAdı/ID> <Miktar>`"); return
+        if amount <= 0: return
+        if users[user_id].get("money", 0) < amount: bot.reply_to(message, f"❌ Yetersiz bakiye!"); return
+        
+        target_id = next((uid for uid, u in users.items() if u.get("username") == target_input.lstrip("@") or uid == target_input), None)
+        if not target_id: bot.reply_to(message, "❌ Kullanıcı bulunamadı."); return
+        if target_id == user_id: bot.reply_to(message, "❌ Kendine para gönderemezsin."); return
+
+        tax, net_amount = int(amount * 0.05), amount - int(amount * 0.05)
+        users[user_id]["money"] -= amount
+        users[target_id]["money"] = users[target_id].get("money", 0) + net_amount
+        save_users()
+        bot.reply_to(message, f"✅ Transfer Başarılı!\n📤 Gönderilen: {amount} $\n🏛️ Vergi: -{tax} $\n📥 Alıcıya Geçen: {net_amount} $")
+        try: bot.send_message(target_id, f"💸 **PARA GELDİ!**\n@{users[user_id].get('username', 'Biri')} sana {net_amount} $ gönderdi.")
+        except: pass
+
+    @bot.message_handler(commands=['portfoyum'])
+    def show_portfolio(message):
+        user_id = str(message.from_user.id)
+        if "portfolio" not in users[user_id]: users[user_id]["portfolio"] = {}; save_users()
+        try:
+            photo, total_value, total_pl = create_portfolio_image(users[user_id])
+            initial_cost = total_value - total_pl
+            pl_percent = (total_pl / initial_cost * 100) if initial_cost != 0 else 0
+            pl_sign = "+" if total_pl >= 0 else ""
+            caption = f"💰 **Portföy Özeti**\n\n**Toplam Değer:** {total_value:.0f} $\n**Toplam Kar/Zarar:** {pl_sign}{total_pl:.0f} $ ({pl_sign}{pl_percent:.2f}%)"
+            bot.send_photo(message.chat.id, photo, caption=caption, parse_mode="Markdown")
+        except Exception as e:
+            bot.reply_to(message, f"Portföy hatası: {e}")
+
+    @bot.message_handler(commands=['emir_ver'])
+    def set_limit_order(message):
+        user_id = str(message.from_user.id)
+        try:
+            _, order_type, item_code, target_price, amount = message.text.lower().split()
+            target_price, amount = int(target_price), int(amount)
+        except: bot.reply_to(message, "⚠️ Kullanım: `/emir_ver <al/sat> <mal> <fiyat> <adet>`"); return
+        if order_type not in ["al", "sat"] or item_code not in TRADE_GOODS or target_price <= 0 or amount <= 0:
+            bot.reply_to(message, "❌ Geçersiz parametreler."); return
+        
+        users[user_id].setdefault("limit_orders", []).append({
+            "id": str(uuid.uuid4())[:6], "type": order_type.upper(), "item": item_code, 
+            "target": target_price, "amount": amount, "date": datetime.now().strftime("%Y-%m-%d %H:%M")
+        }); save_users()
+        bot.reply_to(message, f"✅ Limit Emir Girildi!", parse_mode="Markdown")
+
+    @bot.message_handler(commands=['emir', 'emirler'])
+    def order_history(message):
+        user_id = str(message.from_user.id)
+        orders, limit_orders = users[user_id].get("orders", []), users[user_id].get("limit_orders", [])
+        if not orders and not limit_orders: bot.reply_to(message, "📜 Henüz bir işlem veya emir yok."); return
+        
+        text = "📋 BEKLEYEN EMİRLER\n"
+        if limit_orders:
+            for lo in limit_orders: text += f"🔹 {lo['id']} | {lo['type']} {TRADE_GOODS[lo['item']]['name']} | Hedef: {lo['target']}$\n"
+            text += "\n(İptal: /emir_iptal <ID>)\n"
+        else: text += "(Yok)\n"
+        
+        text += "\n📜 GEÇMİŞ İŞLEMLER\n"
+        for order in reversed(orders[-10:]): text += f"▪️ {order['type']} {order['item']} x{order['amount']} @{order['price']}$\n"
+        bot.send_message(message.chat.id, text)
+
+    @bot.message_handler(commands=['emir_iptal'])
+    def cancel_order(message):
+        user_id = str(message.from_user.id)
+        try: order_id_to_cancel = message.text.split()[1]
+        except: bot.reply_to(message, "⚠️ Kullanım: `/emir_iptal <ID>`"); return
+        
+        user_orders = users[user_id].get("limit_orders", [])
+        order_found = next((order for order in user_orders if order["id"] == order_id_to_cancel), None)
+        if order_found:
+            users[user_id]["limit_orders"].remove(order_found); save_users()
+            bot.reply_to(message, f"✅ `{order_id_to_cancel}` nolu emir iptal edildi.", parse_mode="Markdown")
+        else: bot.reply_to(message, "❌ Emir bulunamadı.")
+
+    @bot.message_handler(commands=['zenginler'])
+    def rich_list(message):
+        leaderboard = []
+        for uid, u in list(users.items()):
+            net_worth = u.get("money", 0) + sum(count * market_prices.get(code, 0) for code, count in u.get("inventory", {}).items() if code in TRADE_GOODS)
+            leaderboard.append((u.get("name", "Gizli"), net_worth, u.get("username")))
+        
+        leaderboard.sort(key=lambda x: x[1], reverse=True)
+        text = "💸 **KAPALIÇARŞI'NIN EN ZENGİNLERİ** 💸\n\n"
+        for i, (name, wealth, uname) in enumerate(leaderboard[:10], 1):
+            icon = "🥇" if i == 1 else ("🥈" if i == 2 else ("🥉" if i == 3 else "▫️"))
+            text += f"{icon} {i}. {name}: **{int(wealth)}** $\n"
+        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['iflas'])
+    def declare_bankruptcy(message):
+        user_id = str(message.from_user.id)
+        if len(message.text.split()) < 2 or message.text.split()[1] != "ONAY":
+            bot.reply_to(message, "⚠️ **DİKKAT!** İflas edersen her şeyin sıfırlanır (para, mal, borç).\nOnaylamak için: `/iflas ONAY`", parse_mode="Markdown"); return
+        u = users[user_id]
+        u.update({"money": 1000, "bank_balance": 0, "loan": 0, "portfolio": {}, "inventory": {}, "orders": [], "limit_orders": []})
+        save_users()
+        bot.reply_to(message, "🏳️ **İFLAS BAYRAĞI ÇEKİLDİ!**\nSana yeni bir başlangıç için 1000 $ verildi.")
+
