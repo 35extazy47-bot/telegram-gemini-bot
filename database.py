@@ -144,17 +144,17 @@ def load_market_data():
     global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, market_trend
     data = None
     
-    if db:
+    if db is not None:
         try:
             collection = db["market"]
             doc = collection.find_one({"_id": "market_data"})
-            if doc:
+            if doc is not None:
                 data = doc
                 print("✅ Borsa verileri MongoDB'den yüklendi.")
         except Exception as e:
             print(f"MongoDB Market Yükleme Hatası: {e}")
 
-    if not data and os.path.exists(MARKET_FILE):
+    if  data is None and os.path.exists(MARKET_FILE):
         try:
             with open(MARKET_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
@@ -162,7 +162,7 @@ def load_market_data():
         except:
             pass
 
-    if data:
+    if data is not None:
         with market_lock:
             loaded_prices = data.get("prices", {})
             for k, v in loaded_prices.items():
@@ -177,7 +177,7 @@ def load_market_data():
             market_news = data.get("news", market_news)
             market_trend = data.get("trend", 0)
             
-            if "last_update" in data and data["last_update"]:
+            if "last_update" in data and data["last_update"] is not None:
                 try:
                     last_market_update = datetime.strptime(data["last_update"], "%Y-%m-%d %H:%M:%S")
                 except (ValueError, TypeError):
