@@ -1,3 +1,4 @@
+import os
 import random
 import uuid
 import time
@@ -10,7 +11,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from database import (
     users, save_users, market_prices, market_volumes, last_prices,
     price_history, market_news, market_trend, last_market_update,
-    TRADE_GOODS, save_market_data, market_lock, active_news_item,
+    TRADE_GOODS, save_market_data, market_lock, data_lock, active_news_item,
     active_news_direction, active_global_modifier, last_news_update
 )
 

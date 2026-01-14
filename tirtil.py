@@ -24,7 +24,11 @@ client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 
 # --- Yardımcı Fonksiyonlar ---
 def safe_generate_content(prompt_content):
-    if not client: return "Gemini API anahtarı ayarlanmamış."
+    if not client:
+        # Arayan fonksiyonlar .text özelliğine sahip bir nesne beklediği için
+        # sadece string döndürmek AttributeError hatasına neden olur.
+        # Bunun yerine bir exception fırlatmak daha güvenlidir, çünkü çağıran yerlerde zaten try-except var.
+        raise Exception("Gemini API anahtarı ayarlanmamış.")
     models = ["gemini-1.5-flash", "gemini-pro"]
     for model in models:
         try: return client.generate_content(model=model, contents=prompt_content)

@@ -1,5 +1,6 @@
 import random
 import html
+import os
 import io
 import textwrap
 import time
@@ -95,7 +96,9 @@ def create_quiz_result_image(is_correct, correct_answer, earned_exp, streak, use
     try:
         font_path = "arial.ttf"
         if not os.path.exists(font_path):
-            candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "/System/Library/Fonts/Helvetica.ttc"]
+            candidates = [
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 
+                "/System/Library/Fonts/Helvetica.ttc"]
             font_path = next((f for f in candidates if os.path.exists(f)), font_path)
         title_font, info_font, big_font = ImageFont.truetype(font_path, 45), ImageFont.truetype(font_path, 30), ImageFont.truetype(font_path, 55)
     except:
