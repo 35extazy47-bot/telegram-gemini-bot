@@ -79,7 +79,7 @@ active_global_modifier = 0.0
 # --- Data Loading/Saving Functions ---
 def load_users():
     """Kullanıcı verilerini önce MongoDB'den, yoksa yerel dosyadan yükler."""
-    if users_collection:
+    if users_collection is not None:
         try:
             doc = users_collection.find_one({"_id": "users_data"})
             if doc and "data" in doc:
@@ -101,7 +101,7 @@ def load_users():
 def save_users():
     """Kullanıcı verilerini MongoDB'ye (varsa) ve yedek olarak yerel dosyaya kaydeder."""
     with data_lock:
-        if users_collection:
+        if users_collection is not None:
             try:
                 users_collection.replace_one({"_id": "users_data"}, {"data": users}, upsert=True)
             except Exception as e:
