@@ -8,11 +8,11 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+import database
 from database import (
     users, save_users, market_prices, market_volumes, last_prices,
-    price_history, market_news, market_trend, last_market_update,
-    TRADE_GOODS, save_market_data, market_lock, data_lock, active_news_item,
-    active_news_direction, active_global_modifier, last_news_update, DEVELOPER_USERNAME
+    price_history, TRADE_GOODS, save_market_data, market_lock, data_lock, 
+    DEVELOPER_USERNAME
 )
 
 # Bu fonksiyonlar tirtil.py'den register fonksiyonu aracılığıyla alınacak
@@ -88,29 +88,29 @@ def check_limit_orders(bot):
     if executed_count > 0: save_users(); print(f"🤖 {executed_count} adet limit emir tetiklendi.")
 
 def update_market(bot):
-    global market_prices, market_volumes, last_prices, market_news, market_trend, price_history, last_news_update, active_news_item, active_news_direction, active_global_modifier
+    global market_prices, market_volumes, last_prices, price_history
     with market_lock:
         last_prices = market_prices.copy()
-        if active_news_item is None or (datetime.now() - last_news_update).total_seconds() > 300:
-            last_news_update = datetime.now()
-            market_trend = random.choices([-1, 0, 1], weights=[0.3, 0.4, 0.3])[0]
-            active_news_item = random.choice(list(TRADE_GOODS.keys()))
-            active_news_direction = random.choice(["up", "down"])
-            market_news = random.choice(NEWS_TEMPLATES[active_news_item][active_news_direction])
+        if database.active_news_item is None or (datetime.now() - database.last_news_update).total_seconds() > 300:
+            database.last_news_update = datetime.now()
+            database.market_trend = random.choices([-1, 0, 1], weights=[0.3, 0.4, 0.3])[0]
+            database.active_news_item = random.choice(list(TRADE_GOODS.keys()))
+            database.active_news_direction = random.choice(["up", "down"])
+            database.market_news = random.choice(NEWS_TEMPLATES[database.active_news_item][database.active_news_direction])
             
             event_roll = random.randint(1, 100)
-            active_global_modifier = -0.25 if event_roll <= 3 else (0.25 if event_roll >= 97 else 0.0)
-            if active_global_modifier == -0.25: market_news = "📉 **KARA GÜN!** Küresel kriz patlak verdi! Piyasalar çakılıyor!"
-            elif active_global_modifier == 0.25: market_news = "🚀 **ALTIN ÇAĞ!** Yabancı yatırımcılar ülkeye akın etti!"
-            print(f"📊 Piyasa Trendi: {market_trend}, Haber: {market_news}")
+            database.active_global_modifier = -0.25 if event_roll <= 3 else (0.25 if event_roll >= 97 else 0.0)
+            if database.active_global_modifier == -0.25: database.market_news = "📉 **KARA GÜN!** Küresel kriz patlak verdi! Piyasalar çakılıyor!"
+            elif database.active_global_modifier == 0.25: database.market_news = "🚀 **ALTIN ÇAĞ!** Yabancı yatırımcılar ülkeye akın etti!"
+            print(f"📊 Piyasa Trendi: {database.market_trend}, Haber: {database.market_news}")
 
         trend_strength = random.uniform(0.01, 0.03)
         for code, data in TRADE_GOODS.items():
-            change_percent = random.gauss(0, data["volatility"]) + (market_trend * trend_strength) + active_global_modifier
+            change_percent = random.gauss(0, data["volatility"]) + (database.market_trend * trend_strength) + database.active_global_modifier
             if market_volumes.get(code, 0) != 0: change_percent += (market_volumes[code] * 0.002)
-            if code == active_news_item: change_percent += random.uniform(0.05, 0.15) * (1 if active_news_direction == "up" else -1)
+            if code == database.active_news_item: change_percent += random.uniform(0.05, 0.15) * (1 if database.active_news_direction == "up" else -1)
             
-            limit = 0.30 if active_global_modifier != 0 else 0.10
+            limit = 0.30 if database.active_global_modifier != 0 else 0.10
             change_percent = max(-limit, min(change_percent, limit))
             price_change = int(market_prices[code] * change_percent) or (random.randint(1, 3) * (-1 if change_percent < 0 else 1))
             
@@ -120,6 +120,7 @@ def update_market(bot):
 
         market_volumes = {k: 0 for k in TRADE_GOODS.keys()}
         check_limit_orders(bot)
+        database.last_market_update = datetime.now()
         save_market_data()
 
 def apply_bank_interest(bot):
@@ -151,7 +152,7 @@ def create_market_image(user_data=None):
     idx_diff, idx_pct = current_index - last_index, (current_index - last_index) / last_index * 100 if last_index > 0 else 0
     idx_arrow = "▲" if idx_diff > 0 else ("▼" if idx_diff < 0 else "➖")
     draw.text((600, 35), f"ENDEKS: {current_index} {idx_arrow} %{abs(idx_pct):.2f}", font=header_font, fill=(240, 240, 240))
-    draw.rectangle([(30, 120), (width-30, 170)], fill=(38, 43, 54)); draw.text((45, 135), f"📰 {market_news[:87] + '...' if len(market_news) > 90 else market_news}", font=row_font, fill=(220, 220, 220))
+    draw.rectangle([(30, 120), (width-30, 170)], fill=(38, 43, 54)); draw.text((45, 135), f"📰 {database.market_news[:87] + '...' if len(database.market_news) > 90 else database.market_news}", font=row_font, fill=(220, 220, 220))
     
     y = 200; headers = ["ÜRÜN", "FİYAT", "DEĞİŞİM", "VARLIK", "DERİNLİK"]; x_pos = [40, 280, 450, 650, 850]
     for i, h in enumerate(headers): draw.text((x_pos[i], y), h, font=header_font, fill=(150, 150, 150))
@@ -176,7 +177,7 @@ def create_market_image(user_data=None):
         else: draw.rectangle([(center_x - bar_len, y+25), (center_x, y+40)], fill=(231, 76, 60))
         y += row_height
 
-    seconds_left = max(0, 90 - (datetime.now() - last_market_update).total_seconds())
+    seconds_left = max(0, 90 - (datetime.now() - database.last_market_update).total_seconds())
     draw.text((width - 350, height - 40), f"⏳ Yenilenme: {int(seconds_left // 60)}dk {int(seconds_left % 60)}sn", font=small_font, fill=(100, 100, 100))
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio
@@ -308,8 +309,8 @@ def register_market_handlers(bot, tirtil_utils):
 
         users[user_id]["money"] -= cost; save_users()
         trend_text = "Piyasa kararsız görünüyor..."
-        if market_trend > 0: trend_text = "🐂 **Kuşlar diyor ki:** Büyük tüccarlar alım yapıyor! Piyasa YÜKSELİŞ trendinde."
-        elif market_trend < 0: trend_text = "🐻 **Kuşlar diyor ki:** Limanda mallar birikmiş! Piyasa DÜŞÜŞ trendinde."
+        if database.market_trend > 0: trend_text = "🐂 **Kuşlar diyor ki:** Büyük tüccarlar alım yapıyor! Piyasa YÜKSELİŞ trendinde."
+        elif database.market_trend < 0: trend_text = "🐻 **Kuşlar diyor ki:** Limanda mallar birikmiş! Piyasa DÜŞÜŞ trendinde."
         
         item = random.choice(list(TRADE_GOODS.keys()))
         hint = "değerlenecek gibi duruyor! 📈" if random.random() > 0.5 else "ucuzlayabilir! 📉"

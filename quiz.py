@@ -422,7 +422,16 @@ def register_quiz_handlers(bot, tirtil_utils):
         if not users.get(user_id, {}).get("is_approved", True): bot.reply_to(message, "⛔ Onay bekleniyor."); return
         wait_msg = bot.send_message(message.chat.id, "🤔 Bilgi hazırlanıyor...")
         try:
-            prompt = 'KPSS konularından (Tarih, Coğrafya, Vatandaşlık) bazen doğru bazen yanlış bir bilgi cümlesi yaz. Cevabı şu JSON formatında ver: {"soru": "...", "cevap": "D" veya "Y", "aciklama": "..."}'
+            prompt = """
+            KPSS Tarih, Coğrafya veya Vatandaşlık konularından rastgele bir bilgi cümlesi yaz. 
+            Bu cümle bazen doğru bilgi içersin, bazen yanlış bilgi içersin (şaşırtmalı olsun).
+            Cevabı şu JSON formatında ver (başka bir şey yazma):
+            {
+                "soru": "Cümle buraya",
+                "cevap": "D" veya "Y",
+                "aciklama": "Neden doğru veya yanlış olduğu buraya"
+            }
+            """
             response = safe_generate_content(prompt)
             data = json.loads(response.text.replace("```json", "").replace("```", "").strip())
             users[user_id].update({"dy_answer": data["cevap"], "dy_explanation": data["aciklama"]}); save_users()

@@ -14,6 +14,7 @@ from telebot import TeleBot, types
 from google import genai
 from PIL import Image, ImageDraw, ImageFont
 
+import database
 # Modülleri import et
 from database import *
 from quiz import register_quiz_handlers
@@ -329,10 +330,34 @@ def daily_reward(message):
     if users[user_id].get("last_daily_reward") == today: bot.reply_to(message, "⏳ Bugünün ödülünü zaten aldın!"); return
     
     streak = users[user_id].get("daily_streak", 0) + 1 if users[user_id].get("last_daily_reward") == (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d") else 1
-    reward = 100 + (streak * 20)
-    users[user_id].update({"money": users[user_id].get("money", 0) + reward, "last_daily_reward": today, "daily_streak": streak})
+    
+    base_reward = 50
+    bonus = min(streak * 10, 150)
+    total_reward = base_reward + bonus
+    money_reward = 100 + (streak * 20)
+
+    users[user_id].update({"exp": users[user_id].get("exp", 0) + total_reward, "money": users[user_id].get("money", 0) + money_reward, "last_daily_reward": today, "daily_streak": streak})
     save_users()
-    bot.reply_to(message, f"🎁 **GÜNLÜK ÖDÜL!**\n💰 +{reward} $\n🔥 Seri: {streak} Gün")
+    
+    msg = bot.send_dice(message.chat.id, emoji="🎰")
+    time.sleep(3)
+    
+    dice_value = msg.dice.value
+    luck_msg = ""
+    if dice_value == 64: # Jackpot
+        total_reward *= 5; money_reward *= 5
+        users[user_id].setdefault("inventory", {})["elmas"] = users[user_id].get("inventory", {}).get("elmas", 0) + 1
+        luck_msg = "\n\n🎰 **JACKPOT! (777)**\n🚀 Ödüller 5'e katlandı!\n💎 +1 Elmas kazandın!"
+    elif dice_value in [1, 22, 43]: # Şanslı
+        total_reward *= 2; money_reward *= 2
+        luck_msg = "\n\n🎰 **Şanslı Çevirme!**\n🔥 Ödüller 2'ye katlandı!"
+    
+    if luck_msg:
+        users[user_id]["exp"] += total_reward - (base_reward + bonus)
+        users[user_id]["money"] += money_reward - (100 + (streak * 20))
+        save_users()
+
+    bot.reply_to(message, f"🎁 **GÜNLÜK ÖDÜL ALINDI!**\n\n⭐️ EXP: +{total_reward}\n💵 Para: +{money_reward} $\n🔥 Seri: {streak}. Gün{luck_msg}")
 
 @bot.message_handler(commands=['ozet'])
 def get_summary(message):
@@ -386,8 +411,14 @@ def history_today(message):
 
 @bot.message_handler(commands=['pomodoro'])
 def start_pomodoro(message):
-    bot.reply_to(message, "🍅 **Pomodoro Başladı!** 25 dk odaklan.")
-    Timer(1500, lambda: bot.send_message(message.chat.id, "⏰ **Süre Doldu!** Mola ver.")).start()
+    msg = bot.reply_to(message, "🍅 **Pomodoro Başladı!**\n\n25 dakika boyunca odaklan. Süre bitince seni etiketleyip haber vereceğim! 📚\n_(Botu sessize alma)_")
+    
+    def finish_pomodoro():
+        try:
+            bot.reply_to(msg, "⏰ **SÜRE DOLDU!**\n\n5 dakika mola ver, sonra tekrar başla! ☕")
+        except:
+            pass
+    Timer(1500, finish_pomodoro).start()
 
 @bot.message_handler(commands=['help', 'yardim', 'menu'])
 def help_guide(message):
@@ -402,9 +433,19 @@ def help_callback(call):
     if cat == "help_games": text = "🎮 **OYUNLAR**\n/quiz - Soru Çöz\n/maraton - Maraton Modu\n/duello - Düello At\n/bahis - Bahis Oyna\n/soruekle - Soru Öner"
     elif cat == "help_economy": text = "💰 **EKONOMİ**\n/borsa - Borsa\n/al - /sat\n/banka - Banka\n/kaz - Maden\n/market - Eşya Al\n/envanter - Çanta\n/zenginler - Sıralama"
     elif cat == "help_profile": text = "👤 **PROFİL**\n/profil - Profilin\n/top10 - Liderlik\n/gorevler - Görevler"
-    else: text = "🔮 **DİĞER**\n/ozet - Konu Özeti\n/ruya - Rüya Tabiri\n/tarot - Fal\n/burc - Burç\n/bilgi - İlginç Bilgi"
+    elif cat == "help_ai": text = "🔮 **DİĞER**\n/ozet - Konu Özeti\n/ruya - Rüya Tabiri\n/tarot - Fal\n/burc - Burç\n/bilgi - İlginç Bilgi"
+    elif cat == "help_back":
+        # Ana menüye geri dönmek için mesajı düzenle
+        markup = InlineKeyboardMarkup(row_width=2)
+        markup.add(InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"), InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy"))
+        markup.add(InlineKeyboardButton("👤 Profil", callback_data="help_profile"), InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai"))
+        bot.edit_message_text("📚 **YARDIM MENÜSÜ**", call.message.chat.id, call.message.message_id, reply_markup=markup)
+        return
+    else: # Bilinmeyen bir kategori ise
+        bot.answer_callback_query(call.id)
+        return
+        
     bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("🔙 Geri", callback_data="help_back")))
-    if cat == "help_back": help_guide(call.message)
 
 # --- Ana Komut Handler'ları ---
 @bot.message_handler(commands=['start'])
@@ -427,7 +468,8 @@ def start_message(message):
         bot.send_message(message.chat.id, "⏳ **Onay Bekleniyor...**"); return
 
     text = "👋 **Hoş Geldin!**\nLütfen dil seçimi yap.\nPlease select your language."
-    keyboard = types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("🇹🇷 Türkçe", callback_data="lang_tr"), types.InlineKeyboardButton("🇬🇧 English", callback_data="lang_en"))
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.add(types.InlineKeyboardButton("🇹🇷 Türkçe", callback_data="lang_tr"), types.InlineKeyboardButton("🇬🇧 English", callback_data="lang_en"), types.InlineKeyboardButton("🇧🇬 Български", callback_data="lang_bg"))
     bot.send_message(message.chat.id, text, reply_markup=keyboard)
 
 @bot.callback_query_handler(func=lambda c: c.data == "request_access")
@@ -474,6 +516,17 @@ def language_selected(call):
         },
         "en": {
             "text": f"👋 **Welcome, {user_text}!**\n\nI am an AI-powered assistant. Use the **Menu** button to access commands.", "btn": "📩 Contact Developer"
+        },
+        "bg": {
+            "text": (
+                f"👋 **Добре дошъл, {user_text}!**\n\n"
+                "Аз съм AI асистент, създаден за теб. Имам страхотни функции за забавление и учене! 🚀\n"
+                "Можете да получите достъп до всички команди от бутона **☰ Меню** по-долу.\n\n"
+                "🎮 **Игри и Викторини**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/quiz` - Решаване на въпроси 📚\n🔹 `/maraton` - Маратон режим 🏃‍♂️\n🔹 `/duello` - PvP Дуел ⚔️\n\n"
+                "💰 **Икономика и Търговия**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/banka` - Банка и лихви 🏦\n🔹 `/borsa` - Търговия на пазара 📈\n🔹 `/kaz` - Копаене ⛏️\n🔹 `/market` - Купи предмети 🛒\n\n"
+                "👤 **Профил и Инструменти**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - Вашата статистика 📊\n🔹 `/envanter` - Инвентар 🎒\n🔹 `/top10` - Класация 🏆\n\n"
+                "🔮 **Екстра Функции**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/ruya`, `/tarot`, `/burc`, `/ozet`"
+            ), "btn": "📩 Свържи се с разработчика"
         }
     }
     selected = messages.get(lang_code, messages["en"])
@@ -548,7 +601,7 @@ def scheduler_thread():
             send_morning_broadcast(); time.sleep(65)
         if now_utc3.hour == 9 and now_utc3.minute == 0:
             apply_bank_interest(bot); time.sleep(65)
-        if (datetime.now() - last_market_update).total_seconds() > 90:
+        if (datetime.now() - database.last_market_update).total_seconds() > 90:
             update_market(bot)
         time.sleep(20)
 
