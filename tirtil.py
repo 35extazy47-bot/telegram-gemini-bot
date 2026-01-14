@@ -128,6 +128,52 @@ def create_profile_image(user_id, user_data):
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio
 
+def create_leaderboard_image(sorted_users):
+    width, height = 800, 140 + (len(sorted_users) * 60)
+    img = Image.new('RGB', (width, height), color=(35, 39, 42))
+    draw = ImageDraw.Draw(img)
+    
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+        title_font, row_font = ImageFont.truetype(font_path, 40), ImageFont.truetype(font_path, 26)
+    except: title_font, row_font = ImageFont.load_default(), ImageFont.load_default()
+
+    draw.text((220, 30), "🏆 LİDERLİK TABLOSU 🏆", font=title_font, fill=(255, 215, 0))
+    draw.rectangle([(20, 90), (width-20, 140)], fill=(44, 47, 51))
+    
+    headers = ["#", "OYUNCU", "RÜTBE", "LEVEL", "EXP"]
+    x_pos = [40, 130, 380, 580, 700]
+    for i, h in enumerate(headers): draw.text((x_pos[i], 100), h, font=row_font, fill=(200, 200, 200))
+        
+    y = 160
+    for i, (uid, data) in enumerate(sorted_users, 1):
+        name = data.get("name", "Gizli")[:12]
+        lvl, xp = str(data.get("level", 1)), str(data.get("exp", 0))
+        rank = get_rank(int(lvl), data.get("username")).split()[0]
+        
+        color = (255, 255, 255)
+        if i == 1: color = (255, 215, 0)
+        elif i == 2: color = (192, 192, 192)
+        elif i == 3: color = (205, 127, 50)
+        
+        p_pic = get_user_profile_image(uid)
+        if p_pic:
+            p_pic = p_pic.resize((40, 40)); mask = Image.new("L", (40, 40), 0)
+            draw = ImageDraw.Draw(mask); draw.ellipse((0, 0, 40, 40), fill=255)
+            img.paste(p_pic, (80, y-5), mask)
+
+        draw.text((x_pos[0], y), str(i), font=row_font, fill=color)
+        draw.text((x_pos[1], y), name, font=row_font, fill=color)
+        draw.text((x_pos[2], y), rank, font=row_font, fill=color)
+        draw.text((x_pos[3], y), lvl, font=row_font, fill=color)
+        draw.text((x_pos[4], y), xp, font=row_font, fill=color)
+        draw.line([(40, y+45), (width-40, y+45)], fill=(60, 60, 60), width=1)
+        y += 60
+        
+    bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
+    return bio
+
 def create_tarot_image(cards):
     width, height = 800, 450
     img = Image.new('RGB', (width, height), color=(25, 20, 40))
@@ -158,15 +204,35 @@ def send_morning_broadcast():
 @bot.message_handler(commands=['admin_panel'])
 def admin_panel(message):
     if message.from_user.username != DEVELOPER_USERNAME: return
-    markup = InlineKeyboardMarkup(row_width=2)
-    markup.add(InlineKeyboardButton("👥 Üyeler", callback_data="admin_user_list"), InlineKeyboardButton("🚫 Yasaklılar", callback_data="admin_banned_list"))
+    
+    user_count = len(users)
+    active_today = sum(1 for u in users.values() if u.get("last_gemini_date") == datetime.now().strftime("%Y-%m-%d"))
+    pending_count = sum(1 for u in users.values() if not u.get("is_approved", True))
+    
+    text = (
+        f"👑 **YÖNETİCİ KONTROL MERKEZİ**\n━━━━━━━━━━━━━━━━━━━━\n"
+        f"👥 Toplam: {user_count} | 🔥 Aktif: {active_today} | ⏳ Bekleyen: {pending_count}\n"
+        "👇 **İşlem Seçiniz:**"
+    )
+    
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton(f"⏳ Onay ({pending_count})", callback_data="admin_pending_list"), InlineKeyboardButton("👥 Üyeler", callback_data="admin_user_list"))
+    markup.add(InlineKeyboardButton("🚫 Yasaklılar", callback_data="admin_banned_list"), InlineKeyboardButton("👑 VIP'ler", callback_data="admin_vip_list"))
+    markup.add(InlineKeyboardButton("📉 Tüm Emirler", callback_data="admin_all_orders"), InlineKeyboardButton("📊 Eko. Analiz", callback_data="admin_economy_stats"))
     markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("📊 Anket", callback_data="admin_help_anket"))
-    markup.add(InlineKeyboardButton("🎁 Hediye", callback_data="admin_help_hediye"), InlineKeyboardButton("💾 Yedek", callback_data="admin_backup"))
-    bot.send_message(message.chat.id, "👑 **YÖNETİCİ PANELİ**", reply_markup=markup)
+    markup.add(InlineKeyboardButton("🎁 Hediye", callback_data="admin_help_hediye"), InlineKeyboardButton("💾 Yedek Al", callback_data="admin_backup"))
+    
+    bot.send_message(message.chat.id, text, reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("admin_"))
 def admin_callbacks(call):
     if call.from_user.username != DEVELOPER_USERNAME: return
+    
+    if call.data == "admin_pending_list":
+        pending = [(uid, u) for uid, u in users.items() if not u.get("is_approved", True)]
+        if not pending: bot.answer_callback_query(call.id, "✅ Bekleyen yok!"); return
+        for uid, u in pending:
+            bot.send_message(call.message.chat.id, f"⏳ {u.get('name')} (@{u.get('username')}) ID: {uid}", reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("✅ Onayla", callback_data=f"approve_{uid}"), InlineKeyboardButton("❌ Reddet", callback_data=f"reject_{uid}")))
     
     if call.data == "admin_user_list":
         text = "📋 **Üyeler:**\n" + "\n".join([f"{i+1}. {u.get('name')} (@{u.get('username')}) ID: {uid}" for i, (uid, u) in enumerate(users.items())])
@@ -182,11 +248,24 @@ def admin_callbacks(call):
         text = "🚫 **Yasaklılar:**\n" + "\n".join([f"• {u.get('name')}" for u in users.values() if u.get("is_banned")])
         bot.send_message(call.message.chat.id, text if len(text) > 20 else "Yasaklı yok.")
         
+    elif call.data == "admin_vip_list":
+        vips = [u for u in users.values() if u.get("level", 1) >= 15]
+        bot.send_message(call.message.chat.id, "👑 **VIP Üyeler:**\n" + "\n".join([f"• {u.get('name')}" for u in vips]) if vips else "VIP yok.")
+
+    elif call.data == "admin_all_orders":
+        text = "📉 **Bekleyen Emirler:**\n"
+        for uid, u in users.items():
+            for o in u.get("limit_orders", []): text += f"👤 {u.get('name')}: {o['type']} {o['item']} @ {o['target']}$\n"
+        bot.send_message(call.message.chat.id, text if len(text) > 25 else "Emir yok.")
+
     elif call.data == "admin_economy_stats":
         total_money = sum(u.get("money", 0) for u in users.values())
         total_bank = sum(u.get("bank_balance", 0) for u in users.values())
         bot.send_message(call.message.chat.id, f"📊 **Ekonomi:**\n💵 Cüzdan: {total_money} $\n🏦 Banka: {total_bank} $\n💰 Toplam: {total_money+total_bank} $")
         
+    elif call.data == "admin_help_duyuru": bot.send_message(call.message.chat.id, "📢 `/duyuru Mesaj`")
+    elif call.data == "admin_help_anket": bot.send_message(call.message.chat.id, "📊 `/anket Soru | Cevap1 | Cevap2`")
+    elif call.data == "admin_help_hediye": bot.send_message(call.message.chat.id, "🎁 `/hediye <ID> <Miktar>` veya `/dagit <Miktar>`")
     elif "help" in call.data:
         bot.answer_callback_query(call.id, "Komut kullanımı için koda bakınız.", show_alert=True)
 
@@ -376,11 +455,36 @@ def admin_approval_callback(call):
 @bot.callback_query_handler(func=lambda call: call.data.startswith("lang_"))
 def language_selected(call):
     user_id, lang_code = str(call.from_user.id), call.data.replace("lang_", "")
-    users.setdefault(user_id, {"level": 1, "exp": 0, "lives": 3})
+    if user_id not in users: users[user_id] = {"level": 1, "exp": 0, "lives": 3, "category": "karisik"}
     users[user_id].update({"lang": lang_code, "name": call.from_user.first_name, "username": call.from_user.username})
     save_users()
-    help_text = "👋 **Hoş Geldin!**\nBen yapay zeka destekli bir asistanım. 🚀\n**☰ Menü**'den komutlara erişebilirsin."
-    bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown")
+    
+    user_text = f"@{call.from_user.username}" if call.from_user.username else call.from_user.first_name
+    messages = {
+        "tr": {
+            "text": (
+                f"👋 **Hoş Geldin, {user_text}!**\n\n"
+                "Ben, senin için geliştirilmiş yapay zeka destekli bir asistanım. Hem eğlenip hem öğrenebileceğin harika özelliklerim var! 🚀\n"
+                "Aşağıdaki **☰ Menü** butonundan tüm komutlara erişebilirsin.\n\n"
+                "🎮 **Oyun & Yarışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/quiz` - KPSS Soruları Çöz 📚\n🔹 `/maraton` - Tek Hakla İlerle 🏃‍♂️\n🔹 `/duello` - PvP Düello ⚔️\n\n"
+                "💰 **Ekonomi & Ticaret**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/banka` - Banka & Faiz 🏦\n🔹 `/borsa` - Kapalıçarşı 📈\n🔹 `/kaz` - Maden Kaz ⛏️\n🔹 `/market` - Eşya Al 🛒\n\n"
+                "👤 **Profil & Araçlar**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - İstatistikler 📊\n🔹 `/envanter` - Çantan 🎒\n🔹 `/top10` - Liderlik 🏆\n\n"
+                "🔮 **Ekstra**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/ruya`, `/tarot`, `/burc`, `/ozet`"
+            ), "btn": "📩 Geliştiriciye Mesaj Gönder"
+        },
+        "en": {
+            "text": f"👋 **Welcome, {user_text}!**\n\nI am an AI-powered assistant. Use the **Menu** button to access commands.", "btn": "📩 Contact Developer"
+        }
+    }
+    selected = messages.get(lang_code, messages["en"])
+    
+    markup = InlineKeyboardMarkup()
+    markup.row(InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"), InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy"))
+    markup.row(InlineKeyboardButton("👤 Profil", callback_data="help_profile"), InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai"))
+    markup.add(InlineKeyboardButton(text=selected["btn"], url=f"https://t.me/{DEVELOPER_USERNAME}"))
+
+    bot.edit_message_text(selected["text"], call.message.chat.id, call.message.message_id, reply_markup=markup, parse_mode="Markdown")
+    bot.send_message(call.message.chat.id, "✅ Kurulum tamamlandı! Sol alttaki **Menu** butonunu kullanabilirsin.")
 
 @bot.message_handler(commands=['profil'])
 def my_profile(message):
@@ -397,10 +501,14 @@ def my_profile(message):
 @bot.message_handler(commands=['top10'])
 def leaderboard(message):
     sorted_users = sorted(users.items(), key=lambda x: (x[1].get("level", 1), x[1].get("exp", 0)), reverse=True)[:10]
-    text = "🏆 **Liderlik Tablosu (Top 10)** 🏆\n\n"
-    for i, (uid, data) in enumerate(sorted_users, 1):
-        text += f"{i}. {data.get('name', 'Bilinmiyor')} - Lvl {data.get('level', 1)} | {data.get('exp', 0)} EXP\n"
-    bot.send_message(message.chat.id, text)
+    try:
+        photo = create_leaderboard_image(sorted_users)
+        bot.send_photo(message.chat.id, photo, caption="🏆 **Liderlik Tablosu**\nZirve yarışında son durum! 🚀")
+    except:
+        text = "🏆 **Liderlik Tablosu (Top 10)** 🏆\n\n"
+        for i, (uid, data) in enumerate(sorted_users, 1):
+            text += f"{i}. {data.get('name', 'Bilinmiyor')} - Lvl {data.get('level', 1)} | {data.get('exp', 0)} EXP\n"
+        bot.send_message(message.chat.id, text)
 
 @bot.message_handler(commands=['gorevler'])
 def show_daily_quests(message):
