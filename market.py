@@ -29,6 +29,25 @@ NEWS_TEMPLATES = {
     "demir": {"up": ["Ordu için yeni silah siparişi! ⚔️"], "down": ["Hurda demirler piyasaya sürüldü. ♻️"]}
 }
 
+def calculate_indicators(prices):
+    """Fiyat geçmişine göre RSI ve SMA teknik indikatörlerini hesaplar."""
+    if not prices: return {"rsi": 50, "sma": 0}
+    current = prices[-1]
+    sma_period = 5
+    sma = sum(prices[-sma_period:]) / sma_period if len(prices) >= sma_period else current
+    period = 14
+    if len(prices) < period + 1: return {"rsi": 50, "sma": sma}
+    gains, losses = [], []
+    relevant_prices = prices[-(period+1):]
+    for i in range(1, len(relevant_prices)):
+        change = relevant_prices[i] - relevant_prices[i-1]
+        if change > 0: gains.append(change); losses.append(0)
+        else: gains.append(0); losses.append(abs(change))
+    avg_gain, avg_loss = sum(gains) / period, sum(losses) / period
+    if avg_loss == 0: rsi = 100
+    else: rs = avg_gain / avg_loss; rsi = 100 - (100 / (1 + rs))
+    return {"rsi": rsi, "sma": sma}
+
 def check_limit_orders(bot):
     executed_count = 0
     for uid, user in list(users.items()):
@@ -280,6 +299,120 @@ def register_market_handlers(bot, tirtil_utils):
     global get_badges, update_quest_progress
     get_badges = tirtil_utils['get_badges']
     update_quest_progress = tirtil_utils['update_quest_progress']
+
+    def buy_rumor(message):
+        user_id = str(message.from_user.id)
+        cost = 100
+        if users[user_id].get("money", 0) < cost:
+            bot.reply_to(message, f"❌ Dedikodu için {cost} $ gerekli."); return
+
+        users[user_id]["money"] -= cost; save_users()
+        trend_text = "Piyasa kararsız görünüyor..."
+        if market_trend > 0: trend_text = "🐂 **Kuşlar diyor ki:** Büyük tüccarlar alım yapıyor! Piyasa YÜKSELİŞ trendinde."
+        elif market_trend < 0: trend_text = "🐻 **Kuşlar diyor ki:** Limanda mallar birikmiş! Piyasa DÜŞÜŞ trendinde."
+        
+        item = random.choice(list(TRADE_GOODS.keys()))
+        hint = "değerlenecek gibi duruyor! 📈" if random.random() > 0.5 else "ucuzlayabilir! 📉"
+        bot.reply_to(message, f"🤫 **KAPALIÇARŞI FISILTISI**\n\n{trend_text}\n\nÖzel Tüyo: **{TRADE_GOODS[item]['name']}** yakında {hint}", parse_mode="Markdown")
+
+    def show_detailed_graph(message):
+        try: item_code = message.text.split()[1].lower()
+        except: bot.reply_to(message, "⚠️ Kullanım: `/grafik_detay altin`"); return
+        if item_code not in TRADE_GOODS: bot.reply_to(message, "❌ Geçersiz ürün."); return
+        
+        history = price_history.get(item_code, [])
+        if not history: bot.reply_to(message, "📉 Yeterli veri yok."); return
+
+        width, height = 800, 500
+        img = Image.new('RGB', (width, height), (20, 23, 30))
+        draw = ImageDraw.Draw(img)
+        
+        min_p, max_p = min(history), max(history)
+        padding_y = (max_p - min_p) * 0.2 if max_p != min_p else 10
+        min_y, max_y = min_p - padding_y, max_p + padding_y
+        
+        margin_left, margin_bottom = 60, 40
+        graph_w, graph_h = width - margin_left - 40, height - 60 - margin_bottom
+        
+        points = []
+        step_x = graph_w / (len(history) - 1) if len(history) > 1 else graph_w
+        for i, price in enumerate(history):
+            x = margin_left + (i * step_x)
+            y = height - margin_bottom - ((price - min_y) / (max_y - min_y) * graph_h)
+            points.append((x, y))
+            
+        if len(points) > 1:
+            line_color = (46, 204, 113) if history[-1] >= history[0] else (231, 76, 60)
+            draw.line(points, fill=line_color, width=3)
+        
+        bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
+        bot.send_photo(message.chat.id, bio, caption=f"📊 **{TRADE_GOODS[item_code]['name']}** Fiyat Grafiği")
+
+    @bot.message_handler(commands=['dedikodu'])
+    def buy_rumor_command(message): buy_rumor(message)
+
+    @bot.message_handler(commands=['grafik_detay'])
+    def show_detailed_graph_command(message): show_detailed_graph(message)
+
+    @bot.message_handler(commands=['grafik'])
+    def show_market_graph(message):
+        text = "📊 **PİYASA FİYAT KONUMU**\n_(Min - Max Aralığı)_\n\n"
+        with market_lock:
+            for code, data in TRADE_GOODS.items():
+                price = market_prices.get(code, data["base"])
+                ratio = (price - data["min"]) / (data["max"] - data["min"]) if data["max"] > data["min"] else 0.5
+                filled = int(ratio * 10)
+                bar = "🟦" * filled + "⬜" * (10 - filled)
+                text += f"**{data['name']}**: {price} $\n{bar} (%{int(ratio*100)})\n\n"
+        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['analiz'])
+    def market_analysis(message):
+        user_id = str(message.from_user.id)
+        if users[user_id].get("money", 0) < 200: bot.reply_to(message, "❌ Analiz için 200 $ gerekli."); return
+        users[user_id]["money"] -= 200; save_users()
+        
+        text = "🧠 **TEKNİK ANALİZ (RSI & SMA)**\n\n"
+        with market_lock:
+            for code, data in TRADE_GOODS.items():
+                ind = calculate_indicators(price_history.get(code, []))
+                price = market_prices.get(code, data["base"])
+                signal = "⚪ Nötr"
+                if ind["rsi"] < 30: signal = "🟢 **GÜÇLÜ AL**"
+                elif ind["rsi"] > 70: signal = "🔴 **GÜÇLÜ SAT**"
+                elif price > ind["sma"]: signal = "📈 **AL** (Trend Yukarı)"
+                elif price < ind["sma"]: signal = "📉 **SAT** (Trend Aşağı)"
+                text += f"🔸 **{data['name']}** ({price}$)\n   └ Sinyal: {signal}\n"
+        bot.reply_to(message, text, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['kara_borsa'])
+    def black_market_menu(message):
+        text = "🕵️ **KARA BORSA**\nFiyatlar %60 ama yakalanırsan paran yanar!\n\n"
+        with market_lock:
+            for code, data in TRADE_GOODS.items():
+                text += f"▫️ {data['name']}: {int(market_prices[code]*0.6)} $\n"
+        text += "\n🛒 `/kacak_al <mal> <adet>`"
+        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['kacak_al'])
+    def buy_illegal(message):
+        user_id = str(message.from_user.id)
+        try: item, amount = message.text.split()[1], int(message.text.split()[2])
+        except: return
+        if item not in TRADE_GOODS or amount <= 0: return
+        
+        price = int(market_prices[item] * 0.6)
+        cost = price * amount
+        if users[user_id].get("money", 0) < cost: bot.reply_to(message, "❌ Paran yetmiyor!"); return
+        
+        if random.random() < 0.30:
+            users[user_id]["money"] -= cost; save_users()
+            bot.reply_to(message, f"🚨 **POLİS BASKINI!** Paranı kaptırdın! (-{cost} $)")
+        else:
+            users[user_id]["money"] -= cost
+            users[user_id].setdefault("inventory", {})[item] = users[user_id].get("inventory", {}).get(item, 0) + amount
+            save_users()
+            bot.reply_to(message, f"🕵️ **Başarılı!** {amount} {TRADE_GOODS[item]['name']} zulaladın.")
 
     @bot.message_handler(commands=['borsa'])
     def check_market(message):

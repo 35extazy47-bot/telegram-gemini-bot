@@ -149,6 +149,11 @@ def create_tarot_image(cards):
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio
 
+def send_morning_broadcast():
+    for uid, u in users.items():
+        try: bot.send_message(uid, f"☀️ **GÜNAYDIN {u.get('name', 'Dostum').upper()}!**\nBugün piyasalar hareketli, bol kazançlar! 🚀")
+        except: pass
+
 # --- Admin & Genel Komutlar ---
 @bot.message_handler(commands=['admin_panel'])
 def admin_panel(message):
@@ -162,14 +167,26 @@ def admin_panel(message):
 @bot.callback_query_handler(func=lambda c: c.data.startswith("admin_"))
 def admin_callbacks(call):
     if call.from_user.username != DEVELOPER_USERNAME: return
+    
     if call.data == "admin_user_list":
         text = "📋 **Üyeler:**\n" + "\n".join([f"{i+1}. {u.get('name')} (@{u.get('username')}) ID: {uid}" for i, (uid, u) in enumerate(users.items())])
         if len(text) > 4000: text = text[:4000] + "..."
         bot.send_message(call.message.chat.id, text)
+        
     elif call.data == "admin_backup":
         try:
             with open(USERS_FILE, "rb") as f: bot.send_document(call.message.chat.id, f, caption=f"💾 Yedek: {datetime.now()}")
         except: bot.send_message(call.message.chat.id, "Yedek alınamadı.")
+        
+    elif call.data == "admin_banned_list":
+        text = "🚫 **Yasaklılar:**\n" + "\n".join([f"• {u.get('name')}" for u in users.values() if u.get("is_banned")])
+        bot.send_message(call.message.chat.id, text if len(text) > 20 else "Yasaklı yok.")
+        
+    elif call.data == "admin_economy_stats":
+        total_money = sum(u.get("money", 0) for u in users.values())
+        total_bank = sum(u.get("bank_balance", 0) for u in users.values())
+        bot.send_message(call.message.chat.id, f"📊 **Ekonomi:**\n💵 Cüzdan: {total_money} $\n🏦 Banka: {total_bank} $\n💰 Toplam: {total_money+total_bank} $")
+        
     elif "help" in call.data:
         bot.answer_callback_query(call.id, "Komut kullanımı için koda bakınız.", show_alert=True)
 
@@ -183,6 +200,27 @@ def admin_broadcast(message):
         try: bot.send_message(uid, f"📢 **DUYURU**\n\n{text}"); count += 1
         except: pass
     bot.reply_to(message, f"✅ {count} kişiye iletildi.")
+
+@bot.message_handler(commands=['anket'])
+def admin_poll(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+    try:
+        parts = message.text.replace("/anket", "").split("|")
+        if len(parts) < 3: return
+        question, options = parts[0].strip(), [o.strip() for o in parts[1:]]
+        for uid in users:
+            try: bot.send_poll(uid, question, options, is_anonymous=True)
+            except: pass
+        bot.reply_to(message, "✅ Anket gönderildi.")
+    except: pass
+
+@bot.message_handler(commands=['dagit'])
+def admin_distribute(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+    try: amount = int(message.text.split()[1])
+    except: return
+    for uid in users: users[uid]["money"] = users[uid].get("money", 0) + amount
+    save_users(); bot.reply_to(message, f"✅ Herkese {amount} $ dağıtıldı.")
 
 @bot.message_handler(commands=['hediye'])
 def admin_gift(message):
@@ -398,6 +436,8 @@ def handle_message(message):
 def scheduler_thread():
     while True:
         now_utc3 = datetime.now(timezone.utc) + timedelta(hours=3)
+        if now_utc3.hour == 8 and now_utc3.minute == 0:
+            send_morning_broadcast(); time.sleep(65)
         if now_utc3.hour == 9 and now_utc3.minute == 0:
             apply_bank_interest(bot); time.sleep(65)
         if (datetime.now() - last_market_update).total_seconds() > 90:
@@ -418,6 +458,11 @@ if __name__ == "__main__":
         types.BotCommand("kaz", "Maden Kaz"),
         types.BotCommand("top10", "Liderlik Tablosu"),
         types.BotCommand("market", "Eşya Marketi"),
+        types.BotCommand("grafik", "Piyasa Grafiği"),
+        types.BotCommand("analiz", "Teknik Analiz"),
+        types.BotCommand("dedikodu", "Piyasa Tüyosu"),
+        types.BotCommand("kara_borsa", "Kara Borsa"),
+        types.BotCommand("emir", "Emirlerim"),
         types.BotCommand("gorevler", "Günlük Görevler"),
     ])
     
