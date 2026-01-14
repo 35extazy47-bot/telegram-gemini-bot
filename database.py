@@ -27,7 +27,7 @@ except FileNotFoundError:
 mongo_client = None
 users_collection = None
 db = None
-if MONGO_URI:
+if MONGO_URI is not None:
     try:
         mongo_client = pymongo.MongoClient(MONGO_URI)
         db = mongo_client["geminibot_db"]
@@ -39,7 +39,7 @@ if MONGO_URI:
             try:
                 with open(USERS_FILE, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                    if data:
+                    if data is not None:
                         # Veri yapısını { "_id": "users_data", "data": { ... } } şeklinde düzelt
                         users_collection.replace_one({"_id": "users_data"}, {"data": data}, upsert=True)
                         print("✅ JSON kullanıcı verileri buluta başarıyla taşındı!")
@@ -82,7 +82,7 @@ def load_users():
     if users_collection is not None:
         try:
             doc = users_collection.find_one({"_id": "users_data"})
-            if doc and "data" in doc:
+            if doc is not None and "data" in doc:
                 print("✅ Kullanıcı verileri MongoDB'den yüklendi.")
                 return doc["data"]
         except Exception as e:
@@ -126,7 +126,7 @@ def save_market_data():
         "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S") if last_market_update else None
     }
     
-    if db:
+    if db is not None:
         try:
             collection = db["market"]
             collection.replace_one({"_id": "market_data"}, data, upsert=True)
