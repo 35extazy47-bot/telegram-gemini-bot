@@ -265,8 +265,11 @@ def admin_callbacks(call):
 
     elif call.data == "admin_backup":
         try:
-            with open(USERS_FILE, "rb") as f: bot.send_document(call.message.chat.id, f, caption=f"💾 Yedek: {datetime.now()}")
-        except: bot.send_message(call.message.chat.id, "Yedek alınamadı.")
+            users_json = json.dumps(users, ensure_ascii=False, indent=2)
+            users_file = io.BytesIO(users_json.encode('utf-8'))
+            users_file.name = f"users_backup_{datetime.now().strftime('%Y-%m-%d_%H-%M')}.json"
+            bot.send_document(call.message.chat.id, users_file, caption=f"💾 Yedek: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+        except Exception as e: bot.send_message(call.message.chat.id, f"Yedek alınamadı: {e}")
 
     elif call.data == "admin_banned_list":
         text = "🚫 **Yasaklılar:**\n" + "\n".join([f"• {u.get('name')}" for u in users.values() if u.get("is_banned")])
@@ -348,6 +351,34 @@ def ban_manager(message):
             users[target]["is_banned"] = (cmd == "/ban"); save_users()
             bot.reply_to(message, f"✅ İşlem tamam: {cmd} {target}")
     except: pass
+
+@bot.message_handler(commands=['backup', 'yedek'])
+def admin_backup_command(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+    
+    wait_msg = bot.reply_to(message, "💾 Veritabanı yedeği hazırlanıyor...")
+    
+    try:
+        # 1. Kullanıcı Verileri (Memory -> JSON)
+        users_json = json.dumps(users, ensure_ascii=False, indent=2)
+        users_file = io.BytesIO(users_json.encode('utf-8'))
+        users_file.name = f"users_backup_{datetime.now().strftime('%Y-%m-%d_%H-%M')}.json"
+        
+        # 2. Market Verileri (Memory -> JSON)
+        market_data = {
+            "prices": market_prices, "volumes": market_volumes, "last_prices": last_prices,
+            "price_history": price_history, "news": market_news, "trend": market_trend,
+            "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S") if last_market_update else None
+        }
+        market_json = json.dumps(market_data, ensure_ascii=False, indent=2)
+        market_file = io.BytesIO(market_json.encode('utf-8'))
+        market_file.name = f"market_backup_{datetime.now().strftime('%Y-%m-%d_%H-%M')}.json"
+        
+        bot.send_document(message.chat.id, users_file, caption="👤 **Kullanıcı Veritabanı**")
+        bot.send_document(message.chat.id, market_file, caption="📈 **Piyasa Veritabanı**")
+        bot.delete_message(message.chat.id, wait_msg.message_id)
+    except Exception as e:
+        bot.edit_message_text(f"❌ Yedekleme hatası: {e}", message.chat.id, wait_msg.message_id)
 
 @bot.message_handler(commands=['gunluk'])
 def daily_reward(message):
