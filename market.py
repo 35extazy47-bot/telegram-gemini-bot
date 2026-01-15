@@ -417,12 +417,16 @@ def register_market_handlers(bot, tirtil_utils):
 
     @bot.message_handler(commands=['borsa'])
     def check_market(message):
-        chat_id = message.chat.id
-        user_id = str(message.from_user.id)
-        if hasattr(message, 'message'): 
+        if hasattr(message, 'message'): # CallbackQuery ise (Yenile butonu)
             chat_id = message.message.chat.id
             user_id = str(message.from_user.id)
-            bot.delete_message(chat_id, message.message.message_id)
+            try: 
+                bot.delete_message(chat_id, message.message.message_id)
+                bot.answer_callback_query(message.id) # Yükleniyor simgesini durdur
+            except: pass
+        else: # Normal mesaj ise (/borsa komutu)
+            chat_id = message.chat.id
+            user_id = str(message.from_user.id)
         
         try:
             photo = create_market_image(users.get(user_id))
