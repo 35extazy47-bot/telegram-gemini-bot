@@ -11,6 +11,7 @@ import html
 from dotenv import load_dotenv
 from flask import Flask
 from telebot import TeleBot, types
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from google import genai
 from PIL import Image, ImageDraw, ImageFont
 
@@ -26,7 +27,7 @@ client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 # --- Yardımcı Fonksiyonlar ---
 def safe_generate_content(prompt_content):
     """Modeller arası geçiş yaparak hata riskini azaltır."""
-    if not client: return type('obj', (object,), {'text': '⚠️ AI Kapalı.'})
+    if not client: return type('obj', (object,), {'text': '⚠️ AI Kapalı.'})()
     # Sırasıyla bu modelleri dener. Biri çalışırsa cevap döner.
     models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"]
     for model in models:
@@ -247,14 +248,16 @@ def admin_callbacks(call):
         if not pending: bot.answer_callback_query(call.id, "✅ Bekleyen yok!"); return
         bot.send_message(call.message.chat.id, f"⏳ **Onay Bekleyen {len(pending)} Kişi Var:**")
         for uid, u in pending:
-            info = f" {u.get('name', 'Bilinmiyor')}\n🆔 `{uid}`\n🔗 @{u.get('username', 'Yok')}"
+            safe_name = escape_md(u.get('name', 'Bilinmiyor'))
+            safe_username = escape_md(u.get('username', 'Yok'))
+            info = f"👤 {safe_name}\n🆔 `{uid}`\n🔗 @{safe_username}"
             markup = InlineKeyboardMarkup().add(InlineKeyboardButton("✅ Onayla", callback_data=f"approve_{uid}"), InlineKeyboardButton("❌ Reddet", callback_data=f"reject_{uid}"))
             bot.send_message(call.message.chat.id, info, reply_markup=markup, parse_mode="Markdown")
 
     elif call.data == "admin_user_list":
         text = "📋 **Kayıtlı Üyeler Listesi**\n\n"
         for i, (uid, u) in enumerate(users.items(), 1):
-            line = f"{i}. {u.get('name')} (@{u.get('username')}) - ID: `{uid}` - Lvl: {u.get('level', 1)}\n"
+            line = f"{i}. {escape_md(u.get('name'))} (@{escape_md(u.get('username'))}) - ID: `{uid}` - Lvl: {u.get('level', 1)}\n"
             if len(text + line) > 4000:
                 bot.send_message(call.message.chat.id, text, parse_mode="Markdown"); text = ""
             text += line
@@ -278,7 +281,7 @@ def admin_callbacks(call):
         for uid, u in users.items():
             for o in u.get("limit_orders", []):
                 item_name = TRADE_GOODS.get(o['item'], {}).get('name', o['item'])
-                text += f"👤 {u.get('name')}: {o['type']} {item_name} @ {o['target']}$\n"
+                text += f"👤 {escape_md(u.get('name'))}: {o['type']} {escape_md(item_name)} @ {o['target']}$\n"
         bot.send_message(call.message.chat.id, text if len(text) > 25 else "Emir yok.")
 
     elif call.data == "admin_economy_stats":
@@ -477,7 +480,7 @@ def help_callback(call):
         text = (
             "🔮 **AI & DİĞER ARAÇLAR**\n\n🔹 `/ozet <konu>` - Konu özeti çıkar.\n🔹 `/dogruyanlis` - Bilgi yarışması.\n🔹 `/ruya <metin>` - Rüya tabiri.\n🔹 `/tarot` - 3 kart tarot falı.\n🔹 `/burc` - Günlük burç yorumu.\n🔹 `/bilgi` - İlginç bir bilgi öğren.\n🔹 `/tarihtebugun` - Tarihte bugün."
         )
-    elif cat == "help_back":
+    elif category == "help_back":
         markup = InlineKeyboardMarkup(row_width=2)
         markup.row(
             InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
