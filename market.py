@@ -301,6 +301,59 @@ def register_market_handlers(bot, tirtil_utils):
     get_badges = tirtil_utils['get_badges']
     update_quest_progress = tirtil_utils['update_quest_progress']
 
+    def get_user_profile_image(user_id):
+        try:
+            photos = bot.get_user_profile_photos(user_id)
+            if photos.total_count > 0:
+                file_info = bot.get_file(photos.photos[0][-1].file_id)
+                return Image.open(io.BytesIO(bot.download_file(file_info.file_path)))
+        except: pass
+        return None
+
+    def create_rich_list_image(sorted_users):
+        width, height = 800, 140 + (len(sorted_users) * 70)
+        img = Image.new('RGB', (width, height), color=(35, 39, 42))
+        draw = ImageDraw.Draw(img)
+        
+        try:
+            font_path = "arial.ttf"
+            if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+            title_font, row_font, small_font = ImageFont.truetype(font_path, 40), ImageFont.truetype(font_path, 24), ImageFont.truetype(font_path, 16)
+        except: title_font, row_font, small_font = ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default()
+
+        draw.text((180, 30), "💸 ZENGİNLER LİSTESİ 💸", font=title_font, fill=(46, 204, 113))
+        draw.rectangle([(20, 90), (width-20, 140)], fill=(44, 47, 51))
+        
+        headers = ["#", "OYUNCU", "SERVET", "ROZETLER"]
+        x_pos = [40, 130, 450, 600]
+        for i, h in enumerate(headers): draw.text((x_pos[i], 100), h, font=row_font, fill=(200, 200, 200))
+            
+        y = 160
+        for i, (uid, data, wealth, badges) in enumerate(sorted_users, 1):
+            name = data.get("name", "Gizli")[:15]
+            
+            color = (255, 255, 255)
+            if i == 1: color = (255, 215, 0)
+            elif i == 2: color = (192, 192, 192)
+            elif i == 3: color = (205, 127, 50)
+            
+            p_pic = get_user_profile_image(uid)
+            if p_pic:
+                p_pic = p_pic.resize((40, 40)); mask = Image.new("L", (40, 40), 0)
+                draw_mask = ImageDraw.Draw(mask); draw_mask.ellipse((0, 0, 40, 40), fill=255)
+                img.paste(p_pic, (80, y-5), mask)
+
+            draw.text((x_pos[0], y), str(i), font=row_font, fill=color)
+            draw.text((x_pos[1], y), name, font=row_font, fill=color)
+            draw.text((x_pos[2], y), f"{int(wealth)} $", font=row_font, fill=color)
+            draw.text((x_pos[3], y), badges, font=small_font, fill=(200, 200, 200))
+            
+            draw.line([(40, y+55), (width-40, y+55)], fill=(60, 60, 60), width=1)
+            y += 70
+            
+        bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
+        return bio
+
     def buy_rumor(message):
         user_id = str(message.from_user.id)
         cost = 100
@@ -673,16 +726,21 @@ def register_market_handlers(bot, tirtil_utils):
     @bot.message_handler(commands=['zenginler'])
     def rich_list(message):
         leaderboard = []
-        for uid, u in list(users.items()):
-            net_worth = u.get("money", 0) + sum(count * market_prices.get(code, 0) for code, count in u.get("inventory", {}).items() if code in TRADE_GOODS)
-            leaderboard.append((u.get("name", "Gizli"), net_worth, u.get("username")))
+        with market_lock:
+            for uid, u in list(users.items()):
+                net_worth = u.get("money", 0) + u.get("bank_balance", 0) + sum(count * market_prices.get(code, 0) for code, count in u.get("inventory", {}).items() if code in TRADE_GOODS)
+                badges = get_badges(u)
+                leaderboard.append((uid, u, net_worth, badges))
         
-        leaderboard.sort(key=lambda x: x[1], reverse=True)
-        text = "💸 **KAPALIÇARŞI'NIN EN ZENGİNLERİ** 💸\n\n"
-        for i, (name, wealth, uname) in enumerate(leaderboard[:10], 1):
-            icon = "🥇" if i == 1 else ("🥈" if i == 2 else ("🥉" if i == 3 else "▫️"))
-            text += f"{icon} {i}. {name}: **{int(wealth)}** $\n"
-        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+        leaderboard.sort(key=lambda x: x[2], reverse=True)
+        
+        try:
+            photo = create_rich_list_image(leaderboard[:10])
+            bot.send_photo(message.chat.id, photo, caption="💸 **Kapalıçarşı'nın En Zenginleri**\n_(Nakit + Banka + Varlıklar)_")
+        except Exception as e:
+            bot.reply_to(message, f"Liderlik tablosu oluşturulamadı: {e}")
+            text = "💸 **Zenginler Listesi**\n\n" + "\n".join([f"{i+1}. {d[1].get('name')}: {int(d[2])} $" for i, d in enumerate(leaderboard[:10])])
+            bot.send_message(message.chat.id, text)
 
     @bot.message_handler(commands=['iflas'])
     def declare_bankruptcy(message):

@@ -164,7 +164,7 @@ def create_leaderboard_image(sorted_users):
         p_pic = get_user_profile_image(uid)
         if p_pic:
             p_pic = p_pic.resize((40, 40)); mask = Image.new("L", (40, 40), 0)
-            draw = ImageDraw.Draw(mask); draw.ellipse((0, 0, 40, 40), fill=255)
+            draw_mask = ImageDraw.Draw(mask); draw_mask.ellipse((0, 0, 40, 40), fill=255)
             img.paste(p_pic, (80, y-5), mask)
 
         draw.text((x_pos[0], y), str(i), font=row_font, fill=color)
