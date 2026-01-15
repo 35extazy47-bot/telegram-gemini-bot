@@ -15,7 +15,6 @@ from google import genai
 from PIL import Image, ImageDraw, ImageFont
 
 import database
-# Modülleri import et
 from database import *
 from quiz import register_quiz_handlers
 from market import register_market_handlers, update_market, apply_bank_interest
@@ -26,11 +25,14 @@ client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 
 # --- Yardımcı Fonksiyonlar ---
 def safe_generate_content(prompt_content):
-    if not client: raise Exception("Gemini API anahtarı ayarlanmamış.")
-    models = ["gemini-1.5-flash", "gemini-pro"]
+    """Modeller arası geçiş yaparak hata riskini azaltır."""
+    if not client: return type('obj', (object,), {'text': '⚠️ AI Kapalı.'})
+    # Sırasıyla bu modelleri dener. Biri çalışırsa cevap döner.
+    models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"]
     for model in models:
-        try: return client.generate_content(model=model, contents=prompt_content)
-        except Exception as e: print(f"⚠️ {model} hatası: {e} -> Diğer modele geçiliyor...")
+        try:
+            return client.models.generate_content(model=model, contents=prompt_content)
+        except Exception as e: print(f"⚠️ {model} hatası: {e}")
     raise Exception("Tüm Gemini modelleri başarısız oldu.")
 
 def escape_md(text): return str(text).replace("_", "\\_").replace("*", "\\*").replace("`", "\\`").replace("[", "\\[")
@@ -205,50 +207,68 @@ def send_morning_broadcast():
 @bot.message_handler(commands=['admin_panel'])
 def admin_panel(message):
     if message.from_user.username != DEVELOPER_USERNAME: return
-    
+
     user_count = len(users)
+    total_questions_solved = sum(u.get("total_questions", 0) for u in users.values())
     active_today = sum(1 for u in users.values() if u.get("last_gemini_date") == datetime.now().strftime("%Y-%m-%d"))
     pending_count = sum(1 for u in users.values() if not u.get("is_approved", True))
-    
+
     text = (
-        f"👑 **YÖNETİCİ KONTROL MERKEZİ**\n━━━━━━━━━━━━━━━━━━━━\n"
-        f"👥 Toplam: {user_count} | 🔥 Aktif: {active_today} | ⏳ Bekleyen: {pending_count}\n"
+        f"👑 **YÖNETİCİ KONTROL MERKEZİ** 👑\n"
+        f"━━━━━━━━━━━━━━━━━━━━\n"
+        f"👥 **Toplam Kullanıcı:** {user_count}\n"
+        f"🔥 **Bugün Aktif:** {active_today}\n"
+        f"⏳ **Onay Bekleyen:** {pending_count}\n"
+        f"📝 **Çözülen Soru:** {total_questions_solved}\n"
+        f"━━━━━━━━━━━━━━━━━━━━\n"
         "👇 **İşlem Seçiniz:**"
     )
-    
+
     markup = InlineKeyboardMarkup()
+    # Satır 1: Kullanıcı Yönetimi
     markup.add(InlineKeyboardButton(f"⏳ Onay ({pending_count})", callback_data="admin_pending_list"), InlineKeyboardButton("👥 Üyeler", callback_data="admin_user_list"))
+    # Satır 2: Özel Listeler
     markup.add(InlineKeyboardButton("🚫 Yasaklılar", callback_data="admin_banned_list"), InlineKeyboardButton("👑 VIP'ler", callback_data="admin_vip_list"))
     markup.add(InlineKeyboardButton("📉 Tüm Emirler", callback_data="admin_all_orders"), InlineKeyboardButton("📊 Eko. Analiz", callback_data="admin_economy_stats"))
+    # Satır 3: İletişim & Anket
     markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("📊 Anket", callback_data="admin_help_anket"))
-    markup.add(InlineKeyboardButton("🎁 Hediye", callback_data="admin_help_hediye"), InlineKeyboardButton("💾 Yedek Al", callback_data="admin_backup"))
-    
+    # Satır 4: Yönetim
+    markup.add(InlineKeyboardButton("🎁 Hediye", callback_data="admin_help_hediye"), InlineKeyboardButton("🔨 Ban", callback_data="admin_help_ban"))
+    markup.add(InlineKeyboardButton("💾 Yedek Al", callback_data="admin_backup"))
+
     bot.send_message(message.chat.id, text, reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("admin_"))
 def admin_callbacks(call):
     if call.from_user.username != DEVELOPER_USERNAME: return
-    
+
     if call.data == "admin_pending_list":
         pending = [(uid, u) for uid, u in users.items() if not u.get("is_approved", True)]
         if not pending: bot.answer_callback_query(call.id, "✅ Bekleyen yok!"); return
+        bot.send_message(call.message.chat.id, f"⏳ **Onay Bekleyen {len(pending)} Kişi Var:**")
         for uid, u in pending:
-            bot.send_message(call.message.chat.id, f"⏳ {u.get('name')} (@{u.get('username')}) ID: {uid}", reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("✅ Onayla", callback_data=f"approve_{uid}"), InlineKeyboardButton("❌ Reddet", callback_data=f"reject_{uid}")))
-    
-    if call.data == "admin_user_list":
-        text = "📋 **Üyeler:**\n" + "\n".join([f"{i+1}. {u.get('name')} (@{u.get('username')}) ID: {uid}" for i, (uid, u) in enumerate(users.items())])
-        if len(text) > 4000: text = text[:4000] + "..."
-        bot.send_message(call.message.chat.id, text)
-        
+            info = f" {u.get('name', 'Bilinmiyor')}\n🆔 `{uid}`\n🔗 @{u.get('username', 'Yok')}"
+            markup = InlineKeyboardMarkup().add(InlineKeyboardButton("✅ Onayla", callback_data=f"approve_{uid}"), InlineKeyboardButton("❌ Reddet", callback_data=f"reject_{uid}"))
+            bot.send_message(call.message.chat.id, info, reply_markup=markup, parse_mode="Markdown")
+
+    elif call.data == "admin_user_list":
+        text = "📋 **Kayıtlı Üyeler Listesi**\n\n"
+        for i, (uid, u) in enumerate(users.items(), 1):
+            line = f"{i}. {u.get('name')} (@{u.get('username')}) - ID: `{uid}` - Lvl: {u.get('level', 1)}\n"
+            if len(text + line) > 4000:
+                bot.send_message(call.message.chat.id, text, parse_mode="Markdown"); text = ""
+            text += line
+        if text: bot.send_message(call.message.chat.id, text, parse_mode="Markdown")
+
     elif call.data == "admin_backup":
         try:
             with open(USERS_FILE, "rb") as f: bot.send_document(call.message.chat.id, f, caption=f"💾 Yedek: {datetime.now()}")
         except: bot.send_message(call.message.chat.id, "Yedek alınamadı.")
-        
+
     elif call.data == "admin_banned_list":
         text = "🚫 **Yasaklılar:**\n" + "\n".join([f"• {u.get('name')}" for u in users.values() if u.get("is_banned")])
         bot.send_message(call.message.chat.id, text if len(text) > 20 else "Yasaklı yok.")
-        
+
     elif call.data == "admin_vip_list":
         vips = [u for u in users.values() if u.get("level", 1) >= 15]
         bot.send_message(call.message.chat.id, "👑 **VIP Üyeler:**\n" + "\n".join([f"• {u.get('name')}" for u in vips]) if vips else "VIP yok.")
@@ -256,17 +276,20 @@ def admin_callbacks(call):
     elif call.data == "admin_all_orders":
         text = "📉 **Bekleyen Emirler:**\n"
         for uid, u in users.items():
-            for o in u.get("limit_orders", []): text += f"👤 {u.get('name')}: {o['type']} {o['item']} @ {o['target']}$\n"
+            for o in u.get("limit_orders", []):
+                item_name = TRADE_GOODS.get(o['item'], {}).get('name', o['item'])
+                text += f"👤 {u.get('name')}: {o['type']} {item_name} @ {o['target']}$\n"
         bot.send_message(call.message.chat.id, text if len(text) > 25 else "Emir yok.")
 
     elif call.data == "admin_economy_stats":
         total_money = sum(u.get("money", 0) for u in users.values())
         total_bank = sum(u.get("bank_balance", 0) for u in users.values())
         bot.send_message(call.message.chat.id, f"📊 **Ekonomi:**\n💵 Cüzdan: {total_money} $\n🏦 Banka: {total_bank} $\n💰 Toplam: {total_money+total_bank} $")
-        
+
     elif call.data == "admin_help_duyuru": bot.send_message(call.message.chat.id, "📢 `/duyuru Mesaj`")
     elif call.data == "admin_help_anket": bot.send_message(call.message.chat.id, "📊 `/anket Soru | Cevap1 | Cevap2`")
     elif call.data == "admin_help_hediye": bot.send_message(call.message.chat.id, "🎁 `/hediye <ID> <Miktar>` veya `/dagit <Miktar>`")
+    elif call.data == "admin_help_ban": bot.send_message(call.message.chat.id, "🚫 `/ban <ID>`\n✅ `/unban <ID>`")
     elif "help" in call.data:
         bot.answer_callback_query(call.id, "Komut kullanımı için koda bakınız.", show_alert=True)
 
@@ -423,29 +446,51 @@ def start_pomodoro(message):
 @bot.message_handler(commands=['help', 'yardim', 'menu'])
 def help_guide(message):
     markup = InlineKeyboardMarkup(row_width=2)
-    markup.add(InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"), InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy"))
-    markup.add(InlineKeyboardButton("👤 Profil", callback_data="help_profile"), InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai"))
-    bot.send_message(message.chat.id, "📚 **YARDIM MENÜSÜ**", reply_markup=markup)
+    markup.row(
+        InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
+        InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy")
+    )
+    markup.row(
+        InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile"),
+        InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai")
+    )
+    bot.send_message(message.chat.id, "📚 **BOT YARDIM MENÜSÜ**\n\nLütfen bilgi almak istediğin kategoriyi seç: 👇", reply_markup=markup, parse_mode="Markdown")
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("help_"))
 def help_callback(call):
-    cat = call.data
-    if cat == "help_games": text = "🎮 **OYUNLAR**\n/quiz - Soru Çöz\n/maraton - Maraton Modu\n/duello - Düello At\n/bahis - Bahis Oyna\n/soruekle - Soru Öner"
-    elif cat == "help_economy": text = "💰 **EKONOMİ**\n/borsa - Borsa\n/al - /sat\n/banka - Banka\n/kaz - Maden\n/market - Eşya Al\n/envanter - Çanta\n/zenginler - Sıralama"
-    elif cat == "help_profile": text = "👤 **PROFİL**\n/profil - Profilin\n/top10 - Liderlik\n/gorevler - Görevler"
-    elif cat == "help_ai": text = "🔮 **DİĞER**\n/ozet - Konu Özeti\n/ruya - Rüya Tabiri\n/tarot - Fal\n/burc - Burç\n/bilgi - İlginç Bilgi"
+    category = call.data
+    text = ""
+    
+    if category == "help_games":
+        text = (
+            "🎮 **OYUN MODLARI**\n\n🔹 `/quiz` - Kategorili KPSS soruları çöz.\n🔹 `/maraton` - Tek canla ne kadar gidebilirsin?\n🔹 `/gorevler` - Günlük görevleri tamamla.\n🔹 `/clock` - Zamana karşı Global sorular.\n🔹 `/duello <@kisi> <para>` - Oyuncuya meydan oku.\n🔹 `/duello <para>` - Botla zar atışı yap.\n🔹 `/bahis <para>` - Sıradaki soruya bahis oyna."
+        )
+    elif category == "help_economy":
+        text = (
+            "💰 **EKONOMİ & TİCARET**\n\n🔹 `/banka` - Banka hesabını yönet (Günlük %5 Faiz).\n🔹 `/kredi <miktar>` - Kredi çek.\n🔹 `/borsa` - Kapalıçarşı fiyatlarını gör.\n🔹 `/analiz` - Piyasa analizi satın al.\n🔹 `/grafik_detay <mal>` - Detaylı grafik.\n🔹 `/dedikodu` - İçeriden bilgi al.\n🔹 `/kara_borsa` - Riskli ucuz pazar.\n🔹 `/al <mal> <adet>` - Mal Al.\n🔹 `/sat <mal> <adet>` - Mal Sat.\n🔹 `/emir_ver` - Otomatik emir gir.\n🔹 `/kaz` - Madene in.\n🔹 `/market` - Eşya satın al.\n🔹 `/transfer` - Para gönder."
+        )
+    elif category == "help_profile":
+        text = (
+            "👤 **PROFİL & ARAÇLAR**\n\n🔹 `/profil` - Profil kartını gör.\n🔹 `/envanter` - Çantanı gör.\n🔹 `/top10` - Liderlik tablosu.\n🔹 `/yanlislarim` - Hatalarını tekrar et.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/soruekle` - Soru öner."
+        )
+    elif category == "help_ai":
+        text = (
+            "🔮 **AI & DİĞER ARAÇLAR**\n\n🔹 `/ozet <konu>` - Konu özeti çıkar.\n🔹 `/dogruyanlis` - Bilgi yarışması.\n🔹 `/ruya <metin>` - Rüya tabiri.\n🔹 `/tarot` - 3 kart tarot falı.\n🔹 `/burc` - Günlük burç yorumu.\n🔹 `/bilgi` - İlginç bir bilgi öğren.\n🔹 `/tarihtebugun` - Tarihte bugün."
+        )
     elif cat == "help_back":
-        # Ana menüye geri dönmek için mesajı düzenle
         markup = InlineKeyboardMarkup(row_width=2)
-        markup.add(InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"), InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy"))
-        markup.add(InlineKeyboardButton("👤 Profil", callback_data="help_profile"), InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai"))
-        bot.edit_message_text("📚 **YARDIM MENÜSÜ**", call.message.chat.id, call.message.message_id, reply_markup=markup)
+        markup.row(
+            InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
+            InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy")
+        )
+        markup.row(
+            InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile"),
+            InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai")
+        )
+        bot.edit_message_text("📚 **BOT YARDIM MENÜSÜ**\n\nLütfen bilgi almak istediğin kategoriyi seç: 👇", call.message.chat.id, call.message.message_id, reply_markup=markup, parse_mode="Markdown")
         return
-    else: # Bilinmeyen bir kategori ise
-        bot.answer_callback_query(call.id)
-        return
-        
-    bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("🔙 Geri", callback_data="help_back")))
+
+    bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("🔙 Geri", callback_data="help_back")), parse_mode="Markdown")
 
 # --- Ana Komut Handler'ları ---
 @bot.message_handler(commands=['start'])
@@ -532,9 +577,18 @@ def language_selected(call):
     selected = messages.get(lang_code, messages["en"])
     
     markup = InlineKeyboardMarkup()
-    markup.row(InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"), InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy"))
-    markup.row(InlineKeyboardButton("👤 Profil", callback_data="help_profile"), InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai"))
-    markup.add(InlineKeyboardButton(text=selected["btn"], url=f"https://t.me/{DEVELOPER_USERNAME}"))
+    # Kategorili Menü Butonları
+    markup.row(
+        InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
+        InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy")
+    )
+    markup.row(
+        InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile"),
+        InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai")
+    )
+    markup.add(
+        InlineKeyboardButton(text=selected["btn"], url=f"https://t.me/{DEVELOPER_USERNAME}")
+    )
 
     bot.edit_message_text(selected["text"], call.message.chat.id, call.message.message_id, reply_markup=markup, parse_mode="Markdown")
     bot.send_message(call.message.chat.id, "✅ Kurulum tamamlandı! Sol alttaki **Menu** butonunu kullanabilirsin.")
