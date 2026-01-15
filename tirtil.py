@@ -416,6 +416,74 @@ def daily_reward(message):
 
     bot.reply_to(message, f"🎁 **GÜNLÜK ÖDÜL ALINDI!**\n\n⭐️ EXP: +{total_reward}\n💵 Para: +{money_reward} $\n🔥 Seri: {streak}. Gün{luck_msg}")
 
+@bot.message_handler(commands=['resim'])
+def image_edit_start(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    if not check_daily_limit(user_id):
+        bot.reply_to(message, "⛔ Günlük limit doldu."); return
+        
+    msg = bot.reply_to(message, "🎨 **RESİM DÜZENLEME MODU**\n\nLütfen üzerinde çalışmamı istediğin resmi gönder: 👇")
+    bot.register_next_step_handler(msg, process_image_upload)
+
+def process_image_upload(message):
+    if message.content_type != 'photo':
+        bot.reply_to(message, "⚠️ Lütfen bir fotoğraf gönder. İşlem iptal edildi.")
+        return
+    
+    file_id = message.photo[-1].file_id
+    msg = bot.reply_to(message, "📸 Resim alındı! Şimdi bu resme ne yapmamı istersin?\n(Örn: 'Anime yap', 'Arkaplanı uzay yap', 'Yağlı boya tablosuna çevir')")
+    bot.register_next_step_handler(msg, process_image_edit_prompt, file_id)
+
+def process_image_edit_prompt(message, file_id):
+    user_id = str(message.from_user.id)
+    user_prompt = message.text
+    
+    if not user_prompt:
+        bot.reply_to(message, "⚠️ Lütfen bir talimat yaz. İşlem iptal edildi.")
+        return
+
+    wait_msg = bot.reply_to(message, "🎨 Yapay zeka çalışıyor... (Önce resmi inceliyor, sonra yeniden çiziyor...)")
+    
+    try:
+        # 1. Resmi İndir
+        file_info = bot.get_file(file_id)
+        downloaded_file = bot.download_file(file_info.file_path)
+        image = Image.open(io.BytesIO(downloaded_file))
+        
+        # 2. Resmi Gemini'ye Tanıt (Vision)
+        vision_prompt = "Bu resmi en ince detaylarına kadar betimle. Renkler, objeler, ortam, ışık, her şeyi anlat."
+        vision_response = safe_generate_content([vision_prompt, image])
+        image_description = vision_response.text
+        
+        # 3. Yeni Prompt Oluştur (Text-to-Text)
+        merge_prompt = f"""
+        Elimizde şöyle bir resim tarifi var: "{image_description}"
+        Kullanıcı bu resmi şu şekilde değiştirmek istiyor: "{user_prompt}"
+        
+        Lütfen bu isteği gerçekleştirecek, İngilizce, detaylı ve profesyonel bir "Image Generation Prompt" (Resim Üretim İstemi) yaz.
+        Sadece promptu yaz, başka bir şey yazma.
+        """
+        prompt_response = safe_generate_content(merge_prompt)
+        final_prompt = prompt_response.text.strip()
+        
+        # 4. Yeni Resmi Çiz (Imagen 3)
+        response = client.models.generate_images(
+            model='imagen-3.0-generate-001',
+            prompt=final_prompt,
+            config=genai.types.GenerateImagesConfig(number_of_images=1)
+        )
+        
+        if response.generated_images:
+            image_bytes = response.generated_images[0].image.image_bytes
+            bot.delete_message(message.chat.id, wait_msg.message_id)
+            bot.send_photo(message.chat.id, io.BytesIO(image_bytes), caption=f"🎨 **Sonuç:** {user_prompt}")
+        else:
+            bot.edit_message_text("Resim oluşturulamadı.", message.chat.id, wait_msg.message_id)
+            
+    except Exception as e:
+        bot.edit_message_text(f"Hata oluştu: {e}", message.chat.id, wait_msg.message_id)
+
 @bot.message_handler(commands=['ozet'])
 def get_summary(message):
     if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
@@ -509,7 +577,7 @@ def help_callback(call):
         )
     elif category == "help_ai":
         text = (
-            "🔮 **AI & DİĞER ARAÇLAR**\n\n🔹 `/ozet <konu>` - Konu özeti çıkar.\n🔹 `/dogruyanlis` - Bilgi yarışması.\n🔹 `/ruya <metin>` - Rüya tabiri.\n🔹 `/tarot` - 3 kart tarot falı.\n🔹 `/burc` - Günlük burç yorumu.\n🔹 `/bilgi` - İlginç bir bilgi öğren.\n🔹 `/tarihtebugun` - Tarihte bugün."
+            "🔮 **AI & DİĞER ARAÇLAR**\n\n🔹 `/resim` - Resim Düzenle/Çiz.\n🔹 `/ozet <konu>` - Konu özeti çıkar.\n🔹 `/dogruyanlis` - Bilgi yarışması.\n🔹 `/ruya <metin>` - Rüya tabiri.\n🔹 `/tarot` - 3 kart tarot falı.\n🔹 `/burc` - Günlük burç yorumu.\n🔹 `/bilgi` - İlginç bir bilgi öğren.\n🔹 `/tarihtebugun` - Tarihte bugün."
         )
     elif category == "help_back":
         markup = InlineKeyboardMarkup(row_width=2)
@@ -728,6 +796,7 @@ if __name__ == "__main__":
         types.BotCommand("kara_borsa", "Kara Borsa"),
         types.BotCommand("zenginler", "En Zenginler"),
         types.BotCommand("ozet", "Konu Özeti"),
+        types.BotCommand("resim", "Resim Düzenle"),
         types.BotCommand("ruya", "Rüya Tabiri"),
         types.BotCommand("tarot", "Tarot Falı"),
         types.BotCommand("burc", "Burç Yorumu"),
