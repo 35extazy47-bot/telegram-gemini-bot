@@ -3349,5 +3349,285 @@
     ],
     "answer": "B",
     "explanation": "Birleşmiş Milletler'in ana merkezi ABD'nin New York şehrindedir."
+  },
+  {
+    "id": 269,
+    "category": "tarih",
+    "level": 2,
+    "question": "93 Harbi (1877-1878 Osmanlı-Rus Savaşı) sonucunda imzalanan ancak Avrupalı devletlerin itirazı üzerine yürürlüğe girmeyen antlaşma hangisidir?",
+    "options": [
+      "A) Berlin Antlaşması",
+      "B) Ayastefanos Antlaşması",
+      "C) Paris Antlaşması",
+      "D) Londra Antlaşması"
+    ],
+    "answer": "B",
+    "explanation": "Ayastefanos Antlaşması, Rusya'nın aşırı güçlenmesinden çekinen İngiltere ve diğer devletlerin baskısıyla yürürlüğe girmemiş, yerine Berlin Antlaşması imzalanmıştır."
+  },
+  {
+    "id": 270,
+    "category": "tarih",
+    "level": 2,
+    "question": "II. Meşrutiyet'in ilan edilmesinde (1908) etkili olan cemiyet hangisidir?",
+    "options": [
+      "A) Hürriyet ve İtilaf Fırkası",
+      "B) Ahrar Fırkası",
+      "C) İttihat ve Terakki Cemiyeti",
+      "D) Vatan ve Hürriyet Cemiyeti"
+    ],
+    "answer": "C",
+    "explanation": "İttihat ve Terakki Cemiyeti'nin baskıları sonucu II. Abdülhamit, 1908 yılında Meşrutiyet'i ikinci kez ilan etmek zorunda kalmıştır."
+  },
+  {
+    "id": 271,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'nin Kuzey Afrika'daki son toprak parçası olan Trablusgarp'ı kaybettiği antlaşma hangisidir?",
+    "options": [
+      "A) Uşi Antlaşması",
+      "B) Atina Antlaşması",
+      "C) İstanbul Antlaşması",
+      "D) Londra Antlaşması"
+    ],
+    "answer": "A",
+    "explanation": "İtalya ile imzalanan Uşi Antlaşması (1912) ile Trablusgarp ve Bingazi İtalya'ya bırakılmıştır."
+  },
+  {
+    "id": 272,
+    "category": "tarih",
+    "level": 2,
+    "question": "Aşağıdaki devletlerden hangisi I. Balkan Savaşı'nda Osmanlı Devleti'ne saldıran Balkan devletlerinden biri değildir?",
+    "options": [
+      "A) Bulgaristan",
+      "B) Yunanistan",
+      "C) Sırbistan",
+      "D) Romanya"
+    ],
+    "answer": "D",
+    "explanation": "Romanya, I. Balkan Savaşı'na katılmamış, ancak II. Balkan Savaşı'nda Bulgaristan'a karşı savaşa girmiştir."
+  },
+  {
+    "id": 273,
+    "category": "tarih",
+    "level": 2,
+    "question": "1913 yılında gerçekleşen ve İttihat ve Terakki'nin yönetimi tam anlamıyla ele geçirdiği hükümet darbesine ne ad verilir?",
+    "options": [
+      "A) 31 Mart Vakası",
+      "B) Bab-ı Ali Baskını",
+      "C) Kuleli Vakası",
+      "D) Çırağan Baskını"
+    ],
+    "answer": "B",
+    "explanation": "Bab-ı Ali Baskını ile İttihat ve Terakki Cemiyeti, Kamil Paşa hükümetini devirerek iktidarı ele geçirmiştir."
+  },
+  {
+    "id": 274,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'ne sığınan ve adları 'Yavuz' ve 'Midilli' olarak değiştirilen Alman gemilerinin asıl adları nelerdir?",
+    "options": [
+      "A) Goben ve Breslau",
+      "B) Malaya ve Ocean",
+      "C) Agamemnon ve Elizabeth",
+      "D) Bismarck ve Tirpitz"
+    ],
+    "answer": "A",
+    "explanation": "Goben ve Breslau gemileri Osmanlı'ya sığınmış, Yavuz ve Midilli adlarını alarak Rus limanlarını bombalamış ve Osmanlı savaşa girmiştir."
+  },
+  {
+    "id": 275,
+    "category": "tarih",
+    "level": 1,
+    "question": "Çanakkale Cephesi'nde kazandığı başarılarla 'Anafartalar Kahramanı' olarak tanınan komutan kimdir?",
+    "options": [
+      "A) Enver Paşa",
+      "B) Kazım Karabekir",
+      "C) Mustafa Kemal Paşa",
+      "D) Fevzi Çakmak"
+    ],
+    "answer": "C",
+    "explanation": "Mustafa Kemal Paşa, Çanakkale'de Anafartalar, Conkbayırı ve Arıburnu'nda gösterdiği başarılarla bu unvanı almıştır."
+  },
+  {
+    "id": 276,
+    "category": "tarih",
+    "level": 2,
+    "question": "I. Dünya Savaşı'nda Irak Cephesi'nde İngiliz ordusunu esir alarak kazanılan büyük zafer hangisidir?",
+    "options": [
+      "A) Kut'ül Amare",
+      "B) Kanal Harekatı",
+      "C) Sarıkamış",
+      "D) Gazze Muharebesi"
+    ],
+    "answer": "A",
+    "explanation": "Halil (Kut) Paşa komutasındaki Osmanlı ordusu, Kut'ül Amare'de İngiliz General Townshend ve ordusunu esir almıştır."
+  },
+  {
+    "id": 277,
+    "category": "tarih",
+    "level": 2,
+    "question": "1915 yılında Ermeni çetelerinin isyanları üzerine çıkarılan ve zorunlu göçü öngören kanun hangisidir?",
+    "options": [
+      "A) Takrir-i Sükun",
+      "B) Tehcir (Sevk ve İskan) Kanunu",
+      "C) Hıyanet-i Vataniye",
+      "D) Teşkilat-ı Esasiye"
+    ],
+    "answer": "B",
+    "explanation": "Tehcir Kanunu ile savaş bölgelerindeki güvenliği tehdit eden Ermeniler, daha güvenli bölgelere (Suriye vb.) göç ettirilmiştir."
+  },
+  {
+    "id": 278,
+    "category": "tarih",
+    "level": 1,
+    "question": "Osmanlı Devleti'nin I. Dünya Savaşı'ndan çekilmesini sağlayan ateşkes antlaşması hangisidir?",
+    "options": [
+      "A) Mudanya",
+      "B) Sevr",
+      "C) Mondros",
+      "D) Lozan"
+    ],
+    "answer": "C",
+    "explanation": "30 Ekim 1918 tarihli Mondros Ateşkes Antlaşması ile Osmanlı Devleti fiilen sona ermiştir."
+  },
+  {
+    "id": 279,
+    "category": "tarih",
+    "level": 2,
+    "question": "Mondros Ateşkes Antlaşması'ndan sonra işgal edilen ilk Osmanlı toprağı neresidir?",
+    "options": [
+      "A) İzmir",
+      "B) Musul",
+      "C) İskenderun",
+      "D) İstanbul"
+    ],
+    "answer": "B",
+    "explanation": "Mondros'tan hemen sonra İngilizler tarafından işgal edilen Musul, işgal edilen ilk Osmanlı toprağıdır."
+  },
+  {
+    "id": 280,
+    "category": "tarih",
+    "level": 2,
+    "question": "Mondros Ateşkes Antlaşması'nın 'İtilaf Devletleri güvenliklerini tehdit eden herhangi bir stratejik noktayı işgal edebileceklerdir' maddesi kaçıncı maddedir?",
+    "options": [
+      "A) 7. Madde",
+      "B) 24. Madde",
+      "C) 1. Madde",
+      "D) 10. Madde"
+    ],
+    "answer": "A",
+    "explanation": "7. Madde, Anadolu'nun işgaline hukuki zemin hazırlayan en tehlikeli maddedir."
+  },
+  {
+    "id": 281,
+    "category": "tarih",
+    "level": 2,
+    "question": "15 Mayıs 1919'da İzmir'in işgali sırasında Yunan askerlerine ilk kurşunu sıkan gazeteci kimdir?",
+    "options": [
+      "A) Ali Çetinkaya",
+      "B) Hasan Tahsin (Osman Nevres)",
+      "C) Yörük Ali Efe",
+      "D) Sütçü İmam"
+    ],
+    "answer": "B",
+    "explanation": "Hukuk-u Beşer gazetesi yazarı Hasan Tahsin, İzmir'de Yunanlılara ilk kurşunu sıkarak direnişi başlatmıştır."
+  },
+  {
+    "id": 282,
+    "category": "tarih",
+    "level": 2,
+    "question": "Son Osmanlı Mebusan Meclisi'nde kabul edilen ve Milli Mücadele'nin temelini oluşturan kararlara ne ad verilir?",
+    "options": [
+      "A) Tekalif-i Milliye",
+      "B) Misak-ı Milli",
+      "C) Amasya Genelgesi",
+      "D) Sivas Kongresi Kararları"
+    ],
+    "answer": "B",
+    "explanation": "Misak-ı Milli (Milli Yemin), Türk vatanının sınırlarını ve bağımsızlık hedeflerini belirleyen kararlardır."
+  },
+  {
+    "id": 283,
+    "category": "tarih",
+    "level": 2,
+    "question": "İstanbul'un İtilaf Devletleri tarafından resmen işgal edilmesine ve Mebusan Meclisi'nin dağıtılmasına neden olan olay nedir?",
+    "options": [
+      "A) Sivas Kongresi",
+      "B) Misak-ı Milli'nin kabulü",
+      "C) Amasya Görüşmeleri",
+      "D) İzmir'in İşgali"
+    ],
+    "answer": "B",
+    "explanation": "Misak-ı Milli'nin kabul edilmesi İtilaf Devletlerini rahatsız etmiş ve 16 Mart 1920'de İstanbul'u resmen işgal etmişlerdir."
+  },
+  {
+    "id": 284,
+    "category": "tarih",
+    "level": 1,
+    "question": "Osmanlı Devleti'nin imzaladığı son antlaşma olan ve Mebusan Meclisi tarafından onaylanmadığı için 'ölü doğmuş' sayılan antlaşma hangisidir?",
+    "options": [
+      "A) Lozan",
+      "B) Mondros",
+      "C) Sevr",
+      "D) Gümrü"
+    ],
+    "answer": "C",
+    "explanation": "10 Ağustos 1920 tarihli Sevr Antlaşması, meclis onayı olmadığı için hukuken geçersiz sayılmıştır."
+  },
+  {
+    "id": 285,
+    "category": "tarih",
+    "level": 2,
+    "question": "Mustafa Kemal Paşa'nın I. Dünya Savaşı'nda görev aldığı son cephe hangisidir?",
+    "options": [
+      "A) Çanakkale",
+      "B) Kafkas",
+      "C) Suriye-Filistin",
+      "D) Galiçya"
+    ],
+    "answer": "C",
+    "explanation": "Mustafa Kemal sırasıyla Çanakkale, Kafkas ve en son Suriye-Filistin cephesinde (Yıldırım Orduları Grup Komutanı olarak) görev yapmıştır."
+  },
+  {
+    "id": 286,
+    "category": "tarih",
+    "level": 2,
+    "question": "ABD Başkanı Wilson'un yayınladığı ilkelere göre, imparatorlukların parçalanmasında ve yeni devletlerin kurulmasında esas alınan kriter nedir?",
+    "options": [
+      "A) Dini inanç",
+      "B) Ekonomik güç",
+      "C) Nüfus yoğunluğu (Milliyet)",
+      "D) Tarihi sınırlar"
+    ],
+    "answer": "C",
+    "explanation": "Wilson İlkeleri'ne göre her millet çoğunlukta olduğu bölgede kendi kaderini tayin etme hakkına (Self-determinasyon) sahiptir."
+  },
+  {
+    "id": 287,
+    "category": "tarih",
+    "level": 2,
+    "question": "I. Dünya Savaşı sonunda yenilen devletlerle yapılacak barış antlaşmalarının şartlarını belirlemek için toplanan konferans hangisidir?",
+    "options": [
+      "A) Paris Barış Konferansı",
+      "B) Londra Konferansı",
+      "C) San Remo Konferansı",
+      "D) Yalta Konferansı"
+    ],
+    "answer": "A",
+    "explanation": "1919 Paris Barış Konferansı, I. Dünya Savaşı sonrası dünya düzenini belirlemek için toplanmıştır."
+  },
+  {
+    "id": 288,
+    "category": "tarih",
+    "level": 2,
+    "question": "19. yüzyılda Rus Çarı I. Nikolay'ın Osmanlı Devleti için kullandığı ve Avrupa literatürüne geçen ifade hangisidir?",
+    "options": [
+      "A) Doğu Sorunu",
+      "B) Hasta Adam",
+      "C) Büyük Oyun",
+      "D) Demir Perde"
+    ],
+    "answer": "B",
+    "explanation": "Rus Çarı, Osmanlı'nın zayıflığını belirtmek için 'Kollarımızda can çekişen bir hasta adam var' ifadesini kullanmıştır."
   }
 ]
