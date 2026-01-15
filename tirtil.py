@@ -467,15 +467,15 @@ def process_image_edit_prompt(message, file_id):
         prompt_response = safe_generate_content(merge_prompt)
         final_prompt = prompt_response.text.strip()
         
-        # 4. Yeni Resmi Çiz (Imagen 3)
-        response = client.models.generate_images(
-            model='imagen-3.0-generate-001',
-            prompt=final_prompt,
-            config=genai.types.GenerateImagesConfig(number_of_images=1)
+        # 4. Yeni Resmi Çiz (Gemini 2.0 Flash)
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=final_prompt,
+            config={'response_modalities': ['IMAGE']}
         )
         
-        if response.generated_images:
-            image_bytes = response.generated_images[0].image.image_bytes
+        if response.parts and response.parts[0].inline_data:
+            image_bytes = response.parts[0].inline_data.data
             bot.delete_message(message.chat.id, wait_msg.message_id)
             bot.send_photo(message.chat.id, io.BytesIO(image_bytes), caption=f"🎨 **Sonuç:** {user_prompt}")
         else:
