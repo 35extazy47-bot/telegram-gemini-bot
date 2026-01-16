@@ -470,12 +470,11 @@ def process_image_edit_prompt(message, file_id):
         # 4. Yeni Resmi Çiz (Gemini 2.0 Flash)
         # 4. Yeni Resmi Çiz (Desteklenen Modelleri Sırayla Deneyerek)
         image_models = [
-            "gemini-2.5-flash-image",
-            "gemini-2.0-flash-exp-image-generation",
-            "gemini-2.0-flash" # Son çare
+            "gemini-2.0-flash-exp",
+            "gemini-2.0-flash-exp-image-generation"
         ]
         response = None
-        last_error = None
+        errors = []
 
         for model_name in image_models:
             try:
@@ -487,7 +486,7 @@ def process_image_edit_prompt(message, file_id):
                 if response.parts and response.parts[0].inline_data:
                     break # Başarılı oldu, döngüden çık
             except Exception as e:
-                last_error = e
+                errors.append(f"{model_name}: {str(e)}")
                 print(f"🖼️ Resim oluşturma hatası ({model_name}): {e}")
                 continue # Sıradaki modeli dene
         
@@ -496,7 +495,7 @@ def process_image_edit_prompt(message, file_id):
             bot.delete_message(message.chat.id, wait_msg.message_id)
             bot.send_photo(message.chat.id, io.BytesIO(image_bytes), caption=f"🎨 **Sonuç:** {user_prompt}")
         else:
-            error_message = f"Resim oluşturulamadı. Tüm modeller denendi. Son hata: {last_error}"
+            error_message = f"Resim oluşturulamadı. Hatalar:\n" + "\n".join(errors)
             bot.edit_message_text(error_message, message.chat.id, wait_msg.message_id)
             
     except Exception as e:
