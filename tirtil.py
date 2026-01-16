@@ -470,7 +470,8 @@ def process_image_edit_prompt(message, file_id):
         # 4. Yeni Resmi Çiz (Gemini 2.0 Flash)
         # 4. Yeni Resmi Çiz (Desteklenen Modelleri Sırayla Deneyerek)
         image_models = [
-            "gemini-2.0-flash-exp",
+            "gemini-3-pro-image-preview",
+            "gemini-2.5-flash-image",
             "gemini-2.0-flash-exp-image-generation"
         ]
         response = None
