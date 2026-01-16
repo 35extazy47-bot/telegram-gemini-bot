@@ -468,26 +468,36 @@ def process_image_edit_prompt(message, file_id):
         final_prompt = prompt_response.text.strip()
         
         # 4. Yeni Resmi Çiz (Gemini 2.0 Flash)
-        try:
-            response = client.models.generate_content(
-                model='gemini-2.0-flash',
-                contents=final_prompt,
-                config={'response_modalities': ['IMAGE']}
-            )
-        except Exception:
-            # Eğer ana model hata verirse exp modelini dene
-            response = client.models.generate_content(
-                model='gemini-2.0-flash-exp',
-                contents=final_prompt,
-                config={'response_modalities': ['IMAGE']}
-            )
+        # 4. Yeni Resmi Çiz (Desteklenen Modelleri Sırayla Deneyerek)
+        image_models = [
+            "gemini-2.5-flash-image",
+            "gemini-2.0-flash-exp-image-generation",
+            "gemini-2.0-flash" # Son çare
+        ]
+        response = None
+        last_error = None
+
+        for model_name in image_models:
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=final_prompt,
+                    config={'response_modalities': ['IMAGE']}
+                )
+                if response.parts and response.parts[0].inline_data:
+                    break # Başarılı oldu, döngüden çık
+            except Exception as e:
+                last_error = e
+                print(f"🖼️ Resim oluşturma hatası ({model_name}): {e}")
+                continue # Sıradaki modeli dene
         
-        if response.parts and response.parts[0].inline_data:
+        if response and response.parts and response.parts[0].inline_data:
             image_bytes = response.parts[0].inline_data.data
             bot.delete_message(message.chat.id, wait_msg.message_id)
             bot.send_photo(message.chat.id, io.BytesIO(image_bytes), caption=f"🎨 **Sonuç:** {user_prompt}")
         else:
-            bot.edit_message_text("Resim oluşturulamadı.", message.chat.id, wait_msg.message_id)
+            error_message = f"Resim oluşturulamadı. Tüm modeller denendi. Son hata: {last_error}"
+            bot.edit_message_text(error_message, message.chat.id, wait_msg.message_id)
             
     except Exception as e:
         bot.edit_message_text(f"Hata oluştu: {e}", message.chat.id, wait_msg.message_id)
