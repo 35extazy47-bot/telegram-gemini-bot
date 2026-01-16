@@ -29,7 +29,7 @@ def safe_generate_content(prompt_content):
     """Modeller arası geçiş yaparak hata riskini azaltır."""
     if not client: return type('obj', (object,), {'text': '⚠️ AI Kapalı.'})()
     # Sırasıyla bu modelleri dener. Biri çalışırsa cevap döner.
-    models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-2.0-flash-exp", "gemini-1.5-pro"]
+    models = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash", "gemini-1.5-flash"]
     for model in models:
         try:
             return client.models.generate_content(model=model, contents=prompt_content)
@@ -468,11 +468,19 @@ def process_image_edit_prompt(message, file_id):
         final_prompt = prompt_response.text.strip()
         
         # 4. Yeni Resmi Çiz (Gemini 2.0 Flash)
-        response = client.models.generate_content(
-            model='gemini-2.0-flash',
-            contents=final_prompt,
-            config={'response_modalities': ['IMAGE']}
-        )
+        try:
+            response = client.models.generate_content(
+                model='gemini-2.0-flash',
+                contents=final_prompt,
+                config={'response_modalities': ['IMAGE']}
+            )
+        except Exception:
+            # Eğer ana model hata verirse exp modelini dene
+            response = client.models.generate_content(
+                model='gemini-2.0-flash-exp',
+                contents=final_prompt,
+                config={'response_modalities': ['IMAGE']}
+            )
         
         if response.parts and response.parts[0].inline_data:
             image_bytes = response.parts[0].inline_data.data
