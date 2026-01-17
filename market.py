@@ -2,6 +2,7 @@ import os
 import random
 import uuid
 import time
+import math
 from datetime import datetime, timedelta
 import io
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
@@ -106,19 +107,36 @@ def update_market(bot):
 
         trend_strength = random.uniform(0.01, 0.03)
         for code, data in TRADE_GOODS.items():
+            # 1. Volatilite ve Trend
             change_percent = random.gauss(0, data["volatility"]) + (database.market_trend * trend_strength) + database.active_global_modifier
-            if market_volumes.get(code, 0) != 0: change_percent += (market_volumes[code] * 0.002)
+            
+            # 2. Hacim Etkisi (Logaritmik - Daha gerçekçi)
+            vol = market_volumes.get(code, 0)
+            if vol != 0:
+                vol_impact = (1 if vol > 0 else -1) * math.log(abs(vol) + 1) * 0.005
+                change_percent += vol_impact
+
+            # 3. Haber Etkisi
             if code == database.active_news_item: change_percent += random.uniform(0.05, 0.15) * (1 if database.active_news_direction == "up" else -1)
             
-            limit = 0.30 if database.active_global_modifier != 0 else 0.10
+            # 4. Momentum (Önceki hareketin %20'si devam eder)
+            history = price_history.get(code, [])
+            if len(history) > 1:
+                prev_change_pct = (history[-1] - history[-2]) / history[-2] if history[-2] != 0 else 0
+                change_percent += prev_change_pct * 0.2
+
+            limit = 0.30 if database.active_global_modifier != 0 else 0.15
             change_percent = max(-limit, min(change_percent, limit))
             price_change = int(market_prices[code] * change_percent) or (random.randint(1, 3) * (-1 if change_percent < 0 else 1))
             
             market_prices[code] = max(data["min"], min(market_prices[code] + price_change, data["max"]))
             price_history.setdefault(code, []).append(market_prices[code])
-            if len(price_history[code]) > 20: price_history[code].pop(0)
+            if len(price_history[code]) > 40: price_history[code].pop(0) # Grafik için daha fazla veri
 
-        market_volumes = {k: 0 for k in TRADE_GOODS.keys()}
+        # Hacim zamanla azalır (Likidite)
+        for k in market_volumes:
+            market_volumes[k] = int(market_volumes[k] * 0.8)
+            
         check_limit_orders(bot)
         database.last_market_update = datetime.now()
         save_market_data()
@@ -137,8 +155,8 @@ def apply_bank_interest(bot):
 
 def create_market_image(user_data=None):
     num_items, row_height, header_height, footer_height = len(TRADE_GOODS), 80, 180, 60
-    width, height = 1100, header_height + (num_items * row_height) + footer_height
-    img = Image.new('RGB', (width, height), color=(25, 28, 36))
+    width, height = 1400, header_height + (num_items * row_height) + footer_height
+    img = Image.new('RGB', (width, height), color=(30, 33, 43)) # Daha modern koyu ton
     draw = ImageDraw.Draw(img)
     try:
         font_path = "arial.ttf"
@@ -147,38 +165,56 @@ def create_market_image(user_data=None):
     except:
         title_font, header_font, row_font, small_font = ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default()
 
-    draw.rectangle([(0, 0), (width, 100)], fill=(46, 204, 113)); draw.text((40, 25), "📈 KAPALIÇARŞI BORSASI", font=title_font, fill=(255, 255, 255))
+    draw.rectangle([(0, 0), (width, 100)], fill=(52, 211, 153)); draw.text((40, 25), "📈 KAPALIÇARŞI BORSASI", font=title_font, fill=(20, 20, 30))
     current_index, last_index = sum(market_prices.values()), sum(last_prices.values())
     idx_diff, idx_pct = current_index - last_index, (current_index - last_index) / last_index * 100 if last_index > 0 else 0
     idx_arrow = "▲" if idx_diff > 0 else ("▼" if idx_diff < 0 else "➖")
-    draw.text((600, 35), f"ENDEKS: {current_index} {idx_arrow} %{abs(idx_pct):.2f}", font=header_font, fill=(240, 240, 240))
-    draw.rectangle([(30, 120), (width-30, 170)], fill=(38, 43, 54)); draw.text((45, 135), f"📰 {database.market_news[:87] + '...' if len(database.market_news) > 90 else database.market_news}", font=row_font, fill=(220, 220, 220))
+    draw.text((700, 35), f"ENDEKS: {current_index} {idx_arrow} %{abs(idx_pct):.2f}", font=header_font, fill=(40, 40, 50))
+    draw.rectangle([(30, 120), (width-30, 170)], fill=(40, 44, 56)); draw.text((45, 135), f"📰 {database.market_news[:100] + '...' if len(database.market_news) > 100 else database.market_news}", font=row_font, fill=(200, 200, 220))
     
-    y = 200; headers = ["ÜRÜN", "FİYAT", "DEĞİŞİM", "VARLIK", "DERİNLİK"]; x_pos = [40, 280, 450, 650, 850]
-    for i, h in enumerate(headers): draw.text((x_pos[i], y), h, font=header_font, fill=(150, 150, 150))
-    draw.line([(40, y + 40), (width-40, y + 40)], fill=(80, 80, 80), width=2)
+    y = 200; headers = ["ÜRÜN", "FİYAT", "DEĞİŞİM", "VARLIK", "DERİNLİK", "GRAFİK (Son 1s)"]; x_pos = [40, 280, 450, 650, 850, 1100]
+    for i, h in enumerate(headers): draw.text((x_pos[i], y), h, font=header_font, fill=(160, 170, 190))
+    draw.line([(40, y + 40), (width-40, y + 40)], fill=(60, 65, 80), width=2)
     
     y += 60
     for code, data in TRADE_GOODS.items():
         price, old_price = market_prices.get(code, data["base"]), last_prices.get(code, data["base"])
         diff = price - old_price
-        draw.rectangle([(40, y), (width-40, y+60)], fill=(38, 43, 54))
+        draw.rectangle([(40, y), (width-40, y+60)], fill=(40, 44, 56))
         draw.text((50, y+15), data['name'], font=row_font, fill=(255, 255, 255))
-        draw.text((280, y+15), f"{price} $", font=row_font, fill=(255, 215, 0))
-        diff_str, color = (f"▲ +{diff}", (46, 204, 113)) if diff > 0 else ((f"▼ {diff}", (231, 76, 60)) if diff < 0 else ("➖ 0", (149, 165, 166)))
+        draw.text((280, y+15), f"{price} $", font=row_font, fill=(250, 250, 250))
+        diff_str, color = (f"▲ +{diff}", (74, 222, 128)) if diff > 0 else ((f"▼ {diff}", (248, 113, 113)) if diff < 0 else ("➖ 0", (148, 163, 184)))
         draw.text((450, y+15), diff_str, font=row_font, fill=color)
         user_stock = user_data.get("inventory", {}).get(code, 0) if user_data else 0
-        draw.text((650, y+15), f"{user_stock} Adet", font=row_font, fill=((255, 255, 255) if user_stock > 0 else (100, 100, 100)))
+        draw.text((650, y+15), f"{user_stock} Adet", font=row_font, fill=((255, 255, 255) if user_stock > 0 else (120, 120, 140)))
         
         vol = market_volumes.get(code, 0); bar_x, bar_w, center_x = 850, 200, 850 + 100
-        draw.rectangle([(bar_x, y+25), (bar_x + bar_w, y+40)], fill=(50, 50, 50)); draw.line([(center_x, y+20), (center_x, y+45)], fill=(150, 150, 150), width=1)
+        draw.rectangle([(bar_x, y+25), (bar_x + bar_w, y+40)], fill=(30, 33, 43)); draw.line([(center_x, y+20), (center_x, y+45)], fill=(100, 100, 120), width=1)
         bar_len = min(abs(vol) * 2, 100)
-        if vol >= 0: draw.rectangle([(center_x, y+25), (center_x + bar_len, y+40)], fill=(46, 204, 113))
-        else: draw.rectangle([(center_x - bar_len, y+25), (center_x, y+40)], fill=(231, 76, 60))
+        if vol >= 0: draw.rectangle([(center_x, y+25), (center_x + bar_len, y+40)], fill=(74, 222, 128))
+        else: draw.rectangle([(center_x - bar_len, y+25), (center_x, y+40)], fill=(248, 113, 113))
+        
+        # Sparkline (Mini Grafik)
+        hist = price_history.get(code, [])[-20:] # Son 20 veri
+        if len(hist) > 1:
+            sl_x, sl_y, sl_w, sl_h = 1100, y + 10, 250, 40
+            min_h, max_h = min(hist), max(hist)
+            points = []
+            for idx, val in enumerate(hist):
+                px = sl_x + (idx * (sl_w / (len(hist) - 1)))
+                py = sl_y + sl_h - ((val - min_h) / (max_h - min_h) * sl_h) if max_h != min_h else sl_y + sl_h/2
+                points.append((px, py))
+            
+            sl_color = (74, 222, 128) if hist[-1] >= hist[0] else (248, 113, 113)
+            draw.line(points, fill=sl_color, width=2)
+            # Son nokta
+            lx, ly = points[-1]
+            draw.ellipse((lx-3, ly-3, lx+3, ly+3), fill=sl_color)
+
         y += row_height
 
     seconds_left = max(0, 90 - (datetime.now() - database.last_market_update).total_seconds())
-    draw.text((width - 350, height - 40), f"⏳ Yenilenme: {int(seconds_left // 60)}dk {int(seconds_left % 60)}sn", font=small_font, fill=(100, 100, 100))
+    draw.text((width - 350, height - 40), f"⏳ Yenilenme: {int(seconds_left // 60)}dk {int(seconds_left % 60)}sn", font=small_font, fill=(150, 150, 170))
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio
 
