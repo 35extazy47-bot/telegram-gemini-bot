@@ -685,18 +685,82 @@ def leaderboard(message):
             text += f"{i}. {data.get('name', 'Bilinmiyor')} - Lvl {data.get('level', 1)} | {data.get('exp', 0)} EXP\n"
         bot.send_message(message.chat.id, text)
 
+def create_stats_image(user_stats, global_stats, date_str):
+    width, height = 800, 600
+    bg_color = (30, 33, 43)
+    text_color = (220, 220, 220)
+    green = (74, 222, 128)
+    red = (248, 113, 113)
+    
+    img = Image.new('RGB', (width, height), bg_color)
+    draw = ImageDraw.Draw(img)
+    
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+        title_font = ImageFont.truetype(font_path, 36)
+        header_font = ImageFont.truetype(font_path, 24)
+        bar_label_font = ImageFont.truetype(font_path, 20)
+        bar_text_font = ImageFont.truetype(font_path, 18)
+    except:
+        title_font, header_font, bar_label_font, bar_text_font = ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default()
+
+    draw.text((width/2, 40), "📊 GÜNLÜK SORU İSTATİSTİKLERİ", font=title_font, fill=(255, 215, 0), anchor="mt")
+    draw.text((width/2, 85), date_str, font=header_font, fill=(150, 163, 184), anchor="mt")
+
+    stats = {"Senin İstatistiklerin": user_stats, "Genel İstatistikler": global_stats}
+    bar_width, gap, group_gap, start_y = 120, 50, 180, 520
+    
+    all_values = list(user_stats.values()) + list(global_stats.values())
+    max_val = max(all_values) if all_values else 1
+    graph_height = 300
+    
+    x = (width - (2 * (bar_width * 2 + gap) + group_gap - gap)) / 2 + 50
+
+    for title, data in stats.items():
+        draw.text((x + bar_width + gap/2, start_y + 25), title, font=header_font, fill=text_color, anchor="mt")
+        
+        correct_val = data.get('correct', 0)
+        bar_h = (correct_val / max_val) * graph_height if max_val > 0 else 0
+        draw.rectangle([(x, start_y - bar_h), (x + bar_width, start_y)], fill=green)
+        draw.text((x + bar_width/2, start_y - bar_h - 10), str(correct_val), font=bar_label_font, fill=green, anchor="mb")
+        draw.text((x + bar_width/2, start_y - 20), "Doğru", font=bar_text_font, fill=(0,0,0), anchor="ms")
+        x += bar_width + gap
+        
+        incorrect_val = data.get('incorrect', 0)
+        bar_h = (incorrect_val / max_val) * graph_height if max_val > 0 else 0
+        draw.rectangle([(x, start_y - bar_h), (x + bar_width, start_y)], fill=red)
+        draw.text((x + bar_width/2, start_y - bar_h - 10), str(incorrect_val), font=bar_label_font, fill=red, anchor="mb")
+        draw.text((x + bar_width/2, start_y - 20), "Yanlış", font=bar_text_font, fill=(0,0,0), anchor="ms")
+        x += bar_width + group_gap
+
+    bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
+    return bio
+
 @bot.message_handler(commands=['istatistik'])
 def daily_stats(message):
     user_id = str(message.from_user.id)
     if not users.get(user_id, {}).get("is_approved", True): return
     
     today = datetime.now().strftime("%Y-%m-%d")
-    user_daily = users[user_id].get("daily_questions_solved", 0)
-    if users[user_id].get("last_question_date") != today: user_daily = 0
+    u_data = users[user_id]
+    if u_data.get("last_question_date") != today:
+        u_data["daily_correct_solved"] = 0
+        u_data["daily_incorrect_solved"] = 0
+
+    user_stats = {'correct': u_data.get("daily_correct_solved", 0), 'incorrect': u_data.get("daily_incorrect_solved", 0)}
+    global_correct = sum(u.get("daily_correct_solved", 0) for u in users.values() if u.get("last_question_date") == today)
+    global_incorrect = sum(u.get("daily_incorrect_solved", 0) for u in users.values() if u.get("last_question_date") == today)
+    global_stats = {'correct': global_correct, 'incorrect': global_incorrect}
     
-    global_daily = sum(u.get("daily_questions_solved", 0) for u in users.values() if u.get("last_question_date") == today)
-    
-    bot.reply_to(message, f"📊 **GÜNLÜK İSTATİSTİKLER**\n\n👤 **Senin Çözdüğün:** {user_daily} Soru\n🌍 **Genel Toplam:** {global_daily} Soru\n📅 **Tarih:** {today}")
+    try:
+        photo = create_stats_image(user_stats, global_stats, today)
+        user_total = user_stats['correct'] + user_stats['incorrect']
+        global_total = global_stats['correct'] + global_stats['incorrect']
+        caption = f"📊 **Günün Özeti**\n\n👤 **Sen:** {user_total} soru ({user_stats['correct']} D, {user_stats['incorrect']} Y)\n🌍 **Genel:** {global_total} soru ({global_stats['correct']} D, {global_stats['incorrect']} Y)"
+        bot.send_photo(message.chat.id, photo, caption=caption)
+    except Exception as e:
+        bot.reply_to(message, f"Grafik hatası: {e}")
 
 @bot.message_handler(commands=['gorevler'])
 def show_daily_quests(message):

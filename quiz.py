@@ -204,6 +204,8 @@ def register_quiz_handlers(bot, tirtil_utils):
         if u.get("last_question_date") != today_str:
             u["last_question_date"] = today_str
             u["daily_questions_solved"] = 0
+            u["daily_correct_solved"] = 0
+            u["daily_incorrect_solved"] = 0
         u["daily_questions_solved"] = u.get("daily_questions_solved", 0) + 1
 
         # Haftalık sayaç
@@ -254,6 +256,7 @@ def register_quiz_handlers(bot, tirtil_utils):
             u["total_correct"] = u.get("total_correct", 0) + 1
             cat = question_data.get("category", "Genel"); u.setdefault("cat_stats", {})[cat] = u.get("cat_stats", {}).get(cat, 0) + 1
             update_quest_progress(user_id, "quiz_correct"); streak += 1
+            u["daily_correct_solved"] = u.get("daily_correct_solved", 0) + 1
             
             q_level = question_data.get("level", 1) if question_data else 1
             total_points = (15 * q_level + 5) + (streak * 2)
@@ -273,6 +276,7 @@ def register_quiz_handlers(bot, tirtil_utils):
             
             if u.get("mode") == "local": u.setdefault("wrong_answers", []).append(q_id)
             u["lives"] -= 1; exp = max(0, exp - 10); earned_exp_display = -10
+            u["daily_incorrect_solved"] = u.get("daily_incorrect_solved", 0) + 1
             result = f"{'⏳ **Süre Doldu!**' if answer == 'TIMEOUT' else random.choice(wrong_msgs)}\nDoğru Cevap: {correct}\n❤️ Kalan Can: {u['lives']}"
             if streak_saved: result += "\n🛡️ **Seri Koruyucu Devrede!**"
             if bet_amount > 0: result += f"\n💸 **BAHİS KAYBETTİN!**"; u["active_bet"] = 0
