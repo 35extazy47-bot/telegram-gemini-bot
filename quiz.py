@@ -197,6 +197,12 @@ def register_quiz_handlers(bot, tirtil_utils):
         if user_id not in users or "current_answer" not in users[user_id]: return
         if user_id in user_timers: user_timers[user_id].cancel(); del user_timers[user_id]
 
+        today = datetime.now().strftime("%Y-%m-%d")
+        if users[user_id].get("last_question_date") != today:
+            users[user_id]["last_question_date"] = today
+            users[user_id]["daily_questions_solved"] = 0
+        users[user_id]["daily_questions_solved"] = users[user_id].get("daily_questions_solved", 0) + 1
+
         q_id = users[user_id].get("current_question_id")
         question_data = next((q for q in QUIZ_QUESTIONS if q["id"] == q_id), None)
 

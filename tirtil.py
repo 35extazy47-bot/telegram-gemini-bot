@@ -651,6 +651,19 @@ def leaderboard(message):
             text += f"{i}. {data.get('name', 'Bilinmiyor')} - Lvl {data.get('level', 1)} | {data.get('exp', 0)} EXP\n"
         bot.send_message(message.chat.id, text)
 
+@bot.message_handler(commands=['istatistik'])
+def daily_stats(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    
+    today = datetime.now().strftime("%Y-%m-%d")
+    user_daily = users[user_id].get("daily_questions_solved", 0)
+    if users[user_id].get("last_question_date") != today: user_daily = 0
+    
+    global_daily = sum(u.get("daily_questions_solved", 0) for u in users.values() if u.get("last_question_date") == today)
+    
+    bot.reply_to(message, f"📊 **GÜNLÜK İSTATİSTİKLER**\n\n👤 **Senin Çözdüğün:** {user_daily} Soru\n🌍 **Genel Toplam:** {global_daily} Soru\n📅 **Tarih:** {today}")
+
 @bot.message_handler(commands=['gorevler'])
 def show_daily_quests(message):
     user_id = str(message.from_user.id)
@@ -736,6 +749,7 @@ if __name__ == "__main__":
         types.BotCommand("pomodoro", "Pomodoro Sayacı"),
         types.BotCommand("soruekle", "Soru Öner"),
         types.BotCommand("top10", "Liderlik Tablosu"),
+        types.BotCommand("istatistik", "Günlük İstatistikler"),
         types.BotCommand("help", "Yardım"),
     ])
     
