@@ -204,6 +204,40 @@ def send_morning_broadcast():
         try: bot.send_message(uid, f"☀️ **GÜNAYDIN {u.get('name', 'Dostum').upper()}!**\nBugün piyasalar hareketli, bol kazançlar! 🚀")
         except: pass
 
+def give_weekly_reward():
+    """Haftanın en çok soru çözen kullanıcısını bulur ve ödüllendirir."""
+    print("🏆 Haftalık ödül süreci başladı...")
+    winner_id = None
+    max_solved = 0
+
+    # Geçen haftanın skorlarına göre kazananı bul
+    for uid, u_data in users.items():
+        solved_count = u_data.get("last_week_questions_solved", 0)
+        if solved_count > max_solved:
+            max_solved = solved_count
+            winner_id = uid
+
+    if winner_id and max_solved > 0:
+        reward = 1000
+        users[winner_id]["money"] = users[winner_id].get("money", 0) + reward
+        
+        winner_name = users[winner_id].get("name", "Bilinmiyor")
+        print(f"🏆 Haftanın şampiyonu: {winner_name} ({max_solved} soru). Ödül: {reward} $ verildi.")
+        
+        try:
+            bot.send_message(winner_id, f"🏆 **HAFTANIN ŞAMPİYONU!** 🏆\n\nGeçen hafta en çok soruyu ({max_solved} adet) sen çözdün!\n\n💰 Ödülün: +{reward} $")
+        except Exception as e:
+            print(f"Haftalık ödül mesajı gönderilemedi: {e}")
+    else:
+        print("🏆 Geçen hafta kimse yeterli soru çözmedi, ödül verilmedi.")
+
+    # Tekrar ödül verilmemesi için geçen haftanın skorlarını sıfırla
+    for uid in users:
+        if "last_week_questions_solved" in users[uid]:
+            users[uid]["last_week_questions_solved"] = 0
+    save_users()
+    print("🏆 Haftalık ödül süreci tamamlandı.")
+
 # --- Admin & Genel Komutlar ---
 @bot.message_handler(commands=['admin_panel'])
 def admin_panel(message):
@@ -698,6 +732,15 @@ def handle_message(message):
 def scheduler_thread():
     while True:
         now_utc3 = datetime.now(timezone.utc) + timedelta(hours=3)
+
+        # Haftalık Ödül (Pazartesi 05:00)
+        current_week_str = now_utc3.strftime("%Y-%W")
+        if now_utc3.weekday() == 0 and now_utc3.hour == 5 and database.last_rewarded_week != current_week_str:
+            give_weekly_reward()
+            database.last_rewarded_week = current_week_str
+            database.save_market_data()
+            time.sleep(65) # Tekrar çalışmasını önle
+
         if now_utc3.hour == 8 and now_utc3.minute == 0:
             send_morning_broadcast(); time.sleep(65)
         if now_utc3.hour == 9 and now_utc3.minute == 0:

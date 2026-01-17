@@ -76,6 +76,7 @@ last_news_update = datetime.now() - timedelta(minutes=6)
 active_news_item = None
 active_news_direction = None
 active_global_modifier = 0.0
+last_rewarded_week = "" # Haftalık ödülün verildiği son haftayı takip eder
 
 # --- Data Loading/Saving Functions ---
 def load_users():
@@ -124,7 +125,8 @@ def save_market_data():
         "price_history": price_history,
         "news": market_news,
         "trend": market_trend,
-        "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S") if last_market_update else None
+        "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S") if last_market_update else None,
+        "last_rewarded_week": last_rewarded_week
     }
     
     if db is not None:
@@ -142,7 +144,7 @@ def save_market_data():
 
 def load_market_data():
     """Borsa verilerini yükler."""
-    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, market_trend
+    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, market_trend, last_rewarded_week
     data = None
     
     if db is not None:
@@ -177,6 +179,7 @@ def load_market_data():
             price_history.update(data.get("price_history", {}))
             market_news = data.get("news", market_news)
             market_trend = data.get("trend", 0)
+            last_rewarded_week = data.get("last_rewarded_week", "")
             
             if "last_update" in data and data["last_update"] is not None:
                 try:
