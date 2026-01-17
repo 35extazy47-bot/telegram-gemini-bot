@@ -51,6 +51,8 @@ def get_badges(user_data):
     if user_data.get("duel_wins", 0) >= 10: badges.append("⚔️ Gladyatör")
     if user_data.get("total_correct", 0) >= 50: badges.append("🧠 Bilgin")
     if user_data.get("money", 0) >= 100000: badges.append("💸 Baron")
+    if user_data.get("is_weekly_winner", False):
+        badges.append("🏆 Haftanın Lideri")
     return " | ".join(badges) if badges else "Yok"
 
 def check_daily_limit(user_id):
@@ -178,6 +180,49 @@ def create_leaderboard_image(sorted_users):
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio
 
+def create_weekly_leaderboard_image(sorted_users):
+    width, height = 800, 140 + (len(sorted_users) * 60)
+    img = Image.new('RGB', (width, height), color=(35, 39, 42))
+    draw = ImageDraw.Draw(img)
+    
+    try:
+        font_path = "arial.ttf"
+        if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+        title_font, row_font = ImageFont.truetype(font_path, 40), ImageFont.truetype(font_path, 26)
+    except: title_font, row_font = ImageFont.load_default(), ImageFont.load_default()
+
+    draw.text((180, 30), "🏆 HAFTALIK LİDERLİK 🏆", font=title_font, fill=(153, 102, 255)) # Mor renk
+    draw.rectangle([(20, 90), (width-20, 140)], fill=(44, 47, 51))
+    
+    headers = ["#", "OYUNCU", "ÇÖZÜLEN SORU"]
+    x_pos = [40, 130, 580]
+    for i, h in enumerate(headers): draw.text((x_pos[i], 100), h, font=row_font, fill=(200, 200, 200))
+        
+    y = 160
+    for i, (uid, data) in enumerate(sorted_users, 1):
+        name = data.get("name", "Gizli")[:15]
+        solved = str(data.get("weekly_questions_solved", 0))
+        
+        color = (255, 255, 255)
+        if i == 1: color = (255, 215, 0)
+        elif i == 2: color = (192, 192, 192)
+        elif i == 3: color = (205, 127, 50)
+        
+        p_pic = get_user_profile_image(uid)
+        if p_pic:
+            p_pic = p_pic.resize((40, 40)); mask = Image.new("L", (40, 40), 0)
+            draw_mask = ImageDraw.Draw(mask); draw_mask.ellipse((0, 0, 40, 40), fill=255)
+            img.paste(p_pic, (80, y-5), mask)
+
+        draw.text((x_pos[0], y), str(i), font=row_font, fill=color)
+        draw.text((x_pos[1], y), name, font=row_font, fill=color)
+        draw.text((x_pos[2], y), solved, font=row_font, fill=color)
+        draw.line([(40, y+45), (width-40, y+45)], fill=(60, 60, 60), width=1)
+        y += 60
+        
+    bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
+    return bio
+
 def create_tarot_image(cards):
     width, height = 800, 450
     img = Image.new('RGB', (width, height), color=(25, 20, 40))
@@ -205,33 +250,42 @@ def send_morning_broadcast():
         except: pass
 
 def give_weekly_reward():
-    """Haftanın en çok soru çözen kullanıcısını bulur ve ödüllendirir."""
+    """Haftanın en çok soru çözen kullanıcısını bulur, ödüllendirir ve rozet verir."""
     print("🏆 Haftalık ödül süreci başladı...")
+    
+    # 1. Tüm kullanıcılardan 'Haftanın Lideri' rozetini kaldır
+    for uid, u_data in users.items():
+        if u_data.get('is_weekly_winner'):
+            u_data['is_weekly_winner'] = False
+            print(f"🏅 Eski şampiyon {u_data.get('name')} rozeti kaldırıldı.")
+
     winner_id = None
     max_solved = 0
 
-    # Geçen haftanın skorlarına göre kazananı bul
+    # 2. Geçen haftanın skorlarına göre yeni kazananı bul
     for uid, u_data in users.items():
         solved_count = u_data.get("last_week_questions_solved", 0)
         if solved_count > max_solved:
             max_solved = solved_count
             winner_id = uid
 
-    if winner_id and max_solved > 0:
+    # 3. Yeni kazanana ödül ve rozet ver (En az 5 soru çözme şartı)
+    if winner_id and max_solved > 5:
         reward = 1000
         users[winner_id]["money"] = users[winner_id].get("money", 0) + reward
+        users[winner_id]['is_weekly_winner'] = True
         
         winner_name = users[winner_id].get("name", "Bilinmiyor")
-        print(f"🏆 Haftanın şampiyonu: {winner_name} ({max_solved} soru). Ödül: {reward} $ verildi.")
+        print(f"🏆 Haftanın şampiyonu: {winner_name} ({max_solved} soru). Ödül: {reward} $ ve rozet verildi.")
         
         try:
-            bot.send_message(winner_id, f"🏆 **HAFTANIN ŞAMPİYONU!** 🏆\n\nGeçen hafta en çok soruyu ({max_solved} adet) sen çözdün!\n\n💰 Ödülün: +{reward} $")
+            bot.send_message(winner_id, f"🏆 **HAFTANIN ŞAMPİYONU!** 🏆\n\nGeçen hafta en çok soruyu ({max_solved} adet) sen çözdün!\n\n💰 Ödülün: +{reward} $\n🏅 Rozet: **Haftanın Lideri** rozetini kazandın!")
         except Exception as e:
             print(f"Haftalık ödül mesajı gönderilemedi: {e}")
     else:
-        print("🏆 Geçen hafta kimse yeterli soru çözmedi, ödül verilmedi.")
+        print("🏆 Geçen hafta kimse yeterli soru çözmedi, ödül ve rozet verilmedi.")
 
-    # Tekrar ödül verilmemesi için geçen haftanın skorlarını sıfırla
+    # 4. Tekrar ödül verilmemesi için geçen haftanın skorlarını sıfırla
     for uid in users:
         if "last_week_questions_solved" in users[uid]:
             users[uid]["last_week_questions_solved"] = 0
@@ -685,6 +739,32 @@ def leaderboard(message):
             text += f"{i}. {data.get('name', 'Bilinmiyor')} - Lvl {data.get('level', 1)} | {data.get('exp', 0)} EXP\n"
         bot.send_message(message.chat.id, text)
 
+@bot.message_handler(commands=['haftaliktop10'])
+def weekly_leaderboard(message):
+    current_week_str = datetime.now().strftime("%Y-%W")
+    
+    # Sadece bu hafta soru çözenleri al ve sırala
+    weekly_players = [
+        (uid, u_data) for uid, u_data in users.items() 
+        if u_data.get("last_weekly_question_week") == current_week_str and u_data.get("weekly_questions_solved", 0) > 0
+    ]
+    
+    sorted_users = sorted(
+        weekly_players, 
+        key=lambda x: x[1].get("weekly_questions_solved", 0), 
+        reverse=True
+    )[:10]
+    
+    if not sorted_users:
+        bot.reply_to(message, "Bu hafta henüz kimse soru çözmedi. İlk sen ol! 🚀")
+        return
+
+    try:
+        photo = create_weekly_leaderboard_image(sorted_users)
+        bot.send_photo(message.chat.id, photo, caption=f"🏆 **Haftanın En Çalışkanları**\n(Pazartesi sıfırlanır)")
+    except Exception as e:
+        bot.reply_to(message, f"Liderlik tablosu oluşturulamadı: {e}")
+
 def create_stats_image(user_stats, global_stats, date_str):
     width, height = 800, 600
     bg_color = (30, 33, 43)
@@ -856,6 +936,7 @@ if __name__ == "__main__":
         types.BotCommand("pomodoro", "Pomodoro Sayacı"),
         types.BotCommand("soruekle", "Soru Öner"),
         types.BotCommand("top10", "Liderlik Tablosu"),
+        types.BotCommand("haftaliktop10", "Haftalık Liderlik"),
         types.BotCommand("istatistik", "Günlük İstatistikler"),
         types.BotCommand("help", "Yardım"),
     ])
