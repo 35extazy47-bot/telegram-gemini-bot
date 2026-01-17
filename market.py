@@ -375,32 +375,123 @@ def register_market_handlers(bot, tirtil_utils):
         if item_code not in TRADE_GOODS: bot.reply_to(message, "❌ Geçersiz ürün."); return
         
         history = price_history.get(item_code, [])
-        if not history: bot.reply_to(message, "📉 Yeterli veri yok."); return
+        if not history or len(history) < 2: bot.reply_to(message, "📉 Yeterli veri yok."); return
 
-        width, height = 800, 500
-        img = Image.new('RGB', (width, height), (20, 23, 30))
+        # --- Ayarlar & Renkler ---
+        width, height = 1000, 600
+        bg_color = (15, 23, 42, 255) # Modern Koyu Lacivert
+        grid_color = (30, 41, 59, 255)
+        text_color = (148, 163, 184, 255)
+        highlight_color = (255, 255, 255, 255)
+        
+        img = Image.new('RGBA', (width, height), bg_color)
         draw = ImageDraw.Draw(img)
+        
+        try:
+            font_path = "arial.ttf"
+            if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+            title_font = ImageFont.truetype(font_path, 32)
+            price_font = ImageFont.truetype(font_path, 48)
+            label_font = ImageFont.truetype(font_path, 16)
+            indicator_font = ImageFont.truetype(font_path, 20)
+        except:
+            title_font = ImageFont.load_default()
+            price_font = ImageFont.load_default()
+            label_font = ImageFont.load_default()
+            indicator_font = ImageFont.load_default()
+
+        # --- Veri Hazırlığı ---
+        current_price = history[-1]
+        start_price = history[0]
+        change = current_price - start_price
+        change_pct = (change / start_price) * 100 if start_price != 0 else 0
+        
+        is_up = change >= 0
+        main_color = (34, 197, 94, 255) if is_up else (239, 68, 68, 255) # Yeşil / Kırmızı
         
         min_p, max_p = min(history), max(history)
         padding_y = (max_p - min_p) * 0.2 if max_p != min_p else 10
         min_y, max_y = min_p - padding_y, max_p + padding_y
         
-        margin_left, margin_bottom = 60, 40
-        graph_w, graph_h = width - margin_left - 40, height - 60 - margin_bottom
+        margin_left, margin_right, margin_top, margin_bottom = 80, 40, 120, 60
+        graph_w = width - margin_left - margin_right
+        graph_h = height - margin_top - margin_bottom
         
+        # --- Başlık ve Fiyat Bilgisi ---
+        item_name = TRADE_GOODS[item_code]['name']
+        draw.text((margin_left, 30), item_name, font=title_font, fill=text_color)
+        draw.text((margin_left, 70), f"{current_price} $", font=price_font, fill=highlight_color)
+        
+        sign = "+" if is_up else ""
+        change_text = f"{sign}{change} ({sign}%{abs(change_pct):.2f})"
+        draw.text((margin_left + 250, 85), change_text, font=indicator_font, fill=main_color)
+
+        # --- İndikatörler (RSI & SMA) ---
+        ind = calculate_indicators(history)
+        rsi = ind['rsi']
+        sma = ind['sma']
+        
+        rsi_color = (34, 197, 94, 255) if 30 <= rsi <= 70 else (239, 68, 68, 255)
+        draw.text((width - 250, 40), f"RSI (14): {rsi:.1f}", font=indicator_font, fill=rsi_color)
+        draw.text((width - 250, 70), f"SMA (5): {sma:.1f}", font=indicator_font, fill=(56, 189, 248, 255))
+
+        # --- Izgara ve Eksenler ---
+        steps = 5
+        for i in range(steps + 1):
+            y_val = min_y + (max_y - min_y) * (i / steps)
+            y_pos = height - margin_bottom - ((y_val - min_y) / (max_y - min_y) * graph_h)
+            draw.line([(margin_left, y_pos), (width - margin_right, y_pos)], fill=grid_color, width=1)
+            draw.text((20, y_pos - 10), f"{int(y_val)}", font=label_font, fill=text_color)
+
+        # --- Grafik Çizimi ---
         points = []
-        step_x = graph_w / (len(history) - 1) if len(history) > 1 else graph_w
+        step_x = graph_w / (len(history) - 1)
         for i, price in enumerate(history):
             x = margin_left + (i * step_x)
             y = height - margin_bottom - ((price - min_y) / (max_y - min_y) * graph_h)
             points.append((x, y))
             
         if len(points) > 1:
-            line_color = (46, 204, 113) if history[-1] >= history[0] else (231, 76, 60)
-            draw.line(points, fill=line_color, width=3)
+            # Alt Alanı Doldurma (Yarı Saydam)
+            overlay = Image.new('RGBA', img.size, (0, 0, 0, 0))
+            overlay_draw = ImageDraw.Draw(overlay)
+            
+            poly_points = [(margin_left, height - margin_bottom)] + points + [(points[-1][0], height - margin_bottom)]
+            fill_color = main_color[:3] + (40,) # Düşük opaklık
+            overlay_draw.polygon(poly_points, fill=fill_color)
+            
+            img = Image.alpha_composite(img, overlay)
+            draw = ImageDraw.Draw(img)
+
+            # Ana Çizgi
+            draw.line(points, fill=main_color, width=4)
+            
+            # SMA Çizgisi (Hareketli Ortalama)
+            sma_points = []
+            sma_period = 5
+            for i in range(len(history)):
+                if i < sma_period - 1:
+                    sma_points.append(None)
+                    continue
+                window = history[i - sma_period + 1 : i + 1]
+                val = sum(window) / sma_period
+                x = margin_left + (i * step_x)
+                y = height - margin_bottom - ((val - min_y) / (max_y - min_y) * graph_h)
+                sma_points.append((x, y))
+            
+            valid_sma = [p for p in sma_points if p is not None]
+            if len(valid_sma) > 1:
+                draw.line(valid_sma, fill=(56, 189, 248, 255), width=2)
+
+            # Son Noktayı Vurgula
+            lx, ly = points[-1]
+            draw.ellipse((lx-6, ly-6, lx+6, ly+6), fill=highlight_color, outline=main_color, width=2)
         
+        # --- Alt Bilgi ---
+        draw.text((width/2 - 50, height - 30), "Zaman (Son 20 Veri)", font=label_font, fill=text_color)
+
         bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
-        bot.send_photo(message.chat.id, bio, caption=f"📊 **{TRADE_GOODS[item_code]['name']}** Fiyat Grafiği")
+        bot.send_photo(message.chat.id, bio, caption=f"📊 **{item_name}** Detaylı Piyasa Analizi")
 
     @bot.message_handler(commands=['dedikodu'])
     def buy_rumor_command(message): buy_rumor(message)
