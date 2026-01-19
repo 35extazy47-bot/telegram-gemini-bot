@@ -1130,7 +1130,7 @@ def register_market_handlers(bot, tirtil_utils):
         except:
             bot.reply_to(message, "⚠️ Kullanım: `/sirket_kur <KOD> <Şirket Adı>`\nÖrnek: `/sirket_kur holding Çılgın Holding A.Ş.`"); return
 
-        if len(code) > 5 or not code.isalpha(): bot.reply_to(message, "❌ Kod en fazla 5 harf olmalı."); return
+        if not code.isalnum(): bot.reply_to(message, "❌ Kod sadece harf ve rakam içerebilir."); return
         if code in TRADE_GOODS or code in [c["code"] for c in IPO_CANDIDATES]: bot.reply_to(message, "❌ Bu kod kullanımda."); return
         if users[user_id].get("private_company"): bot.reply_to(message, "⚠️ Zaten halka arz bekleyen bir şirketin var."); return
 
