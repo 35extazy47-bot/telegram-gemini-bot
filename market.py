@@ -212,7 +212,10 @@ def finalize_ipo(bot):
                     "base": ipo["ipo_price"],
                     "min": int(ipo["ipo_price"] * 0.1),
                     "max": int(ipo["ipo_price"] * 5),
-                    "volatility": 0.08
+                    "volatility": 0.08,
+                    "owner_id": owner_id,
+                    "treasury": 0,
+                    "total_supply": ipo.get("total_supply", ipo["total_shares"])
                 }
                 database.public_companies[ipo["company_code"]] = new_comp
                 TRADE_GOODS[ipo["company_code"]] = new_comp
@@ -1135,6 +1138,77 @@ def register_market_handlers(bot, tirtil_utils):
         users[user_id]["private_company"] = {"code": code, "name": name}
         save_users()
         bot.reply_to(message, f"🏢 **ŞİRKET KURULDU!**\n\nŞirket: {name} ({code.upper()})\nSahibi: Sen (%100)\n\nBorsaya girmek için: `/halkaarz_yap <yüzde>`")
+
+    @bot.message_handler(commands=['sirketim'])
+    def my_company_status(message):
+        user_id = str(message.from_user.id)
+        comp_code = next((c for c, d in database.public_companies.items() if d.get("owner_id") == user_id), None)
+        if not comp_code: bot.reply_to(message, "❌ Sahibi olduğun halka açık bir şirket yok."); return
+        
+        comp = database.public_companies[comp_code]
+        treasury = comp.get("treasury", 0)
+        price = market_prices.get(comp_code, comp["base"])
+        valuation = price * comp.get("total_supply", 0)
+        
+        text = (f"🏢 **ŞİRKET YÖNETİM PANELİ**\n\nŞirket: **{comp['name']}** ({comp_code.upper()})\n"
+                f"💰 Kasa: {treasury} $\n📈 Hisse Fiyatı: {price} $\n💎 Piyasa Değeri: {valuation} $\n\n"
+                f"**İşlemler:**\n`/sirket_yatir <miktar>` - Kasaya para ekle\n`/sirket_cek <miktar>` - Kasadan para al\n`/temettu <miktar>` - Hissedarlara kar payı dağıt")
+        bot.reply_to(message, text, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['sirket_yatir'])
+    def company_deposit(message):
+        user_id = str(message.from_user.id)
+        comp_code = next((c for c, d in database.public_companies.items() if d.get("owner_id") == user_id), None)
+        if not comp_code: return
+        try: amount = int(message.text.split()[1])
+        except: bot.reply_to(message, "⚠️ Kullanım: `/sirket_yatir <miktar>`"); return
+        if amount <= 0 or users[user_id].get("money", 0) < amount: bot.reply_to(message, "❌ Yetersiz bakiye veya geçersiz miktar."); return
+        
+        users[user_id]["money"] -= amount
+        database.public_companies[comp_code]["treasury"] = database.public_companies[comp_code].get("treasury", 0) + amount
+        save_users(); save_market_data()
+        bot.reply_to(message, f"✅ Şirket kasasına {amount} $ yatırıldı.\n💰 Yeni Kasa: {database.public_companies[comp_code]['treasury']} $")
+
+    @bot.message_handler(commands=['sirket_cek'])
+    def company_withdraw(message):
+        user_id = str(message.from_user.id)
+        comp_code = next((c for c, d in database.public_companies.items() if d.get("owner_id") == user_id), None)
+        if not comp_code: return
+        try: amount = int(message.text.split()[1])
+        except: bot.reply_to(message, "⚠️ Kullanım: `/sirket_cek <miktar>`"); return
+        
+        treasury = database.public_companies[comp_code].get("treasury", 0)
+        if amount <= 0 or treasury < amount: bot.reply_to(message, f"❌ Kasada yeterli para yok! (Mevcut: {treasury} $)"); return
+        
+        database.public_companies[comp_code]["treasury"] -= amount
+        users[user_id]["money"] = users[user_id].get("money", 0) + amount
+        save_users(); save_market_data()
+        bot.reply_to(message, f"✅ Şirket kasasından {amount} $ çekildi.")
+
+    @bot.message_handler(commands=['temettu'])
+    def distribute_dividends(message):
+        user_id = str(message.from_user.id)
+        comp_code = next((c for c, d in database.public_companies.items() if d.get("owner_id") == user_id), None)
+        if not comp_code: return
+        try: total_amount = int(message.text.split()[1])
+        except: bot.reply_to(message, "⚠️ Kullanım: `/temettu <dağıtılacak_tutar>`"); return
+        
+        comp = database.public_companies[comp_code]
+        if total_amount <= 0 or comp.get("treasury", 0) < total_amount: bot.reply_to(message, "❌ Kasada yeterli para yok."); return
+        
+        comp["treasury"] -= total_amount
+        div_per_share = total_amount / comp.get("total_supply", 1)
+        count = 0
+        for uid, u in users.items():
+            shares = u.get("inventory", {}).get(comp_code, 0)
+            if shares > 0:
+                payout = int(shares * div_per_share)
+                if payout > 0:
+                    u["money"] = u.get("money", 0) + payout; count += 1
+                    try: bot.send_message(uid, f"💸 **TEMETTÜ ÖDEMESİ**\n\n{comp['name']} kar payı dağıttı.\n{shares} lot için hesabına **{payout} $** yattı.")
+                    except: pass
+        save_users(); save_market_data()
+        bot.reply_to(message, f"✅ Temettü dağıtıldı!\n👥 {count} hissedara toplam {total_amount} $ ödendi.")
 
     @bot.message_handler(commands=['halkaarz_yap'])
     def launch_user_ipo(message):
