@@ -78,6 +78,9 @@ active_news_direction = None
 active_global_modifier = 0.0
 last_rewarded_week = "" # Haftalık ödülün verildiği son haftayı takip eder
 
+# --- IPO (Halka Arz) Verisi ---
+active_ipo = {"is_active": False}
+
 # --- Data Loading/Saving Functions ---
 def load_users():
     """Kullanıcı verilerini önce MongoDB'den, yoksa yerel dosyadan yükler."""
@@ -126,7 +129,8 @@ def save_market_data():
         "news": market_news,
         "trend": market_trend,
         "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S") if last_market_update else None,
-        "last_rewarded_week": last_rewarded_week
+        "last_rewarded_week": last_rewarded_week,
+        "active_ipo": active_ipo
     }
     
     if db is not None:
@@ -144,7 +148,7 @@ def save_market_data():
 
 def load_market_data():
     """Borsa verilerini yükler."""
-    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, market_trend, last_rewarded_week
+    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, market_trend, last_rewarded_week, active_ipo
     data = None
     
     if db is not None:
@@ -180,6 +184,11 @@ def load_market_data():
             market_news = data.get("news", market_news)
             market_trend = data.get("trend", 0)
             last_rewarded_week = data.get("last_rewarded_week", "")
+            
+            # IPO verisini güvenli bir şekilde yükle
+            loaded_ipo = data.get("active_ipo", {"is_active": False})
+            if isinstance(loaded_ipo, dict):
+                active_ipo.update(loaded_ipo)
             
             if "last_update" in data and data["last_update"] is not None:
                 try:
