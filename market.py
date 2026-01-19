@@ -118,6 +118,7 @@ def start_new_ipo(bot):
         
         ipo_price = random.randint(company["min"], int(company["base"] * 0.9))
         total_shares = random.randint(500, 2000)
+        dist_method = random.choice(["Oransal", "Eşit"])
         
         start_time = datetime.now()
         end_time = start_time + timedelta(minutes=15) # 15 dakika talep toplama süresi
@@ -128,6 +129,7 @@ def start_new_ipo(bot):
             "company_name": company["name"],
             "ipo_price": ipo_price,
             "total_shares": total_shares,
+            "method": dist_method,
             "start_date": start_time.strftime("%Y-%m-%d %H:%M:%S"),
             "end_date": end_time.strftime("%Y-%m-%d %H:%M:%S"),
             "subscribers": {} # {user_id: {"amount": X, "username": Y}}
@@ -139,7 +141,8 @@ def start_new_ipo(bot):
             f"Şirket: **{company['name']}**\n"
             f"Kod: `{company['code']}`\n\n"
             f"💰 **Halka Arz Fiyatı:** {ipo_price} $\n"
-            f"📦 **Arz Edilen Lot:** {total_shares} adet\n\n"
+            f"📦 **Arz Edilen Lot:** {total_shares} adet\n"
+            f"⚖️ **Dağıtım:** {dist_method}\n\n"
             f"⏰ **Talep Toplama Bitiş:** {end_time.strftime('%H:%M')}\n\n"
             f"Talepte bulunmak için: `/talepet {company['code']} <adet>`\n"
             f"Durumu görmek için: `/halkaarz`"
@@ -163,13 +166,29 @@ def finalize_ipo(bot):
         if not ipo["subscribers"]:
              result_header += "Talep gelmediği için halka arz iptal edildi. 🤷‍♂️"
         else:
-            ratio = min(1.0, ipo["total_shares"] / total_requested if total_requested > 0 else 1.0)
-            result_header += f"✅ Talepler %{ratio*100:.2f} oranında karşılandı.\n\n"
+            method = ipo.get("method", "Oransal")
+            ratio = 0
+            max_share = 0
+            
+            if method == "Eşit":
+                num_subs = len(ipo["subscribers"])
+                max_share = max(1, ipo["total_shares"] // num_subs) if num_subs > 0 else 0
+                result_header += f"⚖️ **Yöntem:** Eşit Dağıtım\n✅ Kişi Başı Maks: {max_share} Lot\n\n"
+            else:
+                ratio = min(1.0, ipo["total_shares"] / total_requested if total_requested > 0 else 1.0)
+                result_header += f"⚖️ **Yöntem:** Oransal Dağıtım\n✅ Karşılama Oranı: %{ratio*100:.2f}\n\n"
 
+            distributed_count = 0
             for uid, sub_data in ipo["subscribers"].items():
                 user = users.get(uid)
                 if not user: continue
-                allotted = math.floor(sub_data["amount"] * ratio)
+                
+                if method == "Eşit": allotted = min(sub_data["amount"], max_share)
+                else: allotted = math.floor(sub_data["amount"] * ratio)
+                
+                if distributed_count + allotted > ipo["total_shares"]: allotted = max(0, ipo["total_shares"] - distributed_count)
+                distributed_count += allotted
+                
                 cost = allotted * ipo["ipo_price"]
                 if allotted > 0 and user.get("money", 0) >= cost:
                     user["money"] -= cost
@@ -1041,6 +1060,7 @@ def register_market_handlers(bot, tirtil_utils):
                 f"Kod: `{ipo['company_code']}`\n\n"
                 f"💰 **Fiyat:** {ipo['ipo_price']} $\n"
                 f"📦 **Arz Edilen Lot:** {ipo['total_shares']}\n"
+                f"⚖️ **Dağıtım:** {ipo.get('method', 'Oransal')}\n"
                 f"📈 **Gelen Talep:** {total_requested} Lot\n\n"
                 f"⏰ **Kalan Süre:** {int(mins)}dk {int(secs)}sn\n\n"
                 f"`/talepet {ipo['company_code']} <adet>`\n"
