@@ -31,13 +31,30 @@ NEWS_TEMPLATES = {
 }
 
 def calculate_indicators(prices):
-    """Fiyat geçmişine göre RSI ve SMA teknik indikatörlerini hesaplar."""
-    if not prices: return {"rsi": 50, "sma": 0}
+    """Fiyat geçmişine göre RSI, SMA ve Bollinger Bantlarını hesaplar."""
+    if not prices: return {"rsi": 50, "sma": 0, "upper": 0, "lower": 0}
     current = prices[-1]
+    
+    # SMA (5 periyot)
     sma_period = 5
     sma = sum(prices[-sma_period:]) / sma_period if len(prices) >= sma_period else current
+    
+    # Bollinger Bantları (20 periyot)
+    bb_period = min(len(prices), 20)
+    if bb_period > 1:
+        avg = sum(prices[-bb_period:]) / bb_period
+        variance = sum([((x - avg) ** 2) for x in prices[-bb_period:]]) / bb_period
+        std_dev = math.sqrt(variance)
+        upper = avg + (2 * std_dev)
+        lower = avg - (2 * std_dev)
+    else:
+        upper = current * 1.1
+        lower = current * 0.9
+
+    # RSI (14 periyot)
     period = 14
-    if len(prices) < period + 1: return {"rsi": 50, "sma": sma}
+    if len(prices) < period + 1: return {"rsi": 50, "sma": sma, "upper": upper, "lower": lower}
+    
     gains, losses = [], []
     relevant_prices = prices[-(period+1):]
     for i in range(1, len(relevant_prices)):
@@ -47,7 +64,7 @@ def calculate_indicators(prices):
     avg_gain, avg_loss = sum(gains) / period, sum(losses) / period
     if avg_loss == 0: rsi = 100
     else: rs = avg_gain / avg_loss; rsi = 100 - (100 / (1 + rs))
-    return {"rsi": rsi, "sma": sma}
+    return {"rsi": rsi, "sma": sma, "upper": upper, "lower": lower}
 
 def check_limit_orders(bot):
     executed_count = 0
@@ -119,11 +136,11 @@ def update_market(bot):
             # 3. Haber Etkisi
             if code == database.active_news_item: change_percent += random.uniform(0.05, 0.15) * (1 if database.active_news_direction == "up" else -1)
             
-            # 4. Momentum (Önceki hareketin %20'si devam eder)
+            # 4. Momentum (Önceki hareketin %40'ı devam eder - Trend güçlendirildi)
             history = price_history.get(code, [])
             if len(history) > 1:
                 prev_change_pct = (history[-1] - history[-2]) / history[-2] if history[-2] != 0 else 0
-                change_percent += prev_change_pct * 0.2
+                change_percent += prev_change_pct * 0.4
 
             limit = 0.30 if database.active_global_modifier != 0 else 0.15
             change_percent = max(-limit, min(change_percent, limit))
@@ -156,7 +173,7 @@ def apply_bank_interest(bot):
 def create_market_image(user_data=None):
     num_items, row_height, header_height, footer_height = len(TRADE_GOODS), 80, 180, 60
     width, height = 1400, header_height + (num_items * row_height) + footer_height
-    img = Image.new('RGB', (width, height), color=(30, 33, 43)) # Daha modern koyu ton
+    img = Image.new('RGBA', (width, height), color=(30, 33, 43, 255)) # RGBA for transparency
     draw = ImageDraw.Draw(img)
     try:
         font_path = "arial.ttf"
@@ -205,11 +222,15 @@ def create_market_image(user_data=None):
                 py = sl_y + sl_h - ((val - min_h) / (max_h - min_h) * sl_h) if max_h != min_h else sl_y + sl_h/2
                 points.append((px, py))
             
-            sl_color = (74, 222, 128) if hist[-1] >= hist[0] else (248, 113, 113)
+            sl_color = (74, 222, 128, 255) if hist[-1] >= hist[0] else (248, 113, 113, 255)
+            
+            # Altını doldur (Daha şık görünüm)
+            poly_points = [(sl_x, sl_y + sl_h)] + points + [(points[-1][0], sl_y + sl_h)]
+            draw.polygon(poly_points, fill=sl_color[:3] + (50,)) # Yarı saydam dolgu
             draw.line(points, fill=sl_color, width=2)
             # Son nokta
             lx, ly = points[-1]
-            draw.ellipse((lx-3, ly-3, lx+3, ly+3), fill=sl_color)
+            draw.ellipse((lx-3, ly-3, lx+3, ly+3), fill=sl_color[:3] + (255,))
 
         y += row_height
 
@@ -466,6 +487,8 @@ def register_market_handlers(bot, tirtil_utils):
         ind = calculate_indicators(history)
         rsi = ind['rsi']
         sma = ind['sma']
+        upper_bb = ind['upper']
+        lower_bb = ind['lower']
         
         rsi_color = (34, 197, 94, 255) if 30 <= rsi <= 70 else (239, 68, 68, 255)
         draw.text((width - 250, 40), f"RSI (14): {rsi:.1f}", font=indicator_font, fill=rsi_color)
@@ -488,10 +511,24 @@ def register_market_handlers(bot, tirtil_utils):
             points.append((x, y))
             
         if len(points) > 1:
-            # Alt Alanı Doldurma (Yarı Saydam)
+            # Katmanlar (Overlay)
             overlay = Image.new('RGBA', img.size, (0, 0, 0, 0))
             overlay_draw = ImageDraw.Draw(overlay)
             
+            # 1. Bollinger Bantları (Bulut Efekti)
+            bb_points = []
+            # Üst bant noktaları
+            bb_points.append((margin_left, height - margin_bottom - ((upper_bb - min_y) / (max_y - min_y) * graph_h)))
+            bb_points.append((width - margin_right, height - margin_bottom - ((upper_bb - min_y) / (max_y - min_y) * graph_h)))
+            # Alt bant noktaları (Ters sıra)
+            bb_points.append((width - margin_right, height - margin_bottom - ((lower_bb - min_y) / (max_y - min_y) * graph_h)))
+            bb_points.append((margin_left, height - margin_bottom - ((lower_bb - min_y) / (max_y - min_y) * graph_h)))
+            
+            # Basit bir dikdörtgen yerine gerçek BB eğrisi çizmek zor olduğu için (geçmiş BB verisi tutmuyoruz),
+            # güncel BB aralığını tüm grafiğe yansıtıyoruz (Referans aralığı olarak).
+            overlay_draw.polygon(bb_points, fill=(56, 189, 248, 30)) # Çok hafif mavi alan
+
+            # 2. Fiyat Alanı Doldurma
             poly_points = [(margin_left, height - margin_bottom)] + points + [(points[-1][0], height - margin_bottom)]
             fill_color = main_color[:3] + (40,) # Düşük opaklık
             overlay_draw.polygon(poly_points, fill=fill_color)
@@ -522,6 +559,25 @@ def register_market_handlers(bot, tirtil_utils):
             # Son Noktayı Vurgula
             lx, ly = points[-1]
             draw.ellipse((lx-6, ly-6, lx+6, ly+6), fill=highlight_color, outline=main_color, width=2)
+            
+            # --- TAHMİN (FORECAST) ---
+            # Son 5 verinin eğimine (momentum) bakarak basit bir projeksiyon yapalım
+            if len(history) >= 5:
+                slope = (history[-1] - history[-5]) / 5
+                forecast_steps = 5
+                forecast_price = history[-1] + (slope * forecast_steps)
+                
+                # Tahmin Çizgisi
+                fx = lx + (step_x * forecast_steps)
+                fy = height - margin_bottom - ((forecast_price - min_y) / (max_y - min_y) * graph_h)
+                
+                # Kesikli çizgi efekti (manuel)
+                draw.line([(lx, ly), (fx, fy)], fill=(255, 255, 255, 150), width=2)
+                draw.ellipse((fx-4, fy-4, fx+4, fy+4), fill=(255, 255, 255, 150))
+                
+                # Tahmin Metni
+                trend_icon = "↗️" if forecast_price > history[-1] else "↘️"
+                draw.text((fx + 10, fy - 10), f"Tahmin: {int(forecast_price)}$ {trend_icon}", font=label_font, fill=highlight_color)
         
         # --- Alt Bilgi ---
         draw.text((width/2 - 50, height - 30), "Zaman (Son 20 Veri)", font=label_font, fill=text_color)
