@@ -939,6 +939,8 @@ if __name__ == "__main__":
         types.BotCommand("halkaarz", "Aktif Halka Arz"),
         types.BotCommand("talepet", "Halka Arza Katıl"),
         types.BotCommand("talep_iptal", "Halka Arz Talebini İptal Et"),
+        types.BotCommand("sirket_kur", "Kendi Şirketini Kur (50k$)"),
+        types.BotCommand("halkaarz_yap", "Şirketini Borsaya Aç"),
         types.BotCommand("haftaliktop10", "Haftalık Liderlik"),
         types.BotCommand("istatistik", "Günlük İstatistikler"),
         types.BotCommand("help", "Yardım"),

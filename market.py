@@ -30,6 +30,13 @@ NEWS_TEMPLATES = {
     "demir": {"up": ["Ordu için yeni silah siparişi! ⚔️"], "down": ["Hurda demirler piyasaya sürüldü. ♻️"]}
 }
 
+IPO_CANDIDATES = [
+    {"code": "uzay", "name": "TIRTIL Uzay Teknolojileri 🚀", "base": 1000, "min": 500, "max": 2000, "volatility": 0.1},
+    {"code": "gida", "name": "Lezzet Gıda Sanayi 🍔", "base": 150, "min": 100, "max": 300, "volatility": 0.04},
+    {"code": "enerji", "name": "Güneş Enerji A.Ş. ☀️", "base": 300, "min": 200, "max": 500, "volatility": 0.06},
+    {"code": "ilac", "name": "Şifa İlaç Kimya 💊", "base": 400, "min": 250, "max": 700, "volatility": 0.07},
+]
+
 def calculate_indicators(prices):
     """Fiyat geçmişine göre RSI, SMA ve Bollinger Bantlarını hesaplar."""
     if not prices: return {"rsi": 50, "sma": 0, "upper": 0, "lower": 0}
@@ -118,7 +125,6 @@ def start_new_ipo(bot):
         
         ipo_price = random.randint(company["min"], int(company["base"] * 0.9))
         total_shares = random.randint(500, 2000)
-        dist_method = random.choice(["Oransal", "Eşit"])
         
         start_time = datetime.now()
         end_time = start_time + timedelta(minutes=15) # 15 dakika talep toplama süresi
@@ -129,7 +135,6 @@ def start_new_ipo(bot):
             "company_name": company["name"],
             "ipo_price": ipo_price,
             "total_shares": total_shares,
-            "method": dist_method,
             "start_date": start_time.strftime("%Y-%m-%d %H:%M:%S"),
             "end_date": end_time.strftime("%Y-%m-%d %H:%M:%S"),
             "subscribers": {} # {user_id: {"amount": X, "username": Y}}
@@ -141,8 +146,7 @@ def start_new_ipo(bot):
             f"Şirket: **{company['name']}**\n"
             f"Kod: `{company['code']}`\n\n"
             f"💰 **Halka Arz Fiyatı:** {ipo_price} $\n"
-            f"📦 **Arz Edilen Lot:** {total_shares} adet\n"
-            f"⚖️ **Dağıtım:** {dist_method}\n\n"
+            f"📦 **Arz Edilen Lot:** {total_shares} adet\n\n"
             f"⏰ **Talep Toplama Bitiş:** {end_time.strftime('%H:%M')}\n\n"
             f"Talepte bulunmak için: `/talepet {company['code']} <adet>`\n"
             f"Durumu görmek için: `/halkaarz`"
@@ -166,29 +170,14 @@ def finalize_ipo(bot):
         if not ipo["subscribers"]:
              result_header += "Talep gelmediği için halka arz iptal edildi. 🤷‍♂️"
         else:
-            method = ipo.get("method", "Oransal")
-            ratio = 0
-            max_share = 0
-            
-            if method == "Eşit":
-                num_subs = len(ipo["subscribers"])
-                max_share = max(1, ipo["total_shares"] // num_subs) if num_subs > 0 else 0
-                result_header += f"⚖️ **Yöntem:** Eşit Dağıtım\n✅ Kişi Başı Maks: {max_share} Lot\n\n"
-            else:
-                ratio = min(1.0, ipo["total_shares"] / total_requested if total_requested > 0 else 1.0)
-                result_header += f"⚖️ **Yöntem:** Oransal Dağıtım\n✅ Karşılama Oranı: %{ratio*100:.2f}\n\n"
+            ratio = min(1.0, ipo["total_shares"] / total_requested if total_requested > 0 else 1.0)
+            result_header += f"✅ Talepler %{ratio*100:.2f} oranında karşılandı.\n\n"
 
             distributed_count = 0
             for uid, sub_data in ipo["subscribers"].items():
                 user = users.get(uid)
                 if not user: continue
-                
-                if method == "Eşit": allotted = min(sub_data["amount"], max_share)
-                else: allotted = math.floor(sub_data["amount"] * ratio)
-                
-                if distributed_count + allotted > ipo["total_shares"]: allotted = max(0, ipo["total_shares"] - distributed_count)
-                distributed_count += allotted
-                
+                allotted = math.floor(sub_data["amount"] * ratio)
                 cost = allotted * ipo["ipo_price"]
                 if allotted > 0 and user.get("money", 0) >= cost:
                     user["money"] -= cost
@@ -200,6 +189,33 @@ def finalize_ipo(bot):
                 elif allotted > 0:
                     try: bot.send_message(uid, result_header + f"❌ Yetersiz bakiye nedeniyle {allotted} lot alınamadı.")
                     except: pass
+            
+            # --- KULLANICI ŞİRKETİ İSE KURUCUYA ÖDEME YAP ---
+            owner_id = ipo.get("owner_id")
+            if owner_id and owner_id in users:
+                revenue = distributed_count * ipo["ipo_price"]
+                founder_keep = ipo.get("total_supply", ipo["total_shares"]) - distributed_count
+                
+                users[owner_id]["money"] = users[owner_id].get("money", 0) + revenue
+                users[owner_id].setdefault("inventory", {})[ipo["company_code"]] = users[owner_id].get("inventory", {}).get(ipo["company_code"], 0) + founder_keep
+                
+                p_item = users[owner_id].setdefault("portfolio", {}).setdefault(ipo["company_code"], {"amount": 0, "total_cost": 0})
+                p_item["amount"] += founder_keep
+                
+                if "private_company" in users[owner_id]: del users[owner_id]["private_company"]
+                
+                try: bot.send_message(owner_id, f"🎉 **HALKA ARZ TAMAMLANDI!**\n\n💰 Kasa Geliri: {revenue} $\n📦 Elinde Kalan: {founder_keep} Lot\n📈 Şirketin artık borsada işlem görüyor!")
+                except: pass
+                
+                new_comp = {
+                    "name": ipo["company_name"],
+                    "base": ipo["ipo_price"],
+                    "min": int(ipo["ipo_price"] * 0.1),
+                    "max": int(ipo["ipo_price"] * 5),
+                    "volatility": 0.08
+                }
+                database.public_companies[ipo["company_code"]] = new_comp
+                TRADE_GOODS[ipo["company_code"]] = new_comp
         
         market_prices[ipo["company_code"]] = ipo["ipo_price"]
         last_prices[ipo["company_code"]] = ipo["ipo_price"]
@@ -1060,7 +1076,6 @@ def register_market_handlers(bot, tirtil_utils):
                 f"Kod: `{ipo['company_code']}`\n\n"
                 f"💰 **Fiyat:** {ipo['ipo_price']} $\n"
                 f"📦 **Arz Edilen Lot:** {ipo['total_shares']}\n"
-                f"⚖️ **Dağıtım:** {ipo.get('method', 'Oransal')}\n"
                 f"📈 **Gelen Talep:** {total_requested} Lot\n\n"
                 f"⏰ **Kalan Süre:** {int(mins)}dk {int(secs)}sn\n\n"
                 f"`/talepet {ipo['company_code']} <adet>`\n"
@@ -1095,6 +1110,71 @@ def register_market_handlers(bot, tirtil_utils):
             del database.active_ipo["subscribers"][user_id]
             save_market_data()
             bot.reply_to(message, "✅ Halka arz talebiniz iptal edildi.")
+
+    @bot.message_handler(commands=['sirket_kur'])
+    def create_company(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        
+        COST = 50000
+        if users[user_id].get("money", 0) < COST:
+            bot.reply_to(message, f"❌ Şirket kurmak için {COST} $ sermaye gerekli!"); return
+
+        try:
+            args = message.text.split(maxsplit=2)
+            code = args[1].lower()
+            name = args[2]
+        except:
+            bot.reply_to(message, "⚠️ Kullanım: `/sirket_kur <KOD> <Şirket Adı>`\nÖrnek: `/sirket_kur holding Çılgın Holding A.Ş.`"); return
+
+        if len(code) > 5 or not code.isalpha(): bot.reply_to(message, "❌ Kod en fazla 5 harf olmalı."); return
+        if code in TRADE_GOODS or code in [c["code"] for c in IPO_CANDIDATES]: bot.reply_to(message, "❌ Bu kod kullanımda."); return
+        if users[user_id].get("private_company"): bot.reply_to(message, "⚠️ Zaten halka arz bekleyen bir şirketin var."); return
+
+        users[user_id]["money"] -= COST
+        users[user_id]["private_company"] = {"code": code, "name": name}
+        save_users()
+        bot.reply_to(message, f"🏢 **ŞİRKET KURULDU!**\n\nŞirket: {name} ({code.upper()})\nSahibi: Sen (%100)\n\nBorsaya girmek için: `/halkaarz_yap <yüzde>`")
+
+    @bot.message_handler(commands=['halkaarz_yap'])
+    def launch_user_ipo(message):
+        user_id = str(message.from_user.id)
+        p_comp = users.get(user_id, {}).get("private_company")
+        if not p_comp: bot.reply_to(message, "❌ Kurulmuş bir şirketin yok. `/sirket_kur` kullan."); return
+
+        with market_lock:
+            if database.active_ipo.get("is_active"): bot.reply_to(message, "⚠️ Şu an aktif bir halka arz var. Bitmesini bekle."); return
+            try:
+                percent = int(message.text.split()[1])
+                if not (10 <= percent <= 90): raise ValueError
+            except: bot.reply_to(message, "⚠️ Kullanım: `/halkaarz_yap <yüzde>` (10-90 arası)"); return
+
+            base_price = random.randint(50, 300)
+            total_supply = random.randint(1000, 5000)
+            shares_to_sell = int(total_supply * (percent / 100))
+            
+            start_time = datetime.now()
+            end_time = start_time + timedelta(minutes=20)
+
+            database.active_ipo = {
+                "is_active": True,
+                "company_code": p_comp["code"],
+                "company_name": p_comp["name"],
+                "ipo_price": base_price,
+                "total_shares": shares_to_sell,
+                "total_supply": total_supply,
+                "owner_id": user_id,
+                "method": "Oransal",
+                "start_date": start_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "end_date": end_time.strftime("%Y-%m-%d %H:%M:%S"),
+                "subscribers": {}
+            }
+            save_market_data()
+            
+            announcement = (f"📢 **YENİ ŞİRKET HALKA ARZ OLUYOR!**\n\nKurucu: **{users[user_id]['name']}**\nŞirket: **{p_comp['name']}**\n💰 Fiyat: {base_price} $\n📦 Arz: {shares_to_sell} Lot (%{percent})\n⏰ Süre: 20 Dakika\n\n`/talepet {p_comp['code']} <adet>`")
+            for uid in users:
+                 try: bot.send_message(uid, announcement, parse_mode="Markdown")
+                 except: pass
 
     @bot.message_handler(commands=['iflas'])
     def declare_bankruptcy(message):
