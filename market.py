@@ -175,7 +175,7 @@ def start_new_ipo(bot):
             f"Durumu görmek için: `/halkaarz`"
         )
         print(f"📢 Yeni Halka Arz Başladı: {company['name']}")
-        for uid, u_data in users.items():
+        for uid, u_data in list(users.items()):
             if u_data.get("is_approved", False):
                 try: bot.send_message(uid, announcement, parse_mode="Markdown")
                 except Exception as e: print(f"Duyuru gönderilemedi: {uid} - {e}")
@@ -258,68 +258,72 @@ def finalize_ipo(bot):
 
 def update_market(bot):
     global market_prices, market_volumes, last_prices, price_history
-    with market_lock:
-        # --- IPO KONTROLLERİ ---
-        if not database.active_ipo.get("is_active") and random.random() < 1/120: # ~3 saatte bir
-            start_new_ipo(bot)
-            
-        if database.active_ipo.get("is_active"):
-            end_date_str = database.active_ipo.get("end_date")
-            if end_date_str and datetime.now() > datetime.strptime(end_date_str, "%Y-%m-%d %H:%M:%S"):
-                try:
-                    finalize_ipo(bot)
-                except Exception as e:
-                    print(f"❌ Halka arz sonlandırılırken hata: {e}")
-                    database.active_ipo = {"is_active": False}
-        # --- END IPO KONTROLLERİ ---
+    try:
+        with market_lock:
+            # --- IPO KONTROLLERİ ---
+            if not database.active_ipo.get("is_active") and random.random() < 1/120: # ~3 saatte bir
+                start_new_ipo(bot)
+                
+            if database.active_ipo.get("is_active"):
+                end_date_str = database.active_ipo.get("end_date")
+                if end_date_str and datetime.now() > datetime.strptime(end_date_str, "%Y-%m-%d %H:%M:%S"):
+                    try:
+                        finalize_ipo(bot)
+                    except Exception as e:
+                        print(f"❌ Halka arz sonlandırılırken hata: {e}")
+                        database.active_ipo = {"is_active": False}
+            # --- END IPO KONTROLLERİ ---
 
-        last_prices = market_prices.copy()
-        if database.active_news_item is None or (datetime.now() - database.last_news_update).total_seconds() > 300:
-            database.last_news_update = datetime.now()
-            database.market_trend = random.choices([-1, 0, 1], weights=[0.3, 0.4, 0.3])[0]
-            database.active_news_item = random.choice(list(TRADE_GOODS.keys()))
-            database.active_news_direction = random.choice(["up", "down"])
-            database.market_news = random.choice(NEWS_TEMPLATES[database.active_news_item][database.active_news_direction])
-            
-            event_roll = random.randint(1, 100)
-            database.active_global_modifier = -0.25 if event_roll <= 3 else (0.25 if event_roll >= 97 else 0.0)
-            if database.active_global_modifier == -0.25: database.market_news = "📉 **KARA GÜN!** Küresel kriz patlak verdi! Piyasalar çakılıyor!"
-            elif database.active_global_modifier == 0.25: database.market_news = "🚀 **ALTIN ÇAĞ!** Yabancı yatırımcılar ülkeye akın etti!"
-            print(f"📊 Piyasa Trendi: {database.market_trend}, Haber: {database.market_news}")
+            last_prices = market_prices.copy()
+            if database.active_news_item is None or (datetime.now() - database.last_news_update).total_seconds() > 300:
+                database.last_news_update = datetime.now()
+                database.market_trend = random.choices([-1, 0, 1], weights=[0.3, 0.4, 0.3])[0]
+                database.active_news_item = random.choice(list(TRADE_GOODS.keys()))
+                database.active_news_direction = random.choice(["up", "down"])
+                database.market_news = random.choice(NEWS_TEMPLATES[database.active_news_item][database.active_news_direction])
+                
+                event_roll = random.randint(1, 100)
+                database.active_global_modifier = -0.25 if event_roll <= 3 else (0.25 if event_roll >= 97 else 0.0)
+                if database.active_global_modifier == -0.25: database.market_news = "📉 **KARA GÜN!** Küresel kriz patlak verdi! Piyasalar çakılıyor!"
+                elif database.active_global_modifier == 0.25: database.market_news = "🚀 **ALTIN ÇAĞ!** Yabancı yatırımcılar ülkeye akın etti!"
+                print(f"📊 Piyasa Trendi: {database.market_trend}, Haber: {database.market_news}")
 
-        trend_strength = random.uniform(0.01, 0.03)
-        for code, data in TRADE_GOODS.items():
-            # 1. Volatilite ve Trend
-            change_percent = random.gauss(0, data["volatility"]) + (database.market_trend * trend_strength) + database.active_global_modifier
-            
-            # 2. Hacim Etkisi (Logaritmik - Daha gerçekçi)
-            vol = market_volumes.get(code, 0)
-            if vol != 0:
-                vol_impact = (1 if vol > 0 else -1) * math.log(abs(vol) + 1) * 0.005
-                change_percent += vol_impact
+            trend_strength = random.uniform(0.01, 0.03)
+            for code, data in TRADE_GOODS.items():
+                # 1. Volatilite ve Trend
+                change_percent = random.gauss(0, data["volatility"]) + (database.market_trend * trend_strength) + database.active_global_modifier
+                
+                # 2. Hacim Etkisi (Logaritmik - Daha gerçekçi)
+                vol = market_volumes.get(code, 0)
+                if vol != 0:
+                    vol_impact = (1 if vol > 0 else -1) * math.log(abs(vol) + 1) * 0.005
+                    change_percent += vol_impact
 
-            # 3. Haber Etkisi
-            if code == database.active_news_item: change_percent += random.uniform(0.05, 0.15) * (1 if database.active_news_direction == "up" else -1)
-            
-            # 4. Momentum (Önceki hareketin %40'ı devam eder - Trend güçlendirildi)
-            history = price_history.get(code, [])
-            if len(history) > 1:
-                prev_change_pct = (history[-1] - history[-2]) / history[-2] if history[-2] != 0 else 0
-                change_percent += prev_change_pct * 0.4
+                # 3. Haber Etkisi
+                if code == database.active_news_item: change_percent += random.uniform(0.05, 0.15) * (1 if database.active_news_direction == "up" else -1)
+                
+                # 4. Momentum (Önceki hareketin %40'ı devam eder - Trend güçlendirildi)
+                history = price_history.get(code, [])
+                if len(history) > 1:
+                    prev_change_pct = (history[-1] - history[-2]) / history[-2] if history[-2] != 0 else 0
+                    change_percent += prev_change_pct * 0.4
 
-            limit = 0.30 if database.active_global_modifier != 0 else 0.15
-            change_percent = max(-limit, min(change_percent, limit))
-            price_change = int(market_prices[code] * change_percent) or (random.randint(1, 3) * (-1 if change_percent < 0 else 1))
-            
-            market_prices[code] = max(data["min"], min(market_prices[code] + price_change, data["max"]))
-            price_history.setdefault(code, []).append(market_prices[code])
-            if len(price_history[code]) > 40: price_history[code].pop(0) # Grafik için daha fazla veri
+                limit = 0.30 if database.active_global_modifier != 0 else 0.15
+                change_percent = max(-limit, min(change_percent, limit))
+                price_change = int(market_prices[code] * change_percent) or (random.randint(1, 3) * (-1 if change_percent < 0 else 1))
+                
+                market_prices[code] = max(data["min"], min(market_prices[code] + price_change, data["max"]))
+                price_history.setdefault(code, []).append(market_prices[code])
+                if len(price_history[code]) > 40: price_history[code].pop(0) # Grafik için daha fazla veri
 
-        # Hacim zamanla azalır (Likidite)
-        for k in market_volumes:
-            market_volumes[k] = int(market_volumes[k] * 0.8)
-            
-        check_limit_orders(bot)
+            # Hacim zamanla azalır (Likidite)
+            for k in market_volumes:
+                market_volumes[k] = int(market_volumes[k] * 0.8)
+                
+            check_limit_orders(bot)
+    except Exception as e:
+        print(f"❌ Market döngüsünde kritik hata: {e}")
+    finally:
         database.last_market_update = datetime.now()
         save_market_data()
 

@@ -890,7 +890,10 @@ def scheduler_thread():
         if now_utc3.hour == 9 and now_utc3.minute == 0:
             apply_bank_interest(bot); time.sleep(65)
         if (datetime.now() - database.last_market_update).total_seconds() > 90:
-            update_market(bot)
+            try:
+                update_market(bot)
+            except Exception as e:
+                print(f"⚠️ Scheduler hatası: {e}")
         time.sleep(20)
 
 # --- Botu Çalıştırma ---
