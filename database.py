@@ -110,6 +110,7 @@ def save_users():
         if users_collection is not None:
             try:
                 users_collection.replace_one({"_id": "users_data"}, {"data": users}, upsert=True)
+                # print("✅ Kullanıcı verileri MongoDB'ye yedeklendi.") # Çok sık çıkmaması için yorum satırı yapabilirsin
             except Exception as e:
                 print(f"Kullanıcı verileri MongoDB'ye kaydedilirken hata: {e}")
         else:
@@ -139,6 +140,7 @@ def save_market_data():
         try:
             collection = db["market"]
             collection.replace_one({"_id": "market_data"}, data, upsert=True)
+            print("✅ Borsa verileri MongoDB'ye yedeklendi.")
         except Exception as e:
             print(f"❌ MongoDB Market Kayıt Hatası: {e}")
             

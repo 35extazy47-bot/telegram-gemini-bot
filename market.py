@@ -209,6 +209,7 @@ def finalize_ipo(bot):
                     p_item["amount"] += allotted; p_item["total_cost"] += cost
                     try: bot.send_message(uid, result_header + f"Tebrikler! Hesabınıza **{allotted} lot** {ipo['company_code'].upper()} geçti.\n💰 Maliyet: {cost} $")
                     except: pass
+                    distributed_count += allotted
                 elif allotted > 0:
                     try: bot.send_message(uid, result_header + f"❌ Yetersiz bakiye nedeniyle {allotted} lot alınamadı.")
                     except: pass
