@@ -242,6 +242,10 @@ def finalize_ipo(bot):
                 }
                 database.public_companies[ipo["company_code"]] = new_comp
                 TRADE_GOODS[ipo["company_code"]] = new_comp
+            else:
+                # Sistem şirketi ise kalıcı listeye ekle (Restartta silinmemesi için)
+                if ipo["company_code"] in TRADE_GOODS:
+                    database.public_companies[ipo["company_code"]] = TRADE_GOODS[ipo["company_code"]]
         
         market_prices[ipo["company_code"]] = ipo["ipo_price"]
         last_prices[ipo["company_code"]] = ipo["ipo_price"]
