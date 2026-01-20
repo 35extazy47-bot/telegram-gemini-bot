@@ -20,6 +20,27 @@ from database import (
 get_badges = None
 update_quest_progress = None
 
+def restore_active_ipo():
+    """Bot yeniden başladığında aktif halka arzı TRADE_GOODS'a geri yükler."""
+    if database.active_ipo.get("is_active"):
+        code = database.active_ipo["company_code"]
+        if code not in TRADE_GOODS:
+            # Metadata eksikse IPO_CANDIDATES'ten bulmayı dene
+            candidate = next((c for c in IPO_CANDIDATES if c["code"] == code), None)
+            if candidate:
+                TRADE_GOODS[code] = candidate
+            else:
+                # Yedek (Generic) - Eğer listede yoksa veritabanından kurtar
+                TRADE_GOODS[code] = {
+                    "code": code,
+                    "name": database.active_ipo["company_name"],
+                    "base": database.active_ipo["ipo_price"],
+                    "min": int(database.active_ipo["ipo_price"] * 0.5),
+                    "max": int(database.active_ipo["ipo_price"] * 2),
+                    "volatility": 0.05
+                }
+            print(f"🔄 Aktif Halka Arz Geri Yüklendi: {database.active_ipo['company_name']}")
+
 NEWS_TEMPLATES = {
     "ipek": {"up": ["Sarayda ipek modası başladı! 👗"], "down": ["Çin'den dev ipek kervanı ulaştı! 🐫"]},
     "baharat": {"up": ["Saray mutfağı için yüklü baharat siparişi verildi! 🍛"], "down": ["Yeni baharat yolu keşfedildi! 🗺️"]},
@@ -139,6 +160,8 @@ def start_new_ipo(bot):
             "end_date": end_time.strftime("%Y-%m-%d %H:%M:%S"),
             "subscribers": {} # {user_id: {"amount": X, "username": Y}}
         }
+        # Candidate verilerini de saklayalım ki restartta kaybolmasın
+        database.active_ipo.update({k: v for k, v in company.items() if k not in database.active_ipo})
         save_market_data()
 
         announcement = (
@@ -1117,6 +1140,16 @@ def register_market_handlers(bot, tirtil_utils):
             save_market_data()
             bot.reply_to(message, "✅ Halka arz talebiniz iptal edildi.")
 
+    @bot.message_handler(commands=['halkaarz_bitir'])
+    def force_finish_ipo(message):
+        if message.from_user.username != DEVELOPER_USERNAME: return
+        if not database.active_ipo.get("is_active"):
+            bot.reply_to(message, "⚠️ Aktif halka arz yok.")
+            return
+        
+        finalize_ipo(bot)
+        bot.reply_to(message, "✅ Halka arz zorla sonlandırıldı.")
+
     @bot.message_handler(commands=['sirket_kur'])
     def create_company(message):
         user_id = str(message.from_user.id)
@@ -1305,3 +1338,6 @@ def register_market_handlers(bot, tirtil_utils):
     def show_inventory(message):
         try: bot.send_photo(message.chat.id, create_inventory_image(users[str(message.from_user.id)]), caption="🎒 **Envanter Durumu**")
         except: bot.reply_to(message, "Envanter görüntülenemedi.")
+
+# Modül yüklendiğinde aktif IPO varsa geri yükle
+restore_active_ipo()
