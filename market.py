@@ -234,12 +234,15 @@ def update_market(bot):
         # --- IPO KONTROLLERİ ---
         if not database.active_ipo.get("is_active") and random.random() < 1/120: # ~3 saatte bir
             start_new_ipo(bot)
-            return 
+            
         if database.active_ipo.get("is_active"):
             end_date_str = database.active_ipo.get("end_date")
             if end_date_str and datetime.now() > datetime.strptime(end_date_str, "%Y-%m-%d %H:%M:%S"):
-                finalize_ipo(bot)
-                return
+                try:
+                    finalize_ipo(bot)
+                except Exception as e:
+                    print(f"❌ Halka arz sonlandırılırken hata: {e}")
+                    database.active_ipo = {"is_active": False}
         # --- END IPO KONTROLLERİ ---
 
         last_prices = market_prices.copy()
