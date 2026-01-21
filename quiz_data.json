@@ -4189,5 +4189,285 @@
     ],
     "answer": "B",
     "explanation": "İtalya, İttifak bloğunda iken kendisine vaat edilen topraklar (Londra Antlaşması) nedeniyle İtilaf bloğuna geçmiştir."
+  },
+  {
+    "id": 329,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'nin Kırım Savaşı sırasında ilk dış borcu hangi ülkeden almıştır?",
+    "options": [
+      "A) Fransa",
+      "B) Almanya",
+      "C) İngiltere",
+      "D) Rusya"
+    ],
+    "answer": "C",
+    "explanation": "Osmanlı Devleti, Kırım Savaşı'nın masraflarını karşılamak için 1854 yılında ilk dış borcunu İngiltere'den almıştır."
+  },
+  {
+    "id": 330,
+    "category": "tarih",
+    "level": 2,
+    "question": "1856 yılında ilan edilen ve gayrimüslimlere Müslümanlarla tam bir eşitlik getirmeyi amaçlayan ferman hangisidir?",
+    "options": [
+      "A) Tanzimat Fermanı",
+      "B) Sened-i İttifak",
+      "C) Islahat Fermanı",
+      "D) Kanun-i Esasi"
+    ],
+    "answer": "C",
+    "explanation": "Paris Antlaşması öncesinde Avrupalı devletlerin baskısıyla ilan edilen Islahat Fermanı, gayrimüslimlere geniş haklar tanımıştır."
+  },
+  {
+    "id": 331,
+    "category": "tarih",
+    "level": 2,
+    "question": "Kırım Savaşı'nı (1853-1856) sonlandıran ve Osmanlı Devleti'nin 'Avrupa Devleti' sayıldığı antlaşma hangisidir?",
+    "options": [
+      "A) Londra Antlaşması",
+      "B) Paris Antlaşması",
+      "C) Berlin Antlaşması",
+      "D) Hünkar İskelesi Antlaşması"
+    ],
+    "answer": "B",
+    "explanation": "1856 Paris Antlaşması ile Osmanlı Devleti'nin toprak bütünlüğü Avrupa devletlerinin garantisi altına alınmış ve Osmanlı bir Avrupa devleti sayılmıştır."
+  },
+  {
+    "id": 332,
+    "category": "tarih",
+    "level": 2,
+    "question": "1827 yılında İngiltere, Fransa ve Rusya'nın Osmanlı donanmasını yaktığı olay hangisidir?",
+    "options": [
+      "A) Çeşme Baskını",
+      "B) Sinop Baskını",
+      "C) Navarin Olayı",
+      "D) Preveze Deniz Savaşı"
+    ],
+    "answer": "C",
+    "explanation": "Yunan isyanını bastıran Osmanlı-Mısır donanması, Navarin limanında Avrupalı devletlerin donanması tarafından yakılmıştır."
+  },
+  {
+    "id": 333,
+    "category": "tarih",
+    "level": 2,
+    "question": "Mısır Valisi Kavalalı Mehmet Ali Paşa'nın isyanı üzerine Osmanlı Devleti'nin Rusya ile imzaladığı ve Boğazlar Sorunu'nu başlatan antlaşma hangisidir?",
+    "options": [
+      "A) Balta Limanı Antlaşması",
+      "B) Hünkar İskelesi Antlaşması",
+      "C) Londra Boğazlar Sözleşmesi",
+      "D) Paris Antlaşması"
+    ],
+    "answer": "B",
+    "explanation": "1833 Hünkar İskelesi Antlaşması ile Rusya'ya Boğazlarda imtiyazlar tanınmış, bu da Boğazlar Sorunu'nu ortaya çıkarmıştır."
+  },
+  {
+    "id": 334,
+    "category": "tarih",
+    "level": 2,
+    "question": "1841 yılında imzalanan ve Boğazların uluslararası bir statü kazanarak Osmanlı'nın egemenlik haklarının kısıtlandığı sözleşme hangisidir?",
+    "options": [
+      "A) Paris Antlaşması",
+      "B) Berlin Antlaşması",
+      "C) Hünkar İskelesi Antlaşması",
+      "D) Londra Boğazlar Sözleşmesi"
+    ],
+    "answer": "D",
+    "explanation": "Londra Boğazlar Sözleşmesi ile Boğazlar, barış zamanında tüm devletlerin savaş gemilerine kapatılarak uluslararası bir statüye kavuşmuştur."
+  },
+  {
+    "id": 335,
+    "category": "tarih",
+    "level": 2,
+    "question": "Türk tarihinin ilk anayasası olan Kanun-i Esasi hangi padişah döneminde ilan edilmiştir?",
+    "options": [
+      "A) Abdülmecid",
+      "B) Abdülaziz",
+      "C) II. Abdülhamit",
+      "D) V. Murat"
+    ],
+    "answer": "C",
+    "explanation": "Genç Osmanlıların (Jön Türkler) baskısıyla Sultan II. Abdülhamit, 1876'da Kanun-i Esasi'yi ilan ederek I. Meşrutiyet dönemini başlatmıştır."
+  },
+  {
+    "id": 336,
+    "category": "tarih",
+    "level": 2,
+    "question": "93 Harbi (1877-78) sırasında Plevne'de yaptığı kahramanca savunma ile 'Plevne Kahramanı' unvanını alan komutan kimdir?",
+    "options": [
+      "A) Gazi Muhtar Paşa",
+      "B) Gazi Osman Paşa",
+      "C) Mithat Paşa",
+      "D) Süleyman Paşa"
+    ],
+    "answer": "B",
+    "explanation": "Gazi Osman Paşa, Plevne'de Rus ordusuna karşı aylarca süren destansı bir savunma yapmıştır."
+  },
+  {
+    "id": 337,
+    "category": "tarih",
+    "level": 2,
+    "question": "93 Harbi'ni sona erdiren ve Sırbistan, Karadağ ve Romanya'nın bağımsız olmasını sağlayan antlaşma hangisidir?",
+    "options": [
+      "A) Paris Antlaşması",
+      "B) Ayastefanos Antlaşması",
+      "C) Berlin Antlaşması",
+      "D) Bükreş Antlaşması"
+    ],
+    "answer": "C",
+    "explanation": "Berlin Antlaşması, Ayastefanos'un yerine imzalanmış ve Balkanlardaki siyasi haritayı yeniden şekillendirmiştir."
+  },
+  {
+    "id": 338,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'nin iflas ettiğini açıklaması üzerine alacaklı devletler tarafından 1881'de kurulan ve devletin gelirlerine el koyan kurum hangisidir?",
+    "options": [
+      "A) Bank-ı Osmani",
+      "B) Duyun-u Umumiye İdaresi",
+      "C) Memleket Sandıkları",
+      "D) Islah-ı Sanayi Komisyonu"
+    ],
+    "answer": "B",
+    "explanation": "Duyun-u Umumiye (Genel Borçlar) İdaresi, Osmanlı'nın ekonomik bağımsızlığını kaybetmesine neden olmuştur."
+  },
+  {
+    "id": 339,
+    "category": "tarih",
+    "level": 2,
+    "question": "II. Abdülhamit'in 1878'de meclisi kapatıp anayasayı askıya almasıyla başlayan ve 1908'e kadar süren döneme ne ad verilir?",
+    "options": [
+      "A) Lale Devri",
+      "B) Tanzimat Dönemi",
+      "C) İstibdat Dönemi",
+      "D) Fetret Devri"
+    ],
+    "answer": "C",
+    "explanation": "İstibdat (Baskı) Dönemi, II. Abdülhamit'in devleti tek başına yönettiği 30 yıllık dönemi ifade eder."
+  },
+  {
+    "id": 340,
+    "category": "tarih",
+    "level": 2,
+    "question": "19. yüzyılda Osmanlı aydınları arasında ortaya çıkan, dil, din, ırk ayrımı yapmadan tüm Osmanlı tebaasını eşit kabul eden fikir akımı hangisidir?",
+    "options": [
+      "A) İslamcılık (Ümmetçilik)",
+      "B) Türkçülük (Turancılık)",
+      "C) Batıcılık",
+      "D) Osmanlıcılık"
+    ],
+    "answer": "D",
+    "explanation": "Osmanlıcılık, devletin dağılmasını önlemek amacıyla tüm unsurları 'Osmanlı' kimliği altında birleştirmeyi amaçlamıştır."
+  },
+  {
+    "id": 341,
+    "category": "tarih",
+    "level": 2,
+    "question": "1838 yılında İngiltere ile imzalanan ve Osmanlı pazarını İngiliz mallarına açarak yerli sanayiye büyük darbe vuran ticaret antlaşması hangisidir?",
+    "options": [
+      "A) Hünkar İskelesi Antlaşması",
+      "B) Paris Antlaşması",
+      "C) Balta Limanı Ticaret Antlaşması",
+      "D) Londra Sözleşmesi"
+    ],
+    "answer": "C",
+    "explanation": "Balta Limanı Antlaşması ile İngiliz tüccarlara büyük imtiyazlar tanınmış, bu da Osmanlı ekonomisini dışa bağımlı hale getirmiştir."
+  },
+  {
+    "id": 342,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde yurt dışına seyahate çıkan ilk padişah kimdir?",
+    "options": [
+      "A) II. Mahmut",
+      "B) Abdülmecid",
+      "C) Abdülaziz",
+      "D) II. Abdülhamit"
+    ],
+    "answer": "C",
+    "explanation": "Sultan Abdülaziz, 1867 yılında Avrupa'yı ziyaret ederek yurt dışına çıkan ilk ve tek Osmanlı padişahı olmuştur."
+  },
+  {
+    "id": 343,
+    "category": "tarih",
+    "level": 3,
+    "question": "Ermeni meselesi ilk kez hangi uluslararası antlaşma ile gündeme gelmiştir?",
+    "options": [
+      "A) Paris Antlaşması (1856)",
+      "B) Ayastefanos Antlaşması (1878)",
+      "C) Londra Konferansı (1840)",
+      "D) Hünkar İskelesi Antlaşması (1833)"
+    ],
+    "answer": "B",
+    "explanation": "Ayastefanos Antlaşması'nın 16. maddesi ve Berlin Antlaşması'nın 61. maddesi ile Ermeni meselesi uluslararası bir boyut kazanmıştır."
+  },
+  {
+    "id": 344,
+    "category": "tarih",
+    "level": 2,
+    "question": "1828-1829 Osmanlı-Rus Savaşı sonucunda imzalanan ve Yunanistan'a bağımsızlık yolunu açan antlaşma hangisidir?",
+    "options": [
+      "A) Bükreş Antlaşması",
+      "B) Edirne Antlaşması",
+      "C) Yaş Antlaşması",
+      "D) Berlin Antlaşması"
+    ],
+    "answer": "B",
+    "explanation": "1829 Edirne Antlaşması ile Osmanlı Devleti, Yunanistan'ın bağımsızlığını tanımak zorunda kalmıştır."
+  },
+  {
+    "id": 345,
+    "category": "tarih",
+    "level": 2,
+    "question": "II. Abdülhamit döneminde İslamcılık (Panislamizm) politikasının bir aracı olarak inşa edilen ve İstanbul'u Şam ve Medine'ye bağlayan demir yolu hattı hangisidir?",
+    "options": [
+      "A) Bağdat Demiryolu",
+      "B) Hicaz Demiryolu",
+      "C) Rumeli Demiryolu",
+      "D) Anadolu Demiryolu"
+    ],
+    "answer": "B",
+    "explanation": "Hicaz Demiryolu, Müslümanların bağışlarıyla yapılmış ve halifenin Müslümanlar üzerindeki etkisini artırmayı amaçlamıştır."
+  },
+  {
+    "id": 346,
+    "category": "tarih",
+    "level": 3,
+    "question": "1876'da toplanan ve Balkan bunalımını görüşmek üzere Osmanlı Devleti'ne baskı yapan uluslararası konferans hangisidir?",
+    "options": [
+      "A) Paris Konferansı",
+      "B) Londra Konferansı",
+      "C) Tersane Konferansı (İstanbul)",
+      "D) Viyana Kongresi"
+    ],
+    "answer": "C",
+    "explanation": "Tersane Konferansı'nda sunulan ağır şartları reddeden Osmanlı Devleti'ne Rusya savaş ilan etmiş ve 93 Harbi başlamıştır."
+  },
+  {
+    "id": 347,
+    "category": "tarih",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde ilk özel gazete olan 'Tercüman-ı Ahval' kimler tarafından çıkarılmıştır?",
+    "options": [
+      "A) Namık Kemal ve Ziya Paşa",
+      "B) Şinasi ve Agah Efendi",
+      "C) Ahmet Mithat Efendi",
+      "D) Ali Suavi"
+    ],
+    "answer": "B",
+    "explanation": "1860 yılında Şinasi ve Agah Efendi tarafından çıkarılan Tercüman-ı Ahval, ilk özel Türk gazetesidir."
+  },
+  {
+    "id": 348,
+    "category": "tarih",
+    "level": 2,
+    "question": "1897 yılında Osmanlı Devleti ile Yunanistan arasında yapılan ve Osmanlı'nın askeri zaferine rağmen masada kaybettiği savaş hangisidir?",
+    "options": [
+      "A) Kırım Savaşı",
+      "B) 93 Harbi",
+      "C) Dömeke Meydan Muharebesi",
+      "D) Balkan Savaşı"
+    ],
+    "answer": "C",
+    "explanation": "Dömeke Meydan Muharebesi'nde Osmanlı ordusu Atina'ya kadar ilerlemiş ancak Avrupalı devletlerin müdahalesiyle Girit'in özerkliği kabul edilmiştir."
   }
 ]
