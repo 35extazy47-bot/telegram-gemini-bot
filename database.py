@@ -69,6 +69,7 @@ market_prices = {k: v["base"] for k, v in TRADE_GOODS.items()}
 market_volumes = {k: 0 for k in TRADE_GOODS.keys()}
 last_prices = market_prices.copy()
 price_history = {k: [v["base"]] * 20 for k, v in TRADE_GOODS.items()}
+volume_history = {k: [0] * 20 for k in TRADE_GOODS.keys()}
 market_news = "Borsa işlemleri başladı. Piyasa sakin. ☁️"
 last_market_update = datetime.now()
 market_trend = 0
@@ -128,6 +129,7 @@ def save_market_data():
         "volumes": market_volumes,
         "last_prices": last_prices,
         "price_history": price_history,
+        "volume_history": volume_history,
         "news": market_news,
         "trend": market_trend,
         "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S") if last_market_update else None,
@@ -152,7 +154,7 @@ def save_market_data():
 
 def load_market_data():
     """Borsa verilerini yükler."""
-    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, market_trend, last_rewarded_week, active_ipo, public_companies
+    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, volume_history, market_trend, last_rewarded_week, active_ipo, public_companies
     data = None
     
     if db is not None:
@@ -185,6 +187,7 @@ def load_market_data():
 
             last_prices.update(data.get("last_prices", {}))
             price_history.update(data.get("price_history", {}))
+            volume_history.update(data.get("volume_history", {}))
             market_news = data.get("news", market_news)
             market_trend = data.get("trend", 0)
             last_rewarded_week = data.get("last_rewarded_week", "")

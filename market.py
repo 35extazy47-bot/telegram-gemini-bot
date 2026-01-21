@@ -12,7 +12,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import database
 from database import (
     users, save_users, market_prices, market_volumes, last_prices,
-    price_history, TRADE_GOODS, save_market_data, market_lock, data_lock, 
+    price_history, volume_history, TRADE_GOODS, save_market_data, market_lock, data_lock, 
     DEVELOPER_USERNAME
 )
 
@@ -315,6 +315,11 @@ def update_market(bot):
                 market_prices[code] = max(data["min"], min(market_prices[code] + price_change, data["max"]))
                 price_history.setdefault(code, []).append(market_prices[code])
                 if len(price_history[code]) > 40: price_history[code].pop(0) # Grafik için daha fazla veri
+                
+                # Hacim Geçmişini Kaydet
+                current_vol = market_volumes.get(code, 0)
+                volume_history.setdefault(code, []).append(current_vol)
+                if len(volume_history[code]) > 40: volume_history[code].pop(0)
 
             # Hacim zamanla azalır (Likidite)
             for k in market_volumes:
@@ -602,6 +607,12 @@ def register_market_handlers(bot, tirtil_utils):
         
         history = price_history.get(item_code, [])
         if not history or len(history) < 2: bot.reply_to(message, "📉 Yeterli veri yok."); return
+        
+        # Hacim verisini hazırla
+        raw_vol = volume_history.get(item_code, [])
+        if len(raw_vol) < len(history):
+            vol_history = [0] * (len(history) - len(raw_vol)) + raw_vol
+        else: vol_history = raw_vol[-len(history):]
 
         # --- Ayarlar & Renkler ---
         width, height = 1000, 600
@@ -663,6 +674,19 @@ def register_market_handlers(bot, tirtil_utils):
         draw.text((width - 250, 40), f"RSI (14): {rsi:.1f}", font=indicator_font, fill=rsi_color)
         draw.text((width - 250, 70), f"SMA (5): {sma:.1f}", font=indicator_font, fill=(56, 189, 248, 255))
 
+        # --- Hacim Barları (Volume Bars) ---
+        max_vol = max([abs(v) for v in vol_history]) if vol_history else 1
+        if max_vol == 0: max_vol = 1
+        vol_h_max = graph_h * 0.25 # Grafiğin alt %25'i
+        
+        step_x = graph_w / (len(history) - 1)
+        
+        for i, vol in enumerate(vol_history):
+            vx = margin_left + (i * step_x)
+            vh = (abs(vol) / max_vol) * vol_h_max
+            v_color = (34, 197, 94, 100) if vol >= 0 else (239, 68, 68, 100) # Yeşil (Alım) / Kırmızı (Satış)
+            draw.rectangle([vx - 4, height - margin_bottom - vh, vx + 4, height - margin_bottom], fill=v_color)
+
         # --- Izgara ve Eksenler ---
         steps = 5
         for i in range(steps + 1):
@@ -673,7 +697,6 @@ def register_market_handlers(bot, tirtil_utils):
 
         # --- Grafik Çizimi ---
         points = []
-        step_x = graph_w / (len(history) - 1)
         for i, price in enumerate(history):
             x = margin_left + (i * step_x)
             y = height - margin_bottom - ((price - min_y) / (max_y - min_y) * graph_h)
