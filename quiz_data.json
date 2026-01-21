@@ -4469,5 +4469,285 @@
     ],
     "answer": "C",
     "explanation": "Dömeke Meydan Muharebesi'nde Osmanlı ordusu Atina'ya kadar ilerlemiş ancak Avrupalı devletlerin müdahalesiyle Girit'in özerkliği kabul edilmiştir."
+  },
+  {
+    "id": 349,
+    "category": "cografya",
+    "level": 3,
+    "question": "Trakya'da yaygın olan, kurak mevsimde çatlayan, yağışla şişip dönen toprak türü (Dönen Toprak) hangisidir?",
+    "options": [
+      "A) Podzol",
+      "B) Laterit",
+      "C) Vertisol",
+      "D) Terra Rossa"
+    ],
+    "answer": "C",
+    "explanation": "Vertisoller, eski göl tabanlarında oluşan, killi ve kireçli, kurakken çatlayan topraklardır. Trakya'da yaygındır."
+  },
+  {
+    "id": 350,
+    "category": "cografya",
+    "level": 2,
+    "question": "Tortum, Sera, Abant ve Yedigöller gibi göllerimiz oluşum bakımından hangi tür göllerdir?",
+    "options": [
+      "A) Tektonik",
+      "B) Heyelan Set",
+      "C) Volkanik Set",
+      "D) Alüvyal Set"
+    ],
+    "answer": "B",
+    "explanation": "Bu göller, heyelan sonucu kayan kütlelerin bir akarsu vadisinin önünü kapatmasıyla oluşmuştur."
+  },
+  {
+    "id": 351,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de kuzeybatı yönünden esen, soğuk ve yağış getiren yerel rüzgar hangisidir?",
+    "options": [
+      "A) Poyraz",
+      "B) Lodos",
+      "C) Keşişleme",
+      "D) Karayel"
+    ],
+    "answer": "D",
+    "explanation": "Kayıp Sakal kodlamasındaki 'Ka' Karayel'i temsil eder ve kuzeybatıdan eser."
+  },
+  {
+    "id": 352,
+    "category": "cografya",
+    "level": 2,
+    "question": "Sıtma hastalığına neden olabileceği için yerleşim yerlerine belirli bir mesafede ve devlet izniyle ekilen tarım ürünü hangisidir?",
+    "options": [
+      "A) Tütün",
+      "B) Kenevir",
+      "C) Pirinç (Çeltik)",
+      "D) Haşhaş"
+    ],
+    "answer": "C",
+    "explanation": "Pirinç (Çeltik) tarımı bol su içinde yapıldığı için sivrisinek üremesine ve sıtmaya yol açabilir, bu yüzden devlet kontrolündedir."
+  },
+  {
+    "id": 353,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'nin maden ihracatında en büyük paya sahip olan maden hangisidir?",
+    "options": [
+      "A) Bor",
+      "B) Krom",
+      "C) Mermer (Doğaltaş)",
+      "D) Bakır"
+    ],
+    "answer": "C",
+    "explanation": "Mermer ve doğaltaşlar, Türkiye'nin maden ihracat gelirinde ilk sırada yer alır."
+  },
+  {
+    "id": 354,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'deki petrol rafinerilerinden hangisi 'hammaddeye yakınlık' ilkesine göre kurulmuştur?",
+    "options": [
+      "A) İzmit (İpraş)",
+      "B) İzmir (Aliağa)",
+      "C) Kırıkkale (Orta Anadolu)",
+      "D) Batman"
+    ],
+    "answer": "D",
+    "explanation": "Batman Rafinerisi, Türkiye'de petrolün çıkarıldığı bölgede (Batman) olduğu için hammaddeye yakındır."
+  },
+  {
+    "id": 355,
+    "category": "cografya",
+    "level": 2,
+    "question": "UNESCO Dünya Mirası Listesi'ne giren ilk eserimiz olan 'Divriği Ulu Camii ve Darüşşifası' hangi ilimizdedir?",
+    "options": [
+      "A) Sivas",
+      "B) Konya",
+      "C) Diyarbakır",
+      "D) İstanbul"
+    ],
+    "answer": "A",
+    "explanation": "Mengücekliler dönemine ait bu eser Sivas'ın Divriği ilçesindedir ve 1985'te listeye girmiştir."
+  },
+  {
+    "id": 356,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'nin en büyük delta ovası olan Çukurova'yı oluşturan akarsular hangileridir?",
+    "options": [
+      "A) Fırat ve Dicle",
+      "B) Seyhan ve Ceyhan",
+      "C) Kızılırmak ve Yeşilırmak",
+      "D) Gediz ve Bakırçay"
+    ],
+    "answer": "B",
+    "explanation": "Seyhan ve Ceyhan nehirlerinin taşıdığı alüvyonlar Çukurova deltasını oluşturmuştur."
+  },
+  {
+    "id": 357,
+    "category": "cografya",
+    "level": 1,
+    "question": "Karadeniz ve Akdeniz kıyılarında dağların denize paralel uzanması sonucu görülen kıyı tipi hangisidir?",
+    "options": [
+      "A) Enine Kıyı",
+      "B) Ria Kıyı",
+      "C) Dalmaçya Kıyı",
+      "D) Boyuna Kıyı"
+    ],
+    "answer": "D",
+    "explanation": "Dağların kıyıya paralel uzandığı yerlerde Boyuna Kıyı tipi görülür; girinti çıkıntı azdır."
+  },
+  {
+    "id": 358,
+    "category": "cografya",
+    "level": 2,
+    "question": "Karabük ve Ereğli'de demir-çelik fabrikalarının kurulmasının temel nedeni nedir?",
+    "options": [
+      "A) Demir madenine yakınlık",
+      "B) Su kaynaklarına yakınlık",
+      "C) Enerji kaynağına (Taş kömürü) yakınlık",
+      "D) Pazara yakınlık"
+    ],
+    "answer": "C",
+    "explanation": "Demiri eritmek için gereken yüksek enerji, Zonguldak havzasındaki taş kömüründen sağlandığı için fabrikalar buraya kurulmuştur."
+  },
+  {
+    "id": 359,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de Yüksek Hızlı Tren (YHT) seferleri ilk olarak hangi hat üzerinde başlamıştır?",
+    "options": [
+      "A) Ankara - İstanbul",
+      "B) Ankara - Konya",
+      "C) Ankara - Eskişehir",
+      "D) İstanbul - Konya"
+    ],
+    "answer": "C",
+    "explanation": "Türkiye'de ilk YHT seferi 2009 yılında Ankara - Eskişehir hattında yapılmıştır."
+  },
+  {
+    "id": 360,
+    "category": "cografya",
+    "level": 2,
+    "question": "Doğu Karadeniz Bölgesi'nde yer şekillerinin engebeli, su kaynaklarının bol olması hangi yerleşme tipini ortaya çıkarmıştır?",
+    "options": [
+      "A) Toplu Yerleşme",
+      "B) Dağınık Yerleşme",
+      "C) Çizgisel Yerleşme",
+      "D) Kıyı Boyu Yerleşme"
+    ],
+    "answer": "B",
+    "explanation": "Tarım alanlarının parçalı ve suyun bol olması, evlerin birbirinden uzak olduğu dağınık yerleşmeyi zorunlu kılmıştır."
+  },
+  {
+    "id": 361,
+    "category": "cografya",
+    "level": 3,
+    "question": "Konya-Karapınar çevresinde bulunan ve 'Dünyanın Nazar Boncuğu' olarak bilinen volkanik oluşum hangisidir?",
+    "options": [
+      "A) Nemrut Gölü",
+      "B) Meke Gölü (Maarr)",
+      "C) Acıgöl",
+      "D) Krater Gölü"
+    ],
+    "answer": "B",
+    "explanation": "Meke Gölü, volkanik gaz patlaması sonucu oluşan bir maarr gölüdür ve nazar boncuğuna benzer."
+  },
+  {
+    "id": 362,
+    "category": "cografya",
+    "level": 1,
+    "question": "Tiftik keçisi (Ankara keçisi) yetiştiriciliğinde Türkiye'de ilk sırada yer alan ilimiz hangisidir?",
+    "options": [
+      "A) Siirt",
+      "B) Ankara",
+      "C) Eskişehir",
+      "D) Mardin"
+    ],
+    "answer": "B",
+    "explanation": "Tiftik keçisi, Ankara ve çevresine özgü bir türdür."
+  },
+  {
+    "id": 363,
+    "category": "cografya",
+    "level": 1,
+    "question": "Türkiye'de gül üretimi ve gül yağı ihracatında merkezi konumda olan ilimiz hangisidir?",
+    "options": [
+      "A) Burdur",
+      "B) Antalya",
+      "C) Isparta",
+      "D) Afyonkarahisar"
+    ],
+    "answer": "C",
+    "explanation": "Isparta, 'Güller Diyarı' olarak bilinir ve dünya gül yağı üretiminde önemli bir yere sahiptir."
+  },
+  {
+    "id": 364,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'nin en büyük linyit rezervi hangi havzada bulunmaktadır?",
+    "options": [
+      "A) Soma (Manisa)",
+      "B) Tavşanlı (Kütahya)",
+      "C) Yatağan (Kütahya)",
+      "D) Afşin-Elbistan (Kahramanmaraş)"
+    ],
+    "answer": "D",
+    "explanation": "Afşin-Elbistan havzası, Türkiye'nin en büyük linyit rezervine ve termik santrallerine sahiptir."
+  },
+  {
+    "id": 365,
+    "category": "cografya",
+    "level": 2,
+    "question": "Erzurum'da bulunan ve 'Kırmızı Periler Diyarı' olarak adlandırılan yer şekilleri hangisidir?",
+    "options": [
+      "A) Ihlara Vadisi",
+      "B) Narman Peribacaları",
+      "C) Kula Volkanları",
+      "D) Vanadokya"
+    ],
+    "answer": "B",
+    "explanation": "Erzurum'un Narman ilçesindeki kırmızı renkli peribacaları, farklı jeolojik yapısıyla dikkat çeker."
+  },
+  {
+    "id": 366,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de çıkarılan krom madeninin en önemli ihraç limanları hangileridir?",
+    "options": [
+      "A) Samsun ve Trabzon",
+      "B) İzmir ve İstanbul",
+      "C) Antalya ve İskenderun",
+      "D) Mersin ve Zonguldak"
+    ],
+    "answer": "C",
+    "explanation": "Fethiye ve Guleman'dan çıkarılan kromlar genellikle Antalya ve İskenderun limanlarından ihraç edilir."
+  },
+  {
+    "id": 367,
+    "category": "cografya",
+    "level": 1,
+    "question": "Dünya kuru kayısı üretiminde ve ihracatında birinci sırada olan ilimiz hangisidir?",
+    "options": [
+      "A) Elazığ",
+      "B) Malatya",
+      "C) Iğdır",
+      "D) Kayseri"
+    ],
+    "answer": "B",
+    "explanation": "Malatya, dünyaca ünlü kayısısı ile üretim ve ihracatta liderdir."
+  },
+  {
+    "id": 368,
+    "category": "cografya",
+    "level": 2,
+    "question": "Türkiye'de rüzgarın şekillendirici etkisinin (erozyonun) en az olduğu bölge hangisidir?",
+    "options": [
+      "A) İç Anadolu",
+      "B) Güneydoğu Anadolu",
+      "C) Karadeniz",
+      "D) Ege"
+    ],
+    "answer": "C",
+    "explanation": "Nemli iklimi ve gür bitki örtüsü nedeniyle Karadeniz Bölgesi'nde rüzgar erozyonu en azdır."
   }
 ]
