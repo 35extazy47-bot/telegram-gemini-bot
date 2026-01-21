@@ -4749,5 +4749,215 @@
     ],
     "answer": "C",
     "explanation": "Nemli iklimi ve gür bitki örtüsü nedeniyle Karadeniz Bölgesi'nde rüzgar erozyonu en azdır."
+  },
+  {
+    "id": 369,
+    "category": "guncel",
+    "level": 1,
+    "question": "2024 yılında düzenlenen 96. Oscar Ödülleri'nde 'En İyi Film' ödülünü kazanan yapım hangisidir?",
+    "options": [
+      "A) Barbie",
+      "B) Oppenheimer",
+      "C) Poor Things",
+      "D) Killers of the Flower Moon"
+    ],
+    "answer": "B",
+    "explanation": "Christopher Nolan'ın yönettiği Oppenheimer, 2024 Oscar Ödülleri'ne damga vurarak En İyi Film ödülünü kazanmıştır."
+  },
+  {
+    "id": 370,
+    "category": "guncel",
+    "level": 1,
+    "question": "Cumhurbaşkanı Recep Tayyip Erdoğan tarafından 2024 yılı ne yılı ilan edilmiştir?",
+    "options": [
+      "A) Gençlik Yılı",
+      "B) Emekliler Yılı",
+      "C) Teknoloji Yılı",
+      "D) Turizm Yılı"
+    ],
+    "answer": "B",
+    "explanation": "2024 yılı, Türkiye'de 'Emekliler Yılı' olarak ilan edilmiştir."
+  },
+  {
+    "id": 371,
+    "category": "guncel",
+    "level": 1,
+    "question": "2024 Eurovision Şarkı Yarışması'nı 'The Code' adlı şarkısıyla kazanan ülke hangisidir?",
+    "options": [
+      "A) İsveç",
+      "B) Hırvatistan",
+      "C) İsviçre",
+      "D) Ukrayna"
+    ],
+    "answer": "C",
+    "explanation": "İsviçre temsilcisi Nemo, 'The Code' şarkısıyla 2024 Eurovision birincisi olmuştur."
+  },
+  {
+    "id": 372,
+    "category": "guncel",
+    "level": 2,
+    "question": "2024 Birleşmiş Milletler İklim Değişikliği Konferansı'na (COP29) ev sahipliği yapan şehir hangisidir?",
+    "options": [
+      "A) Dubai",
+      "B) Bakü",
+      "C) Kahire",
+      "D) İstanbul"
+    ],
+    "answer": "B",
+    "explanation": "COP29 İklim Zirvesi, Azerbaycan'ın başkenti Bakü'de düzenlenmiştir."
+  },
+  {
+    "id": 373,
+    "category": "guncel",
+    "level": 2,
+    "question": "2025 EXPO Fuarı'na ev sahipliği yapacak olan ülke hangisidir?",
+    "options": [
+      "A) Japonya",
+      "B) Güney Kore",
+      "C) Suudi Arabistan",
+      "D) Fransa"
+    ],
+    "answer": "A",
+    "explanation": "EXPO 2025, 'Geleceğin Toplumunu Tasarlamak' temasıyla Japonya'nın Osaka kentinde düzenlenecektir."
+  },
+  {
+    "id": 374,
+    "category": "guncel",
+    "level": 2,
+    "question": "2024 yılında Türkiye Cumhuriyet Merkez Bankası (TCMB) Başkanlığı görevine kim atanmıştır?",
+    "options": [
+      "A) Hafize Gaye Erkan",
+      "B) Şahap Kavcıoğlu",
+      "C) Fatih Karahan",
+      "D) Naci Ağbal"
+    ],
+    "answer": "C",
+    "explanation": "Hafize Gaye Erkan'ın istifası üzerine TCMB Başkanlığına Fatih Karahan atanmıştır."
+  },
+  {
+    "id": 375,
+    "category": "guncel",
+    "level": 2,
+    "question": "NATO'nun kuruluşunun 75. yılı nedeniyle 2024 NATO Zirvesi hangi şehirde düzenlenmiştir?",
+    "options": [
+      "A) Brüksel",
+      "B) Londra",
+      "C) Washington D.C.",
+      "D) Berlin"
+    ],
+    "answer": "C",
+    "explanation": "NATO'nun 75. yıl dönümü zirvesi ABD'nin başkenti Washington'da gerçekleştirilmiştir."
+  },
+  {
+    "id": 376,
+    "category": "guncel",
+    "level": 2,
+    "question": "2024 yılında düzenlenen 5. Dünya Göçebe Oyunları'na ev sahipliği yapan şehir hangisidir?",
+    "options": [
+      "A) Bişkek",
+      "B) Astana",
+      "C) Taşkent",
+      "D) Bakü"
+    ],
+    "answer": "B",
+    "explanation": "5. Dünya Göçebe Oyunları, Kazakistan'ın başkenti Astana'da düzenlenmiştir."
+  },
+  {
+    "id": 377,
+    "category": "guncel",
+    "level": 2,
+    "question": "Uluslararası Türk Kültürü Teşkilatı (TÜRKSOY) tarafından 2025 'Türk Dünyası Kültür Başkenti' seçilen şehir hangisidir?",
+    "options": [
+      "A) Anev",
+      "B) Aktau",
+      "C) Şuşa",
+      "D) Bursa"
+    ],
+    "answer": "B",
+    "explanation": "Kazakistan'ın Aktau şehri, 2025 yılı Türk Dünyası Kültür Başkenti ilan edilmiştir."
+  },
+  {
+    "id": 378,
+    "category": "guncel",
+    "level": 1,
+    "question": "2024 yılında TEKNOFEST Havacılık, Uzay ve Teknoloji Festivali hangi ilimizde düzenlenmiştir?",
+    "options": [
+      "A) İstanbul",
+      "B) Ankara",
+      "C) İzmir",
+      "D) Adana"
+    ],
+    "answer": "D",
+    "explanation": "2024 TEKNOFEST, Adana'da gerçekleştirilmiştir."
+  },
+  {
+    "id": 379,
+    "category": "guncel",
+    "level": 2,
+    "question": "2024 Copa America finalinde Kolombiya'yı yenerek şampiyon olan ülke hangisidir?",
+    "options": [
+      "A) Brezilya",
+      "B) Uruguay",
+      "C) Arjantin",
+      "D) Şili"
+    ],
+    "answer": "C",
+    "explanation": "Arjantin, 2024 Copa America finalinde şampiyonluğa ulaşmıştır."
+  },
+  {
+    "id": 380,
+    "category": "guncel",
+    "level": 3,
+    "question": "2025 Avrupa Kültür Başkenti seçilen şehirlerden biri aşağıdakilerden hangisidir?",
+    "options": [
+      "A) Chemnitz (Almanya)",
+      "B) Viyana (Avusturya)",
+      "C) Lyon (Fransa)",
+      "D) Milano (İtalya)"
+    ],
+    "answer": "A",
+    "explanation": "Almanya'nın Chemnitz şehri ve Slovenya'nın Nova Gorica şehri 2025 Avrupa Kültür Başkentleri seçilmiştir."
+  },
+  {
+    "id": 381,
+    "category": "guncel",
+    "level": 2,
+    "question": "2024 Yaz Paralimpik Oyunları hangi şehirde düzenlenmiştir?",
+    "options": [
+      "A) Tokyo",
+      "B) Paris",
+      "C) Los Angeles",
+      "D) Londra"
+    ],
+    "answer": "B",
+    "explanation": "2024 Olimpiyatları gibi Paralimpik Oyunları da Fransa'nın başkenti Paris'te düzenlenmiştir."
+  },
+  {
+    "id": 382,
+    "category": "guncel",
+    "level": 2,
+    "question": "2024 Avrupa Atletizm Şampiyonası hangi şehirde düzenlenmiştir?",
+    "options": [
+      "A) Münih",
+      "B) Roma",
+      "C) Amsterdam",
+      "D) Barselona"
+    ],
+    "answer": "B",
+    "explanation": "2024 Avrupa Atletizm Şampiyonası İtalya'nın başkenti Roma'da yapılmıştır."
+  },
+  {
+    "id": 383,
+    "category": "guncel",
+    "level": 3,
+    "question": "2024 yılı 'İslam Dünyası Turizm Başkenti' seçilen şehir hangisidir?",
+    "options": [
+      "A) Şanlıurfa",
+      "B) Hive",
+      "C) Konya",
+      "D) Bakü"
+    ],
+    "answer": "B",
+    "explanation": "Türkmenistan'ın Hive şehri, 2024 yılı İslam Dünyası Turizm Başkenti olarak seçilmiştir."
   }
 ]
