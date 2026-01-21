@@ -3629,5 +3629,285 @@
     ],
     "answer": "B",
     "explanation": "Rus Çarı, Osmanlı'nın zayıflığını belirtmek için 'Kollarımızda can çekişen bir hasta adam var' ifadesini kullanmıştır."
+  },
+  {
+    "id": 289,
+    "category": "tarih",
+    "level": 2,
+    "question": "Balkan Savaşları sırasında 'Hamidiye Kruvazörü' ile Ege Denizi'nde gösterdiği başarılardan dolayı 'Hamidiye Kahramanı' olarak tanınan komutan kimdir?",
+    "options": [
+      "A) Enver Paşa",
+      "B) Rauf Orbay",
+      "C) Refet Bele",
+      "D) Cemal Paşa"
+    ],
+    "answer": "B",
+    "explanation": "Rauf Orbay, Balkan Savaşları'nda Hamidiye gemisiyle Yunan donanmasına karşı gösterdiği başarılarla bu unvanı almıştır."
+  },
+  {
+    "id": 290,
+    "category": "tarih",
+    "level": 2,
+    "question": "I. Balkan Savaşı sonunda imzalanan ve Osmanlı Devleti'nin Midye-Enez hattının batısındaki tüm toprakları kaybettiği antlaşma hangisidir?",
+    "options": [
+      "A) İstanbul Antlaşması",
+      "B) Atina Antlaşması",
+      "C) Londra Antlaşması",
+      "D) Bükreş Antlaşması"
+    ],
+    "answer": "C",
+    "explanation": "1913 Londra Antlaşması ile Osmanlı Devleti, Midye-Enez hattının batısındaki toprakları Balkan devletlerine bırakmıştır."
+  },
+  {
+    "id": 291,
+    "category": "tarih",
+    "level": 2,
+    "question": "I. Dünya Savaşı'nda Hicaz-Yemen Cephesi'nde Medine'yi İngilizlere karşı kahramanca savunan ve 'Çöl Kaplanı' unvanını alan komutan kimdir?",
+    "options": [
+      "A) Fahrettin Paşa",
+      "B) Cemal Paşa",
+      "C) Halil Paşa",
+      "D) Fevzi Paşa"
+    ],
+    "answer": "A",
+    "explanation": "Fahrettin Paşa (Türkkan), Medine Müdafaası'ndaki üstün gayretleri nedeniyle 'Çöl Kaplanı' ve 'Medine Müdafii' olarak anılır."
+  },
+  {
+    "id": 292,
+    "category": "tarih",
+    "level": 3,
+    "question": "I. Dünya Savaşı sırasında İngiltere ve Fransa'nın Ortadoğu topraklarını kendi aralarında paylaştıkları gizli antlaşma hangisidir?",
+    "options": [
+      "A) Mac Mahon",
+      "B) Sykes-Picot",
+      "C) Saint Jean de Maurienne",
+      "D) Petrograd"
+    ],
+    "answer": "B",
+    "explanation": "1916 Sykes-Picot Antlaşması ile İngiltere ve Fransa, Osmanlı'nın Ortadoğu topraklarını paylaşmışlardır."
+  },
+  {
+    "id": 293,
+    "category": "tarih",
+    "level": 2,
+    "question": "Mondros Ateşkes Antlaşması'nı Osmanlı Devleti adına imzalayan Bahriye Nazırı kimdir?",
+    "options": [
+      "A) Damat Ferit Paşa",
+      "B) Ali Rıza Paşa",
+      "C) Rauf Orbay",
+      "D) Salih Paşa"
+    ],
+    "answer": "C",
+    "explanation": "Mondros Ateşkes Antlaşması, Rauf Orbay başkanlığındaki Osmanlı heyeti ile İtilaf Devletleri arasında Limni Adası'nda imzalanmıştır."
+  },
+  {
+    "id": 294,
+    "category": "tarih",
+    "level": 2,
+    "question": "İzmir'in Yunanistan tarafından işgal edilmesine, İtalya'nın tepkisine rağmen hangi konferansta karar verilmiştir?",
+    "options": [
+      "A) Londra Konferansı",
+      "B) San Remo Konferansı",
+      "C) Paris Barış Konferansı",
+      "D) Yalta Konferansı"
+    ],
+    "answer": "C",
+    "explanation": "Paris Barış Konferansı'nda İngiltere'nin desteğiyle İzmir ve çevresinin Yunanistan tarafından işgal edilmesi kararlaştırılmıştır."
+  },
+  {
+    "id": 295,
+    "category": "tarih",
+    "level": 2,
+    "question": "Milli Mücadele'nin haklılığını ve İzmir işgalinin haksızlığını ortaya koyan ilk uluslararası belge hangisidir?",
+    "options": [
+      "A) Amiral Bristol Raporu",
+      "B) General Harbord Raporu",
+      "C) Milne Hattı Raporu",
+      "D) Sandler Raporu"
+    ],
+    "answer": "A",
+    "explanation": "ABD'li Amiral Bristol'ün hazırladığı rapor, Türk Milli Mücadelesi'nin haklılığını dünyaya duyuran ilk uluslararası belgedir."
+  },
+  {
+    "id": 296,
+    "category": "tarih",
+    "level": 3,
+    "question": "Adana ve Çukurova bölgesini Fransız ve Ermeni işgallerine karşı savunmak amacıyla kurulan yararlı cemiyet hangisidir?",
+    "options": [
+      "A) Trakya Paşaeli Cemiyeti",
+      "B) Kilikyalılar Cemiyeti",
+      "C) Redd-i İlhak Cemiyeti",
+      "D) Milli Kongre Cemiyeti"
+    ],
+    "answer": "B",
+    "explanation": "Kilikyalılar Cemiyeti, ismi zararlı cemiyetleri çağrıştırsa da Adana ve çevresini savunmak için kurulmuş yararlı bir cemiyettir."
+  },
+  {
+    "id": 297,
+    "category": "tarih",
+    "level": 2,
+    "question": "Milli Mücadele sürecinde ulusal bilincin uyandırılması amacıyla ilk kez protesto ve mitinglerin düzenlenmesi nerede istenmiştir?",
+    "options": [
+      "A) Amasya Genelgesi",
+      "B) Erzurum Kongresi",
+      "C) Havza Genelgesi",
+      "D) Sivas Kongresi"
+    ],
+    "answer": "C",
+    "explanation": "Mustafa Kemal Paşa, Havza Genelgesi ile işgallere karşı protesto mitingleri düzenlenmesini isteyerek milli bilinci uyandırmayı amaçlamıştır."
+  },
+  {
+    "id": 298,
+    "category": "tarih",
+    "level": 2,
+    "question": "İstanbul Hükümeti'nin Temsil Heyeti'ni resmen ve hukuken tanıdığı ilk olay hangisidir?",
+    "options": [
+      "A) Bilecik Görüşmeleri",
+      "B) Amasya Görüşmeleri",
+      "C) Sivas Kongresi",
+      "D) Lozan Konferansı"
+    ],
+    "answer": "B",
+    "explanation": "Ali Rıza Paşa hükümeti temsilcisi Salih Paşa ile Mustafa Kemal arasında yapılan Amasya Görüşmeleri ile Temsil Heyeti resmen tanınmıştır."
+  },
+  {
+    "id": 299,
+    "category": "tarih",
+    "level": 3,
+    "question": "Sivas Kongresi'ni engellemek ve Mustafa Kemal'i tutuklamak amacıyla Damat Ferit Paşa tarafından görevlendirilen Elazığ Valisi kimdir?",
+    "options": [
+      "A) Ali Galip",
+      "B) Anzavur Ahmet",
+      "C) Çerkez Ethem",
+      "D) Ali Batı"
+    ],
+    "answer": "A",
+    "explanation": "Ali Galip Olayı, Sivas Kongresi'ni engellemek için İstanbul Hükümeti'nin bir girişimidir."
+  },
+  {
+    "id": 300,
+    "category": "tarih",
+    "level": 2,
+    "question": "Kurtuluş Savaşı'nda Doğu Cephesi'nde Ermenilere karşı mücadele eden 15. Kolordu Komutanı kimdir?",
+    "options": [
+      "A) İsmet İnönü",
+      "B) Ali Fuat Cebesoy",
+      "C) Kazım Karabekir",
+      "D) Refet Bele"
+    ],
+    "answer": "C",
+    "explanation": "Kazım Karabekir Paşa, Mondros'a rağmen ordusunu dağıtmamış ve Doğu Cephesi'nde büyük başarılar kazanmıştır."
+  },
+  {
+    "id": 301,
+    "category": "tarih",
+    "level": 2,
+    "question": "Kurtuluş Savaşı'nda düzenli ordunun savaşmadığı, mücadelenin Kuvay-ı Milliye birlikleriyle yürütüldüğü cephe hangisidir?",
+    "options": [
+      "A) Batı Cephesi",
+      "B) Doğu Cephesi",
+      "C) Güney Cephesi",
+      "D) Galiçya Cephesi"
+    ],
+    "answer": "C",
+    "explanation": "Güney Cephesi'nde (Antep, Maraş, Urfa) Fransız ve Ermenilere karşı halkın oluşturduğu Kuvay-ı Milliye birlikleri savaşmıştır."
+  },
+  {
+    "id": 302,
+    "category": "tarih",
+    "level": 3,
+    "question": "Batı Cephesi'nde Kuvay-ı Milliye birliklerinin Yunanlılara karşı başarısız olduğu ve düzenli orduya geçişi hızlandıran taarruz girişimi hangisidir?",
+    "options": [
+      "A) Aslıhanlar Taarruzu",
+      "B) Gediz Taarruzu",
+      "C) Koçgiri İsyanı",
+      "D) Düzce İsyanı"
+    ],
+    "answer": "B",
+    "explanation": "Ali Fuat Paşa komutasındaki Kuvay-ı Milliye birliklerinin Gediz Taarruzu'nda başarısız olması, düzenli ordunun kurulmasını zorunlu kılmıştır."
+  },
+  {
+    "id": 303,
+    "category": "tarih",
+    "level": 2,
+    "question": "TBMM'yi ve Misak-ı Milli'yi tanıyan ilk Avrupalı büyük devlet hangisidir?",
+    "options": [
+      "A) Fransa",
+      "B) İtalya",
+      "C) Sovyet Rusya",
+      "D) İngiltere"
+    ],
+    "answer": "C",
+    "explanation": "I. İnönü Savaşı sonrasında imzalanan Moskova Antlaşması (1921) ile Sovyet Rusya, TBMM'yi tanıyan ilk büyük Avrupa devleti olmuştur."
+  },
+  {
+    "id": 304,
+    "category": "tarih",
+    "level": 2,
+    "question": "Mustafa Kemal'in 'Cahillikle savaş, düşmanla savaştan daha az önemli değildir' diyerek Kütahya-Eskişehir Savaşları devam ederken topladığı kongre hangisidir?",
+    "options": [
+      "A) İktisat Kongresi",
+      "B) Maarif (Eğitim) Kongresi",
+      "C) Sivas Kongresi",
+      "D) Pozantı Kongresi"
+    ],
+    "answer": "B",
+    "explanation": "Maarif Kongresi, savaşın en şiddetli döneminde Ankara'da toplanmış ve eğitime verilen önemi göstermiştir."
+  },
+  {
+    "id": 305,
+    "category": "tarih",
+    "level": 2,
+    "question": "Sakarya Meydan Muharebesi öncesinde ordunun ihtiyaçlarını karşılamak için Mustafa Kemal Paşa tarafından yayımlanan emirler hangisidir?",
+    "options": [
+      "A) Takrir-i Sükun",
+      "B) Hıyanet-i Vataniye",
+      "C) Tekalif-i Milliye",
+      "D) Teşkilat-ı Esasiye"
+    ],
+    "answer": "C",
+    "explanation": "Başkomutanlık yetkisine dayanarak çıkarılan Tekalif-i Milliye Emirleri ile halktan orduya yardım toplanmıştır."
+  },
+  {
+    "id": 306,
+    "category": "tarih",
+    "level": 2,
+    "question": "Sakarya Zaferi'nden sonra Fransa ile imzalanan ve Güney Cephesi'ni resmen kapatan antlaşma hangisidir?",
+    "options": [
+      "A) Gümrü Antlaşması",
+      "B) Kars Antlaşması",
+      "C) 1921 Ankara Antlaşması",
+      "D) Moskova Antlaşması"
+    ],
+    "answer": "C",
+    "explanation": "1921 Ankara Antlaşması ile Fransa işgal ettiği topraklardan çekilmiş ve Hatay hariç güney sınırımız çizilmiştir."
+  },
+  {
+    "id": 307,
+    "category": "tarih",
+    "level": 2,
+    "question": "Kurtuluş Savaşı'nın askeri safhasını bitiren ve Doğu Trakya'nın savaşılmadan kurtarılmasını sağlayan antlaşma hangisidir?",
+    "options": [
+      "A) Mudanya Ateşkes Antlaşması",
+      "B) Mondros Ateşkes Antlaşması",
+      "C) Lozan Barış Antlaşması",
+      "D) Sevr Antlaşması"
+    ],
+    "answer": "A",
+    "explanation": "Büyük Taarruz'dan sonra imzalanan Mudanya Ateşkesi ile İstanbul, Boğazlar ve Doğu Trakya savaş yapılmadan TBMM'ye bırakılmıştır."
+  },
+  {
+    "id": 308,
+    "category": "tarih",
+    "level": 3,
+    "question": "Lozan Barış Konferansı'na 'Gözlemci' statüsünde katılan devlet hangisidir?",
+    "options": [
+      "A) Sovyet Rusya",
+      "B) ABD",
+      "C) Bulgaristan",
+      "D) Japonya"
+    ],
+    "answer": "B",
+    "explanation": "ABD, Lozan Konferansı'na taraf olarak değil, gözlemci statüsünde katılmıştır."
   }
 ]
