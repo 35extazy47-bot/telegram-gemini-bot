@@ -4959,5 +4959,145 @@
     ],
     "answer": "B",
     "explanation": "Türkmenistan'ın Hive şehri, 2024 yılı İslam Dünyası Turizm Başkenti olarak seçilmiştir."
+  },
+  {
+    "id": 384,
+    "category": "vatandaslik",
+    "level": 3,
+    "question": "1982 Anayasası'na göre, TBMM Başkanlığı seçimlerinde ilk iki turda aranan çoğunluk nedir?",
+    "options": [
+      "A) Üye tamsayısının salt çoğunluğu",
+      "B) Üye tamsayısının 2/3 çoğunluğu",
+      "C) Üye tamsayısının 3/5 çoğunluğu",
+      "D) Katılanların salt çoğunluğu"
+    ],
+    "answer": "B",
+    "explanation": "TBMM Başkanı seçiminde 1. ve 2. turda üye tamsayısının 2/3 çoğunluğu (400), 3. turda ise salt çoğunluk (301) aranır."
+  },
+  {
+    "id": 385,
+    "category": "vatandaslik",
+    "level": 3,
+    "question": "İdare hukukunda 'Yetki Genişliği' ilkesi, Türkiye'de sadece hangi idari birime tanınmıştır?",
+    "options": [
+      "A) Belediyeler",
+      "B) İller (Vali)",
+      "C) İlçeler (Kaymakam)",
+      "D) Bölge Müdürlükleri"
+    ],
+    "answer": "B",
+    "explanation": "Yetki genişliği, merkeze danışmadan karar alabilme yetkisidir ve Anayasa'ya göre sadece illere (Valilere) tanınmıştır."
+  },
+  {
+    "id": 386,
+    "category": "vatandaslik",
+    "level": 3,
+    "question": "Siyasi partilerin devlet yardımından faydalanabilmesi için son milletvekili genel seçimlerinde geçerli oyların en az yüzde kaçını alması gerekir?",
+    "options": [
+      "A) %3",
+      "B) %5",
+      "C) %7",
+      "D) %10"
+    ],
+    "answer": "A",
+    "explanation": "Siyasi partiler barajı (%7) geçemese bile, geçerli oyların en az %3'ünü almaları durumunda devlet yardımına hak kazanırlar."
+  },
+  {
+    "id": 387,
+    "category": "vatandaslik",
+    "level": 3,
+    "question": "Aşağıdaki idari birimlerden hangisi 'İstisnai Memurluk' kapsamında değildir?",
+    "options": [
+      "A) Vali",
+      "B) Büyükelçi",
+      "C) Kaymakam",
+      "D) MİT Başkanı"
+    ],
+    "answer": "C",
+    "explanation": "Vali, Büyükelçi ve MİT Başkanı istisnai memurluktur (sınavsız atanabilir), ancak Kaymakamlık güvenceli bir meslek memurluğudur."
+  },
+  {
+    "id": 388,
+    "category": "vatandaslik",
+    "level": 3,
+    "question": "Danıştay üyelerinin seçimi ile ilgili aşağıdaki ifadelerden hangisi doğrudur?",
+    "options": [
+      "A) Tamamını HSK seçer",
+      "B) Tamamını Cumhurbaşkanı seçer",
+      "C) 1/4'ünü Cumhurbaşkanı, 3/4'ünü HSK seçer",
+      "D) 1/4'ünü HSK, 3/4'ünü Cumhurbaşkanı seçer"
+    ],
+    "answer": "C",
+    "explanation": "Danıştay üyelerinin dörtte birini Cumhurbaşkanı, dörtte üçünü ise Hakimler ve Savcılar Kurulu (HSK) seçer."
+  },
+  {
+    "id": 389,
+    "category": "vatandaslik",
+    "level": 3,
+    "question": "Kamu Başdenetçisi'ni (Ombudsman) kim seçer?",
+    "options": [
+      "A) Cumhurbaşkanı",
+      "B) TBMM",
+      "C) Anayasa Mahkemesi",
+      "D) Yargıtay"
+    ],
+    "answer": "B",
+    "explanation": "Kamu Başdenetçisi, TBMM tarafından gizli oyla ve 4 yıl süreyle seçilir."
+  },
+  {
+    "id": 390,
+    "category": "vatandaslik",
+    "level": 3,
+    "question": "Köy idaresinin organlarından biri olan 'Köy Derneği' kimlerden oluşur?",
+    "options": [
+      "A) İhtiyar Heyeti üyelerinden",
+      "B) Köydeki tüm seçmenlerden",
+      "C) Köy öğretmen ve imamından",
+      "D) Hane reislerinden"
+    ],
+    "answer": "B",
+    "explanation": "Köy Derneği, köyde ikamet eden ve seçme hakkına sahip olan tüm köylülerden (seçmenlerden) oluşur."
+  },
+  {
+    "id": 391,
+    "category": "vatandaslik",
+    "level": 3,
+    "question": "Usulüne göre yürürlüğe konulmuş temel hak ve özgürlüklere ilişkin milletlerarası antlaşmalar ile kanunlar çatışırsa nasıl bir yol izlenir?",
+    "options": [
+      "A) Kanun hükümleri esas alınır",
+      "B) Milletlerarası antlaşma hükümleri esas alınır",
+      "C) Anayasa Mahkemesi'ne başvurulur",
+      "D) TBMM'nin yorumuna bakılır"
+    ],
+    "answer": "B",
+    "explanation": "2004 Anayasa değişikliği ile temel haklara ilişkin antlaşmalar ile kanunların çatışması durumunda antlaşma hükümlerinin esas alınacağı kabul edilmiştir."
+  },
+  {
+    "id": 392,
+    "category": "vatandaslik",
+    "level": 3,
+    "question": "Aşağıdakilerden hangisi merkezi idarenin taşra teşkilatı üzerindeki denetim yetkisine örnektir?",
+    "options": [
+      "A) İdari Vesayet",
+      "B) Hiyerarşi",
+      "C) Yetki Genişliği",
+      "D) Yerinden Yönetim"
+    ],
+    "answer": "B",
+    "explanation": "Merkezi idarenin kendi içindeki (taşra teşkilatı dahil) ast-üst ilişkisine ve denetimine 'Hiyerarşi' denir. (Örn: Bakan -> Vali)."
+  },
+  {
+    "id": 393,
+    "category": "vatandaslik",
+    "level": 3,
+    "question": "Milletvekilliğinin düşürülmesine ilişkin kararlara karşı Anayasa Mahkemesi'ne kaç gün içinde itiraz edilebilir?",
+    "options": [
+      "A) 7 gün",
+      "B) 10 gün",
+      "C) 15 gün",
+      "D) 30 gün"
+    ],
+    "answer": "A",
+    "explanation": "Milletvekilliğinin düşürülmesi kararına karşı 7 gün içinde AYM'ye itiraz edilebilir, AYM de 15 gün içinde kesin kararını verir."
   }
 ]
