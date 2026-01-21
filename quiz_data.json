@@ -3909,5 +3909,285 @@
     ],
     "answer": "B",
     "explanation": "ABD, Lozan Konferansı'na taraf olarak değil, gözlemci statüsünde katılmıştır."
+  },
+  {
+    "id": 309,
+    "category": "tarih",
+    "level": 2,
+    "question": "II. Balkan Savaşı'nda Edirne ve Kırklareli'yi geri alarak 'Edirne Fatihi' unvanını alan komutan kimdir?",
+    "options": [
+      "A) Mustafa Kemal Paşa",
+      "B) Enver Paşa",
+      "C) Rauf Orbay",
+      "D) Cemal Paşa"
+    ],
+    "answer": "B",
+    "explanation": "Enver Paşa, II. Balkan Savaşı sırasında ordunun başında Edirne'ye girerek şehri geri almıştır."
+  },
+  {
+    "id": 310,
+    "category": "tarih",
+    "level": 2,
+    "question": "I. Dünya Savaşı devam ederken Rusya'nın savaştan çekilmesini sağlayan antlaşma hangisidir?",
+    "options": [
+      "A) Brest-Litovsk Antlaşması",
+      "B) Moskova Antlaşması",
+      "C) Versay Antlaşması",
+      "D) Trianon Antlaşması"
+    ],
+    "answer": "A",
+    "explanation": "Bolşevik İhtilali sonrası Çarlık Rusyası yıkılmış, yeni yönetim Brest-Litovsk Antlaşması ile savaştan çekilmiştir."
+  },
+  {
+    "id": 311,
+    "category": "tarih",
+    "level": 2,
+    "question": "Sivas Kongresi'nde tüm yararlı cemiyetler hangi isim altında birleştirilmiştir?",
+    "options": [
+      "A) Karakol Cemiyeti",
+      "B) Felah-ı Vatan Grubu",
+      "C) Anadolu ve Rumeli Müdafaa-i Hukuk Cemiyeti",
+      "D) Milli Kongre Cemiyeti"
+    ],
+    "answer": "C",
+    "explanation": "Milli Mücadele'yi tek merkezden yönetmek amacıyla tüm cemiyetler ARMHC çatısı altında birleştirilmiştir."
+  },
+  {
+    "id": 312,
+    "category": "tarih",
+    "level": 2,
+    "question": "Temsil Heyeti'nin Ankara'ya gelmesinden sonra Milli Mücadele'nin yayın organı olarak çıkarılan gazete hangisidir?",
+    "options": [
+      "A) İrade-i Milliye",
+      "B) Hakimiyet-i Milliye",
+      "C) Ceride-i Resmiye",
+      "D) Albayrak"
+    ],
+    "answer": "B",
+    "explanation": "Sivas'ta İrade-i Milliye çıkarılmıştı, Ankara'ya gelince Hakimiyet-i Milliye gazetesi çıkarılmıştır."
+  },
+  {
+    "id": 313,
+    "category": "tarih",
+    "level": 2,
+    "question": "23 Nisan 1920'de açılan TBMM'nin açılış konuşmasını yapan en yaşlı üye sıfatıyla Sinop Mebusu kimdir?",
+    "options": [
+      "A) Şerif Bey",
+      "B) Abdurrahman Şeref Bey",
+      "C) Kazım Karabekir",
+      "D) Ali Fuat Cebesoy"
+    ],
+    "answer": "A",
+    "explanation": "Sinop Mebusu Şerif Bey, en yaşlı üye olduğu için Meclis'in ilk oturumuna başkanlık etmiştir."
+  },
+  {
+    "id": 314,
+    "category": "tarih",
+    "level": 2,
+    "question": "Sevr Antlaşması'nı imzalayan heyetin adı nedir?",
+    "options": [
+      "A) Temsil Heyeti",
+      "B) Mebusan Meclisi",
+      "C) Saltanat Şurası",
+      "D) Hürriyet ve İtilaf Fırkası"
+    ],
+    "answer": "C",
+    "explanation": "Mebusan Meclisi kapalı olduğu için antlaşma, Padişah tarafından görevlendirilen Saltanat Şurası tarafından imzalanmıştır."
+  },
+  {
+    "id": 315,
+    "category": "tarih",
+    "level": 2,
+    "question": "İtilaf Devletleri'nin TBMM'yi hukuken tanıdığı ilk olay hangisidir?",
+    "options": [
+      "A) Lozan Konferansı",
+      "B) Londra Konferansı",
+      "C) San Remo Konferansı",
+      "D) Paris Barış Konferansı"
+    ],
+    "answer": "B",
+    "explanation": "I. İnönü Savaşı sonrası toplanan Londra Konferansı'na TBMM'nin davet edilmesi, hukuken tanınması anlamına gelir."
+  },
+  {
+    "id": 316,
+    "category": "tarih",
+    "level": 2,
+    "question": "Londra Konferansı'na TBMM adına katılan devlet adamı kimdir?",
+    "options": [
+      "A) İsmet İnönü",
+      "B) Bekir Sami Bey",
+      "C) Yusuf Kemal Tengirşenk",
+      "D) Rauf Orbay"
+    ],
+    "answer": "B",
+    "explanation": "Dışişleri Bakanı Bekir Sami Bey (Kunduh), Londra Konferansı'nda TBMM heyetine başkanlık etmiştir."
+  },
+  {
+    "id": 317,
+    "category": "tarih",
+    "level": 2,
+    "question": "Mustafa Kemal'in 'Siz orada yalnız düşmanı değil, milletin makus talihini de yendiniz' sözünü söylediği savaş hangisidir?",
+    "options": [
+      "A) I. İnönü",
+      "B) II. İnönü",
+      "C) Sakarya",
+      "D) Büyük Taarruz"
+    ],
+    "answer": "B",
+    "explanation": "Bu söz, II. İnönü Zaferi sonrasında İsmet Paşa'ya çekilen telgrafta yer almaktadır."
+  },
+  {
+    "id": 318,
+    "category": "tarih",
+    "level": 2,
+    "question": "Sakarya Meydan Muharebesi'nden sonra imzalanan ve Türkiye'nin doğu sınırını kesinleştiren antlaşma hangisidir?",
+    "options": [
+      "A) Gümrü Antlaşması",
+      "B) Moskova Antlaşması",
+      "C) Kars Antlaşması",
+      "D) Ankara Antlaşması"
+    ],
+    "answer": "C",
+    "explanation": "Kafkas Cumhuriyetleri (Azerbaycan, Gürcistan, Ermenistan) ile imzalanan Kars Antlaşması ile doğu sınırımız kesin halini almıştır."
+  },
+  {
+    "id": 319,
+    "category": "tarih",
+    "level": 2,
+    "question": "Mudanya Ateşkes Antlaşması görüşmelerinde TBMM'yi temsil eden komutan kimdir?",
+    "options": [
+      "A) Refet Bele",
+      "B) Fevzi Çakmak",
+      "C) İsmet İnönü",
+      "D) Kazım Karabekir"
+    ],
+    "answer": "C",
+    "explanation": "Batı Cephesi Komutanı İsmet Paşa, Mudanya görüşmelerinde TBMM'yi temsil etmiş ve diplomatik başarısı Lozan'a gitmesini sağlamıştır."
+  },
+  {
+    "id": 320,
+    "category": "tarih",
+    "level": 2,
+    "question": "Lozan görüşmelerinin kesintiye uğradığı dönemde, yeni Türk devletinin ekonomi politikasını belirlemek için toplanan kongre hangisidir?",
+    "options": [
+      "A) Maarif Kongresi",
+      "B) Sivas Kongresi",
+      "C) İzmir İktisat Kongresi",
+      "D) Sanayi Kongresi"
+    ],
+    "answer": "C",
+    "explanation": "1923 yılında Kazım Karabekir başkanlığında toplanan İzmir İktisat Kongresi'nde Misak-ı İktisadi kararları alınmıştır."
+  },
+  {
+    "id": 321,
+    "category": "tarih",
+    "level": 1,
+    "question": "'Devletin rejimi' ve 'Devlet başkanlığı' sorunlarını çözen inkılap hangisidir?",
+    "options": [
+      "A) Saltanatın Kaldırılması",
+      "B) Cumhuriyetin İlanı",
+      "C) Halifeliğin Kaldırılması",
+      "D) Anayasanın Kabulü"
+    ],
+    "answer": "B",
+    "explanation": "29 Ekim 1923'te Cumhuriyetin ilanı ile devletin adı ve rejimi belli olmuş, Cumhurbaşkanlığı makamı oluşturulmuştur."
+  },
+  {
+    "id": 322,
+    "category": "tarih",
+    "level": 2,
+    "question": "3 Mart 1924'te Halifeliğin kaldırıldığı gün kabul edilen ve eğitim-öğretimin birleştirilmesini sağlayan kanun hangisidir?",
+    "options": [
+      "A) Tevhid-i Tedrisat Kanunu",
+      "B) Maarif Teşkilatı Kanunu",
+      "C) Harf İnkılabı",
+      "D) Medreselerin Kapatılması"
+    ],
+    "answer": "A",
+    "explanation": "Tevhid-i Tedrisat Kanunu ile tüm eğitim kurumları Milli Eğitim Bakanlığı'na bağlanarak eğitimde birlik sağlanmıştır."
+  },
+  {
+    "id": 323,
+    "category": "tarih",
+    "level": 2,
+    "question": "Şeyh Sait İsyanı'nın bastırılması ve asayişin sağlanması için çıkarılan kanun hangisidir?",
+    "options": [
+      "A) Hıyanet-i Vataniye",
+      "B) Takrir-i Sükun",
+      "C) Teşkilat-ı Esasiye",
+      "D) Firariler Kanunu"
+    ],
+    "answer": "B",
+    "explanation": "1925 yılında çıkarılan Takrir-i Sükun Kanunu, hükümete geniş yetkiler vererek isyanın bastırılmasını sağlamıştır."
+  },
+  {
+    "id": 324,
+    "category": "tarih",
+    "level": 3,
+    "question": "Mustafa Kemal'e yönelik İzmir Suikastı girişimini ihbar eden kişi kimdir?",
+    "options": [
+      "A) Çerkez Ethem",
+      "B) Giritli Şevki",
+      "C) Ziya Hurşit",
+      "D) Topal Osman"
+    ],
+    "answer": "B",
+    "explanation": "Suikastçileri kaçıracak olan motorcu Giritli Şevki, pişmanlık duyarak durumu valiliğe ihbar etmiştir."
+  },
+  {
+    "id": 325,
+    "category": "tarih",
+    "level": 2,
+    "question": "1930 yılında Türkiye ile Yunanistan arasında yaşanan ve Atatürk'ün barışçı yollarla çözdüğü sorun hangisidir?",
+    "options": [
+      "A) Kıbrıs Sorunu",
+      "B) Kıta Sahanlığı Sorunu",
+      "C) Nüfus Mübadelesi (Etabli) Sorunu",
+      "D) Kardak Krizi"
+    ],
+    "answer": "C",
+    "explanation": "İstanbul'daki Rumlar ile Batı Trakya'daki Türklerin yerleşik (etabli) sayılıp sayılmayacağı sorunu 1930 Ahali Mübadele Antlaşması ile çözülmüştür."
+  },
+  {
+    "id": 326,
+    "category": "tarih",
+    "level": 3,
+    "question": "Montrö Boğazlar Sözleşmesi'ni Türkiye adına imzalayan Dışişleri Bakanı kimdir?",
+    "options": [
+      "A) İsmet İnönü",
+      "B) Tevfik Rüştü Aras",
+      "C) Şükrü Saraçoğlu",
+      "D) Numan Menemencioğlu"
+    ],
+    "answer": "B",
+    "explanation": "Dönemin Dışişleri Bakanı Tevfik Rüştü Aras, Montrö Boğazlar Sözleşmesi'ni imzalayan heyetin başkanıdır."
+  },
+  {
+    "id": 327,
+    "category": "tarih",
+    "level": 2,
+    "question": "Atatürk Dönemi'nin son Başbakanı kimdir?",
+    "options": [
+      "A) İsmet İnönü",
+      "B) Fethi Okyar",
+      "C) Celal Bayar",
+      "D) Refik Saydam"
+    ],
+    "answer": "C",
+    "explanation": "Atatürk vefat ettiğinde Başbakanlık görevinde Celal Bayar bulunmaktaydı."
+  },
+  {
+    "id": 328,
+    "category": "tarih",
+    "level": 2,
+    "question": "I. Dünya Savaşı'nda taraf değiştiren devlet hangisidir?",
+    "options": [
+      "A) Bulgaristan",
+      "B) İtalya",
+      "C) Osmanlı Devleti",
+      "D) Japonya"
+    ],
+    "answer": "B",
+    "explanation": "İtalya, İttifak bloğunda iken kendisine vaat edilen topraklar (Londra Antlaşması) nedeniyle İtilaf bloğuna geçmiştir."
   }
 ]
