@@ -193,12 +193,14 @@ def load_market_data():
             last_rewarded_week = data.get("last_rewarded_week", "")
             
             # IPO verisini güvenli bir şekilde yükle
-            loaded_ipo = data.get("active_ipo", {"is_active": False})
+            loaded_ipo = data.get("active_ipo", {})
             if isinstance(loaded_ipo, dict):
                 active_ipo.update(loaded_ipo)
             
-            # Kullanıcı şirketlerini yükle ve ana listeye ekle
-            public_companies = data.get("public_companies", {})
+            # Kullanıcı şirketlerini yükle (Mevcut listeyi ezmeden güncelle)
+            loaded_companies = data.get("public_companies", {})
+            if isinstance(loaded_companies, dict):
+                public_companies.update(loaded_companies)
             TRADE_GOODS.update(public_companies)
             
             if "last_update" in data and data["last_update"] is not None:

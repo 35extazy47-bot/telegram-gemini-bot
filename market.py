@@ -22,6 +22,12 @@ update_quest_progress = None
 
 def restore_active_ipo():
     """Bot yeniden başladığında aktif halka arzı TRADE_GOODS'a geri yükler."""
+    # Halka açık şirketleri garantiye al (Veritabanından markete yükle)
+    for code, comp in database.public_companies.items():
+        if code not in TRADE_GOODS:
+            TRADE_GOODS[code] = comp
+            print(f"🔄 Şirket Geri Yüklendi: {comp['name']}")
+
     if database.active_ipo.get("is_active"):
         code = database.active_ipo["company_code"]
         if code not in TRADE_GOODS:
@@ -246,7 +252,8 @@ def finalize_ipo(bot):
             else:
                 # Sistem şirketi ise kalıcı listeye ekle (Restartta silinmemesi için)
                 if ipo["company_code"] in TRADE_GOODS:
-                    database.public_companies[ipo["company_code"]] = TRADE_GOODS[ipo["company_code"]]
+                    # Veriyi kopyalayarak sakla ki referans hatası olmasın
+                    database.public_companies[ipo["company_code"]] = TRADE_GOODS[ipo["company_code"]].copy()
         
         market_prices[ipo["company_code"]] = ipo["ipo_price"]
         last_prices[ipo["company_code"]] = ipo["ipo_price"]
