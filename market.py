@@ -57,13 +57,6 @@ NEWS_TEMPLATES = {
     "demir": {"up": ["Ordu için yeni silah siparişi! ⚔️"], "down": ["Hurda demirler piyasaya sürüldü. ♻️"]}
 }
 
-IPO_CANDIDATES = [
-    {"code": "uzay", "name": "TIRTIL Uzay Teknolojileri 🚀", "base": 1000, "min": 500, "max": 2000, "volatility": 0.1},
-    {"code": "gida", "name": "Lezzet Gıda Sanayi 🍔", "base": 150, "min": 100, "max": 300, "volatility": 0.04},
-    {"code": "enerji", "name": "Güneş Enerji A.Ş. ☀️", "base": 300, "min": 200, "max": 500, "volatility": 0.06},
-    {"code": "ilac", "name": "Şifa İlaç Kimya 💊", "base": 400, "min": 250, "max": 700, "volatility": 0.07},
-]
-
 def calculate_indicators(prices):
     """Fiyat geçmişine göre RSI, SMA ve Bollinger Bantlarını hesaplar."""
     if not prices: return {"rsi": 50, "sma": 0, "upper": 0, "lower": 0}
@@ -141,50 +134,8 @@ def check_limit_orders(bot):
 
 def start_new_ipo(bot):
     """Yeni bir halka arz süreci başlatır."""
-    with market_lock:
-        available_candidates = [c for c in IPO_CANDIDATES if c["code"] not in TRADE_GOODS]
-        if not available_candidates:
-            print("ℹ️ Halka arz için yeni şirket kalmadı.")
-            return
-
-        company = random.choice(available_candidates)
-        TRADE_GOODS[company["code"]] = company
-        
-        ipo_price = random.randint(company["min"], int(company["base"] * 0.9))
-        total_shares = random.randint(500, 2000)
-        
-        start_time = datetime.now()
-        end_time = start_time + timedelta(minutes=15) # 15 dakika talep toplama süresi
-
-        database.active_ipo = {
-            "is_active": True,
-            "company_code": company["code"],
-            "company_name": company["name"],
-            "ipo_price": ipo_price,
-            "total_shares": total_shares,
-            "start_date": start_time.strftime("%Y-%m-%d %H:%M:%S"),
-            "end_date": end_time.strftime("%Y-%m-%d %H:%M:%S"),
-            "subscribers": {} # {user_id: {"amount": X, "username": Y}}
-        }
-        # Candidate verilerini de saklayalım ki restartta kaybolmasın
-        database.active_ipo.update({k: v for k, v in company.items() if k not in database.active_ipo})
-        save_market_data()
-
-        announcement = (
-            f"🔔 **HALKA ARZ DUYURUSU!** 🔔\n\n"
-            f"Şirket: **{company['name']}**\n"
-            f"Kod: `{company['code']}`\n\n"
-            f"💰 **Halka Arz Fiyatı:** {ipo_price} $\n"
-            f"📦 **Arz Edilen Lot:** {total_shares} adet\n\n"
-            f"⏰ **Talep Toplama Bitiş:** {end_time.strftime('%H:%M')}\n\n"
-            f"Talepte bulunmak için: `/talepet {company['code']} <adet>`\n"
-            f"Durumu görmek için: `/halkaarz`"
-        )
-        print(f"📢 Yeni Halka Arz Başladı: {company['name']}")
-        for uid, u_data in list(users.items()):
-            if u_data.get("is_approved", False):
-                try: bot.send_message(uid, announcement, parse_mode="Markdown")
-                except Exception as e: print(f"Duyuru gönderilemedi: {uid} - {e}")
+    # Sistem tarafından otomatik halka arz başlatılması devre dışı bırakıldı.
+    pass
 
 def finalize_ipo(bot):
     """Aktif halka arzı sonuçlandırır ve hisseleri dağıtır."""
@@ -268,9 +219,6 @@ def update_market(bot):
     try:
         with market_lock:
             # --- IPO KONTROLLERİ ---
-            if not database.active_ipo.get("is_active") and random.random() < 1/120: # ~3 saatte bir
-                start_new_ipo(bot)
-                
             if database.active_ipo.get("is_active"):
                 end_date_str = database.active_ipo.get("end_date")
                 if end_date_str and datetime.now() > datetime.strptime(end_date_str, "%Y-%m-%d %H:%M:%S"):
@@ -1206,7 +1154,7 @@ def register_market_handlers(bot, tirtil_utils):
             bot.reply_to(message, "⚠️ Kullanım: `/sirket_kur <KOD> <Şirket Adı>`\nÖrnek: `/sirket_kur holding Çılgın Holding A.Ş.`"); return
 
         if not code.isalnum(): bot.reply_to(message, "❌ Kod sadece harf ve rakam içerebilir."); return
-        if code in TRADE_GOODS or code in [c["code"] for c in IPO_CANDIDATES]: bot.reply_to(message, "❌ Bu kod kullanımda."); return
+        if code in TRADE_GOODS: bot.reply_to(message, "❌ Bu kod kullanımda."); return
         if users[user_id].get("private_company"): bot.reply_to(message, "⚠️ Zaten halka arz bekleyen bir şirketin var."); return
 
         users[user_id]["money"] -= COST
@@ -1378,5 +1326,52 @@ def register_market_handlers(bot, tirtil_utils):
         try: bot.send_photo(message.chat.id, create_inventory_image(users[str(message.from_user.id)]), caption="🎒 **Envanter Durumu**")
         except: bot.reply_to(message, "Envanter görüntülenemedi.")
 
+def clean_system_companies():
+    """Sistem tarafından oluşturulan şirketleri kaldırır ve yatırımcılara iade yapar."""
+    system_codes = ["uzay", "gida", "enerji", "ilac"]
+    changes_made = False
+
+    with market_lock:
+        # 1. Aktif Halka Arzı Kontrol Et (Sistem şirketiyse iptal et)
+        if database.active_ipo.get("is_active") and database.active_ipo.get("company_code") in system_codes:
+            print(f"🚫 Sistem halka arzı iptal ediliyor: {database.active_ipo['company_name']}")
+            database.active_ipo = {"is_active": False}
+            changes_made = True
+
+        # 2. Marketten ve Envanterlerden Sil
+        for code in system_codes:
+            # Eğer markette varsa işlem yap
+            if code in TRADE_GOODS or code in market_prices:
+                changes_made = True
+                price = market_prices.get(code, 0)
+                if price == 0: price = last_prices.get(code, 100)
+
+                # Kullanıcılara iade
+                for uid, user in users.items():
+                    inv = user.get("inventory", {})
+                    amount = inv.get(code, 0)
+                    if amount > 0:
+                        refund = int(amount * price)
+                        user["money"] = user.get("money", 0) + refund
+                        del inv[code]
+                        # Portföy temizliği
+                        if "portfolio" in user and code in user["portfolio"]:
+                            del user["portfolio"][code]
+                        print(f"💸 {uid} kullanıcısına {code} hisseleri için {refund} $ iade edildi.")
+                
+                # Verilerden sil
+                if code in TRADE_GOODS: del TRADE_GOODS[code]
+                if code in market_prices: del market_prices[code]
+                if code in market_volumes: del market_volumes[code]
+                if code in last_prices: del last_prices[code]
+                if code in price_history: del price_history[code]
+                if code in volume_history: del volume_history[code]
+        
+        if changes_made:
+            save_users()
+            save_market_data()
+            print("✅ Sistem şirketleri temizlendi ve iadeler yapıldı.")
+
 # Modül yüklendiğinde aktif IPO varsa geri yükle
 restore_active_ipo()
+clean_system_companies() # Sistem şirketlerini temizle
