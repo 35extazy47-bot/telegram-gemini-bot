@@ -31,20 +31,15 @@ def restore_active_ipo():
     if database.active_ipo.get("is_active"):
         code = database.active_ipo["company_code"]
         if code not in TRADE_GOODS:
-            # Metadata eksikse IPO_CANDIDATES'ten bulmayı dene
-            candidate = next((c for c in IPO_CANDIDATES if c["code"] == code), None)
-            if candidate:
-                TRADE_GOODS[code] = candidate
-            else:
-                # Yedek (Generic) - Eğer listede yoksa veritabanından kurtar
-                TRADE_GOODS[code] = {
-                    "code": code,
-                    "name": database.active_ipo["company_name"],
-                    "base": database.active_ipo["ipo_price"],
-                    "min": int(database.active_ipo["ipo_price"] * 0.5),
-                    "max": int(database.active_ipo["ipo_price"] * 2),
-                    "volatility": 0.05
-                }
+            # Yedek (Generic) - Eğer listede yoksa veritabanından kurtar
+            TRADE_GOODS[code] = {
+                "code": code,
+                "name": database.active_ipo["company_name"],
+                "base": database.active_ipo["ipo_price"],
+                "min": int(database.active_ipo["ipo_price"] * 0.5),
+                "max": int(database.active_ipo["ipo_price"] * 2),
+                "volatility": 0.05
+            }
             print(f"🔄 Aktif Halka Arz Geri Yüklendi: {database.active_ipo['company_name']}")
 
 NEWS_TEMPLATES = {
@@ -245,6 +240,9 @@ def update_market(bot):
 
             trend_strength = random.uniform(0.01, 0.03)
             for code, data in TRADE_GOODS.items():
+                # Fiyat yoksa varsayılanı ata (Çökmemesi için)
+                if code not in market_prices: market_prices[code] = data["base"]
+
                 # 1. Volatilite ve Trend
                 change_percent = random.gauss(0, data["volatility"]) + (database.market_trend * trend_strength) + database.active_global_modifier
                 

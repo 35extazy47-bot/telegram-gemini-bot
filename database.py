@@ -177,13 +177,29 @@ def load_market_data():
 
     if data is not None:
         with market_lock:
+            # Kullanıcı şirketlerini yükle (Mevcut listeyi ezmeden güncelle)
+            loaded_companies = data.get("public_companies", {})
+            if isinstance(loaded_companies, dict):
+                public_companies.update(loaded_companies)
+            TRADE_GOODS.update(public_companies)
+
+            # Fiyatları Yükle (TRADE_GOODS güncellendikten sonra)
             loaded_prices = data.get("prices", {})
             for k, v in loaded_prices.items():
-                if k in market_prices: market_prices[k] = v
+                if k in TRADE_GOODS: market_prices[k] = v
             
+            # Eksik fiyat varsa tamamla
+            for k, v in TRADE_GOODS.items():
+                if k not in market_prices: market_prices[k] = v["base"]
+            
+            # Hacimleri Yükle
             loaded_volumes = data.get("volumes", {})
             for k, v in loaded_volumes.items():
-                if k in market_volumes: market_volumes[k] = v
+                if k in TRADE_GOODS: market_volumes[k] = v
+            
+            # Eksik hacim varsa tamamla
+            for k in TRADE_GOODS:
+                if k not in market_volumes: market_volumes[k] = 0
 
             last_prices.update(data.get("last_prices", {}))
             price_history.update(data.get("price_history", {}))
@@ -196,12 +212,6 @@ def load_market_data():
             loaded_ipo = data.get("active_ipo", {})
             if isinstance(loaded_ipo, dict):
                 active_ipo.update(loaded_ipo)
-            
-            # Kullanıcı şirketlerini yükle (Mevcut listeyi ezmeden güncelle)
-            loaded_companies = data.get("public_companies", {})
-            if isinstance(loaded_companies, dict):
-                public_companies.update(loaded_companies)
-            TRADE_GOODS.update(public_companies)
             
             if "last_update" in data and data["last_update"] is not None:
                 try:
