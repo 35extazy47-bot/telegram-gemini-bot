@@ -367,7 +367,10 @@ def create_market_image(user_data=None):
         draw.rounded_rectangle([(30, y), (width-30, y+row_height)], radius=15, fill=card_bg)
         
         # 1. Name
-        draw.text((50, y+30), data['name'], font=row_name_font, fill=text_primary)
+        display_name = data['name']
+        if code in database.public_companies:
+            display_name = code.upper()
+        draw.text((50, y+30), display_name, font=row_name_font, fill=text_primary)
         
         # 2. Price
         price, old_price = market_prices.get(code, data["base"]), last_prices.get(code, data["base"])
@@ -520,7 +523,10 @@ def create_portfolio_image(user_data):
             draw.rounded_rectangle([(30, y), (width-30, y+row_height)], radius=15, fill=card_bg)
             
             # 1. Item Name & Amount
-            draw.text((50, y+25), item_info["name"], font=item_name_font, fill=text_primary)
+            display_name = item_info["name"]
+            if code in database.public_companies:
+                display_name = code.upper()
+            draw.text((50, y+25), display_name, font=item_name_font, fill=text_primary)
             draw.text((50, y+70), f"{int(amount)} Adet", font=item_detail_font, fill=text_secondary)
             
             # 2. Cost vs Price
