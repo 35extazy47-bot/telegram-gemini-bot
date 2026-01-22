@@ -420,73 +420,132 @@ def create_market_image(user_data=None):
     return bio
 
 def create_portfolio_image(user_data):
-    width = 800
+    # Colors (Modern Dark Theme)
+    bg_color = (15, 23, 42, 255)       # Slate 950
+    card_bg = (30, 41, 59, 255)        # Slate 800
+    text_primary = (241, 245, 249, 255)# Slate 100
+    text_secondary = (148, 163, 184, 255) # Slate 400
+    accent_green = (34, 197, 94, 255)  # Green 500
+    accent_red = (239, 68, 68, 255)    # Red 500
+    gold_color = (250, 204, 21, 255)   # Yellow 400
+
     portfolio = user_data.get("portfolio", {})
-    num_items = len([v for v in portfolio.values() if v.get("amount", 0) > 0])
-    height = 200 + (num_items * 50)
+    # Filter items with amount > 0
+    active_items = [
+        (code, data) for code, data in portfolio.items() 
+        if data.get("amount", 0) > 0 and code in TRADE_GOODS
+    ]
     
-    img = Image.new('RGB', (width, height), color=(25, 28, 36))
+    num_items = len(active_items)
+    row_height = 120
+    header_height = 220
+    footer_height = 40
+    width = 1000
+    height = header_height + (num_items * (row_height + 15)) + footer_height
+    
+    img = Image.new('RGBA', (width, height), color=bg_color)
     draw = ImageDraw.Draw(img)
     
     try:
         font_path = "arial.ttf"
-        if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-        title_font, header_font, row_font = ImageFont.truetype(font_path, 36), ImageFont.truetype(font_path, 20), ImageFont.truetype(font_path, 18)
+        if not os.path.exists(font_path): font_path = next((f for f in ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"] if os.path.exists(f)), font_path)
+        title_font = ImageFont.truetype(font_path, 48)
+        header_val_font = ImageFont.truetype(font_path, 40)
+        header_lbl_font = ImageFont.truetype(font_path, 20)
+        item_name_font = ImageFont.truetype(font_path, 32)
+        item_detail_font = ImageFont.truetype(font_path, 20)
+        pl_font = ImageFont.truetype(font_path, 24)
+        small_label_font = ImageFont.truetype(font_path, 14)
     except:
-        title_font, header_font, row_font = ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default()
+        title_font = ImageFont.load_default()
+        header_val_font = ImageFont.load_default()
+        header_lbl_font = ImageFont.load_default()
+        item_name_font = ImageFont.load_default()
+        item_detail_font = ImageFont.load_default()
+        pl_font = ImageFont.load_default()
+        small_label_font = ImageFont.load_default()
 
-    draw.text((40, 20), f"💼 {user_data.get('name', '')} Portföyü", font=title_font, fill=(255, 215, 0))
+    # --- Header ---
+    draw.rectangle([(0, 0), (width, 160)], fill=(30, 41, 59))
+    draw.text((40, 40), f"💼 {user_data.get('name', 'Yatırımcı')}", font=title_font, fill=text_primary)
+    draw.text((40, 100), "PORTFÖY ÖZETİ", font=header_lbl_font, fill=text_secondary)
 
-    if not num_items:
-        draw.text((40, 100), "Portföyün boş...", font=header_font, fill=(150, 150, 150))
+    # Calculate Totals
+    total_portfolio_value = 0
+    total_initial_cost = 0
+    
+    # Pre-calculate to show in header
+    with market_lock:
+        for code, data in active_items:
+            current_price = market_prices.get(code, 0)
+            amount = data["amount"]
+            total_cost = data["total_cost"]
+            current_value = current_price * amount
+            total_portfolio_value += current_value
+            total_initial_cost += total_cost
+
+    total_pl = total_portfolio_value - total_initial_cost
+    pl_percent = (total_pl / total_initial_cost * 100) if total_initial_cost > 0 else 0
+    
+    # Header Stats
+    # Total Value
+    draw.text((550, 40), "TOPLAM DEĞER", font=header_lbl_font, fill=text_secondary)
+    draw.text((550, 70), f"{int(total_portfolio_value)} $", font=header_val_font, fill=gold_color)
+    
+    # Total P&L
+    draw.text((800, 40), "TOPLAM KAR/ZARAR", font=header_lbl_font, fill=text_secondary)
+    pl_color = accent_green if total_pl >= 0 else accent_red
+    pl_sign = "+" if total_pl >= 0 else ""
+    draw.text((800, 70), f"{pl_sign}{int(total_pl)} $", font=header_val_font, fill=pl_color)
+    draw.text((800, 115), f"%{pl_percent:.2f}", font=header_lbl_font, fill=pl_color)
+
+    if not active_items:
+        draw.text((width//2 - 100, 250), "Portföyün boş...", font=item_name_font, fill=text_secondary)
         bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
         return bio, 0, 0
 
-    y = 90
-    headers = ["ÜRÜN", "ADET", "ORT. MALİYET", "P&L", "GÜNCEL DEĞER"]
-    x_pos = [40, 250, 400, 550, 680]
-    for i, h in enumerate(headers): draw.text((x_pos[i], y), h, font=header_font, fill=(150, 150, 150))
-    
-    y += 30
-    total_portfolio_value, total_initial_cost = 0, 0
-
+    # --- Items List ---
+    y = header_height
     with market_lock:
-        for code, data in portfolio.items():
-            if data.get("amount", 0) <= 0: continue
+        for code, data in active_items:
             item_info = TRADE_GOODS.get(code)
-            if not item_info: continue
-            
-            current_price, amount, total_cost = market_prices.get(code, 0), data["amount"], data["total_cost"]
+            current_price = market_prices.get(code, 0)
+            amount = data["amount"]
+            total_cost = data["total_cost"]
             avg_cost, current_value = total_cost / amount if amount > 0 else 0, current_price * amount
             profit_loss = current_value - total_cost
-            
-            total_portfolio_value += current_value; total_initial_cost += total_cost
-            
-            draw.line([(40, y-5), (width-40, y-5)], fill=(50, 50, 70), width=1)
-            draw.text((x_pos[0], y), item_info["name"], font=row_font, fill=(255,255,255))
-            draw.text((x_pos[1], y), str(int(amount)), font=row_font, fill=(255,255,255))
-            draw.text((x_pos[2], y), f"{avg_cost:.1f} $", font=row_font, fill=(255,255,255))
-            
-            pl_color = (46, 204, 113) if profit_loss >= 0 else (231, 76, 60)
-            pl_sign = "+" if profit_loss >= 0 else ""
-            draw.text((x_pos[3], y), f"{pl_sign}{profit_loss:.0f} $", font=row_font, fill=pl_color)
-            draw.text((x_pos[4], y), f"{current_value:.0f} $", font=row_font, fill=(255, 215, 0))
-            y += 50
+            item_pl_pct = (profit_loss / total_cost * 100) if total_cost > 0 else 0
 
-    total_profit_loss = total_portfolio_value - total_initial_cost
-    draw.line([(40, y+10), (width-40, y+10)], fill=(80, 80, 80), width=2); y += 30
-    
-    draw.text((400, y), "Toplam Değer:", font=header_font, fill=(150, 150, 150))
-    draw.text((680, y), f"{total_portfolio_value:.0f} $", font=header_font, fill=(255, 215, 0))
-    y += 40
-    
-    pl_color = (46, 204, 113) if total_profit_loss >= 0 else (231, 76, 60)
-    pl_sign = "+" if total_profit_loss >= 0 else ""
-    draw.text((400, y), "Toplam Kar/Zarar:", font=header_font, fill=(150, 150, 150))
-    draw.text((680, y), f"{pl_sign}{total_profit_loss:.0f} $", font=header_font, fill=pl_color)
+            # Card Background
+            draw.rounded_rectangle([(30, y), (width-30, y+row_height)], radius=15, fill=card_bg)
+            
+            # 1. Item Name & Amount
+            draw.text((50, y+25), item_info["name"], font=item_name_font, fill=text_primary)
+            draw.text((50, y+70), f"{int(amount)} Adet", font=item_detail_font, fill=text_secondary)
+            
+            # 2. Cost vs Price
+            draw.text((350, y+30), "Ort. Maliyet", font=small_label_font, fill=text_secondary)
+            draw.text((350, y+50), f"{avg_cost:.1f} $", font=item_detail_font, fill=text_primary)
+            
+            draw.text((500, y+30), "Güncel Fiyat", font=small_label_font, fill=text_secondary)
+            draw.text((500, y+50), f"{current_price} $", font=item_detail_font, fill=gold_color)
+
+            # 3. P&L Pill
+            pl_item_color = accent_green if profit_loss >= 0 else accent_red
+            pl_bg = (34, 197, 94, 40) if profit_loss >= 0 else (239, 68, 68, 40)
+            pl_sign_item = "+" if profit_loss >= 0 else ""
+            
+            # Pill Background
+            draw.rounded_rectangle([(700, y+25), (950, y+95)], radius=10, fill=pl_bg)
+            
+            # Value inside pill
+            draw.text((720, y+35), f"{pl_sign_item}{int(profit_loss)} $", font=pl_font, fill=pl_item_color)
+            draw.text((720, y+65), f"%{item_pl_pct:.2f}", font=item_detail_font, fill=pl_item_color)
+            
+            y += row_height + 15
 
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
-    return bio, total_portfolio_value, total_profit_loss
+    return bio, total_portfolio_value, total_pl
 
 def create_inventory_image(user_data):
     width, height = 800, 600
