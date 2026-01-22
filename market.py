@@ -298,71 +298,124 @@ def apply_bank_interest(bot):
     if count > 0: save_users(); print(f"🏦 {count} kişiye faiz dağıtıldı.")
 
 def create_market_image(user_data=None):
-    num_items, row_height, header_height, footer_height = len(TRADE_GOODS), 80, 180, 60
-    width, height = 1400, header_height + (num_items * row_height) + footer_height
-    img = Image.new('RGBA', (width, height), color=(30, 33, 43, 255)) # RGBA for transparency
+    # Layout Constants
+    num_items = len(TRADE_GOODS)
+    row_height = 100
+    header_height = 240
+    footer_height = 60
+    width = 1400
+    height = header_height + (num_items * (row_height + 15)) + footer_height
+
+    # Colors (Modern Dark Theme)
+    bg_color = (15, 23, 42, 255)       # Slate 950
+    card_bg = (30, 41, 59, 255)        # Slate 800
+    text_primary = (241, 245, 249, 255)# Slate 100
+    text_secondary = (148, 163, 184, 255) # Slate 400
+    accent_green = (34, 197, 94, 255)  # Green 500
+    accent_red = (239, 68, 68, 255)    # Red 500
+    gold_color = (250, 204, 21, 255)   # Yellow 400
+
+    img = Image.new('RGBA', (width, height), color=bg_color)
     draw = ImageDraw.Draw(img)
+
     try:
         font_path = "arial.ttf"
         if not os.path.exists(font_path): font_path = next((f for f in ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"] if os.path.exists(f)), font_path)
-        title_font, header_font, row_font, small_font = ImageFont.truetype(font_path, 42), ImageFont.truetype(font_path, 26), ImageFont.truetype(font_path, 24), ImageFont.truetype(font_path, 18)
+        title_font = ImageFont.truetype(font_path, 56)
+        stat_label_font = ImageFont.truetype(font_path, 24)
+        stat_value_font = ImageFont.truetype(font_path, 36)
+        row_name_font = ImageFont.truetype(font_path, 32)
+        row_price_font = ImageFont.truetype(font_path, 36)
+        small_font = ImageFont.truetype(font_path, 20)
     except:
-        title_font, header_font, row_font, small_font = ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default()
+        title_font = ImageFont.load_default()
+        stat_label_font = ImageFont.load_default()
+        stat_value_font = ImageFont.load_default()
+        row_name_font = ImageFont.load_default()
+        row_price_font = ImageFont.load_default()
+        small_font = ImageFont.load_default()
 
-    draw.rectangle([(0, 0), (width, 100)], fill=(52, 211, 153)); draw.text((40, 25), "📈 KAPALIÇARŞI BORSASI", font=title_font, fill=(20, 20, 30))
+    # --- Header Section ---
+    draw.rectangle([(0, 0), (width, 150)], fill=(30, 41, 59)) # Top bar background
+    
+    draw.text((40, 45), "KAPALIÇARŞI", font=title_font, fill=text_primary)
+    draw.text((40, 110), datetime.now().strftime("%d %B %Y"), font=stat_label_font, fill=text_secondary)
+
     current_index, last_index = sum(market_prices.values()), sum(last_prices.values())
     idx_diff, idx_pct = current_index - last_index, (current_index - last_index) / last_index * 100 if last_index > 0 else 0
-    idx_arrow = "▲" if idx_diff > 0 else ("▼" if idx_diff < 0 else "➖")
-    draw.text((700, 35), f"ENDEKS: {current_index} {idx_arrow} %{abs(idx_pct):.2f}", font=header_font, fill=(40, 40, 50))
-    draw.rectangle([(30, 120), (width-30, 170)], fill=(40, 44, 56)); draw.text((45, 135), f"📰 {database.market_news[:100] + '...' if len(database.market_news) > 100 else database.market_news}", font=row_font, fill=(200, 200, 220))
     
-    y = 200; headers = ["ÜRÜN", "FİYAT", "DEĞİŞİM", "VARLIK", "DERİNLİK", "GRAFİK (Son 1s)"]; x_pos = [40, 280, 450, 650, 850, 1100]
-    for i, h in enumerate(headers): draw.text((x_pos[i], y), h, font=header_font, fill=(160, 170, 190))
-    draw.line([(40, y + 40), (width-40, y + 40)], fill=(60, 65, 80), width=2)
+    # Stat 1: Index
+    draw.text((600, 45), "BIST ENDEKS", font=stat_label_font, fill=text_secondary)
+    idx_color = accent_green if idx_diff >= 0 else accent_red
+    idx_arrow = "▲" if idx_diff > 0 else "▼"
+    draw.text((600, 80), f"{current_index} {idx_arrow} %{abs(idx_pct):.2f}", font=stat_value_font, fill=idx_color)
+
+    # Stat 2: Trend
+    draw.text((950, 45), "PİYASA YÖNÜ", font=stat_label_font, fill=text_secondary)
+    trend_text = "BOĞA (Yükseliş)" if database.market_trend > 0 else ("AYI (Düşüş)" if database.market_trend < 0 else "YATAY")
+    trend_color = accent_green if database.market_trend > 0 else (accent_red if database.market_trend < 0 else text_secondary)
+    draw.text((950, 80), trend_text, font=stat_value_font, fill=trend_color)
+
+    # News Ticker
+    draw.rounded_rectangle([(30, 170), (width-30, 220)], radius=10, fill=(51, 65, 85))
+    draw.text((50, 182), f"📢 {database.market_news[:110]}", font=stat_label_font, fill=(226, 232, 240))
     
-    y += 60
+    # --- List Section ---
+    y = header_height + 10
     for code, data in TRADE_GOODS.items():
+        # Card Background
+        draw.rounded_rectangle([(30, y), (width-30, y+row_height)], radius=15, fill=card_bg)
+        
+        # 1. Name
+        draw.text((50, y+30), data['name'], font=row_name_font, fill=text_primary)
+        
+        # 2. Price
         price, old_price = market_prices.get(code, data["base"]), last_prices.get(code, data["base"])
+        draw.text((450, y+30), f"{price} $", font=row_price_font, fill=gold_color)
+        
+        # 3. Change Pill
         diff = price - old_price
-        draw.rectangle([(40, y), (width-40, y+60)], fill=(40, 44, 56))
-        draw.text((50, y+15), data['name'], font=row_font, fill=(255, 255, 255))
-        draw.text((280, y+15), f"{price} $", font=row_font, fill=(250, 250, 250))
-        diff_str, color = (f"▲ +{diff}", (74, 222, 128)) if diff > 0 else ((f"▼ {diff}", (248, 113, 113)) if diff < 0 else ("➖ 0", (148, 163, 184)))
-        draw.text((450, y+15), diff_str, font=row_font, fill=color)
+        diff_pct = (diff / old_price * 100) if old_price > 0 else 0
+        change_color = accent_green if diff >= 0 else accent_red
+        change_bg = (34, 197, 94, 40) if diff >= 0 else (239, 68, 68, 40)
+        change_str = f"{'▲' if diff > 0 else '▼'} %{abs(diff_pct):.2f}"
+        
+        draw.rounded_rectangle([(700, y+25), (860, y+75)], radius=25, fill=change_bg)
+        draw.text((720, y+35), change_str, font=stat_label_font, fill=change_color)
+        
+        # 4. User Asset
         user_stock = user_data.get("inventory", {}).get(code, 0) if user_data else 0
-        draw.text((650, y+15), f"{user_stock} Adet", font=row_font, fill=((255, 255, 255) if user_stock > 0 else (120, 120, 140)))
+        if user_stock > 0:
+            draw.text((900, y+35), f"🎒 {user_stock}", font=stat_label_font, fill=text_secondary)
         
-        vol = market_volumes.get(code, 0); bar_x, bar_w, center_x = 850, 200, 850 + 100
-        draw.rectangle([(bar_x, y+25), (bar_x + bar_w, y+40)], fill=(30, 33, 43)); draw.line([(center_x, y+20), (center_x, y+45)], fill=(100, 100, 120), width=1)
-        bar_len = min(abs(vol) * 2, 100)
-        if vol >= 0: draw.rectangle([(center_x, y+25), (center_x + bar_len, y+40)], fill=(74, 222, 128))
-        else: draw.rectangle([(center_x - bar_len, y+25), (center_x, y+40)], fill=(248, 113, 113))
-        
-        # Sparkline (Mini Grafik)
-        hist = price_history.get(code, [])[-20:] # Son 20 veri
+        # 5. Sparkline (Mini Grafik)
+        hist = price_history.get(code, [])[-30:]
         if len(hist) > 1:
-            sl_x, sl_y, sl_w, sl_h = 1100, y + 10, 250, 40
+            sl_x, sl_y, sl_w, sl_h = 1050, y + 20, 300, 60
             min_h, max_h = min(hist), max(hist)
             points = []
             for idx, val in enumerate(hist):
                 px = sl_x + (idx * (sl_w / (len(hist) - 1)))
-                py = sl_y + sl_h - ((val - min_h) / (max_h - min_h) * sl_h) if max_h != min_h else sl_y + sl_h/2
+                py = sl_y + sl_h - ((val - min_h) / (max_h - min_h) * sl_h) if max_h != min_h else sl_y + sl_h / 2
                 points.append((px, py))
             
-            sl_color = (74, 222, 128, 255) if hist[-1] >= hist[0] else (248, 113, 113, 255)
+            sl_color = accent_green if hist[-1] >= hist[0] else accent_red
             
-            # Altını doldur (Daha şık görünüm)
+            # Altını doldur
             poly_points = [(sl_x, sl_y + sl_h)] + points + [(points[-1][0], sl_y + sl_h)]
-            draw.polygon(poly_points, fill=sl_color[:3] + (50,)) # Yarı saydam dolgu
-            draw.line(points, fill=sl_color, width=2)
-            # Son nokta
-            lx, ly = points[-1]
-            draw.ellipse((lx-3, ly-3, lx+3, ly+3), fill=sl_color[:3] + (255,))
+            overlay = Image.new('RGBA', img.size, (0,0,0,0))
+            overlay_draw = ImageDraw.Draw(overlay)
+            overlay_draw.polygon(poly_points, fill=sl_color[:3] + (30,))
+            img = Image.alpha_composite(img, overlay)
+            draw = ImageDraw.Draw(img)
+            
+            draw.line(points, fill=sl_color, width=3)
 
-        y += row_height
+        y += row_height + 15
 
     seconds_left = max(0, 90 - (datetime.now() - database.last_market_update).total_seconds())
-    draw.text((width - 350, height - 40), f"⏳ Yenilenme: {int(seconds_left // 60)}dk {int(seconds_left % 60)}sn", font=small_font, fill=(150, 150, 170))
+    draw.text((width - 350, height - 40), f"⏳ Yenilenme: {int(seconds_left // 60)}dk {int(seconds_left % 60)}sn", font=small_font, fill=text_secondary)
+    
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio
 
