@@ -294,7 +294,7 @@
   },
   {
     "id": 22,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yasama",
     "level": 1,
     "question": "Türkiye'de yasama yetkisi kime aittir?",
     "options": [
@@ -307,7 +307,7 @@
   },
   {
     "id": 23,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yasama",
     "level": 1,
     "question": "Türkiye Cumhuriyeti Anayasası'na göre, milletvekili seçilme yaşı kaçtır?",
     "options": [
@@ -320,7 +320,7 @@
   },
   {
     "id": 24,
-    "category": "vatandaslik",
+    "category": "vatandaslik_temel",
     "level": 1,
     "question": "Temel hak ve hürriyetler hangi durumda sınırlandırılabilir?",
     "options": [
@@ -333,7 +333,7 @@
   },
   {
     "id": 25,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 1,
     "question": "Bir kanunu kim veto edebilir?",
     "options": [
@@ -346,7 +346,7 @@
   },
   {
     "id": 26,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yasama",
     "level": 1,
     "question": "Türkiye'de genel seçimler kaç yılda bir yapılır?",
     "options": [
@@ -359,7 +359,7 @@
   },
   {
     "id": 27,
-    "category": "vatandaslik",
+    "category": "vatandaslik_temel",
     "level": 1,
     "question": "Devletin temel amaç ve görevleri Anayasa'nın hangi maddesinde belirtilmiştir?",
     "options": [
@@ -372,7 +372,7 @@
   },
   {
     "id": 28,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 1,
     "question": "Anayasa Mahkemesi kaç üyeden oluşur?",
     "options": [
@@ -385,7 +385,7 @@
   },
   {
     "id": 29,
-    "category": "vatandaslik",
+    "category": "vatandaslik_temel",
     "level": 1,
     "question": "'Kanun önünde eşitlik' ilkesi Anayasa'nın hangi maddesinde yer alır?",
     "options": [
@@ -398,7 +398,7 @@
   },
   {
     "id": 30,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 1,
     "question": "Yargı yetkisi kim tarafından kullanılır?",
     "options": [
@@ -411,7 +411,7 @@
   },
   {
     "id": 31,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 1,
     "question": "Belediye başkanı kim tarafından seçilir?",
     "options": [
@@ -814,7 +814,7 @@
   },
   {
     "id": 62,
-    "category": "vatandaslik",
+    "category": "vatandaslik_temel",
     "level": 1,
     "question": "1982 Anayasası'na göre, Türkiye Devleti'nin yönetim şekli nedir?",
     "options": [
@@ -827,7 +827,7 @@
   },
   {
     "id": 63,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 1,
     "question": "Yönetmelikleri kimler çıkarabilir?",
     "options": [
@@ -840,7 +840,7 @@
   },
   {
     "id": 64,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 1,
     "question": "Yürütme yetkisi ve görevi kime aittir?",
     "options": [
@@ -853,7 +853,7 @@
   },
   {
     "id": 65,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 1,
     "question": "Siyasi partilerin mali denetimini kim yapar?",
     "options": [
@@ -866,7 +866,7 @@
   },
   {
     "id": 66,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 1,
     "question": "İdari yargının en yüksek mahkemesi (temyiz mercii) hangisidir?",
     "options": [
@@ -879,7 +879,7 @@
   },
   {
     "id": 67,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 1,
     "question": "Cumhurbaşkanlığı kararnameleri ile ilgili yargısal denetimi kim yapar?",
     "options": [
@@ -892,7 +892,7 @@
   },
   {
     "id": 68,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 1,
     "question": "Bir ilde devletin ve cumhurbaşkanının temsilcisi kimdir?",
     "options": [
@@ -905,7 +905,7 @@
   },
   {
     "id": 69,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 1,
     "question": "Memurluktan çıkarma cezasına karşı yargı yolu açık mıdır?",
     "options": [
@@ -918,7 +918,7 @@
   },
   {
     "id": 70,
-    "category": "vatandaslik",
+    "category": "vatandaslik_temel",
     "level": 1,
     "question": "Türkiye'nin NATO'ya üye olduğu yıl hangisidir?",
     "options": [
@@ -931,7 +931,7 @@
   },
   {
     "id": 71,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yasama",
     "level": 1,
     "question": "TBMM, Olağanüstü Hal (OHAL) süresini her defasında en fazla kaç ay uzatabilir?",
     "options": [
@@ -1464,7 +1464,7 @@
   },
   {
     "id": 112,
-    "category": "vatandaslik",
+    "category": "vatandaslik_temel",
     "level": 1,
     "question": "1982 Anayasası'na göre 'Değiştirilemez' maddeler kaç tanedir?",
     "options": [
@@ -1477,7 +1477,7 @@
   },
   {
     "id": 113,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yasama",
     "level": 1,
     "question": "Türkiye Büyük Millet Meclisi (TBMM) üye sayısı kaçtır?",
     "options": [
@@ -1490,7 +1490,7 @@
   },
   {
     "id": 114,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 1,
     "question": "Yüksek Seçim Kurulu (YSK) üyelerini kim seçer?",
     "options": [
@@ -1503,7 +1503,7 @@
   },
   {
     "id": 115,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 1,
     "question": "Ülke çapındaki yönetmelikleri iptal etme yetkisi (yargısal denetim) kime aittir?",
     "options": [
@@ -1516,7 +1516,7 @@
   },
   {
     "id": 116,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 1,
     "question": "Köy yönetiminin başı ve devletin köydeki temsilcisi kimdir?",
     "options": [
@@ -1529,7 +1529,7 @@
   },
   {
     "id": 117,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 1,
     "question": "Hakimler ve Savcılar Kurulu'nun (HSK) başkanı kimdir?",
     "options": [
@@ -1542,7 +1542,7 @@
   },
   {
     "id": 118,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 1,
     "question": "Olağanüstü Hal (OHAL) ilan etme yetkisi kime aittir?",
     "options": [
@@ -1555,7 +1555,7 @@
   },
   {
     "id": 119,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 1,
     "question": "Siyasi partilerin kapatılması davasını kim açar?",
     "options": [
@@ -1568,7 +1568,7 @@
   },
   {
     "id": 120,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 1,
     "question": "Siyasi partilerin kapatılmasına hangi mahkeme karar verir?",
     "options": [
@@ -1581,7 +1581,7 @@
   },
   {
     "id": 121,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 1,
     "question": "Devlet memurlarının haftalık çalışma saati kanunen kaçtır?",
     "options": [
@@ -1594,7 +1594,7 @@
   },
   {
     "id": 122,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 1,
     "question": "Aşağıdakilerden hangisi 'Adli Yargı' kolunun en üst mahkemesidir?",
     "options": [
@@ -1607,7 +1607,7 @@
   },
   {
     "id": 123,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 1,
     "question": "1982 Anayasası'na göre Cumhurbaşkanlığı seçimleri kaç yılda bir yapılır?",
     "options": [
@@ -1620,7 +1620,7 @@
   },
   {
     "id": 124,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 1,
     "question": "Kamulaştırma bedeline itiraz hangi mahkemeye yapılır?",
     "options": [
@@ -1633,7 +1633,7 @@
   },
   {
     "id": 125,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 1,
     "question": "Devlet Denetleme Kurulu (DDK) kime bağlı olarak çalışır?",
     "options": [
@@ -1646,7 +1646,7 @@
   },
   {
     "id": 126,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 1,
     "question": "Uluslararası antlaşmaları onaylama ve yayımlama yetkisi kime aittir?",
     "options": [
@@ -1882,7 +1882,7 @@
   },
   {
     "id": 164,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 2,
     "question": "1982 Anayasası'na göre, Cumhurbaşkanı hastalık veya yurt dışına çıkma gibi sebeplerle görevinden ayrıldığında yerine kim vekalet eder?",
     "options": [
@@ -1938,7 +1938,7 @@
   },
   {
     "id": 168,
-    "category": "vatandaslik",
+    "category": "vatandaslik_temel",
     "level": 1,
     "question": "Hukuk kurallarına aykırı yapılan bir işlemin, baştan itibaren hüküm ifade etmemesi durumuna ne ad verilir?",
     "options": [
@@ -3072,7 +3072,7 @@
   },
   {
     "id": 249,
-    "category": "vatandaslik",
+    "category": "vatandaslik_temel",
     "level": 1,
     "question": "Aşağıdakilerden hangisi 'Sosyal Haklar' (İsteme Hakları) grubunda yer alır?",
     "options": [
@@ -3086,7 +3086,7 @@
   },
   {
     "id": 250,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yasama",
     "level": 2,
     "question": "Milletvekillerinin meclis çalışmalarındaki oy ve sözlerinden dolayı sorumlu tutulmamasına ne ad verilir?",
     "options": [
@@ -3100,7 +3100,7 @@
   },
   {
     "id": 251,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yasama",
     "level": 1,
     "question": "Savaş ilanına karar verme yetkisi kime aittir?",
     "options": [
@@ -3114,7 +3114,7 @@
   },
   {
     "id": 252,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 2,
     "question": "Cumhurbaşkanlığına aday gösterebilmek için en az kaç seçmenin imzası gerekir?",
     "options": [
@@ -3128,7 +3128,7 @@
   },
   {
     "id": 253,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 2,
     "question": "Devlet Denetleme Kurulu (DDK) aşağıdakilerden hangisini denetleyemez?",
     "options": [
@@ -3142,7 +3142,7 @@
   },
   {
     "id": 254,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 2,
     "question": "İl Özel İdaresi'nin karar organı hangisidir?",
     "options": [
@@ -3156,7 +3156,7 @@
   },
   {
     "id": 255,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 2,
     "question": "Devlet memurluğunda adaylık süresi en az 1 yıl, en çok kaç yıldır?",
     "options": [
@@ -3170,7 +3170,7 @@
   },
   {
     "id": 256,
-    "category": "vatandaslik",
+    "category": "vatandaslik_temel",
     "level": 2,
     "question": "Türkiye aşağıdaki uluslararası kuruluşlardan hangisinin kurucu üyesidir?",
     "options": [
@@ -3184,7 +3184,7 @@
   },
   {
     "id": 257,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 2,
     "question": "Anayasa Mahkemesi, Cumhurbaşkanı ve Bakanları yargılarken hangi sıfatı kullanır?",
     "options": [
@@ -3198,7 +3198,7 @@
   },
   {
     "id": 258,
-    "category": "vatandaslik",
+    "category": "vatandaslik_temel",
     "level": 1,
     "question": "Temel hak ve hürriyetlerin tamamen veya kısmen durdurulabileceği durum hangisidir?",
     "options": [
@@ -4962,7 +4962,7 @@
   },
   {
     "id": 384,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yasama",
     "level": 3,
     "question": "1982 Anayasası'na göre, TBMM Başkanlığı seçimlerinde ilk iki turda aranan çoğunluk nedir?",
     "options": [
@@ -4976,7 +4976,7 @@
   },
   {
     "id": 385,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 3,
     "question": "İdare hukukunda 'Yetki Genişliği' ilkesi, Türkiye'de sadece hangi idari birime tanınmıştır?",
     "options": [
@@ -4990,7 +4990,7 @@
   },
   {
     "id": 386,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yasama",
     "level": 3,
     "question": "Siyasi partilerin devlet yardımından faydalanabilmesi için son milletvekili genel seçimlerinde geçerli oyların en az yüzde kaçını alması gerekir?",
     "options": [
@@ -5004,7 +5004,7 @@
   },
   {
     "id": 387,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 3,
     "question": "Aşağıdaki idari birimlerden hangisi 'İstisnai Memurluk' kapsamında değildir?",
     "options": [
@@ -5018,7 +5018,7 @@
   },
   {
     "id": 388,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 3,
     "question": "Danıştay üyelerinin seçimi ile ilgili aşağıdaki ifadelerden hangisi doğrudur?",
     "options": [
@@ -5032,7 +5032,7 @@
   },
   {
     "id": 389,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yasama",
     "level": 3,
     "question": "Kamu Başdenetçisi'ni (Ombudsman) kim seçer?",
     "options": [
@@ -5046,7 +5046,7 @@
   },
   {
     "id": 390,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 3,
     "question": "Köy idaresinin organlarından biri olan 'Köy Derneği' kimlerden oluşur?",
     "options": [
@@ -5060,7 +5060,7 @@
   },
   {
     "id": 391,
-    "category": "vatandaslik",
+    "category": "vatandaslik_temel",
     "level": 3,
     "question": "Usulüne göre yürürlüğe konulmuş temel hak ve özgürlüklere ilişkin milletlerarası antlaşmalar ile kanunlar çatışırsa nasıl bir yol izlenir?",
     "options": [
@@ -5074,7 +5074,7 @@
   },
   {
     "id": 392,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yurutme",
     "level": 3,
     "question": "Aşağıdakilerden hangisi merkezi idarenin taşra teşkilatı üzerindeki denetim yetkisine örnektir?",
     "options": [
@@ -5088,7 +5088,7 @@
   },
   {
     "id": 393,
-    "category": "vatandaslik",
+    "category": "vatandaslik_yargi",
     "level": 3,
     "question": "Milletvekilliğinin düşürülmesine ilişkin kararlara karşı Anayasa Mahkemesi'ne kaç gün içinde itiraz edilebilir?",
     "options": [

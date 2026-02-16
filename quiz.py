@@ -345,8 +345,8 @@ def register_quiz_handlers(bot, tirtil_utils):
             bot.reply_to(message, "⛔ Onay bekleniyor."); return
         kb = InlineKeyboardMarkup(row_width=2)
         kb.add(InlineKeyboardButton("📜 Tarih", callback_data="submenu_tarih"), InlineKeyboardButton("🌍 Coğrafya", callback_data="submenu_cografya"))
-        kb.add(InlineKeyboardButton("⚖️ Vatandaşlık", callback_data="cat_vatandaslik"), InlineKeyboardButton("📰 Güncel", callback_data="cat_guncel"))
-        kb.add(InlineKeyboardButton("🔀 Karışık", callback_data="cat_karisik"))
+        kb.add(InlineKeyboardButton("⚖️ Vatandaşlık", callback_data="submenu_vatandaslik"), InlineKeyboardButton("📰 Güncel", callback_data="cat_guncel"))
+        kb.add(InlineKeyboardButton(" Karışık", callback_data="cat_karisik"))
 
         bot.send_message(message.chat.id, "📚 Kategori seç knk 👇", reply_markup=kb)
 
@@ -366,7 +366,7 @@ def register_quiz_handlers(bot, tirtil_utils):
     def main_quiz_menu(call):
         kb = InlineKeyboardMarkup(row_width=2)
         kb.add(InlineKeyboardButton("📜 Tarih", callback_data="submenu_tarih"), InlineKeyboardButton("🌍 Coğrafya", callback_data="submenu_cografya"))
-        kb.add(InlineKeyboardButton("⚖️ Vatandaşlık", callback_data="cat_vatandaslik"), InlineKeyboardButton("📰 Güncel", callback_data="cat_guncel"))
+        kb.add(InlineKeyboardButton("⚖️ Vatandaşlık", callback_data="submenu_vatandaslik"), InlineKeyboardButton("📰 Güncel", callback_data="cat_guncel"))
         kb.add(InlineKeyboardButton("� Güncel", callback_data="cat_guncel"), InlineKeyboardButton("🔀 Karışık", callback_data="cat_karisik"))
         
         bot.edit_message_text("📚 Kategori seç knk 👇", call.message.chat.id, call.message.message_id, reply_markup=kb)
@@ -381,6 +381,17 @@ def register_quiz_handlers(bot, tirtil_utils):
         kb.add(InlineKeyboardButton("🔙 Geri", callback_data="main_quiz_menu"))
         
         bot.edit_message_text("🌍 **Coğrafya Alt Başlıkları**\nLütfen bir konu seç:", call.message.chat.id, call.message.message_id, reply_markup=kb, parse_mode="Markdown")
+
+    @bot.callback_query_handler(func=lambda c: c.data == "submenu_vatandaslik")
+    def citizenship_submenu(call):
+        kb = InlineKeyboardMarkup(row_width=2)
+        kb.add(InlineKeyboardButton("🏛️ Yasama", callback_data="cat_vatandaslik_yasama"))
+        kb.add(InlineKeyboardButton("👔 Yürütme & İdare", callback_data="cat_vatandaslik_yurutme"))
+        kb.add(InlineKeyboardButton("⚖️ Yargı", callback_data="cat_vatandaslik_yargi"))
+        kb.add(InlineKeyboardButton("📘 Temel Hukuk", callback_data="cat_vatandaslik_temel"))
+        kb.add(InlineKeyboardButton("🔙 Geri", callback_data="main_quiz_menu"))
+        
+        bot.edit_message_text("⚖️ **Vatandaşlık Alt Başlıkları**\nLütfen bir konu seç:", call.message.chat.id, call.message.message_id, reply_markup=kb, parse_mode="Markdown")
 
     @bot.callback_query_handler(func=lambda c: c.data.startswith("cat_"))
     def category_selected(call):
