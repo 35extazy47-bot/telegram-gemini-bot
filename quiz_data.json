@@ -155,7 +155,7 @@
   },
   {
     "id": 12,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Türkiye'nin en yüksek dağı hangisidir?",
     "options": [
@@ -169,7 +169,7 @@
   },
   {
     "id": 13,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Türkiye'nin en büyük gölü hangisidir?",
     "options": [
@@ -183,7 +183,7 @@
   },
   {
     "id": 14,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Kapadokya'daki peri bacaları hangi tür kayaçların aşınmasıyla oluşmuştur?",
     "options": [
@@ -197,7 +197,7 @@
   },
   {
     "id": 15,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Fırat ve Dicle nehirlerinin birleşerek oluşturduğu nehrin adı nedir?",
     "options": [
@@ -211,7 +211,7 @@
   },
   {
     "id": 16,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Türkiye'de çay tarımı en çok hangi bölgede yapılır?",
     "options": [
@@ -225,7 +225,7 @@
   },
   {
     "id": 17,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Türkiye'nin en kalabalık şehri hangisidir?",
     "options": [
@@ -239,7 +239,7 @@
   },
   {
     "id": 18,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Pamukkale travertenleri hangi ilimizde yer almaktadır?",
     "options": [
@@ -253,7 +253,7 @@
   },
   {
     "id": 19,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Türkiye'nin hangi komşusu ile en uzun kara sınırı vardır?",
     "options": [
@@ -267,7 +267,7 @@
   },
   {
     "id": 20,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Akdeniz ikliminin karakteristik bitki örtüsü nedir?",
     "options": [
@@ -281,7 +281,7 @@
   },
   {
     "id": 21,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 1,
     "question": "Bor madeni rezervlerinde dünya birincisi olan ülke hangisidir?",
     "options": [
@@ -684,7 +684,7 @@
   },
   {
     "id": 52,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Türkiye'nin en doğu ucu hangi ilimizdedir?",
     "options": [
@@ -697,7 +697,7 @@
   },
   {
     "id": 53,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Türkiye'nin en uzun akarsuyu hangisidir?",
     "options": [
@@ -710,7 +710,7 @@
   },
   {
     "id": 54,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Ege Bölgesi'nde dağların denize uzanış şekli nasıldır?",
     "options": [
@@ -723,7 +723,7 @@
   },
   {
     "id": 55,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Türkiye'de aritmetik nüfus yoğunluğunun en fazla olduğu bölge hangisidir?",
     "options": [
@@ -736,7 +736,7 @@
   },
   {
     "id": 56,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 1,
     "question": "Dünya rezervlerinin büyük kısmı Türkiye'de bulunan maden hangisidir?",
     "options": [
@@ -749,7 +749,7 @@
   },
   {
     "id": 57,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Muz tarımı Türkiye'de en çok hangi yörede yapılır?",
     "options": [
@@ -762,7 +762,7 @@
   },
   {
     "id": 58,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 1,
     "question": "Türkiye'nin ilk nükleer güç santrali hangi ilimizde inşa edilmektedir?",
     "options": [
@@ -775,7 +775,7 @@
   },
   {
     "id": 59,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "GAP (Güneydoğu Anadolu Projesi) kapsamında yapılan Türkiye'nin en büyük barajı hangisidir?",
     "options": [
@@ -788,7 +788,7 @@
   },
   {
     "id": 60,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 1,
     "question": "Nemrut Dağı Milli Parkı ve heykelleri hangi ilimizdedir?",
     "options": [
@@ -801,7 +801,7 @@
   },
   {
     "id": 61,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 1,
     "question": "Türkiye'de rüzgar enerjisinden elektrik üretiminde ilk sırada yer alan bölge hangisidir?",
     "options": [
@@ -1269,7 +1269,7 @@
   },
   {
     "id": 97,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Türkiye'nin yüzölçümü bakımından en büyük bölgesi hangisidir?",
     "options": [
@@ -1282,7 +1282,7 @@
   },
   {
     "id": 98,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Türkiye'de en fazla yağış alan ilimiz hangisidir?",
     "options": [
@@ -1295,7 +1295,7 @@
   },
   {
     "id": 99,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Ege Bölgesi'nde kıyıya dik uzanan dağlar arasında kalan çöküntü ovalarına ne ad verilir?",
     "options": [
@@ -1308,7 +1308,7 @@
   },
   {
     "id": 100,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Türkiye'de heyelan olaylarına en çok hangi bölgede rastlanır?",
     "options": [
@@ -1321,7 +1321,7 @@
   },
   {
     "id": 101,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Ülkemizde taş kömürü yatakları (Zonguldak çevresi) hangi jeolojik zamanda oluşmuştur?",
     "options": [
@@ -1334,7 +1334,7 @@
   },
   {
     "id": 102,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Türkiye'nin en büyük adası hangisidir?",
     "options": [
@@ -1347,7 +1347,7 @@
   },
   {
     "id": 103,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "İncir üretiminde Türkiye'de birinci olan il hangisidir?",
     "options": [
@@ -1360,7 +1360,7 @@
   },
   {
     "id": 104,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 1,
     "question": "Türkiye'de demir yolu ağı ile bağlantısı olmayan bölüm hangisidir?",
     "options": [
@@ -1373,7 +1373,7 @@
   },
   {
     "id": 105,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "GAP projesi ile sulanan ve pamuk üretiminde ilk sıraya yerleşen ilimiz hangisidir?",
     "options": [
@@ -1386,7 +1386,7 @@
   },
   {
     "id": 106,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 1,
     "question": "Türkiye'de güneş enerjisi potansiyeli en yüksek bölge hangisidir?",
     "options": [
@@ -1399,7 +1399,7 @@
   },
   {
     "id": 107,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Peri bacalarının oluşumunda etkili olan temel dış kuvvet nedir?",
     "options": [
@@ -1412,7 +1412,7 @@
   },
   {
     "id": 108,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Türkiye'de nüfusun en seyrek olduğu yerlerden biri olan 'Teke ve Taşeli' platoları hangi bölgededir?",
     "options": [
@@ -1425,7 +1425,7 @@
   },
   {
     "id": 109,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 1,
     "question": "Türkiye'nin en uzun tüneli hangisidir?",
     "options": [
@@ -1438,7 +1438,7 @@
   },
   {
     "id": 110,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Ülkemizde 'Mavi Tünel' projesi hangi ovanın sulanması için yapılmıştır?",
     "options": [
@@ -1451,7 +1451,7 @@
   },
   {
     "id": 111,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 1,
     "question": "Türkiye'de ilk demir yolu hattı nereye döşenmiştir?",
     "options": [
@@ -1868,7 +1868,7 @@
   },
   {
     "id": 163,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Türkiye'de 'Rüzgar Erozyonu'nun en şiddetli görüldüğü bölge hangisidir?",
     "options": [
@@ -1924,7 +1924,7 @@
   },
   {
     "id": 167,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 3,
     "question": "Aşağıdaki göllerden hangisi 'Karstik' oluşumlu göllerimizden biridir?",
     "options": [
@@ -2372,7 +2372,7 @@
   },
   {
     "id": 199,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Türkiye'de yerel saati en ileri olan ilimiz hangisidir?",
     "options": [
@@ -2386,7 +2386,7 @@
   },
   {
     "id": 200,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Türkiye'de en uzun gündüzün yaşandığı tarih hangisidir?",
     "options": [
@@ -2400,7 +2400,7 @@
   },
   {
     "id": 201,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Türkiye'de sönmüş volkanik dağların en yoğun olduğu bölge hangisidir?",
     "options": [
@@ -2414,7 +2414,7 @@
   },
   {
     "id": 202,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Kalker, jips ve kaya tuzu gibi eriyebilen kayaçların bulunduğu 'Karstik' arazilerin en yaygın olduğu bölgemiz hangisidir?",
     "options": [
@@ -2428,7 +2428,7 @@
   },
   {
     "id": 203,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Türkiye'de yıllık yağış miktarının en az olduğu yer neresidir?",
     "options": [
@@ -2442,7 +2442,7 @@
   },
   {
     "id": 204,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Türkiye'de heyelan olaylarının en sık görüldüğü mevsim hangisidir?",
     "options": [
@@ -2456,7 +2456,7 @@
   },
   {
     "id": 205,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 2,
     "question": "Türkiye'de su kaynaklarının azlığı ve yer şekillerinin düz olması nedeniyle 'Toplu Yerleşme'nin en yaygın olduğu bölge hangisidir?",
     "options": [
@@ -2470,7 +2470,7 @@
   },
   {
     "id": 206,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Türkiye'de en çok göç veren bölgemiz hangisidir?",
     "options": [
@@ -2484,7 +2484,7 @@
   },
   {
     "id": 207,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 2,
     "question": "Yer şekillerinin engebeli olması nedeniyle tarımda makineleşmenin en zor olduğu bölge hangisidir?",
     "options": [
@@ -2498,7 +2498,7 @@
   },
   {
     "id": 208,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 2,
     "question": "Her mevsim yağışlı olduğu için 'Nadas' yönteminin en az uygulandığı bölge hangisidir?",
     "options": [
@@ -2512,7 +2512,7 @@
   },
   {
     "id": 209,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Türkiye'de zeytin üretiminde ilk sırada yer alan bölgemiz hangisidir?",
     "options": [
@@ -2526,7 +2526,7 @@
   },
   {
     "id": 210,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 2,
     "question": "Türkiye'de 'Beyaz Altın' olarak bilinen ve GAP ile birlikte üretimi Güneydoğu Anadolu'da zirveye çıkan ürün hangisidir?",
     "options": [
@@ -2540,7 +2540,7 @@
   },
   {
     "id": 211,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 2,
     "question": "Yaz yağışlarına bağlı olarak gür çayırların bulunması nedeniyle 'Büyükbaş Mera Hayvancılığı'nın en yaygın olduğu bölge hangisidir?",
     "options": [
@@ -2554,7 +2554,7 @@
   },
   {
     "id": 212,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 3,
     "question": "Türkiye'de yaş koza üretimiyle 'İpek Böcekçiliği'nin en yoğun yapıldığı ilimiz hangisidir?",
     "options": [
@@ -2568,7 +2568,7 @@
   },
   {
     "id": 213,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 2,
     "question": "Türkiye'nin en zengin demir yataklarına sahip ili ve ilçesi hangisidir?",
     "options": [
@@ -2582,7 +2582,7 @@
   },
   {
     "id": 214,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 1,
     "question": "Türkiye'de taş kömürü yataklarının bulunduğu tek havza neresidir?",
     "options": [
@@ -2596,7 +2596,7 @@
   },
   {
     "id": 215,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 2,
     "question": "Kırıklı yer yapısı (fay hatları) nedeniyle 'Jeotermal Enerji' potansiyeli en yüksek bölge hangisidir?",
     "options": [
@@ -2610,7 +2610,7 @@
   },
   {
     "id": 216,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 3,
     "question": "Türkiye'nin ilk rüzgar enerji santrali (RES) nerede kurulmuştur?",
     "options": [
@@ -2624,7 +2624,7 @@
   },
   {
     "id": 217,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 1,
     "question": "Türkiye'de sanayinin en fazla geliştiği ve nüfus yoğunluğunun en yüksek olduğu bölge hangisidir?",
     "options": [
@@ -2638,7 +2638,7 @@
   },
   {
     "id": 218,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 2,
     "question": "Hinterlandı (art bölgesi) en geniş olan ve en işlek limanımız hangisidir?",
     "options": [
@@ -2652,7 +2652,7 @@
   },
   {
     "id": 219,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 2,
     "question": "Yer şekillerinin engebeli olması nedeniyle demir yolu ulaşımının bulunmadığı bölüm hangisidir?",
     "options": [
@@ -2666,7 +2666,7 @@
   },
   {
     "id": 220,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Türkiye'nin en kısa kara sınırı hangi ülkeyledir?",
     "options": [
@@ -2680,7 +2680,7 @@
   },
   {
     "id": 221,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 2,
     "question": "Türkiye'nin Avrupa'ya açılan en işlek sınır kapısı olan 'Kapıkule' hangi ülke ile aramızdadır?",
     "options": [
@@ -2694,7 +2694,7 @@
   },
   {
     "id": 222,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 1,
     "question": "Döviz getirisi yüksek olduğu için 'Bacasız Sanayi' olarak adlandırılan sektör hangisidir?",
     "options": [
@@ -2708,7 +2708,7 @@
   },
   {
     "id": 223,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 1,
     "question": "UNESCO Dünya Mirası Listesi'nde yer alan ve 'Tarihin Sıfır Noktası' olarak bilinen Göbeklitepe hangi ilimizdedir?",
     "options": [
@@ -2722,7 +2722,7 @@
   },
   {
     "id": 224,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Türkiye'de orman alanlarının en fazla olduğu bölge hangisidir?",
     "options": [
@@ -2736,7 +2736,7 @@
   },
   {
     "id": 225,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Eğimli arazilerde kar kütlesinin düşmesiyle oluşan 'Çığ' felaketinin en sık görüldüğü bölge hangisidir?",
     "options": [
@@ -2750,7 +2750,7 @@
   },
   {
     "id": 226,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 2,
     "question": "Doğu Anadolu Projesi'nin (DAP) temel amacı nedir?",
     "options": [
@@ -2764,7 +2764,7 @@
   },
   {
     "id": 227,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Dünya üretiminde birinci olduğumuz ve üretiminin tamamına yakınının Karadeniz'den karşılandığı ürün hangisidir?",
     "options": [
@@ -2778,7 +2778,7 @@
   },
   {
     "id": 228,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Akdeniz iklim bölgesinde kalkerli araziler üzerinde oluşan kırmızı renkli topraklara ne ad verilir?",
     "options": [
@@ -2932,7 +2932,7 @@
   },
   {
     "id": 239,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Türkiye'nin matematik konumu (Orta Kuşak) gereği aşağıdakilerden hangisi görülür?",
     "options": [
@@ -2946,7 +2946,7 @@
   },
   {
     "id": 240,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Aşağıdakilerden hangisi Türkiye'deki 'Masif' (eski, sertleşmiş) arazilerden biridir?",
     "options": [
@@ -2960,7 +2960,7 @@
   },
   {
     "id": 241,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Yeşilırmak nehrinin taşıdığı alüvyonlarla oluşturduğu delta ovası hangisidir?",
     "options": [
@@ -2974,7 +2974,7 @@
   },
   {
     "id": 242,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Erzurum-Kars çevresinde görülen, dünyanın en verimli yerli toprağı hangisidir?",
     "options": [
@@ -2988,7 +2988,7 @@
   },
   {
     "id": 243,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Türkiye'de devlet kontrolünde üretilen ve uyuşturucu yapımında da kullanılabilen tarım ürünü hangisidir?",
     "options": [
@@ -3002,7 +3002,7 @@
   },
   {
     "id": 244,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 2,
     "question": "Türkiye'de arıcılığın en fazla geliştiği ve bal üretiminde önde gelen illerimiz hangileridir?",
     "options": [
@@ -3016,7 +3016,7 @@
   },
   {
     "id": 245,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 3,
     "question": "Alüminyumun hammaddesi olan ve Konya-Seydişehir'de işlenen maden hangisidir?",
     "options": [
@@ -3030,7 +3030,7 @@
   },
   {
     "id": 246,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 2,
     "question": "Kağıt fabrikalarının genellikle kıyı kesimlerde (Giresun, Zonguldak, Mersin, Muğla) kurulmasının temel nedeni nedir?",
     "options": [
@@ -3044,7 +3044,7 @@
   },
   {
     "id": 247,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 1,
     "question": "Türkiye'nin kış turizmi merkezlerinden biri olan 'Palandöken' hangi ilimizdedir?",
     "options": [
@@ -3058,7 +3058,7 @@
   },
   {
     "id": 248,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "İstanbul Boğazı ve Çanakkale Boğazı hangi kıyı tipine örnektir?",
     "options": [
@@ -4472,7 +4472,7 @@
   },
   {
     "id": 349,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 3,
     "question": "Trakya'da yaygın olan, kurak mevsimde çatlayan, yağışla şişip dönen toprak türü (Dönen Toprak) hangisidir?",
     "options": [
@@ -4486,7 +4486,7 @@
   },
   {
     "id": 350,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Tortum, Sera, Abant ve Yedigöller gibi göllerimiz oluşum bakımından hangi tür göllerdir?",
     "options": [
@@ -4500,7 +4500,7 @@
   },
   {
     "id": 351,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Türkiye'de kuzeybatı yönünden esen, soğuk ve yağış getiren yerel rüzgar hangisidir?",
     "options": [
@@ -4514,7 +4514,7 @@
   },
   {
     "id": 352,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 2,
     "question": "Sıtma hastalığına neden olabileceği için yerleşim yerlerine belirli bir mesafede ve devlet izniyle ekilen tarım ürünü hangisidir?",
     "options": [
@@ -4528,7 +4528,7 @@
   },
   {
     "id": 353,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 2,
     "question": "Türkiye'nin maden ihracatında en büyük paya sahip olan maden hangisidir?",
     "options": [
@@ -4542,7 +4542,7 @@
   },
   {
     "id": 354,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 2,
     "question": "Türkiye'deki petrol rafinerilerinden hangisi 'hammaddeye yakınlık' ilkesine göre kurulmuştur?",
     "options": [
@@ -4556,7 +4556,7 @@
   },
   {
     "id": 355,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 2,
     "question": "UNESCO Dünya Mirası Listesi'ne giren ilk eserimiz olan 'Divriği Ulu Camii ve Darüşşifası' hangi ilimizdedir?",
     "options": [
@@ -4570,7 +4570,7 @@
   },
   {
     "id": 356,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Türkiye'nin en büyük delta ovası olan Çukurova'yı oluşturan akarsular hangileridir?",
     "options": [
@@ -4584,7 +4584,7 @@
   },
   {
     "id": 357,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 1,
     "question": "Karadeniz ve Akdeniz kıyılarında dağların denize paralel uzanması sonucu görülen kıyı tipi hangisidir?",
     "options": [
@@ -4598,7 +4598,7 @@
   },
   {
     "id": 358,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 2,
     "question": "Karabük ve Ereğli'de demir-çelik fabrikalarının kurulmasının temel nedeni nedir?",
     "options": [
@@ -4612,7 +4612,7 @@
   },
   {
     "id": 359,
-    "category": "cografya",
+    "category": "cografya_hizmet",
     "level": 2,
     "question": "Türkiye'de Yüksek Hızlı Tren (YHT) seferleri ilk olarak hangi hat üzerinde başlamıştır?",
     "options": [
@@ -4626,7 +4626,7 @@
   },
   {
     "id": 360,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 2,
     "question": "Doğu Karadeniz Bölgesi'nde yer şekillerinin engebeli, su kaynaklarının bol olması hangi yerleşme tipini ortaya çıkarmıştır?",
     "options": [
@@ -4640,7 +4640,7 @@
   },
   {
     "id": 361,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 3,
     "question": "Konya-Karapınar çevresinde bulunan ve 'Dünyanın Nazar Boncuğu' olarak bilinen volkanik oluşum hangisidir?",
     "options": [
@@ -4654,7 +4654,7 @@
   },
   {
     "id": 362,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Tiftik keçisi (Ankara keçisi) yetiştiriciliğinde Türkiye'de ilk sırada yer alan ilimiz hangisidir?",
     "options": [
@@ -4668,7 +4668,7 @@
   },
   {
     "id": 363,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Türkiye'de gül üretimi ve gül yağı ihracatında merkezi konumda olan ilimiz hangisidir?",
     "options": [
@@ -4682,7 +4682,7 @@
   },
   {
     "id": 364,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 2,
     "question": "Türkiye'nin en büyük linyit rezervi hangi havzada bulunmaktadır?",
     "options": [
@@ -4696,7 +4696,7 @@
   },
   {
     "id": 365,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Erzurum'da bulunan ve 'Kırmızı Periler Diyarı' olarak adlandırılan yer şekilleri hangisidir?",
     "options": [
@@ -4710,7 +4710,7 @@
   },
   {
     "id": 366,
-    "category": "cografya",
+    "category": "cografya_maden_sanayi",
     "level": 2,
     "question": "Türkiye'de çıkarılan krom madeninin en önemli ihraç limanları hangileridir?",
     "options": [
@@ -4724,7 +4724,7 @@
   },
   {
     "id": 367,
-    "category": "cografya",
+    "category": "cografya_beseri_tarim",
     "level": 1,
     "question": "Dünya kuru kayısı üretiminde ve ihracatında birinci sırada olan ilimiz hangisidir?",
     "options": [
@@ -4738,7 +4738,7 @@
   },
   {
     "id": 368,
-    "category": "cografya",
+    "category": "cografya_fiziki",
     "level": 2,
     "question": "Türkiye'de rüzgarın şekillendirici etkisinin (erozyonun) en az olduğu bölge hangisidir?",
     "options": [
