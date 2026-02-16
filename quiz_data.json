@@ -424,7 +424,7 @@
   },
   {
     "id": 32,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "Türkiye'nin ilk yerli ve milli otomobilinin markası nedir?",
     "options": [
@@ -437,7 +437,7 @@
   },
   {
     "id": 33,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "2025 Nobel Edebiyat Ödülü'nü hangi yazar kazanmıştır?",
     "options": [
@@ -450,7 +450,7 @@
   },
   {
     "id": 34,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "Türkiye'nin ilk astronotu olan Alper Gezeravcı'nın uzaydaki görevinin adı nedir?",
     "options": [
@@ -463,7 +463,7 @@
   },
   {
     "id": 35,
-    "category": "guncel",
+    "category": "guncel_spor",
     "level": 1,
     "question": "2024 Yaz Olimpiyatları hangi şehirde düzenlenmiştir?",
     "options": [
@@ -476,7 +476,7 @@
   },
   {
     "id": 36,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "Türkiye'nin en büyük savaş gemisinin adı nedir?",
     "options": [
@@ -489,7 +489,7 @@
   },
   {
     "id": 37,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "COVID-19'a karşı Türkiye'de geliştirilen yerli aşının adı nedir?",
     "options": [
@@ -502,7 +502,7 @@
   },
   {
     "id": 38,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "2023 yılında Türkiye Cumhuriyeti'nin kaçıncı kuruluş yıl dönümü kutlanmıştır?",
     "options": [
@@ -515,7 +515,7 @@
   },
   {
     "id": 39,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "Türkiye'nin en uzun köprüsü olan 1915 Çanakkale Köprüsü hangi denizin üzerinde yer alır?",
     "options": [
@@ -528,7 +528,7 @@
   },
   {
     "id": 40,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "Türkiye'nin ilk insansız savaş uçağının adı nedir?",
     "options": [
@@ -541,7 +541,7 @@
   },
   {
     "id": 41,
-    "category": "guncel",
+    "category": "guncel_spor",
     "level": 1,
     "question": "2022 FIFA Dünya Kupası'nı hangi ülke kazanmıştır?",
     "options": [
@@ -944,7 +944,7 @@
   },
   {
     "id": 72,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "NATO'ya 2024 yılında katılan 32. üye ülke hangisidir?",
     "options": [
@@ -957,7 +957,7 @@
   },
   {
     "id": 73,
-    "category": "guncel",
+    "category": "guncel_spor",
     "level": 1,
     "question": "2024 Avrupa Futbol Şampiyonası'nı (EURO 2024) kazanan ülke hangisidir?",
     "options": [
@@ -970,7 +970,7 @@
   },
   {
     "id": 74,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "2023 yılında UNESCO Dünya Mirası Listesi'ne giren 'Gordion' antik kenti hangi ilimizdedir?",
     "options": [
@@ -983,7 +983,7 @@
   },
   {
     "id": 75,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "2025 yılında UNESCO Dünya Mirası Listesi'ne dahil edilen 'Sardes Antik Kenti' hangi ilimizdedir?",
     "options": [
@@ -996,7 +996,7 @@
   },
   {
     "id": 76,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "Türkiye'nin 50. Milli Parkı olarak ilan edilen (2025) 'Geben Vadisi' hangi ilimizdedir?",
     "options": [
@@ -1009,7 +1009,7 @@
   },
   {
     "id": 77,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "Türkiye'nin ilk yerli ve milli haberleşme uydusu hangisidir?",
     "options": [
@@ -1022,7 +1022,7 @@
   },
   {
     "id": 78,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "Türkiye'nin Milli Muharip Uçağı KAAN ilk uçuşunu hangi yıl gerçekleştirmiştir?",
     "options": [
@@ -1035,7 +1035,7 @@
   },
   {
     "id": 79,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "Türkiye'nin uzaya giden ikinci astronotu kimdir?",
     "options": [
@@ -1048,7 +1048,7 @@
   },
   {
     "id": 80,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "2024 Nobel Edebiyat Ödülü'nü kazanan Güney Koreli yazar kimdir?",
     "options": [
@@ -1061,7 +1061,7 @@
   },
   {
     "id": 81,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "2024 yılında Anayasa Mahkemesi Başkanlığına kim seçilmiştir?",
     "options": [
@@ -1659,7 +1659,7 @@
   },
   {
     "id": 127,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "UNESCO tarafından 'İnsanlığın Somut Olmayan Kültürel Mirası' listesine alınan 'Islık Dili' hangi bölgemize aittir?",
     "options": [
@@ -1672,7 +1672,7 @@
   },
   {
     "id": 128,
-    "category": "guncel",
+    "category": "guncel_spor",
     "level": 1,
     "question": "2023 yılında Avrupa Şampiyonu olan 'Filenin Sultanları' hangi sporu yapmaktadır?",
     "options": [
@@ -1685,7 +1685,7 @@
   },
   {
     "id": 129,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "Türkiye'nin ilk yerli zeka testi hangisidir?",
     "options": [
@@ -1698,7 +1698,7 @@
   },
   {
     "id": 130,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "'Bozkırın Tezenesi' olarak bilinen ünlü halk ozanımız kimdir?",
     "options": [
@@ -1711,7 +1711,7 @@
   },
   {
     "id": 131,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "2024 G20 Liderler Zirvesi hangi ülkede düzenlenmiştir?",
     "options": [
@@ -1724,7 +1724,7 @@
   },
   {
     "id": 132,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "Cannes Film Festivali'nde 'En İyi Kadın Oyuncu' ödülünü alan sanatçımız kimdir?",
     "options": [
@@ -1737,7 +1737,7 @@
   },
   {
     "id": 133,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "Türkiye'nin ilk cep uydusu hangisidir?",
     "options": [
@@ -1750,7 +1750,7 @@
   },
   {
     "id": 134,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "'Kürk Mantolu Madonna' kitabının yazarı kimdir?",
     "options": [
@@ -1763,7 +1763,7 @@
   },
   {
     "id": 135,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "Dünyanın en derin noktası olan Mariana Çukuru hangi okyanustadır?",
     "options": [
@@ -1776,7 +1776,7 @@
   },
   {
     "id": 136,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "Türkiye'nin Otomobili Togg'un üretim fabrikası hangi ilimizdedir?",
     "options": [
@@ -1789,7 +1789,7 @@
   },
   {
     "id": 137,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "'Hababam Sınıfı' eserinin yazarı kimdir?",
     "options": [
@@ -1802,7 +1802,7 @@
   },
   {
     "id": 138,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "Türkiye'nin en büyük kütüphanesi hangisidir?",
     "options": [
@@ -1815,7 +1815,7 @@
   },
   {
     "id": 139,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "İstiklal Marşı'nın yazarı Mehmet Akif Ersoy, marşı nerede yazmıştır?",
     "options": [
@@ -1828,7 +1828,7 @@
   },
   {
     "id": 140,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "5 TL banknotunun arka yüzünde resmi bulunan bilim insanı kimdir?",
     "options": [
@@ -1841,7 +1841,7 @@
   },
   {
     "id": 141,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "Türkiye'nin ilk kadın savaş pilotu kimdir?",
     "options": [
@@ -1896,7 +1896,7 @@
   },
   {
     "id": 165,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "Türkiye'nin ilk yerli ve milli yüksek çözünürlüklü yer gözlem uydusu hangisidir?",
     "options": [
@@ -3212,7 +3212,7 @@
   },
   {
     "id": 259,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "UNESCO Dünya Mirası Listesi'ne 2021 yılında eklenen 'Arslantepe Höyüğü' hangi ilimizdedir?",
     "options": [
@@ -3226,7 +3226,7 @@
   },
   {
     "id": 260,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "Türkiye'nin ilk 'Cittaslow' (Sakin Şehir) unvanını alan ilçesi hangisidir?",
     "options": [
@@ -3240,7 +3240,7 @@
   },
   {
     "id": 261,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "Nobel Kimya Ödülü'nü kazanarak bu ödülü alan ilk Türk bilim insanı kimdir?",
     "options": [
@@ -3254,7 +3254,7 @@
   },
   {
     "id": 262,
-    "category": "guncel",
+    "category": "guncel_spor",
     "level": 1,
     "question": "Tokyo 2020 Olimpiyatları'nda okçuluk dalında altın madalya kazanan milli sporcumuz kimdir?",
     "options": [
@@ -3268,7 +3268,7 @@
   },
   {
     "id": 263,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "Türkiye'nin en büyük tatlı su gölü hangisidir?",
     "options": [
@@ -3282,7 +3282,7 @@
   },
   {
     "id": 264,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "İstiklal Marşı'nın bestecisi kimdir?",
     "options": [
@@ -3296,7 +3296,7 @@
   },
   {
     "id": 265,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "Edebiyatımızda 'Bayrak Şairi' olarak bilinen şairimiz kimdir?",
     "options": [
@@ -3310,7 +3310,7 @@
   },
   {
     "id": 266,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "Türkiye Cumhuriyeti'nin ilk ve tek kadın başbakanı kimdir?",
     "options": [
@@ -3324,7 +3324,7 @@
   },
   {
     "id": 267,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "Kuzey Atlantik Antlaşması Örgütü'nün (NATO) merkezi hangi şehirdedir?",
     "options": [
@@ -3338,7 +3338,7 @@
   },
   {
     "id": 268,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "Birleşmiş Milletler (BM) Genel Merkezi hangi şehirdedir?",
     "options": [
@@ -4752,7 +4752,7 @@
   },
   {
     "id": 369,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "2024 yılında düzenlenen 96. Oscar Ödülleri'nde 'En İyi Film' ödülünü kazanan yapım hangisidir?",
     "options": [
@@ -4766,7 +4766,7 @@
   },
   {
     "id": 370,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 1,
     "question": "Cumhurbaşkanı Recep Tayyip Erdoğan tarafından 2024 yılı ne yılı ilan edilmiştir?",
     "options": [
@@ -4780,7 +4780,7 @@
   },
   {
     "id": 371,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 1,
     "question": "2024 Eurovision Şarkı Yarışması'nı 'The Code' adlı şarkısıyla kazanan ülke hangisidir?",
     "options": [
@@ -4794,7 +4794,7 @@
   },
   {
     "id": 372,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 2,
     "question": "2024 Birleşmiş Milletler İklim Değişikliği Konferansı'na (COP29) ev sahipliği yapan şehir hangisidir?",
     "options": [
@@ -4808,7 +4808,7 @@
   },
   {
     "id": 373,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 2,
     "question": "2025 EXPO Fuarı'na ev sahipliği yapacak olan ülke hangisidir?",
     "options": [
@@ -4822,7 +4822,7 @@
   },
   {
     "id": 374,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 2,
     "question": "2024 yılında Türkiye Cumhuriyet Merkez Bankası (TCMB) Başkanlığı görevine kim atanmıştır?",
     "options": [
@@ -4836,7 +4836,7 @@
   },
   {
     "id": 375,
-    "category": "guncel",
+    "category": "guncel_genel",
     "level": 2,
     "question": "NATO'nun kuruluşunun 75. yılı nedeniyle 2024 NATO Zirvesi hangi şehirde düzenlenmiştir?",
     "options": [
@@ -4850,7 +4850,7 @@
   },
   {
     "id": 376,
-    "category": "guncel",
+    "category": "guncel_spor",
     "level": 2,
     "question": "2024 yılında düzenlenen 5. Dünya Göçebe Oyunları'na ev sahipliği yapan şehir hangisidir?",
     "options": [
@@ -4864,7 +4864,7 @@
   },
   {
     "id": 377,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 2,
     "question": "Uluslararası Türk Kültürü Teşkilatı (TÜRKSOY) tarafından 2025 'Türk Dünyası Kültür Başkenti' seçilen şehir hangisidir?",
     "options": [
@@ -4878,7 +4878,7 @@
   },
   {
     "id": 378,
-    "category": "guncel",
+    "category": "guncel_bilim",
     "level": 1,
     "question": "2024 yılında TEKNOFEST Havacılık, Uzay ve Teknoloji Festivali hangi ilimizde düzenlenmiştir?",
     "options": [
@@ -4892,7 +4892,7 @@
   },
   {
     "id": 379,
-    "category": "guncel",
+    "category": "guncel_spor",
     "level": 2,
     "question": "2024 Copa America finalinde Kolombiya'yı yenerek şampiyon olan ülke hangisidir?",
     "options": [
@@ -4906,7 +4906,7 @@
   },
   {
     "id": 380,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 3,
     "question": "2025 Avrupa Kültür Başkenti seçilen şehirlerden biri aşağıdakilerden hangisidir?",
     "options": [
@@ -4920,7 +4920,7 @@
   },
   {
     "id": 381,
-    "category": "guncel",
+    "category": "guncel_spor",
     "level": 2,
     "question": "2024 Yaz Paralimpik Oyunları hangi şehirde düzenlenmiştir?",
     "options": [
@@ -4934,7 +4934,7 @@
   },
   {
     "id": 382,
-    "category": "guncel",
+    "category": "guncel_spor",
     "level": 2,
     "question": "2024 Avrupa Atletizm Şampiyonası hangi şehirde düzenlenmiştir?",
     "options": [
@@ -4948,7 +4948,7 @@
   },
   {
     "id": 383,
-    "category": "guncel",
+    "category": "guncel_sanat",
     "level": 3,
     "question": "2024 yılı 'İslam Dünyası Turizm Başkenti' seçilen şehir hangisidir?",
     "options": [
