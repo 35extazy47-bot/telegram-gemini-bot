@@ -344,19 +344,32 @@ def register_quiz_handlers(bot, tirtil_utils):
         if not users.get(str(message.from_user.id), {}).get("is_approved", True):
             bot.reply_to(message, "⛔ Onay bekleniyor."); return
         kb = InlineKeyboardMarkup(row_width=2)
-        
-        # Tarih Kategorileri
+        kb.add(InlineKeyboardButton("📜 Tarih", callback_data="submenu_tarih"), InlineKeyboardButton("🌍 Coğrafya", callback_data="cat_cografya"))
+        kb.add(InlineKeyboardButton("⚖️ Vatandaşlık", callback_data="cat_vatandaslik"), InlineKeyboardButton("📰 Güncel", callback_data="cat_guncel"))
+        kb.add(InlineKeyboardButton("🔀 Karışık", callback_data="cat_karisik"))
+
+        bot.send_message(message.chat.id, "📚 Kategori seç knk 👇", reply_markup=kb)
+
+    @bot.callback_query_handler(func=lambda c: c.data == "submenu_tarih")
+    def history_submenu(call):
+        kb = InlineKeyboardMarkup(row_width=2)
         kb.add(InlineKeyboardButton("🏹 İslamiyet Öncesi", callback_data="cat_tarih_islamiyet_oncesi"))
         kb.add(InlineKeyboardButton("🕌 Türk-İslam", callback_data="cat_tarih_ilk_turk_islam"))
         kb.add(InlineKeyboardButton("🏰 Osmanlı", callback_data="cat_tarih_osmanli"))
         kb.add(InlineKeyboardButton("🇹🇷 İnkılap", callback_data="cat_tarih_inkilap"))
         kb.add(InlineKeyboardButton("🌍 Çağdaş", callback_data="cat_tarih_cagdas"))
+        kb.add(InlineKeyboardButton("🔙 Geri", callback_data="main_quiz_menu"))
+        
+        bot.edit_message_text("📜 **Tarih Alt Başlıkları**\nLütfen bir dönem seç:", call.message.chat.id, call.message.message_id, reply_markup=kb, parse_mode="Markdown")
 
-        # Diğer Kategoriler
-        kb.add(InlineKeyboardButton("🌍 Coğrafya", callback_data="cat_cografya"), InlineKeyboardButton("⚖️ Vatandaşlık", callback_data="cat_vatandaslik"))
-        kb.add(InlineKeyboardButton("📰 Güncel", callback_data="cat_guncel"), InlineKeyboardButton("🔀 Karışık", callback_data="cat_karisik"))
-
-        bot.send_message(message.chat.id, "📚 Kategori seç knk 👇", reply_markup=kb)
+    @bot.callback_query_handler(func=lambda c: c.data == "main_quiz_menu")
+    def main_quiz_menu(call):
+        kb = InlineKeyboardMarkup(row_width=2)
+        kb.add(InlineKeyboardButton("📜 Tarih", callback_data="submenu_tarih"), InlineKeyboardButton("🌍 Coğrafya", callback_data="cat_cografya"))
+        kb.add(InlineKeyboardButton("⚖️ Vatandaşlık", callback_data="cat_vatandaslik"), InlineKeyboardButton("📰 Güncel", callback_data="cat_guncel"))
+        kb.add(InlineKeyboardButton("� Güncel", callback_data="cat_guncel"), InlineKeyboardButton("🔀 Karışık", callback_data="cat_karisik"))
+        
+        bot.edit_message_text("📚 Kategori seç knk 👇", call.message.chat.id, call.message.message_id, reply_markup=kb)
 
     @bot.callback_query_handler(func=lambda c: c.data.startswith("cat_"))
     def category_selected(call):
