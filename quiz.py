@@ -344,9 +344,18 @@ def register_quiz_handlers(bot, tirtil_utils):
         if not users.get(str(message.from_user.id), {}).get("is_approved", True):
             bot.reply_to(message, "⛔ Onay bekleniyor."); return
         kb = InlineKeyboardMarkup(row_width=2)
-        kb.add(InlineKeyboardButton("📜 Tarih", callback_data="cat_tarih"), InlineKeyboardButton("🌍 Coğrafya", callback_data="cat_cografya"),
-               InlineKeyboardButton("⚖️ Vatandaşlık", callback_data="cat_vatandaslik"), InlineKeyboardButton("📰 Güncel", callback_data="cat_guncel"),
-               InlineKeyboardButton("🔀 Karışık", callback_data="cat_karisik"))
+        
+        # Tarih Kategorileri
+        kb.add(InlineKeyboardButton("🏹 İslamiyet Öncesi", callback_data="cat_tarih_islamiyet_oncesi"))
+        kb.add(InlineKeyboardButton("🕌 Türk-İslam", callback_data="cat_tarih_ilk_turk_islam"))
+        kb.add(InlineKeyboardButton("🏰 Osmanlı", callback_data="cat_tarih_osmanli"))
+        kb.add(InlineKeyboardButton("🇹🇷 İnkılap", callback_data="cat_tarih_inkilap"))
+        kb.add(InlineKeyboardButton("🌍 Çağdaş", callback_data="cat_tarih_cagdas"))
+
+        # Diğer Kategoriler
+        kb.add(InlineKeyboardButton("🌍 Coğrafya", callback_data="cat_cografya"), InlineKeyboardButton("⚖️ Vatandaşlık", callback_data="cat_vatandaslik"))
+        kb.add(InlineKeyboardButton("📰 Güncel", callback_data="cat_guncel"), InlineKeyboardButton("🔀 Karışık", callback_data="cat_karisik"))
+
         bot.send_message(message.chat.id, "📚 Kategori seç knk 👇", reply_markup=kb)
 
     @bot.callback_query_handler(func=lambda c: c.data.startswith("cat_"))

@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 1,
     "question": "Osmanlı Devleti'nin kurucusu kimdir?",
     "options": [
@@ -15,7 +15,7 @@
   },
   {
     "id": 2,
-    "category": "tarih",
+    "category": "tarih_ilk_turk_islam",
     "level": 1,
     "question": "Malazgirt Savaşı hangi iki hükümdar arasında yapılmıştır?",
     "options": [
@@ -29,7 +29,7 @@
   },
   {
     "id": 3,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 1,
     "question": "İstanbul'u fetheden Osmanlı padişahı kimdir?",
     "options": [
@@ -43,7 +43,7 @@
   },
   {
     "id": 4,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Türkiye Cumhuriyeti'nin ilk başbakanı kimdir?",
     "options": [
@@ -57,7 +57,7 @@
   },
   {
     "id": 5,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Kurtuluş Savaşı'nı başlatan olay hangisidir?",
     "options": [
@@ -71,7 +71,7 @@
   },
   {
     "id": 6,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 1,
     "question": "Lale Devri hangi padişah döneminde yaşanmıştır?",
     "options": [
@@ -85,7 +85,7 @@
   },
   {
     "id": 7,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "'Ya istiklal ya ölüm!' sözü nerede söylenmiştir?",
     "options": [
@@ -99,7 +99,7 @@
   },
   {
     "id": 8,
-    "category": "tarih",
+    "category": "tarih_ilk_turk_islam",
     "level": 1,
     "question": "İlk Türk denizcisi olarak bilinen kişi kimdir?",
     "options": [
@@ -113,7 +113,7 @@
   },
   {
     "id": 9,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 1,
     "question": "Tanzimat Fermanı hangi padişah döneminde ilan edilmiştir?",
     "options": [
@@ -127,7 +127,7 @@
   },
   {
     "id": 10,
-    "category": "tarih",
+    "category": "tarih_islamiyet_oncesi",
     "level": 1,
     "question": "Göktürk Devleti'nin kurucusu kimdir?",
     "options": [
@@ -141,7 +141,7 @@
   },
   {
     "id": 11,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Lozan Barış Antlaşması hangi tarihte imzalanmıştır?",
     "options": [
@@ -554,7 +554,7 @@
   },
   {
     "id": 42,
-    "category": "tarih",
+    "category": "tarih_islamiyet_oncesi",
     "level": 1,
     "question": "Uygurlar hangi dini kabul ederek yerleşik hayata geçmişlerdir?",
     "options": [
@@ -567,7 +567,7 @@
   },
   {
     "id": 43,
-    "category": "tarih",
+    "category": "tarih_ilk_turk_islam",
     "level": 1,
     "question": "Anadolu'nun Türk yurdu olduğu kesinleşen savaş hangisidir?",
     "options": [
@@ -580,7 +580,7 @@
   },
   {
     "id": 44,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 1,
     "question": "Osmanlı Devleti'nde 'Sultan' unvanını kullanan ilk padişah kimdir?",
     "options": [
@@ -593,7 +593,7 @@
   },
   {
     "id": 45,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 1,
     "question": "Yeniçeri Ocağı hangi padişah döneminde kaldırılmıştır (Vaka-i Hayriye)?",
     "options": [
@@ -606,7 +606,7 @@
   },
   {
     "id": 46,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Mustafa Kemal'in 'Gazeteci Şerif Bey' takma adıyla katıldığı savaş hangisidir?",
     "options": [
@@ -619,7 +619,7 @@
   },
   {
     "id": 47,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Milli Mücadele'nin amaç, yöntem ve gerekçesi ilk kez nerede belirtilmiştir?",
     "options": [
@@ -632,7 +632,7 @@
   },
   {
     "id": 48,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Mustafa Kemal'e 'Gazilik' unvanı ve 'Mareşallik' rütbesi hangi savaştan sonra verilmiştir?",
     "options": [
@@ -645,7 +645,7 @@
   },
   {
     "id": 49,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Halifelik hangi tarihte kaldırılmıştır?",
     "options": [
@@ -658,7 +658,7 @@
   },
   {
     "id": 50,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Hatay Cumhuriyeti'nin ilk ve tek cumhurbaşkanı kimdir?",
     "options": [
@@ -671,7 +671,7 @@
   },
   {
     "id": 51,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Türk kadınlarına milletvekili seçme ve seçilme hakkı hangi yıl verilmiştir?",
     "options": [
@@ -1074,7 +1074,7 @@
   },
   {
     "id": 82,
-    "category": "tarih",
+    "category": "tarih_islamiyet_oncesi",
     "level": 1,
     "question": "İlk Türk devletlerinde devlet işlerinin görüşülüp karara bağlandığı meclise ne ad verilir?",
     "options": [
@@ -1087,7 +1087,7 @@
   },
   {
     "id": 83,
-    "category": "tarih",
+    "category": "tarih_ilk_turk_islam",
     "level": 1,
     "question": "Türk-İslam tarihinde 'Ribat' adı verilen ilk kervansaray örnekleri hangi devlet döneminde görülmüştür?",
     "options": [
@@ -1100,7 +1100,7 @@
   },
   {
     "id": 84,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 1,
     "question": "Osmanlı Devleti'nde ilk gümüş para hangi padişah döneminde basılmıştır?",
     "options": [
@@ -1113,7 +1113,7 @@
   },
   {
     "id": 85,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 1,
     "question": "Fatih Sultan Mehmet'in portresini çizen ünlü İtalyan ressam kimdir?",
     "options": [
@@ -1126,7 +1126,7 @@
   },
   {
     "id": 86,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 1,
     "question": "Osmanlı Devleti'nin Batı'nın üstünlüğünü kabul ettiği ve Lale Devri'nin başladığı antlaşma hangisidir?",
     "options": [
@@ -1139,7 +1139,7 @@
   },
   {
     "id": 87,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 1,
     "question": "Osmanlı Devleti'nde çıkarılan ilk resmi gazete hangisidir?",
     "options": [
@@ -1152,7 +1152,7 @@
   },
   {
     "id": 88,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "I. Dünya Savaşı'nda Osmanlı Devleti'nin toprak kazandığı tek cephe hangisidir?",
     "options": [
@@ -1165,7 +1165,7 @@
   },
   {
     "id": 89,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Mustafa Kemal Atatürk'ün 'Ben size taarruzu değil, ölmeyi emrediyorum' dediği savaş hangisidir?",
     "options": [
@@ -1178,7 +1178,7 @@
   },
   {
     "id": 90,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Misak-ı Milli kararları nerede kabul edilmiştir?",
     "options": [
@@ -1191,7 +1191,7 @@
   },
   {
     "id": 91,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Türkiye Cumhuriyeti'nin ilk anayasası hangisidir?",
     "options": [
@@ -1204,7 +1204,7 @@
   },
   {
     "id": 92,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Şeyh Sait İsyanı nedeniyle kapatılan ilk muhalefet partisi hangisidir?",
     "options": [
@@ -1217,7 +1217,7 @@
   },
   {
     "id": 93,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Boğazlar üzerindeki Türk egemenliğinin kesin olarak sağlandığı antlaşma hangisidir?",
     "options": [
@@ -1230,7 +1230,7 @@
   },
   {
     "id": 94,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Hatay'ın anavatana katıldığı yıl hangisidir?",
     "options": [
@@ -1243,7 +1243,7 @@
   },
   {
     "id": 95,
-    "category": "tarih",
+    "category": "tarih_cagdas",
     "level": 1,
     "question": "Türkiye'nin Kore Savaşı'na asker göndermesi hangi örgüte üye olmasını sağlamıştır?",
     "options": [
@@ -1256,7 +1256,7 @@
   },
   {
     "id": 96,
-    "category": "tarih",
+    "category": "tarih_cagdas",
     "level": 1,
     "question": "Kıbrıs Barış Harekatı hangi yıl yapılmıştır?",
     "options": [
@@ -1854,7 +1854,7 @@
   },
   {
     "id": 162,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 3,
     "question": "Osmanlı Devleti'nde 'Devlet-i Ebed Müddet' anlayışı neyi ifade eder?",
     "options": [
@@ -1910,7 +1910,7 @@
   },
   {
     "id": 166,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Mustafa Kemal Atatürk'ün 'Benim şahsi meselem' dediği ve anavatana katılması için büyük çaba harcadığı il hangisidir?",
     "options": [
@@ -1952,7 +1952,7 @@
   },
   {
     "id": 169,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "Osmanlı Devleti'nde ilk denk bütçeyi hazırlayan devlet adamı kimdir?",
     "options": [
@@ -1966,7 +1966,7 @@
   },
   {
     "id": 170,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 3,
     "question": "II. Mahmut döneminde Ayanlarla imzalanan ve padişahın yetkilerini ilk kez kısıtlayan belge hangisidir?",
     "options": [
@@ -1980,7 +1980,7 @@
   },
   {
     "id": 171,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Osmanlı Devleti'nde rejimi değiştirmeye yönelik çıkan ilk isyan hangisidir?",
     "options": [
@@ -1994,7 +1994,7 @@
   },
   {
     "id": 172,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Mustafa Kemal Atatürk'ün sömürgeciliğe karşı savaştığı ilk cephe hangisidir?",
     "options": [
@@ -2008,7 +2008,7 @@
   },
   {
     "id": 173,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "I. Balkan Savaşı sonucunda Osmanlı Devleti'nden ayrılarak bağımsızlığını ilan eden son Balkan ulusu hangisidir?",
     "options": [
@@ -2022,7 +2022,7 @@
   },
   {
     "id": 174,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "I. Dünya Savaşı sırasında İtilaf Devletleri arasında yapılan gizli antlaşmaları dünya kamuoyuna duyuran devlet hangisidir?",
     "options": [
@@ -2036,7 +2036,7 @@
   },
   {
     "id": 175,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "Milli Mücadele döneminde Temsil Heyeti'nin 'yürütme yetkisini' kullandığının ilk kanıtı nedir?",
     "options": [
@@ -2050,7 +2050,7 @@
   },
   {
     "id": 176,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "TBMM'nin uluslararası alanda imzaladığı ilk antlaşma ve kazandığı ilk siyasi başarı hangisidir?",
     "options": [
@@ -2064,7 +2064,7 @@
   },
   {
     "id": 177,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "İstiklal Marşı, 1921 yılında hangi savaşın kazanılmasından sonra TBMM'de kabul edilmiştir?",
     "options": [
@@ -2078,7 +2078,7 @@
   },
   {
     "id": 178,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Mustafa Kemal Paşa'ya 'Başkomutanlık' yetkisi hangi savaştan önce verilmiştir?",
     "options": [
@@ -2092,7 +2092,7 @@
   },
   {
     "id": 179,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "Lozan Barış Antlaşması'nda çözüme kavuşturulamayan ve sonraya bırakılan tek konu hangisidir?",
     "options": [
@@ -2106,7 +2106,7 @@
   },
   {
     "id": 180,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Cumhuriyet döneminde kurulan ilk muhalefet partisi hangisidir?",
     "options": [
@@ -2120,7 +2120,7 @@
   },
   {
     "id": 181,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "Türkiye'nin Milletler Cemiyeti'ne üye olduğu yıl hangisidir?",
     "options": [
@@ -2134,7 +2134,7 @@
   },
   {
     "id": 182,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "Montrö Boğazlar Sözleşmesi ile Boğazlar Komisyonu'nun kaldırılması Atatürk'ün hangi ilkesiyle doğrudan ilgilidir?",
     "options": [
@@ -2148,7 +2148,7 @@
   },
   {
     "id": 183,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 3,
     "question": "Osmanlı Devleti'nde divan üyelerinden olan ve günümüzdeki Dışişleri Bakanı'nın görevini yürüten yetkili kimdir?",
     "options": [
@@ -2162,7 +2162,7 @@
   },
   {
     "id": 184,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "Osmanlı Devleti'nde 'Mecelle' adlı medeni kanunu hazırlayan komisyonun başkanı kimdir?",
     "options": [
@@ -2176,7 +2176,7 @@
   },
   {
     "id": 185,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "Osmanlı Devleti'nde ilk kağıt para (Kaime) hangi padişah döneminde basılmıştır?",
     "options": [
@@ -2190,7 +2190,7 @@
   },
   {
     "id": 186,
-    "category": "tarih",
+    "category": "tarih_islamiyet_oncesi",
     "level": 2,
     "question": "Türk tarihinde 'Orhun Abideleri' hangi alfabe ile yazılmıştır?",
     "options": [
@@ -2204,7 +2204,7 @@
   },
   {
     "id": 187,
-    "category": "tarih",
+    "category": "tarih_ilk_turk_islam",
     "level": 3,
     "question": "Selçuklularda meliklerin (şehzadelerin) eğitimiyle ilgilenen devlet görevlisine ne ad verilir?",
     "options": [
@@ -2218,7 +2218,7 @@
   },
   {
     "id": 188,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Osmanlı Devleti'nin Kuzey Afrika'da kaybettiği son toprak parçası hangisidir?",
     "options": [
@@ -2232,7 +2232,7 @@
   },
   {
     "id": 189,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "I. TBMM'nin gerçekleştirdiği tek inkılap hareketi hangisidir?",
     "options": [
@@ -2246,7 +2246,7 @@
   },
   {
     "id": 190,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "1926 yılında kabul edilen Türk Medeni Kanunu hangi ülkeden örnek alınmıştır?",
     "options": [
@@ -2260,7 +2260,7 @@
   },
   {
     "id": 191,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Mustafa Kemal'in 'Ordular! İlk hedefiniz Akdeniz'dir. İleri!' emrini verdiği savaş hangisidir?",
     "options": [
@@ -2274,7 +2274,7 @@
   },
   {
     "id": 192,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Türkiye Cumhuriyeti'nin ilk Diyanet İşleri Başkanı kimdir?",
     "options": [
@@ -2288,7 +2288,7 @@
   },
   {
     "id": 193,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Cumhuriyet döneminin ilk özel bankası hangisidir?",
     "options": [
@@ -2302,7 +2302,7 @@
   },
   {
     "id": 194,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "1934 yılında imzalanan Balkan Antantı'na katılan devletler hangileridir?",
     "options": [
@@ -2316,7 +2316,7 @@
   },
   {
     "id": 195,
-    "category": "tarih",
+    "category": "tarih_cagdas",
     "level": 3,
     "question": "II. Dünya Savaşı sırasında Türkiye'de haksız kazançları önlemek için çıkarılan vergi kanunu hangisidir?",
     "options": [
@@ -2330,7 +2330,7 @@
   },
   {
     "id": 196,
-    "category": "tarih",
+    "category": "tarih_cagdas",
     "level": 3,
     "question": "1946 yılında Demokrat Parti'yi kuran 'Dörtlü Takrir' grubunda aşağıdakilerden hangisi yer almaz?",
     "options": [
@@ -2344,7 +2344,7 @@
   },
   {
     "id": 197,
-    "category": "tarih",
+    "category": "tarih_cagdas",
     "level": 2,
     "question": "1960 Darbesi sonrasında Yassıada yargılamaları sonucu idam edilen Başbakan kimdir?",
     "options": [
@@ -2358,7 +2358,7 @@
   },
   {
     "id": 198,
-    "category": "tarih",
+    "category": "tarih_cagdas",
     "level": 2,
     "question": "1974 Kıbrıs Barış Harekatı sırasında Türkiye'nin Başbakanı kimdir?",
     "options": [
@@ -2792,7 +2792,7 @@
   },
   {
     "id": 229,
-    "category": "tarih",
+    "category": "tarih_islamiyet_oncesi",
     "level": 1,
     "question": "İslamiyet öncesi Türk devletlerinde ölüler için yapılan cenaze törenine ne ad verilir?",
     "options": [
@@ -2806,7 +2806,7 @@
   },
   {
     "id": 230,
-    "category": "tarih",
+    "category": "tarih_ilk_turk_islam",
     "level": 2,
     "question": "Büyük Selçuklu Devleti'nin en parlak dönemi hangi hükümdar zamanında yaşanmıştır?",
     "options": [
@@ -2820,7 +2820,7 @@
   },
   {
     "id": 231,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "Osmanlı Devleti'nde 'Esham' (İç Borçlanma) sistemi ilk kez hangi padişah döneminde uygulanmıştır?",
     "options": [
@@ -2834,7 +2834,7 @@
   },
   {
     "id": 232,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "II. Abdülhamit döneminde yoksullar, kimsesizler ve yaşlılar için kurulan kurum hangisidir?",
     "options": [
@@ -2848,7 +2848,7 @@
   },
   {
     "id": 233,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Amasya Genelgesi'nde yer alan 'Milletin bağımsızlığını yine milletin azim ve kararı kurtaracaktır' maddesi neyi ifade eder?",
     "options": [
@@ -2862,7 +2862,7 @@
   },
   {
     "id": 234,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "Lozan Barış Antlaşması'na göre Boğazlar Komisyonu'nun başkanının hangi ülkeden olması kararlaştırılmıştır?",
     "options": [
@@ -2876,7 +2876,7 @@
   },
   {
     "id": 235,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Cumhuriyet döneminde çok partili hayata geçiş denemelerinin başarısızlıkla sonuçlanmasına neden olan olay hangisidir?",
     "options": [
@@ -2890,7 +2890,7 @@
   },
   {
     "id": 236,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "Türkiye, İran, Irak ve Afganistan arasında 1937 yılında imzalanan 'Sadabat Paktı' nerede imzalanmıştır?",
     "options": [
@@ -2904,7 +2904,7 @@
   },
   {
     "id": 237,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Mustafa Kemal Atatürk'ün en büyük eseri olarak nitelendirdiği eseri hangisidir?",
     "options": [
@@ -2918,7 +2918,7 @@
   },
   {
     "id": 238,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "Osmanlı Devleti'nde padişahın yetkilerini kısıtlayan ilk demokratikleşme hareketi hangisidir?",
     "options": [
@@ -3352,7 +3352,7 @@
   },
   {
     "id": 269,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "93 Harbi (1877-1878 Osmanlı-Rus Savaşı) sonucunda imzalanan ancak Avrupalı devletlerin itirazı üzerine yürürlüğe girmeyen antlaşma hangisidir?",
     "options": [
@@ -3366,7 +3366,7 @@
   },
   {
     "id": 270,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "II. Meşrutiyet'in ilan edilmesinde (1908) etkili olan cemiyet hangisidir?",
     "options": [
@@ -3380,7 +3380,7 @@
   },
   {
     "id": 271,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Osmanlı Devleti'nin Kuzey Afrika'daki son toprak parçası olan Trablusgarp'ı kaybettiği antlaşma hangisidir?",
     "options": [
@@ -3394,7 +3394,7 @@
   },
   {
     "id": 272,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Aşağıdaki devletlerden hangisi I. Balkan Savaşı'nda Osmanlı Devleti'ne saldıran Balkan devletlerinden biri değildir?",
     "options": [
@@ -3408,7 +3408,7 @@
   },
   {
     "id": 273,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "1913 yılında gerçekleşen ve İttihat ve Terakki'nin yönetimi tam anlamıyla ele geçirdiği hükümet darbesine ne ad verilir?",
     "options": [
@@ -3422,7 +3422,7 @@
   },
   {
     "id": 274,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Osmanlı Devleti'ne sığınan ve adları 'Yavuz' ve 'Midilli' olarak değiştirilen Alman gemilerinin asıl adları nelerdir?",
     "options": [
@@ -3436,7 +3436,7 @@
   },
   {
     "id": 275,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Çanakkale Cephesi'nde kazandığı başarılarla 'Anafartalar Kahramanı' olarak tanınan komutan kimdir?",
     "options": [
@@ -3450,7 +3450,7 @@
   },
   {
     "id": 276,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "I. Dünya Savaşı'nda Irak Cephesi'nde İngiliz ordusunu esir alarak kazanılan büyük zafer hangisidir?",
     "options": [
@@ -3464,7 +3464,7 @@
   },
   {
     "id": 277,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "1915 yılında Ermeni çetelerinin isyanları üzerine çıkarılan ve zorunlu göçü öngören kanun hangisidir?",
     "options": [
@@ -3478,7 +3478,7 @@
   },
   {
     "id": 278,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Osmanlı Devleti'nin I. Dünya Savaşı'ndan çekilmesini sağlayan ateşkes antlaşması hangisidir?",
     "options": [
@@ -3492,7 +3492,7 @@
   },
   {
     "id": 279,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Mondros Ateşkes Antlaşması'ndan sonra işgal edilen ilk Osmanlı toprağı neresidir?",
     "options": [
@@ -3506,7 +3506,7 @@
   },
   {
     "id": 280,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Mondros Ateşkes Antlaşması'nın 'İtilaf Devletleri güvenliklerini tehdit eden herhangi bir stratejik noktayı işgal edebileceklerdir' maddesi kaçıncı maddedir?",
     "options": [
@@ -3520,7 +3520,7 @@
   },
   {
     "id": 281,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "15 Mayıs 1919'da İzmir'in işgali sırasında Yunan askerlerine ilk kurşunu sıkan gazeteci kimdir?",
     "options": [
@@ -3534,7 +3534,7 @@
   },
   {
     "id": 282,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Son Osmanlı Mebusan Meclisi'nde kabul edilen ve Milli Mücadele'nin temelini oluşturan kararlara ne ad verilir?",
     "options": [
@@ -3548,7 +3548,7 @@
   },
   {
     "id": 283,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "İstanbul'un İtilaf Devletleri tarafından resmen işgal edilmesine ve Mebusan Meclisi'nin dağıtılmasına neden olan olay nedir?",
     "options": [
@@ -3562,7 +3562,7 @@
   },
   {
     "id": 284,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "Osmanlı Devleti'nin imzaladığı son antlaşma olan ve Mebusan Meclisi tarafından onaylanmadığı için 'ölü doğmuş' sayılan antlaşma hangisidir?",
     "options": [
@@ -3576,7 +3576,7 @@
   },
   {
     "id": 285,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Mustafa Kemal Paşa'nın I. Dünya Savaşı'nda görev aldığı son cephe hangisidir?",
     "options": [
@@ -3590,7 +3590,7 @@
   },
   {
     "id": 286,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "ABD Başkanı Wilson'un yayınladığı ilkelere göre, imparatorlukların parçalanmasında ve yeni devletlerin kurulmasında esas alınan kriter nedir?",
     "options": [
@@ -3604,7 +3604,7 @@
   },
   {
     "id": 287,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "I. Dünya Savaşı sonunda yenilen devletlerle yapılacak barış antlaşmalarının şartlarını belirlemek için toplanan konferans hangisidir?",
     "options": [
@@ -3618,7 +3618,7 @@
   },
   {
     "id": 288,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "19. yüzyılda Rus Çarı I. Nikolay'ın Osmanlı Devleti için kullandığı ve Avrupa literatürüne geçen ifade hangisidir?",
     "options": [
@@ -3632,7 +3632,7 @@
   },
   {
     "id": 289,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Balkan Savaşları sırasında 'Hamidiye Kruvazörü' ile Ege Denizi'nde gösterdiği başarılardan dolayı 'Hamidiye Kahramanı' olarak tanınan komutan kimdir?",
     "options": [
@@ -3646,7 +3646,7 @@
   },
   {
     "id": 290,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "I. Balkan Savaşı sonunda imzalanan ve Osmanlı Devleti'nin Midye-Enez hattının batısındaki tüm toprakları kaybettiği antlaşma hangisidir?",
     "options": [
@@ -3660,7 +3660,7 @@
   },
   {
     "id": 291,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "I. Dünya Savaşı'nda Hicaz-Yemen Cephesi'nde Medine'yi İngilizlere karşı kahramanca savunan ve 'Çöl Kaplanı' unvanını alan komutan kimdir?",
     "options": [
@@ -3674,7 +3674,7 @@
   },
   {
     "id": 292,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "I. Dünya Savaşı sırasında İngiltere ve Fransa'nın Ortadoğu topraklarını kendi aralarında paylaştıkları gizli antlaşma hangisidir?",
     "options": [
@@ -3688,7 +3688,7 @@
   },
   {
     "id": 293,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Mondros Ateşkes Antlaşması'nı Osmanlı Devleti adına imzalayan Bahriye Nazırı kimdir?",
     "options": [
@@ -3702,7 +3702,7 @@
   },
   {
     "id": 294,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "İzmir'in Yunanistan tarafından işgal edilmesine, İtalya'nın tepkisine rağmen hangi konferansta karar verilmiştir?",
     "options": [
@@ -3716,7 +3716,7 @@
   },
   {
     "id": 295,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Milli Mücadele'nin haklılığını ve İzmir işgalinin haksızlığını ortaya koyan ilk uluslararası belge hangisidir?",
     "options": [
@@ -3730,7 +3730,7 @@
   },
   {
     "id": 296,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "Adana ve Çukurova bölgesini Fransız ve Ermeni işgallerine karşı savunmak amacıyla kurulan yararlı cemiyet hangisidir?",
     "options": [
@@ -3744,7 +3744,7 @@
   },
   {
     "id": 297,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Milli Mücadele sürecinde ulusal bilincin uyandırılması amacıyla ilk kez protesto ve mitinglerin düzenlenmesi nerede istenmiştir?",
     "options": [
@@ -3758,7 +3758,7 @@
   },
   {
     "id": 298,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "İstanbul Hükümeti'nin Temsil Heyeti'ni resmen ve hukuken tanıdığı ilk olay hangisidir?",
     "options": [
@@ -3772,7 +3772,7 @@
   },
   {
     "id": 299,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "Sivas Kongresi'ni engellemek ve Mustafa Kemal'i tutuklamak amacıyla Damat Ferit Paşa tarafından görevlendirilen Elazığ Valisi kimdir?",
     "options": [
@@ -3786,7 +3786,7 @@
   },
   {
     "id": 300,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Kurtuluş Savaşı'nda Doğu Cephesi'nde Ermenilere karşı mücadele eden 15. Kolordu Komutanı kimdir?",
     "options": [
@@ -3800,7 +3800,7 @@
   },
   {
     "id": 301,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Kurtuluş Savaşı'nda düzenli ordunun savaşmadığı, mücadelenin Kuvay-ı Milliye birlikleriyle yürütüldüğü cephe hangisidir?",
     "options": [
@@ -3814,7 +3814,7 @@
   },
   {
     "id": 302,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "Batı Cephesi'nde Kuvay-ı Milliye birliklerinin Yunanlılara karşı başarısız olduğu ve düzenli orduya geçişi hızlandıran taarruz girişimi hangisidir?",
     "options": [
@@ -3828,7 +3828,7 @@
   },
   {
     "id": 303,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "TBMM'yi ve Misak-ı Milli'yi tanıyan ilk Avrupalı büyük devlet hangisidir?",
     "options": [
@@ -3842,7 +3842,7 @@
   },
   {
     "id": 304,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Mustafa Kemal'in 'Cahillikle savaş, düşmanla savaştan daha az önemli değildir' diyerek Kütahya-Eskişehir Savaşları devam ederken topladığı kongre hangisidir?",
     "options": [
@@ -3856,7 +3856,7 @@
   },
   {
     "id": 305,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Sakarya Meydan Muharebesi öncesinde ordunun ihtiyaçlarını karşılamak için Mustafa Kemal Paşa tarafından yayımlanan emirler hangisidir?",
     "options": [
@@ -3870,7 +3870,7 @@
   },
   {
     "id": 306,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Sakarya Zaferi'nden sonra Fransa ile imzalanan ve Güney Cephesi'ni resmen kapatan antlaşma hangisidir?",
     "options": [
@@ -3884,7 +3884,7 @@
   },
   {
     "id": 307,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Kurtuluş Savaşı'nın askeri safhasını bitiren ve Doğu Trakya'nın savaşılmadan kurtarılmasını sağlayan antlaşma hangisidir?",
     "options": [
@@ -3898,7 +3898,7 @@
   },
   {
     "id": 308,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "Lozan Barış Konferansı'na 'Gözlemci' statüsünde katılan devlet hangisidir?",
     "options": [
@@ -3912,7 +3912,7 @@
   },
   {
     "id": 309,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "II. Balkan Savaşı'nda Edirne ve Kırklareli'yi geri alarak 'Edirne Fatihi' unvanını alan komutan kimdir?",
     "options": [
@@ -3926,7 +3926,7 @@
   },
   {
     "id": 310,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "I. Dünya Savaşı devam ederken Rusya'nın savaştan çekilmesini sağlayan antlaşma hangisidir?",
     "options": [
@@ -3940,7 +3940,7 @@
   },
   {
     "id": 311,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Sivas Kongresi'nde tüm yararlı cemiyetler hangi isim altında birleştirilmiştir?",
     "options": [
@@ -3954,7 +3954,7 @@
   },
   {
     "id": 312,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Temsil Heyeti'nin Ankara'ya gelmesinden sonra Milli Mücadele'nin yayın organı olarak çıkarılan gazete hangisidir?",
     "options": [
@@ -3968,7 +3968,7 @@
   },
   {
     "id": 313,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "23 Nisan 1920'de açılan TBMM'nin açılış konuşmasını yapan en yaşlı üye sıfatıyla Sinop Mebusu kimdir?",
     "options": [
@@ -3982,7 +3982,7 @@
   },
   {
     "id": 314,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Sevr Antlaşması'nı imzalayan heyetin adı nedir?",
     "options": [
@@ -3996,7 +3996,7 @@
   },
   {
     "id": 315,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "İtilaf Devletleri'nin TBMM'yi hukuken tanıdığı ilk olay hangisidir?",
     "options": [
@@ -4010,7 +4010,7 @@
   },
   {
     "id": 316,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Londra Konferansı'na TBMM adına katılan devlet adamı kimdir?",
     "options": [
@@ -4024,7 +4024,7 @@
   },
   {
     "id": 317,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Mustafa Kemal'in 'Siz orada yalnız düşmanı değil, milletin makus talihini de yendiniz' sözünü söylediği savaş hangisidir?",
     "options": [
@@ -4038,7 +4038,7 @@
   },
   {
     "id": 318,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Sakarya Meydan Muharebesi'nden sonra imzalanan ve Türkiye'nin doğu sınırını kesinleştiren antlaşma hangisidir?",
     "options": [
@@ -4052,7 +4052,7 @@
   },
   {
     "id": 319,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Mudanya Ateşkes Antlaşması görüşmelerinde TBMM'yi temsil eden komutan kimdir?",
     "options": [
@@ -4066,7 +4066,7 @@
   },
   {
     "id": 320,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Lozan görüşmelerinin kesintiye uğradığı dönemde, yeni Türk devletinin ekonomi politikasını belirlemek için toplanan kongre hangisidir?",
     "options": [
@@ -4080,7 +4080,7 @@
   },
   {
     "id": 321,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 1,
     "question": "'Devletin rejimi' ve 'Devlet başkanlığı' sorunlarını çözen inkılap hangisidir?",
     "options": [
@@ -4094,7 +4094,7 @@
   },
   {
     "id": 322,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "3 Mart 1924'te Halifeliğin kaldırıldığı gün kabul edilen ve eğitim-öğretimin birleştirilmesini sağlayan kanun hangisidir?",
     "options": [
@@ -4108,7 +4108,7 @@
   },
   {
     "id": 323,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Şeyh Sait İsyanı'nın bastırılması ve asayişin sağlanması için çıkarılan kanun hangisidir?",
     "options": [
@@ -4122,7 +4122,7 @@
   },
   {
     "id": 324,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "Mustafa Kemal'e yönelik İzmir Suikastı girişimini ihbar eden kişi kimdir?",
     "options": [
@@ -4136,7 +4136,7 @@
   },
   {
     "id": 325,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "1930 yılında Türkiye ile Yunanistan arasında yaşanan ve Atatürk'ün barışçı yollarla çözdüğü sorun hangisidir?",
     "options": [
@@ -4150,7 +4150,7 @@
   },
   {
     "id": 326,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 3,
     "question": "Montrö Boğazlar Sözleşmesi'ni Türkiye adına imzalayan Dışişleri Bakanı kimdir?",
     "options": [
@@ -4164,7 +4164,7 @@
   },
   {
     "id": 327,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "Atatürk Dönemi'nin son Başbakanı kimdir?",
     "options": [
@@ -4178,7 +4178,7 @@
   },
   {
     "id": 328,
-    "category": "tarih",
+    "category": "tarih_inkilap",
     "level": 2,
     "question": "I. Dünya Savaşı'nda taraf değiştiren devlet hangisidir?",
     "options": [
@@ -4192,7 +4192,7 @@
   },
   {
     "id": 329,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "Osmanlı Devleti'nin Kırım Savaşı sırasında ilk dış borcu hangi ülkeden almıştır?",
     "options": [
@@ -4206,7 +4206,7 @@
   },
   {
     "id": 330,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "1856 yılında ilan edilen ve gayrimüslimlere Müslümanlarla tam bir eşitlik getirmeyi amaçlayan ferman hangisidir?",
     "options": [
@@ -4220,7 +4220,7 @@
   },
   {
     "id": 331,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "Kırım Savaşı'nı (1853-1856) sonlandıran ve Osmanlı Devleti'nin 'Avrupa Devleti' sayıldığı antlaşma hangisidir?",
     "options": [
@@ -4234,7 +4234,7 @@
   },
   {
     "id": 332,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "1827 yılında İngiltere, Fransa ve Rusya'nın Osmanlı donanmasını yaktığı olay hangisidir?",
     "options": [
@@ -4248,7 +4248,7 @@
   },
   {
     "id": 333,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "Mısır Valisi Kavalalı Mehmet Ali Paşa'nın isyanı üzerine Osmanlı Devleti'nin Rusya ile imzaladığı ve Boğazlar Sorunu'nu başlatan antlaşma hangisidir?",
     "options": [
@@ -4262,7 +4262,7 @@
   },
   {
     "id": 334,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "1841 yılında imzalanan ve Boğazların uluslararası bir statü kazanarak Osmanlı'nın egemenlik haklarının kısıtlandığı sözleşme hangisidir?",
     "options": [
@@ -4276,7 +4276,7 @@
   },
   {
     "id": 335,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "Türk tarihinin ilk anayasası olan Kanun-i Esasi hangi padişah döneminde ilan edilmiştir?",
     "options": [
@@ -4290,7 +4290,7 @@
   },
   {
     "id": 336,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "93 Harbi (1877-78) sırasında Plevne'de yaptığı kahramanca savunma ile 'Plevne Kahramanı' unvanını alan komutan kimdir?",
     "options": [
@@ -4304,7 +4304,7 @@
   },
   {
     "id": 337,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "93 Harbi'ni sona erdiren ve Sırbistan, Karadağ ve Romanya'nın bağımsız olmasını sağlayan antlaşma hangisidir?",
     "options": [
@@ -4318,7 +4318,7 @@
   },
   {
     "id": 338,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "Osmanlı Devleti'nin iflas ettiğini açıklaması üzerine alacaklı devletler tarafından 1881'de kurulan ve devletin gelirlerine el koyan kurum hangisidir?",
     "options": [
@@ -4332,7 +4332,7 @@
   },
   {
     "id": 339,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "II. Abdülhamit'in 1878'de meclisi kapatıp anayasayı askıya almasıyla başlayan ve 1908'e kadar süren döneme ne ad verilir?",
     "options": [
@@ -4346,7 +4346,7 @@
   },
   {
     "id": 340,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "19. yüzyılda Osmanlı aydınları arasında ortaya çıkan, dil, din, ırk ayrımı yapmadan tüm Osmanlı tebaasını eşit kabul eden fikir akımı hangisidir?",
     "options": [
@@ -4360,7 +4360,7 @@
   },
   {
     "id": 341,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "1838 yılında İngiltere ile imzalanan ve Osmanlı pazarını İngiliz mallarına açarak yerli sanayiye büyük darbe vuran ticaret antlaşması hangisidir?",
     "options": [
@@ -4374,7 +4374,7 @@
   },
   {
     "id": 342,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "Osmanlı Devleti'nde yurt dışına seyahate çıkan ilk padişah kimdir?",
     "options": [
@@ -4388,7 +4388,7 @@
   },
   {
     "id": 343,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 3,
     "question": "Ermeni meselesi ilk kez hangi uluslararası antlaşma ile gündeme gelmiştir?",
     "options": [
@@ -4402,7 +4402,7 @@
   },
   {
     "id": 344,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "1828-1829 Osmanlı-Rus Savaşı sonucunda imzalanan ve Yunanistan'a bağımsızlık yolunu açan antlaşma hangisidir?",
     "options": [
@@ -4416,7 +4416,7 @@
   },
   {
     "id": 345,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "II. Abdülhamit döneminde İslamcılık (Panislamizm) politikasının bir aracı olarak inşa edilen ve İstanbul'u Şam ve Medine'ye bağlayan demir yolu hattı hangisidir?",
     "options": [
@@ -4430,7 +4430,7 @@
   },
   {
     "id": 346,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 3,
     "question": "1876'da toplanan ve Balkan bunalımını görüşmek üzere Osmanlı Devleti'ne baskı yapan uluslararası konferans hangisidir?",
     "options": [
@@ -4444,7 +4444,7 @@
   },
   {
     "id": 347,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "Osmanlı Devleti'nde ilk özel gazete olan 'Tercüman-ı Ahval' kimler tarafından çıkarılmıştır?",
     "options": [
@@ -4458,7 +4458,7 @@
   },
   {
     "id": 348,
-    "category": "tarih",
+    "category": "tarih_osmanli",
     "level": 2,
     "question": "1897 yılında Osmanlı Devleti ile Yunanistan arasında yapılan ve Osmanlı'nın askeri zaferine rağmen masada kaybettiği savaş hangisidir?",
     "options": [
