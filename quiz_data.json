@@ -5099,5 +5099,986 @@
     ],
     "answer": "A",
     "explanation": "Milletvekilliğinin düşürülmesi kararına karşı 7 gün içinde AYM'ye itiraz edilebilir, AYM de 15 gün içinde kesin kararını verir."
+  },
+  {
+    "id": 394,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Museviliği kabul eden ilk ve tek Türk devleti hangisidir?",
+    "options": [
+      "A) Avarlar",
+      "B) Hazarlar",
+      "C) Peçenekler",
+      "D) Kıpçaklar"
+    ],
+    "answer": "B",
+    "explanation": "Hazarlar, yöneticileri ve halkının bir kısmı Museviliği benimseyen tek Türk devletidir."
+  },
+  {
+    "id": 395,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 1,
+    "question": "Avrupalılar tarafından 'Tanrı'nın Kırbacı' olarak nitelendirilerek korkulan Avrupa Hun hükümdarı kimdir?",
+    "options": [
+      "A) Balamir",
+      "B) Uldız",
+      "C) Attila",
+      "D) Rua"
+    ],
+    "answer": "C",
+    "explanation": "Attila, Avrupa Hun Devleti'nin en parlak dönemini yaşatmış ve Avrupalılarca 'Tanrı'nın Kırbacı' olarak anılmıştır."
+  },
+  {
+    "id": 396,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Türk tarihinin bilinen ilk kadın hükümdarı kimdir?",
+    "options": [
+      "A) Tomris Hatun",
+      "B) Ayşe Hatun",
+      "C) Terken Hatun",
+      "D) Altuncan Hatun"
+    ],
+    "answer": "A",
+    "explanation": "İskitler (Sakalar) hükümdarı olan Tomris Hatun, bilinen ilk Türk kadın hükümdardır."
+  },
+  {
+    "id": 397,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Dünyanın en uzun destanı olan 'Manas Destanı' hangi Türk boyuna aittir?",
+    "options": [
+      "A) Oğuzlar",
+      "B) Kırgızlar",
+      "C) Uygurlar",
+      "D) Göktürkler"
+    ],
+    "answer": "B",
+    "explanation": "Manas Destanı, Kırgız Türklerine aittir ve hala yazılmaya devam eden canlı bir destandır."
+  },
+  {
+    "id": 398,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Türklerin kullandığı ilk takvim hangisidir?",
+    "options": [
+      "A) Celali Takvim",
+      "B) Rumi Takvim",
+      "C) Hicri Takvim",
+      "D) 12 Hayvanlı Türk Takvimi"
+    ],
+    "answer": "D",
+    "explanation": "Türklerin İslamiyet öncesinde kullandığı, güneş yılı esaslı ilk takvim 12 Hayvanlı Türk Takvimi'dir."
+  },
+  {
+    "id": 399,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "Hem Asya'da hem de Avrupa'da devlet kuran Türk topluluğu hangisidir?",
+    "options": [
+      "A) Avarlar",
+      "B) Karluklar",
+      "C) Kırgızlar",
+      "D) Türgişler"
+    ],
+    "answer": "A",
+    "explanation": "Avarlar (Juan-Juanlar), hem Orta Asya'da hem de Avrupa'da devlet kurmuşlardır."
+  },
+  {
+    "id": 400,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Orhun Abideleri; Bilge Kağan, Kültigin ve hangi devlet adamı adına dikilmiştir?",
+    "options": [
+      "A) Bumin Kağan",
+      "B) Vezir Tonyukuk",
+      "C) Yolluğ Tigin",
+      "D) Kutluk Kağan"
+    ],
+    "answer": "B",
+    "explanation": "Orhun Abideleri; Bilge Kağan, kardeşi Kültigin ve vezir Tonyukuk adına dikilmiştir."
+  },
+  {
+    "id": 401,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "Türk adının geçtiği ilk yazılı antlaşma olan 'Kuzey Şansi Antlaşması' hangi devletle yapılmıştır?",
+    "options": [
+      "A) Bizans",
+      "B) Sasani",
+      "C) Çin",
+      "D) Roma"
+    ],
+    "answer": "C",
+    "explanation": "Asya Hun Devleti ile Çin arasında yapılan Kuzey Şansi Antlaşması, Türk adının geçtiği ilk antlaşmadır."
+  },
+  {
+    "id": 402,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "İskitler (Sakalar)'in en ünlü hükümdarı kimdir?",
+    "options": [
+      "A) Mete Han",
+      "B) Alper Tunga",
+      "C) Teoman",
+      "D) Attila"
+    ],
+    "answer": "B",
+    "explanation": "İskitlerin en ünlü hükümdarı Alper Tunga'dır. Firdevsi'nin Şehname eserinde 'Afrasiyab' olarak geçer."
+  },
+  {
+    "id": 403,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 1,
+    "question": "Asya Hun Devleti'nin en parlak dönemi hangi hükümdar zamanında yaşanmıştır?",
+    "options": [
+      "A) Teoman",
+      "B) Mete Han",
+      "C) Ki-ok",
+      "D) Ho-han-yeh"
+    ],
+    "answer": "B",
+    "explanation": "Mete Han, Asya Hun Devleti'ne en parlak dönemini yaşatmış ve onlu sistemi kurmuştur."
+  },
+  {
+    "id": 404,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Mısır'da kurulan ilk Türk-İslam devleti hangisidir?",
+    "options": [
+      "A) İhşidiler",
+      "B) Eyyubiler",
+      "C) Memlükler",
+      "D) Tolunoğulları"
+    ],
+    "answer": "D",
+    "explanation": "Tolunoğulları, Mısır'da kurulan ilk Türk-İslam devletidir."
+  },
+  {
+    "id": 405,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "'Mutluluk Veren Bilgi' anlamına gelen ve Yusuf Has Hacip tarafından yazılan eser hangisidir?",
+    "options": [
+      "A) Divan-ı Hikmet",
+      "B) Atabetü'l Hakayık",
+      "C) Kutadgu Bilig",
+      "D) Divan-ı Lügati't Türk"
+    ],
+    "answer": "C",
+    "explanation": "Kutadgu Bilig, Türk-İslam edebiyatının ilk eseri olup Yusuf Has Hacip tarafından yazılmıştır."
+  },
+  {
+    "id": 406,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Hıttin Savaşı ile Kudüs'ü Haçlılardan geri alan Eyyubi hükümdarı kimdir?",
+    "options": [
+      "A) Nureddin Zengi",
+      "B) Selahaddin Eyyubi",
+      "C) Baybars",
+      "D) Kılıçarslan"
+    ],
+    "answer": "B",
+    "explanation": "Selahaddin Eyyubi, 1187 Hıttin Savaşı ile Kudüs'ü Haçlılardan geri almıştır."
+  },
+  {
+    "id": 407,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Türk dilinin Arapça kadar zengin olduğunu göstermek amacıyla yazılan 'Divan-ı Lügati't Türk' kime aittir?",
+    "options": [
+      "A) Kaşgarlı Mahmut",
+      "B) Edip Ahmet Yükneki",
+      "C) Ahmet Yesevi",
+      "D) Ali Şir Nevai"
+    ],
+    "answer": "A",
+    "explanation": "Kaşgarlı Mahmut, ilk Türkçe sözlük olan Divan-ı Lügati't Türk'ü yazmıştır."
+  },
+  {
+    "id": 408,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Büyük Selçuklu Devleti'nin yıkılmasına neden olan savaş hangisidir?",
+    "options": [
+      "A) Dandanakan",
+      "B) Pasinler",
+      "C) Katvan",
+      "D) Yassıçemen"
+    ],
+    "answer": "C",
+    "explanation": "1141 Katvan Savaşı'nda Karahitaylara yenilen Büyük Selçuklu Devleti yıkılış sürecine girmiştir."
+  },
+  {
+    "id": 409,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Anadolu Selçuklu Devleti'nin kurucusu kimdir?",
+    "options": [
+      "A) I. Kılıçarslan",
+      "B) Kutalmışoğlu Süleyman Şah",
+      "C) Alaaddin Keykubat",
+      "D) I. Mesut"
+    ],
+    "answer": "B",
+    "explanation": "Anadolu Selçuklu Devleti, 1077 yılında İznik merkezli olarak Kutalmışoğlu Süleyman Şah tarafından kurulmuştur."
+  },
+  {
+    "id": 410,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Hindistan'a 17 sefer düzenleyerek İslamiyet'in yayılmasını sağlayan Gazneli hükümdar kimdir?",
+    "options": [
+      "A) Sultan Mesut",
+      "B) Alp Tegin",
+      "C) Gazneli Mahmut",
+      "D) Sebük Tegin"
+    ],
+    "answer": "C",
+    "explanation": "Gazneli Mahmut, Hindistan'a yaptığı seferlerle İslamiyet'in bu bölgede yayılmasını sağlamıştır."
+  },
+  {
+    "id": 411,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Kendilerini Büyük Selçuklu Devleti'nin mirasçısı olarak gören devlet hangisidir?",
+    "options": [
+      "A) Harzemşahlar",
+      "B) Karakoyunlular",
+      "C) Akkoyunlular",
+      "D) Memlükler"
+    ],
+    "answer": "A",
+    "explanation": "Harzemşahlar, Büyük Selçuklu Devleti'nin yıkılmasından sonra kendilerini onların mirasçısı olarak görmüşlerdir."
+  },
+  {
+    "id": 412,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Türk-İslam tarihinde 'Hace-i Evvel' (İlk Hoca) olarak bilinen Hoca Ahmet Yesevi'nin eseri hangisidir?",
+    "options": [
+      "A) Makalat",
+      "B) Divan-ı Hikmet",
+      "C) Mesnevi",
+      "D) Mektubat"
+    ],
+    "answer": "B",
+    "explanation": "Hoca Ahmet Yesevi, tasavvufi düşüncelerini 'Divan-ı Hikmet' adlı eserinde toplamıştır."
+  },
+  {
+    "id": 413,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Moğol İlhanlı Devleti ile Anadolu Selçuklu Devleti arasında yapılan ve Anadolu'da Türk siyasi birliğinin bozulmasına neden olan savaş hangisidir?",
+    "options": [
+      "A) Yassıçemen",
+      "B) Kösedağ",
+      "C) Miryokefalon",
+      "D) Malazgirt"
+    ],
+    "answer": "B",
+    "explanation": "1243 Kösedağ Savaşı'nda Anadolu Selçuklu Devleti Moğollara yenilmiş ve yıkılış sürecine girmiştir."
+  }
+,
+  {
+    "id": 444,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde Batı tarzında askeri ıslahatlar yapan ve Hendesehane'yi kuran ilk padişah kimdir?",
+    "options": [
+      "A) III. Selim",
+      "B) II. Mahmut",
+      "C) I. Mahmut",
+      "D) I. Abdülhamit"
+    ],
+    "answer": "C",
+    "explanation": "I. Mahmut, Humbaracı Ocağı'nı ıslah ederek ve subay yetiştirmek için Hendesehane'yi kurarak Batı tarzı askeri ıslahatları başlatan ilk padişahtır."
+  },
+  {
+    "id": 445,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nin Kuzey Afrika'da kaybettiği ilk toprak parçası hangisidir?",
+    "options": [
+      "A) Mısır",
+      "B) Tunus",
+      "C) Cezayir",
+      "D) Trablusgarp"
+    ],
+    "answer": "C",
+    "explanation": "Fransa, 1830 yılında Cezayir'i işgal ederek Osmanlı'nın Kuzey Afrika'daki ilk toprak kaybına neden olmuştur."
+  },
+  {
+    "id": 446,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde 'Ekber ve Erşed' sistemini getirerek veraset sisteminde son değişikliği yapan padişah kimdir?",
+    "options": [
+      "A) Fatih Sultan Mehmet",
+      "B) I. Ahmet",
+      "C) II. Osman",
+      "D) IV. Murat"
+    ],
+    "answer": "B",
+    "explanation": "I. Ahmet, taht kavgalarını önlemek amacıyla hanedanın en yaşlı (erşed) ve en akıllı (ekber) üyesinin padişah olmasını öngören sistemi getirmiştir."
+  },
+  {
+    "id": 447,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nin Avusturya karşısındaki siyasi üstünlüğünü kaybettiği ve 'mütekabiliyet' (denklik) esasına dayanan ilk antlaşma hangisidir?",
+    "options": [
+      "A) Karlofça Antlaşması",
+      "B) Vasvar Antlaşması",
+      "C) Zitvatorok Antlaşması",
+      "D) İstanbul Antlaşması (1533)"
+    ],
+    "answer": "C",
+    "explanation": "1606 Zitvatorok Antlaşması ile Avusturya Arşidükü, Osmanlı Padişahı'na denk sayılmış ve Osmanlı'nın Avrupa'daki siyasi üstünlüğü sona ermiştir."
+  },
+  {
+    "id": 448,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde ilk daimi elçilik hangi padişah döneminde ve nerede açılmıştır?",
+    "options": [
+      "A) III. Ahmet - Paris",
+      "B) II. Mahmut - Viyana",
+      "C) III. Selim - Londra",
+      "D) Abdülmecid - Berlin"
+    ],
+    "answer": "C",
+    "explanation": "Nizam-ı Cedit reformları çerçevesinde ilk daimi elçilik III. Selim döneminde Londra'da açılmıştır (Yusuf Agah Efendi)."
+  },
+  {
+    "id": 449,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde 'Müsadere' usulünü (devletin, memurun malına el koyması) kaldıran padişah kimdir?",
+    "options": [
+      "A) III. Selim",
+      "B) II. Mahmut",
+      "C) Abdülmecid",
+      "D) II. Abdülhamit"
+    ],
+    "answer": "B",
+    "explanation": "II. Mahmut, özel mülkiyeti güvence altına almak amacıyla müsadere usulünü büyük ölçüde kaldırmıştır. Tanzimat Fermanı ile tamamen kaldırılmıştır."
+  },
+  {
+    "id": 450,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nin Kutsal İttifak Savaşları (1683-1699) sonucunda Batı'da ilk kez büyük çapta toprak kaybettiği antlaşma hangisidir?",
+    "options": [
+      "A) Bucaş Antlaşması",
+      "B) Karlofça Antlaşması",
+      "C) Pasarofça Antlaşması",
+      "D) Küçük Kaynarca Antlaşması"
+    ],
+    "answer": "B",
+    "explanation": "1699 Karlofça Antlaşması ile Osmanlı Devleti, Macaristan, Podolya ve Mora gibi önemli toprakları kaybederek gerileme dönemine girmiştir."
+  },
+  {
+    "id": 451,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde ilk kez 'Şeyhülislam' idam ettiren padişah kimdir?",
+    "options": [
+      "A) Yavuz Sultan Selim",
+      "B) Kanuni Sultan Süleyman",
+      "C) IV. Murat",
+      "D) II. Osman (Genç Osman)"
+    ],
+    "answer": "C",
+    "explanation": "IV. Murat, devlet otoritesini yeniden sağlamak için sert tedbirler almış ve Şeyhülislam Ahizade Hüseyin Efendi'yi idam ettirmiştir."
+  },
+  {
+    "id": 452,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde 'Nizam-ı Cedit' adı verilen Batı tarzı orduyu kuran padişah kimdir?",
+    "options": [
+      "A) I. Mahmut",
+      "B) I. Abdülhamit",
+      "C) III. Selim",
+      "D) II. Mahmut"
+    ],
+    "answer": "C",
+    "explanation": "III. Selim, Nizam-ı Cedit (Yeni Düzen) reformları kapsamında Batı tarzında talimli bir ordu kurmuştur."
+  },
+  {
+    "id": 453,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde ilk anayasal yönetime (I. Meşrutiyet) son vererek meclisi kapatan padişah kimdir?",
+    "options": [
+      "A) Abdülaziz",
+      "B) V. Murat",
+      "C) II. Abdülhamit",
+      "D) V. Mehmet Reşat"
+    ],
+    "answer": "C",
+    "explanation": "II. Abdülhamit, 1877-78 Osmanlı-Rus Savaşı'nı (93 Harbi) bahane ederek Kanun-i Esasi'yi askıya almış ve Mebusan Meclisi'ni kapatmıştır."
+  },
+  {
+    "id": 454,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Milli Mücadele döneminde, manda ve himayenin ilk kez reddedildiği kongre hangisidir?",
+    "options": [
+      "A) Sivas Kongresi",
+      "B) Erzurum Kongresi",
+      "C) Alaşehir Kongresi",
+      "D) Balıkesir Kongresi"
+    ],
+    "answer": "B",
+    "explanation": "'Manda ve himaye kabul olunamaz' kararı ilk kez bölgesel nitelikteki Erzurum Kongresi'nde alınmış, Sivas Kongresi'nde ise kesin olarak reddedilmiştir."
+  },
+  {
+    "id": 455,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "TBMM'ye karşı çıkan isyanlardan hangisi doğrudan İstanbul Hükümeti tarafından, Kuvay-ı Milliye'yi yok etmek amacıyla çıkarılmıştır?",
+    "options": [
+      "A) Çerkez Ethem İsyanı",
+      "B) Demirci Mehmet Efe İsyanı",
+      "C) Kuva-yı İnzibatiye (Hilafet Ordusu)",
+      "D) Koçgiri İsyanı"
+    ],
+    "answer": "C",
+    "explanation": "Kuva-yı İnzibatiye, doğrudan İstanbul Hükümeti tarafından TBMM'yi ve Kuvay-ı Milliye'yi ortadan kaldırmak için kurulan bir ordudur."
+  },
+  {
+    "id": 456,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Lozan Barış Antlaşması'nda, Türkiye'nin aleyhine çözülen ve daha sonra anavatana katılan toprak parçası hangisidir?",
+    "options": [
+      "A) Boğazlar",
+      "B) Musul",
+      "C) Hatay",
+      "D) Batı Trakya"
+    ],
+    "answer": "C",
+    "explanation": "Lozan'da Fransa mandasındaki Suriye'ye bırakılan Hatay, 1939 yılında yapılan halk oylaması ile anavatana katılmıştır. Musul ise aleyhimize çözülmüş ama anavatana katılamamıştır."
+  },
+  {
+    "id": 457,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Atatürk'ün 'Halkçılık' ilkesi doğrultusunda, köylünün üzerindeki ağır vergi yükünü kaldırmak amacıyla 1925 yılında kaldırılan vergi hangisidir?",
+    "options": [
+      "A) Ağnam Vergisi",
+      "B) Varlık Vergisi",
+      "C) Aşar (Öşür) Vergisi",
+      "D) Yol Vergisi"
+    ],
+    "answer": "C",
+    "explanation": "Ürünün onda biri oranında alınan ve köylü için büyük bir yük olan Aşar Vergisi, 1925 yılında kaldırılarak halkçılık ilkesi doğrultusunda önemli bir adım atılmıştır."
+  },
+  {
+    "id": 458,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Türkiye Cumhuriyeti'nin ilk muhalefet partisi olan Terakkiperver Cumhuriyet Fırkası'nın kapatılmasına neden olan olay hangisidir?",
+    "options": [
+      "A) Menemen Olayı",
+      "B) İzmir Suikastı",
+      "C) Şeyh Sait İsyanı",
+      "D) Ağrı İsyanları"
+    ],
+    "answer": "C",
+    "explanation": "1925 yılında çıkan Şeyh Sait İsyanı'nda parti yöneticilerinin de parmağı olduğu gerekçesiyle Terakkiperver Cumhuriyet Fırkası, Takrir-i Sükun Kanunu ile kapatılmıştır."
+  },
+  {
+    "id": 459,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Lozan Barış Konferansı'na TBMM heyeti başkanı olarak katılan ve Türkiye'yi temsil eden devlet adamı kimdir?",
+    "options": [
+      "A) Rauf Orbay",
+      "B) İsmet İnönü",
+      "C) Bekir Sami Bey",
+      "D) Yusuf Kemal Tengirşenk"
+    ],
+    "answer": "B",
+    "explanation": "Mudanya'daki diplomatik başarısından sonra Lozan Konferansı'na TBMM'yi temsilen İsmet İnönü gönderilmiştir."
+  },
+  {
+    "id": 460,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Mustafa Kemal Atatürk'ün 'Nutuk' adlı eseri hangi yılları kapsamaktadır?",
+    "options": [
+      "A) 1919-1923",
+      "B) 1920-1927",
+      "C) 1919-1927",
+      "D) 1923-1938"
+    ],
+    "answer": "C",
+    "explanation": "Nutuk, Atatürk'ün Samsun'a çıktığı 19 Mayıs 1919'dan başlayarak 1927 yılına kadar olan dönemi anlatır."
+  },
+  {
+    "id": 461,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Lozan Antlaşması'nda çözülemeyen 'Yabancı Okullar' sorunu, hangi devletle yaşanan bir kriz sonrası Türkiye'nin lehine kesin olarak çözülmüştür?",
+    "options": [
+      "A) İngiltere",
+      "B) İtalya",
+      "C) Fransa",
+      "D) ABD"
+    ],
+    "answer": "C",
+    "explanation": "Fransa'nın, okullarında Türkçe dersleri ve Türk müfettişleri istememesi üzerine çıkan kriz, Türkiye'nin kararlı tutumuyla lehine çözülmüş ve okullar Türk kanunlarına tabi olmuştur."
+  },
+  {
+    "id": 462,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "1934 yılında çıkarılan Soyadı Kanunu ile Mustafa Kemal'e 'Atatürk' soyadını verme teklifini meclise sunan kişi kimdir?",
+    "options": [
+      "A) İsmet İnönü",
+      "B) Kazım Karabekir",
+      "C) Saffet Arıkan",
+      "D) Fevzi Çakmak"
+    ],
+    "answer": "C",
+    "explanation": "Dönemin Milli Eğitim Bakanı Saffet Arıkan, Mustafa Kemal'e 'Atatürk' soyadının verilmesini meclise teklif etmiştir."
+  },
+  {
+    "id": 463,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Türkiye Cumhuriyeti'nde çok partili hayata geçişin ikinci denemesi olarak Atatürk'ün isteğiyle kurulan, ancak kısa süre sonra kendini fesheden parti hangisidir?",
+    "options": [
+      "A) Terakkiperver Cumhuriyet Fırkası",
+      "B) Demokrat Parti",
+      "C) Milli Kalkınma Partisi",
+      "D) Serbest Cumhuriyet Fırkası"
+    ],
+    "answer": "D",
+    "explanation": "1930 yılında Fethi Okyar tarafından kurulan Serbest Cumhuriyet Fırkası, kısa sürede rejim karşıtlarının toplandığı bir yer haline gelince kendi kendini feshetmiştir."
+  },
+  {
+    "id": 464,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "II. Dünya Savaşı'ndan sonra Almanya'nın ikiye bölünmesiyle kurulan ve başkenti Bonn olan devlet hangisidir?",
+    "options": [
+      "A) Doğu Almanya",
+      "B) Batı Almanya",
+      "C) Avusturya",
+      "D) Polonya"
+    ],
+    "answer": "B",
+    "explanation": "Savaş sonrası Almanya, ABD, İngiltere ve Fransa kontrolünde Federal Almanya (Batı Almanya) ve Sovyet kontrolünde Demokratik Almanya (Doğu Almanya) olarak ikiye ayrılmıştır."
+  },
+  {
+    "id": 465,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "1955 yılında Sovyetler Birliği öncülüğünde, NATO'ya karşı kurulan askeri pakt hangisidir?",
+    "options": [
+      "A) Varşova Paktı",
+      "B) Bağdat Paktı",
+      "C) SEATO",
+      "D) CENTO"
+    ],
+    "answer": "A",
+    "explanation": "Varşova Paktı, Doğu Bloku ülkelerinin NATO'ya karşı oluşturduğu askeri ve siyasi bir ittifaktır."
+  },
+  {
+    "id": 466,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "1962 yılında ABD ile Sovyetler Birliği'ni nükleer savaşın eşiğine getiren kriz hangisidir?",
+    "options": [
+      "A) Berlin Buhranı",
+      "B) Kore Savaşı",
+      "C) Vietnam Savaşı",
+      "D) Küba Füze Krizi"
+    ],
+    "answer": "D",
+    "explanation": "Sovyetler Birliği'nin Küba'ya nükleer füzeler yerleştirmesi üzerine çıkan Küba Füze Krizi, Soğuk Savaş'ın en tehlikeli anlarından biridir."
+  },
+  {
+    "id": 467,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "1979 yılında İran'da Şah rejimini yıkarak İslam Cumhuriyeti'ni kuran lider kimdir?",
+    "options": [
+      "A) Saddam Hüseyin",
+      "B) Ayetullah Humeyni",
+      "C) Muhammed Musaddık",
+      "D) Rıza Pehlevi"
+    ],
+    "answer": "B",
+    "explanation": "Ayetullah Humeyni liderliğindeki İran İslam Devrimi ile Şah Rıza Pehlevi yönetimi devrilmiştir."
+  },
+  {
+    "id": 468,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "Sovyetler Birliği'nde 'Glasnost' (Açıklık) ve 'Perestroyka' (Yeniden Yapılanma) politikalarını başlatan lider kimdir?",
+    "options": [
+      "A) Leonid Brejnev",
+      "B) Yuri Andropov",
+      "C) Mihail Gorbaçov",
+      "D) Boris Yeltsin"
+    ],
+    "answer": "C",
+    "explanation": "Mihail Gorbaçov'un bu politikaları, Sovyetler Birliği'nin dağılmasına yol açan süreci başlatmıştır."
+  },
+  {
+    "id": 469,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "1992-1995 yılları arasında Bosna Savaşı sırasında yaşanan ve binlerce Boşnak sivilin katledildiği soykırım olayı hangisidir?",
+    "options": [
+      "A) Hocalı Katliamı",
+      "B) Srebrenitsa Katliamı",
+      "C) Halepçe Katliamı",
+      "D) Ruanda Soykırımı"
+    ],
+    "answer": "B",
+    "explanation": "Srebrenitsa'da Sırp güçleri tarafından 8 binden fazla Boşnak erkek ve çocuk katledilmiştir."
+  },
+  {
+    "id": 470,
+    "category": "tarih_cagdas",
+    "level": 1,
+    "question": "1960'larda ABD'de siyahilerin sivil hakları için mücadele eden ve 'Bir Hayalim Var' konuşmasıyla tanınan lider kimdir?",
+    "options": [
+      "A) Malcolm X",
+      "B) Martin Luther King Jr.",
+      "C) Nelson Mandela",
+      "D) Rosa Parks"
+    ],
+    "answer": "B",
+    "explanation": "Martin Luther King Jr., şiddet içermeyen sivil itaatsizlik eylemleriyle ırk ayrımcılığına karşı mücadelenin simgesi olmuştur."
+  },
+  {
+    "id": 471,
+    "category": "tarih_cagdas",
+    "level": 1,
+    "question": "1989 yılında Doğu ve Batı Berlin'i ayıran ve Soğuk Savaş'ın simgesi olan yapının yıkılmasına ne ad verilir?",
+    "options": [
+      "A) Berlin Duvarı'nın Yıkılışı",
+      "B) Berlin Ablukası",
+      "C) Berlin Kongresi",
+      "D) Berlin Buhranı"
+    ],
+    "answer": "A",
+    "explanation": "Berlin Duvarı'nın yıkılması, Almanya'nın birleşmesi ve Soğuk Savaş'ın sona ermesinde önemli bir dönüm noktasıdır."
+  },
+  {
+    "id": 472,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "1990 yılında Irak'ın Kuveyt'i işgal etmesi üzerine başlayan ve ABD öncülüğündeki koalisyon güçlerinin müdahale ettiği savaş hangisidir?",
+    "options": [
+      "A) İran-Irak Savaşı",
+      "B) I. Körfez Savaşı",
+      "C) II. Körfez Savaşı (Irak'ın İşgali)",
+      "D) Vietnam Savaşı"
+    ],
+    "answer": "B",
+    "explanation": "I. Körfez Savaşı (Çöl Fırtınası Harekatı), Irak'ın Kuveyt'ten çıkarılmasıyla sonuçlanmıştır."
+  },
+  {
+    "id": 473,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "Avrupa Birliği'nin temelini atan ve 1957'de imzalanan antlaşma hangisidir?",
+    "options": [
+      "A) Maastricht Antlaşması",
+      "B) Roma Antlaşması",
+      "C) Paris Antlaşması (1951)",
+      "D) Schengen Antlaşması"
+    ],
+    "answer": "B",
+    "explanation": "Roma Antlaşması ile Avrupa Ekonomik Topluluğu (AET) kurulmuş ve bugünkü Avrupa Birliği'nin temelleri atılmıştır."
+  },
+  {
+    "id": 474,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Türkiye'nin en genç volkanik arazisi olan ve 'Türkiye'nin en genç volkanı' olarak bilinen dağ hangisidir?",
+    "options": [
+      "A) Ağrı Dağı",
+      "B) Erciyes Dağı",
+      "C) Kula Volkanları (Manisa)",
+      "D) Nemrut Dağı"
+    ],
+    "answer": "C",
+    "explanation": "Manisa'daki Kula volkanları, en son tarihsel dönemlerde püskürmüş olup Türkiye'nin en genç volkanik arazisidir."
+  },
+  {
+    "id": 475,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Aşağıdaki platolardan hangisi oluşum bakımından diğerlerinden farklıdır?",
+    "options": [
+      "A) Obruk Platosu",
+      "B) Cihanbeyli Platosu",
+      "C) Haymana Platosu",
+      "D) Erzurum-Kars Platosu"
+    ],
+    "answer": "D",
+    "explanation": "Obruk, Cihanbeyli ve Haymana platoları tabaka düzlüğü (yatay duruşlu) platolarken, Erzurum-Kars Platosu volkanik (lav) bir platodur."
+  },
+  {
+    "id": 476,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Türkiye'de fiyort tipi kıyılara nerede rastlanır?",
+    "options": [
+      "A) Kaş-Finike arası",
+      "B) İstanbul Boğazı",
+      "C) Ege kıyıları",
+      "D) Türkiye'de görülmez"
+    ],
+    "answer": "D",
+    "explanation": "Fiyort tipi kıyılar, buzul vadilerinin sular altında kalmasıyla oluşur. Türkiye'nin matematik konumu nedeniyle buzul çağında deniz seviyesinde buzullar oluşmadığı için fiyort tipi kıyılar görülmez."
+  },
+  {
+    "id": 477,
+    "category": "cografya_fiziki",
+    "level": 1,
+    "question": "Ege Bölgesi'ndeki horst-graben sisteminde yüksekte kalan kütlelere (dağlara) ne ad verilir?",
+    "options": [
+      "A) Graben",
+      "B) Horst",
+      "C) Plato",
+      "D) Delta"
+    ],
+    "answer": "B",
+    "explanation": "Kırılma sonucu oluşan yükselen bloklara horst (dağ), çöken alanlara ise graben (ova) denir. Kaz Dağları, Madra Dağı, Yunt Dağı horstlara örnektir."
+  },
+  {
+    "id": 478,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Türkiye'de buzul aşındırması ve biriktirmesiyle oluşan şekillere en çok hangi bölgede rastlanır?",
+    "options": [
+      "A) Karadeniz",
+      "B) Akdeniz",
+      "C) Doğu Anadolu",
+      "D) Marmara"
+    ],
+    "answer": "C",
+    "explanation": "Yükseltinin en fazla olduğu Doğu Anadolu Bölgesi'ndeki dağlarda (Ağrı, Süphan, Cilo) buzul şekilleri (sirk gölleri, morenler) yaygındır."
+  },
+  {
+    "id": 479,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Aşağıdaki akarsulardan hangisi kaynağını Türkiye'den alıp yurt dışında denize dökülür?",
+    "options": [
+      "A) Meriç",
+      "B) Asi",
+      "C) Fırat",
+      "D) Susurluk"
+    ],
+    "answer": "C",
+    "explanation": "Fırat Nehri, Doğu Anadolu'dan doğar, Suriye ve Irak'ı geçerek Dicle ile birleşip Basra Körfezi'ne dökülür. Meriç ve Asi nehirleri ise dışarıdan doğup Türkiye'de denize dökülür."
+  },
+  {
+    "id": 480,
+    "category": "cografya_fiziki",
+    "level": 1,
+    "question": "Türkiye'de en yaygın görülen iklim tipi hangisidir?",
+    "options": [
+      "A) Karadeniz İklimi",
+      "B) Akdeniz İklimi",
+      "C) Karasal İklim",
+      "D) Marmara Geçiş İklimi"
+    ],
+    "answer": "C",
+    "explanation": "Ülkenin büyük bir bölümünü kaplayan İç Anadolu, Doğu Anadolu ve Güneydoğu Anadolu bölgelerinde karasal iklim özellikleri görülür."
+  },
+  {
+    "id": 481,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Akdeniz ve Karadeniz bölgelerinde dağların kıyıya paralel uzanmasının ortak sonucu aşağıdakilerden hangisidir?",
+    "options": [
+      "A) Falez (yalıyar) oluşumunun yaygın olması",
+      "B) Kıta sahanlığının geniş olması",
+      "C) Enine kıyı tipinin görülmesi",
+      "D) Limanların hinterlandının geniş olması"
+    ],
+    "answer": "A",
+    "explanation": "Dağların kıyıya paralel ve yakın uzandığı yerlerde dalga aşındırmasıyla falezler (yalıyarlar) oluşur. Bu durum hem Akdeniz hem de Karadeniz'de yaygındır."
+  },
+  {
+    "id": 482,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Türkiye'nin en büyük milli parkı hangisidir?",
+    "options": [
+      "A) Göreme Tarihi Milli Parkı",
+      "B) Beyşehir Gölü Milli Parkı",
+      "C) Ağrı Dağı Milli Parkı",
+      "D) Yozgat Çamlığı Milli Parkı"
+    ],
+    "answer": "C",
+    "explanation": "2004 yılında ilan edilen Ağrı Dağı Milli Parkı, yüzölçümü bakımından Türkiye'nin en büyük milli parkıdır."
+  },
+  {
+    "id": 483,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Aşağıdaki ovalardan hangisi tektonik oluşumlu bir ova değildir?",
+    "options": [
+      "A) Konya Ovası",
+      "B) Erzurum Ovası",
+      "C) Çukurova",
+      "D) Iğdır Ovası"
+    ],
+    "answer": "C",
+    "explanation": "Çukurova, Seyhan ve Ceyhan nehirlerinin taşıdığı alüvyonlarla oluşmuş bir delta ovasıdır. Diğerleri ise tektonik çöküntü alanlarıdır."
+  },
+  {
+    "id": 484,
+    "category": "cografya_beseri_tarim",
+    "level": 1,
+    "question": "Türkiye'de nüfusun dağılışını etkileyen en önemli faktör hangisidir?",
+    "options": [
+      "A) İklim ve yer şekilleri",
+      "B) Sanayi ve ticaret faaliyetleri",
+      "C) Turizm",
+      "D) Tarım"
+    ],
+    "answer": "B",
+    "explanation": "Günümüzde Türkiye nüfusunun büyük bir kısmı, iş imkanlarının yoğun olduğu sanayi ve ticaret merkezlerinde (İstanbul, Kocaeli, Bursa, İzmir vb.) toplanmıştır."
+  },
+  {
+    "id": 485,
+    "category": "cografya_beseri_tarim",
+    "level": 1,
+    "question": "Aşağıdaki tarım ürünlerinden hangisi soğuğa karşı dayanıksız olduğu için üretim alanı daha çok kıyı bölgelerle sınırlıdır?",
+    "options": [
+      "A) Buğday",
+      "B) Elma",
+      "C) Turunçgiller",
+      "D) Şeker pancarı"
+    ],
+    "answer": "C",
+    "explanation": "Turunçgiller (portakal, mandalina, limon) kış ılıklığı istediği için don olaylarının görülmediği Akdeniz ve Ege kıyılarında yetişir."
+  },
+  {
+    "id": 486,
+    "category": "cografya_beseri_tarim",
+    "level": 1,
+    "question": "Türkiye'de küçükbaş hayvancılığın (koyun) en yaygın olduğu bölge hangisidir?",
+    "options": [
+      "A) Karadeniz",
+      "B) Akdeniz",
+      "C) Doğu Anadolu",
+      "D) İç Anadolu"
+    ],
+    "answer": "D",
+    "explanation": "Bozkır bitki örtüsünün yaygın olması nedeniyle küçükbaş hayvancılık en çok İç Anadolu ve Doğu Anadolu'da yapılır. Koyun yetiştiriciliğinde İç Anadolu (Konya, Van) öndedir."
+  },
+  {
+    "id": 487,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Yaz kuraklığı isteyen ve olgunlaşma döneminde yağış istemeyen kırmızı mercimek üretimi en fazla hangi bölgemizde yapılır?",
+    "options": [
+      "A) İç Anadolu",
+      "B) Güneydoğu Anadolu",
+      "C) Ege",
+      "D) Marmara"
+    ],
+    "answer": "B",
+    "explanation": "Kırmızı mercimek, yüksek yaz sıcaklıkları ve kuraklık nedeniyle en fazla Güneydoğu Anadolu Bölgesi'nde (özellikle Şanlıurfa, Diyarbakır) üretilir."
+  },
+  {
+    "id": 488,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Türkiye'de nüfus artış hızının en yüksek olduğu dönem hangisidir?",
+    "options": [
+      "A) 1923-1935",
+      "B) 1955-1960",
+      "C) 1980-1985",
+      "D) 2000-2010"
+    ],
+    "answer": "B",
+    "explanation": "II. Dünya Savaşı sonrası sağlık hizmetlerinin gelişmesi, bebek ölümlerinin azalması ve siyasi istikrar gibi nedenlerle 1955-1960 dönemi nüfus artış hızının zirve yaptığı dönemdir."
+  },
+  {
+    "id": 489,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Türkiye'de mevsimlik göçlerin en temel nedeni nedir?",
+    "options": [
+      "A) Turizm",
+      "B) Eğitim",
+      "C) Tarım işçiliği",
+      "D) Yaylacılık"
+    ],
+    "answer": "C",
+    "explanation": "Özellikle pamuk, fındık, çay gibi ürünlerin hasat dönemlerinde tarım işçiliği için yapılan göçler, mevsimlik göçlerin en önemli nedenidir."
+  },
+  {
+    "id": 490,
+    "category": "cografya_beseri_tarim",
+    "level": 1,
+    "question": "Aşağıdakilerden hangisi Türkiye'de nüfusun seyrek olduğu yerlerden biri değildir?",
+    "options": [
+      "A) Tuz Gölü çevresi",
+      "B) Teke ve Taşeli Platoları",
+      "C) Çatalca-Kocaeli Platosu",
+      "D) Yıldız Dağları"
+    ],
+    "answer": "C",
+    "explanation": "Çatalca-Kocaeli Platosu, sanayi, ticaret ve ulaşımın gelişmesi nedeniyle Türkiye'nin en yoğun nüfuslu alanıdır. Diğerleri ise kuraklık, engebe gibi nedenlerle seyrektir."
+  },
+  {
+    "id": 491,
+    "category": "cografya_beseri_tarim",
+    "level": 1,
+    "question": "Ayçiçeği üretiminde Türkiye'de ilk sırada yer alan bölgemiz hangisidir?",
+    "options": [
+      "A) İç Anadolu",
+      "B) Güneydoğu Anadolu",
+      "C) Ege",
+      "D) Marmara (Trakya)"
+    ],
+    "answer": "D",
+    "explanation": "Ayçiçeği tarımı en fazla Marmara Bölgesi'nin Trakya kesiminde (Tekirdağ, Edirne) yapılır."
+  },
+  {
+    "id": 492,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Türkiye'de ormancılık faaliyetlerinin en yoğun olduğu ve orman ürünleri sanayisinin geliştiği bölge hangisidir?",
+    "options": [
+      "A) Batı Karadeniz",
+      "B) Doğu Karadeniz",
+      "C) Ege",
+      "D) Akdeniz"
+    ],
+    "answer": "A",
+    "explanation": "Batı Karadeniz (Zonguldak, Kastamonu, Bolu) hem zengin orman varlığı hem de sanayi tesisleri ile ormancılıkta öne çıkar."
+  },
+  {
+    "id": 493,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Türkiye'nin nüfus yapısıyla ilgili aşağıdakilerden hangisi söylenemez?",
+    "options": [
+      "A) Nüfusun büyük bölümü kentlerde yaşamaktadır.",
+      "B) Ortalama yaşam süresi uzamaktadır.",
+      "C) Yaşlı nüfus oranı artmaktadır.",
+      "D) Nüfus artış hızı sürekli yükselmektedir."
+    ],
+    "answer": "D",
+    "explanation": "Türkiye'de nüfus miktarı artmaya devam etse de, nüfus artış hızı özellikle 1960'lardan sonra düşme eğilimindedir."
   }
 ]
