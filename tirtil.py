@@ -318,9 +318,10 @@ def admin_panel(message):
     markup.add(InlineKeyboardButton(f"⏳ Onay ({pending_count})", callback_data="admin_pending_list"), InlineKeyboardButton("👥 Üyeler", callback_data="admin_user_list"))
     # Satır 2: Özel Listeler
     markup.add(InlineKeyboardButton("🚫 Yasaklılar", callback_data="admin_banned_list"), InlineKeyboardButton("👑 VIP'ler", callback_data="admin_vip_list"))
-    markup.add(InlineKeyboardButton("📉 Tüm Emirler", callback_data="admin_all_orders"), InlineKeyboardButton("📊 Eko. Analiz", callback_data="admin_economy_stats"))
+    markup.add(InlineKeyboardButton("📉 Tüm Emirler", callback_data="admin_all_orders"))
+    markup.add(InlineKeyboardButton("📊 Eko. Analiz", callback_data="admin_economy_stats"), InlineKeyboardButton("📚 Konu Analizi", callback_data="admin_topic_stats"))
     # Satır 3: İletişim & Anket
-    markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("📊 Anket", callback_data="admin_help_anket"))
+    markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("📊 Anket", callback_data="admin_help_anket"), InlineKeyboardButton("✉️ Özel Mesaj", callback_data="admin_help_dm"))
     # Satır 4: Yönetim
     markup.add(InlineKeyboardButton("🎁 Hediye", callback_data="admin_help_hediye"), InlineKeyboardButton("🔨 Ban", callback_data="admin_help_ban"))
     markup.add(InlineKeyboardButton("💾 Yedek Al", callback_data="admin_backup"))
@@ -380,8 +381,37 @@ def admin_callbacks(call):
         total_bank = sum(u.get("bank_balance", 0) for u in users.values())
         bot.send_message(call.message.chat.id, f"📊 **Ekonomi:**\n💵 Cüzdan: {total_money} $\n🏦 Banka: {total_bank} $\n💰 Toplam: {total_money+total_bank} $")
 
-    elif call.data == "admin_help_duyuru": bot.send_message(call.message.chat.id, "📢 `/duyuru Mesaj`")
+    elif call.data == "admin_topic_stats":
+        global_stats = {}
+        total_users_with_stats = 0
+        for u in users.values():
+            u_stats = u.get("topic_stats", {})
+            if u_stats: total_users_with_stats += 1
+            for cat, data in u_stats.items():
+                if cat not in global_stats: global_stats[cat] = {"correct": 0, "incorrect": 0}
+                global_stats[cat]["correct"] += data.get("correct", 0)
+                global_stats[cat]["incorrect"] += data.get("incorrect", 0)
+        
+        if not global_stats:
+            bot.answer_callback_query(call.id, "Henüz veri yok.")
+            return
+            
+        sorted_stats = []
+        for cat, data in global_stats.items():
+            total = data["correct"] + data["incorrect"]
+            rate = (data["correct"] / total * 100) if total > 0 else 0
+            sorted_stats.append((cat, rate, total))
+        sorted_stats.sort(key=lambda x: x[1])
+        
+        text = f"📊 **GENEL KONU ANALİZİ**\n_(Toplam {total_users_with_stats} öğrenci)_\n\n📉 **En Zorlanılanlar:**\n"
+        for cat, rate, total in sorted_stats[:5]: text += f"• {cat.replace('_', ' ').title()}: %{int(rate)} ({total} soru)\n"
+        text += "\n📈 **En Başarılılar:**\n"
+        for cat, rate, total in sorted_stats[-5:][::-1]: text += f"• {cat.replace('_', ' ').title()}: %{int(rate)} ({total} soru)\n"
+        bot.send_message(call.message.chat.id, text, parse_mode="Markdown"); bot.answer_callback_query(call.id)
+
+    elif call.data == "admin_help_duyuru": bot.send_message(call.message.chat.id, "📢 **Duyuru Sistemi**\n\n🔹 `/duyuru Mesaj` - Normal mesaj atar.\n🔹 `/sabitle Mesaj` - Mesaj atar ve sabitler.\n🔹 `/sabitle` (Mesaja yanıtla) - Medyayı atar ve sabitler.\n🔹 `/sabitle_kaldir` - Herkesteki sabitlemeyi kaldırır.", parse_mode="Markdown")
     elif call.data == "admin_help_anket": bot.send_message(call.message.chat.id, "📊 `/anket Soru | Cevap1 | Cevap2`")
+    elif call.data == "admin_help_dm": bot.send_message(call.message.chat.id, "✉️ **Özel Mesaj:**\n`/dm <ID veya @Kullanıcı> <Mesaj>`\nÖrnek: `/dm @Ali Merhaba!`", parse_mode="Markdown")
     elif call.data == "admin_help_hediye": bot.send_message(call.message.chat.id, "🎁 `/hediye <ID> <Miktar>` veya `/dagit <Miktar>`")
     elif call.data == "admin_help_ban": bot.send_message(call.message.chat.id, "🚫 `/ban <ID>`\n✅ `/unban <ID>`")
     elif "help" in call.data:
@@ -397,6 +427,56 @@ def admin_broadcast(message):
         try: bot.send_message(uid, f"📢 **DUYURU**\n\n{text}"); count += 1
         except: pass
     bot.reply_to(message, f"✅ {count} kişiye iletildi.")
+
+@bot.message_handler(commands=['sabitle'])
+def admin_broadcast_pin(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+
+    # Mesaj içeriğini belirle
+    if message.reply_to_message:
+        # Bir mesaja yanıt verilmişse (Metin, Resim, Video vb.)
+        source_chat_id = message.chat.id
+        source_message_id = message.reply_to_message.message_id
+        is_copy = True
+    else:
+        # Sadece metin yazılmışsa
+        text = message.text.replace("/sabitle", "").strip()
+        if not text:
+            bot.reply_to(message, "⚠️ Sabitlenecek mesajı yanıtla veya metin yaz.\nÖrnek: `/sabitle Önemli Duyuru!`", parse_mode="Markdown")
+            return
+        is_copy = False
+
+    msg = bot.reply_to(message, "📌 Sabitleme işlemi başladı...")
+    count = 0
+    
+    for uid in list(users.keys()):
+        try:
+            if is_copy:
+                sent = bot.copy_message(uid, source_chat_id, source_message_id)
+            else:
+                sent = bot.send_message(uid, f"📢 **DUYURU**\n\n{text}", parse_mode="Markdown")
+            
+            if sent:
+                bot.pin_chat_message(uid, sent.message_id)
+                count += 1
+        except: pass
+    
+    bot.edit_message_text(f"✅ Mesaj {count} kişiye iletildi ve sabitlendi.", message.chat.id, msg.message_id)
+
+@bot.message_handler(commands=['sabitle_kaldir'])
+def admin_unpin_all(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+    
+    msg = bot.reply_to(message, "📌 Sabitlemeler kaldırılıyor...")
+    count = 0
+    
+    for uid in list(users.keys()):
+        try:
+            bot.unpin_all_chat_messages(uid)
+            count += 1
+        except: pass
+    
+    bot.edit_message_text(f"✅ {count} kişinin sohbetindeki sabitlemeler kaldırıldı.", message.chat.id, msg.message_id)
 
 @bot.message_handler(commands=['anket'])
 def admin_poll(message):
@@ -429,6 +509,33 @@ def admin_gift(message):
             users[uid]["money"] = users[uid].get("money", 0) + amount; save_users()
             bot.send_message(uid, f"🎁 **HEDİYE!** Hesabına {amount} $ yüklendi."); bot.reply_to(message, "✅ Gönderildi.")
     except: bot.reply_to(message, "Hata: /hediye <ID/@User> <Miktar>")
+
+@bot.message_handler(commands=['dm'])
+def admin_send_dm(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+    try:
+        args = message.text.split(maxsplit=2)
+        if len(args) < 3:
+            bot.reply_to(message, "⚠️ Kullanım: `/dm <ID/@Kullanıcı> <Mesaj>`", parse_mode="Markdown")
+            return
+            
+        target_input = args[1]
+        text = args[2]
+        
+        target_id = None
+        if target_input in users:
+            target_id = target_input
+        else:
+            search_name = target_input.lstrip("@")
+            target_id = next((uid for uid, u in users.items() if u.get("username") == search_name), None)
+        
+        if target_id:
+            bot.send_message(target_id, f"📩 **YÖNETİCİ MESAJI**\n\n{text}", parse_mode="Markdown")
+            bot.reply_to(message, f"✅ Mesaj gönderildi: {users[target_id].get('name', target_id)}")
+        else:
+            bot.reply_to(message, "❌ Kullanıcı bulunamadı.")
+    except Exception as e:
+        bot.reply_to(message, f"Hata: {e}")
 
 @bot.message_handler(commands=['ban', 'unban'])
 def ban_manager(message):
