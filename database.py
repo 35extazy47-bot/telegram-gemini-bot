@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from threading import Lock, RLock
 import pymongo
 from dotenv import load_dotenv
+from pymongo import UpdateOne
 
 load_dotenv()
 
@@ -41,9 +42,14 @@ if MONGO_URI is not None:
                 with open(USERS_FILE, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     if data is not None:
-                        # Veri yapısını { "_id": "users_data", "data": { ... } } şeklinde düzelt
-                        users_collection.replace_one({"_id": "users_data"}, {"data": data}, upsert=True)
-                        print("✅ JSON kullanıcı verileri buluta başarıyla taşındı!")
+                        # Veri yapısını her kullanıcı ayrı döküman olacak şekilde ayarla
+                        ops = []
+                        for uid, udata in data.items():
+                            udata["_id"] = uid
+                            ops.append(udata)
+                        if ops:
+                            users_collection.insert_many(ops)
+                        print("✅ JSON kullanıcı verileri buluta başarıyla taşındı (Ayrı Dökümanlar)!")
             except Exception as e:
                 print(f"⚠️ JSON aktarma hatası: {e}")
     except Exception as e:
@@ -88,10 +94,22 @@ def load_users():
     """Kullanıcı verilerini önce MongoDB'den, yoksa yerel dosyadan yükler."""
     if users_collection is not None:
         try:
-            doc = users_collection.find_one({"_id": "users_data"})
-            if doc is not None and "data" in doc:
-                print("✅ Kullanıcı verileri MongoDB'den yüklendi.")
-                return doc["data"]
+            # Önce eski format (tek döküman) var mı bak
+            old_doc = users_collection.find_one({"_id": "users_data"})
+            if old_doc is not None and "data" in old_doc:
+                print("⚠️ Eski format veri bulundu, yükleniyor ve dönüştürülüyor...")
+                return old_doc["data"]
+            
+            # Yeni format: Her kullanıcı ayrı döküman
+            data = {}
+            cursor = users_collection.find({"_id": {"$ne": "users_data"}})
+            for doc in cursor:
+                uid = doc.pop("_id")
+                data[uid] = doc
+            
+            if data:
+                print(f"✅ {len(data)} kullanıcı MongoDB'den yüklendi.")
+                return data
         except Exception as e:
             print(f"MongoDB Users Yükleme Hatası: {e}")
 
@@ -110,8 +128,16 @@ def save_users():
     with data_lock:
         if users_collection is not None:
             try:
-                users_collection.replace_one({"_id": "users_data"}, {"data": users}, upsert=True)
-                # print("✅ Kullanıcı verileri MongoDB'ye yedeklendi.") # Çok sık çıkmaması için yorum satırı yapabilirsin
+                # Her kullanıcıyı ayrı döküman olarak kaydet (Bulk Write)
+                operations = []
+                for uid, user_data in users.items():
+                    operations.append(UpdateOne({"_id": uid}, {"$set": user_data}, upsert=True))
+                
+                if operations:
+                    users_collection.bulk_write(operations)
+                
+                # Eski tekli döküman varsa temizle (Migration tamamlandı)
+                users_collection.delete_one({"_id": "users_data"})
             except Exception as e:
                 print(f"Kullanıcı verileri MongoDB'ye kaydedilirken hata: {e}")
         else:

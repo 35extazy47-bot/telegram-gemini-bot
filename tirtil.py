@@ -902,6 +902,7 @@ if __name__ == "__main__":
     bot.set_my_commands([
         types.BotCommand("menu", "Ana Menü"),
         types.BotCommand("profil", "Profil ve İstatistikler"),
+        types.BotCommand("karnem", "Başarı Karnesi"),
         types.BotCommand("envanter", "Çanta ve Eşyalar"),
         types.BotCommand("gunluk", "Günlük Ödülünü Al"),
         types.BotCommand("gorevler", "Günlük Görevler"),

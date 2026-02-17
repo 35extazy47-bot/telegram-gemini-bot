@@ -193,6 +193,46 @@ def register_quiz_handlers(bot, tirtil_utils):
         user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
         save_users()
 
+    def send_weakness_question(chat_id, user_id):
+        weak_topics = users[user_id].get("weak_topics", [])
+        if not weak_topics:
+            bot.send_message(chat_id, "🎉 **Tebrikler!** Zayıf olduğun konuları tamamladın veya listen boş. Normal moda dönülüyor. 👏")
+            users[user_id]["mode"] = "local"
+            save_users()
+            return
+
+        candidates = [q for q in QUIZ_QUESTIONS if q.get("category") in weak_topics]
+        
+        if not candidates:
+            bot.send_message(chat_id, "📂 Bu konularda soru bulunamadı. Normal moda dönülüyor.")
+            users[user_id]["mode"] = "local"
+            save_users()
+            return
+
+        q = random.choice(candidates)
+        users[user_id].update({"current_answer": q["answer"], "current_question_id": q["id"]})
+        
+        photo = create_quiz_image(q['question'], q['options'], q['category'], users[user_id]["level"], users[user_id]['lives'])
+        
+        markup = InlineKeyboardMarkup(row_width=4)
+        markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
+        
+        joker_btns = []
+        inv = users[user_id].get("inventory", {})
+        if inv.get("joker_50", 0) > 0: joker_btns.append(InlineKeyboardButton(f"💡 %50 ({inv['joker_50']})", callback_data="joker_50"))
+        if inv.get("joker_pass", 0) > 0: joker_btns.append(InlineKeyboardButton(f"⏭ Pas ({inv['joker_pass']})", callback_data="joker_pass"))
+        if inv.get("joker_audience", 0) > 0: joker_btns.append(InlineKeyboardButton(f"👥 Seyirci ({inv['joker_audience']})", callback_data="joker_audience"))
+        if inv.get("joker_ai", 0) > 0: joker_btns.append(InlineKeyboardButton(f"🤖 AI İpucu ({inv['joker_ai']})", callback_data="joker_ai"))
+        if joker_btns: markup.add(*joker_btns)
+
+        if user_id in user_timers: user_timers[user_id].cancel()
+        cat_display = q['category'].replace("_", " ").title()
+        msg = bot.send_photo(chat_id, photo, caption=f"📉 **Zayıf Konu Çalışması**\n📂 Konu: {cat_display}\n👇 Doğru şıkkı seç! (⏳ 30 sn)", reply_markup=markup)
+        users[user_id]["last_question_message_id"] = msg.message_id
+        
+        user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
+        save_users()
+
     def evaluate_quiz_answer(chat_id, user_id, answer, bot, message_id_to_delete=None):
         if user_id not in users or "current_answer" not in users[user_id]: return
         if user_id in user_timers: user_timers[user_id].cancel(); del user_timers[user_id]
@@ -226,6 +266,11 @@ def register_quiz_handlers(bot, tirtil_utils):
 
         correct = users[user_id]["current_answer"]
         u = users[user_id]
+        
+        # İstatistik Hazırlığı (Konu Bazlı)
+        cat = question_data.get("category", "Genel")
+        u.setdefault("topic_stats", {}).setdefault(cat, {"correct": 0, "incorrect": 0})
+
         level, exp, streak, bet_amount = u["level"], u["exp"], u.get("streak", 0), u.get("active_bet", 0)
 
         correct_msgs = ["✅ **Harikasın!**", "🔥 **Alev aldı buralar!**", "🧠 **Zeka küpü!**", "🎯 **Tam isabet!**"]
@@ -254,7 +299,19 @@ def register_quiz_handlers(bot, tirtil_utils):
             bot.send_dice(chat_id, emoji="🎯")
             if q_id in u.get("wrong_answers", []): u["wrong_answers"].remove(q_id)
             u["total_correct"] = u.get("total_correct", 0) + 1
-            cat = question_data.get("category", "Genel"); u.setdefault("cat_stats", {})[cat] = u.get("cat_stats", {}).get(cat, 0) + 1
+            
+            # İstatistik Güncelleme (Doğru)
+            u.setdefault("cat_stats", {})[cat] = u.get("cat_stats", {}).get(cat, 0) + 1 # Eski sistem (Profil için)
+            u["topic_stats"][cat]["correct"] += 1 # Yeni detaylı sistem
+            
+            # Zayıf Konu Kontrolü (İyileşme varsa listeden çıkar)
+            if u.get("mode") == "weakness" and cat in u.get("weak_topics", []):
+                stats = u["topic_stats"][cat]
+                total = stats["correct"] + stats["incorrect"]
+                if total > 0 and (stats["correct"] / total) >= 0.5:
+                    u["weak_topics"].remove(cat)
+                    bot.send_message(chat_id, f"📈 **Gelişme Var!**\n'{cat.replace('_', ' ').title()}' konusundaki başarı oranın %50'yi geçti ve listeden çıkarıldı. 💪")
+
             update_quest_progress(user_id, "quiz_correct"); streak += 1
             u["daily_correct_solved"] = u.get("daily_correct_solved", 0) + 1
             
@@ -275,6 +332,10 @@ def register_quiz_handlers(bot, tirtil_utils):
                 streak = 0; streak_saved = False
             
             if u.get("mode") == "local": u.setdefault("wrong_answers", []).append(q_id)
+            
+            # İstatistik Güncelleme (Yanlış)
+            u["topic_stats"][cat]["incorrect"] += 1
+            
             u["lives"] -= 1; exp = max(0, exp - 10); earned_exp_display = -10
             u["daily_incorrect_solved"] = u.get("daily_incorrect_solved", 0) + 1
             result = f"{'⏳ **Süre Doldu!**' if answer == 'TIMEOUT' else random.choice(wrong_msgs)}\nDoğru Cevap: {correct}\n❤️ Kalan Can: {u['lives']}"
@@ -304,6 +365,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         
         if u.get("mode") == "global": send_global_question(chat_id, user_id)
         elif u.get("mode") == "retry": send_wrong_question(chat_id, user_id)
+        elif u.get("mode") == "weakness": send_weakness_question(chat_id, user_id)
         else: send_question(chat_id, user_id)
 
     def send_global_question(chat_id, user_id):
@@ -403,6 +465,66 @@ def register_quiz_handlers(bot, tirtil_utils):
         kb.add(InlineKeyboardButton("🔙 Geri", callback_data="main_quiz_menu"))
         
         bot.edit_message_text("📰 **Güncel Bilgiler Alt Başlıkları**\nLütfen bir konu seç:", call.message.chat.id, call.message.message_id, reply_markup=kb, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['karnem'])
+    def show_report_card(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        
+        stats = users[user_id].get("topic_stats", {})
+        if not stats:
+            bot.reply_to(message, "📊 Henüz karne oluşturacak kadar soru çözmedin. Biraz pratik yap! ✍️")
+            return
+            
+        report = {}
+        weak_topics = []
+        for cat, data in stats.items():
+            parts = cat.split("_")
+            main = parts[0].upper()
+            sub = " ".join(parts[1:]).title() if len(parts) > 1 else "Genel"
+            
+            if main not in report: report[main] = []
+            report[main].append((sub, data["correct"], data["incorrect"]))
+            
+            total = data["correct"] + data["incorrect"]
+            if total > 0 and (data["correct"] / total) < 0.5:
+                weak_topics.append(cat)
+            
+        text = "📊 **KİŞİSEL BAŞARI KARNESİ**\n\n"
+        for main, items in sorted(report.items()):
+            text += f"📂 **{main}**\n"
+            for sub, c, i in sorted(items, key=lambda x: x[0]):
+                total = c + i
+                rate = (c / total * 100) if total > 0 else 0
+                icon = "🟩" if rate >= 80 else ("🟨" if rate >= 50 else "🟥")
+                text += f"   └ {sub}: {c}✅ {i}❌ ({icon} %{int(rate)})\n"
+            text += "\n"
+        
+        markup = None
+        if weak_topics:
+            markup = InlineKeyboardMarkup()
+            markup.add(InlineKeyboardButton("📉 Zayıf Konulara Çalış (%50 Altı)", callback_data="start_weakness_quiz"))
+            text += "💡 **İpucu:** Başarısız olduğun konular tespit edildi. Aşağıdaki butona basarak sadece bu konulardan soru çözebilirsin."
+            
+        bot.send_message(message.chat.id, text, parse_mode="Markdown", reply_markup=markup)
+
+    @bot.callback_query_handler(func=lambda c: c.data == "start_weakness_quiz")
+    def start_weakness_quiz_callback(call):
+        user_id = str(call.from_user.id)
+        stats = users[user_id].get("topic_stats", {})
+        weak_topics = []
+        for cat, data in stats.items():
+            total = data["correct"] + data["incorrect"]
+            if total > 0 and (data["correct"] / total) < 0.5:
+                weak_topics.append(cat)
+        
+        if not weak_topics:
+            bot.answer_callback_query(call.id, "🎉 Zayıf konun kalmadı!", show_alert=True); return
+            
+        users[user_id].update({"mode": "weakness", "weak_topics": weak_topics}); save_users()
+        bot.answer_callback_query(call.id, "📉 Antrenman başlıyor...")
+        bot.send_message(call.message.chat.id, "📉 **ZAYIF KONU ANTRENMANI**\n\nBaşarı oranın %50'nin altında olduğu konulardan sorular geliyor.\nBaşarana kadar devam! 🚀")
+        send_weakness_question(call.message.chat.id, user_id)
 
     @bot.callback_query_handler(func=lambda c: c.data.startswith("cat_"))
     def category_selected(call):
