@@ -6080,5 +6080,567 @@
     ],
     "answer": "D",
     "explanation": "Türkiye'de nüfus miktarı artmaya devam etse de, nüfus artış hızı özellikle 1960'lardan sonra düşme eğilimindedir."
+  },
+  {
+    "id": 494,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Türkiye'de çıkarılan madenlerin işlendiği tesislere bakıldığında, hammaddeye yakınlık ilkesine uymayan örnek hangisidir?",
+    "options": [
+      "A) Batman - Petrol Rafinerisi",
+      "B) Seydişehir - Alüminyum Tesisleri",
+      "C) Samsun - Bakır İşletmeleri",
+      "D) Murgul - Bakır İşletmeleri"
+    ],
+    "answer": "C",
+    "explanation": "Samsun Bakır İşletmeleri, hammaddeye yakınlık değil, ulaşım (liman) ve pazarlama kolaylığı nedeniyle kurulmuştur. Hammadde Küre'den gelir."
+  },
+  {
+    "id": 495,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Hangi madenimiz volkanik arazilerde değil, 3. jeolojik zamanda oluşmuş tortul arazilerde (göl tabanlarında) bulunur?",
+    "options": [
+      "A) Krom",
+      "B) Linyit",
+      "C) Demir",
+      "D) Bakır"
+    ],
+    "answer": "B",
+    "explanation": "Linyit, 3. jeolojik zamanda oluşmuş organik tortul bir kayaçtır ve Türkiye'nin jeolojik yapısı gereği rezervi en yaygın enerji kaynağıdır."
+  },
+  {
+    "id": 496,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Türkiye'de 'Fosfat' yataklarının en zengin olduğu ve gübre sanayisinin hammaddesi olarak çıkarıldığı merkez neresidir?",
+    "options": [
+      "A) Mardin - Mazıdağı",
+      "B) Bingöl - Genç",
+      "C) Bitlis - Tatvan",
+      "D) Elazığ - Maden"
+    ],
+    "answer": "A",
+    "explanation": "Türkiye'nin en önemli fosfat yatakları Mardin'in Mazıdağı ilçesinde bulunur."
+  },
+  {
+    "id": 497,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Isıya dayanıklı çelik yapımında, uzay ve savaş sanayisinde kullanılan 'Wolfram' madeninin en önemli rezervi hangi ilimizdedir?",
+    "options": [
+      "A) Bursa (Uludağ)",
+      "B) Kütahya (Emet)",
+      "C) Eskişehir (Kırka)",
+      "D) Balıkesir (Bigadiç)"
+    ],
+    "answer": "A",
+    "explanation": "Wolfram (Tungsten) madeninin Türkiye'deki en önemli yatağı Bursa-Uludağ'dadır."
+  },
+  {
+    "id": 498,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Cam, seramik ve deterjan sanayisinde kullanılan 'Soda Külü' (Trona) rezervi bakımından dünyanın sayılı yataklarından biri nerede bulunur?",
+    "options": [
+      "A) Ankara - Beypazarı",
+      "B) Eskişehir - Seyitgazi",
+      "C) Balıkesir - Susurluk",
+      "D) İzmir - Kınık"
+    ],
+    "answer": "A",
+    "explanation": "Ankara-Beypazarı, dünyanın en büyük ikinci Trona (Soda Külü) rezervine sahiptir."
+  },
+  {
+    "id": 499,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Aşağıdaki sanayi kollarından hangisinin kuruluş yerinin belirlenmesinde 'iklim koşulları' ve 'hammaddeye çabuk ulaşım' en belirleyici faktördür?",
+    "options": [
+      "A) Demir-Çelik Sanayisi",
+      "B) Çay Sanayisi",
+      "C) Otomotiv Sanayisi",
+      "D) Seramik Sanayisi"
+    ],
+    "answer": "B",
+    "explanation": "Çay yaprağı toplandıktan kısa süre sonra işlenmelidir, aksi takdirde bozulur. Bu yüzden fabrikalar Doğu Karadeniz'de, üretim alanının içindedir."
+  },
+  {
+    "id": 500,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Petrol ve doğalgaz sondajlarında sondaj çamurunun yoğunluğunu artırmak için kullanılan 'Barit' madeninin en zengin yatakları nerededir?",
+    "options": [
+      "A) Antalya (Alanya-Gazipaşa)",
+      "B) Muğla (Köyceğiz)",
+      "C) Isparta (Şarkikaraağaç)",
+      "D) Konya (Yalvaç)"
+    ],
+    "answer": "A",
+    "explanation": "Barit madeni rezervlerinin büyük kısmı Antalya (Alanya, Gazipaşa) ve çevresinde bulunur."
+  },
+  {
+    "id": 501,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Erzurum'un Oltu Taşı meşhurdur. Peki, süs eşyası yapımında kullanılan 'Lüle Taşı' hangi ilimizle özdeşleşmiştir?",
+    "options": [
+      "A) Kütahya",
+      "B) Eskişehir",
+      "C) Bilecik",
+      "D) Afyonkarahisar"
+    ],
+    "answer": "B",
+    "explanation": "Lüle Taşı, dünyada en kaliteli olarak Eskişehir'de çıkarılır ve işlenir."
+  },
+  {
+    "id": 502,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Türkiye'nin ilk 'Jeotermal Enerji Santrali' hangi ilimizde kurulmuştur?",
+    "options": [
+      "A) Aydın - Germencik",
+      "B) Denizli - Sarayköy",
+      "C) Manisa - Alaşehir",
+      "D) Çanakkale - Tuzla"
+    ],
+    "answer": "B",
+    "explanation": "Türkiye'nin ilk jeotermal santrali Denizli - Sarayköy (Kızıldere) Jeotermal Santrali'dir."
+  },
+  {
+    "id": 503,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Aşağıdaki maden ve çıkarıldığı yer eşleştirmelerinden hangisi yanlıştır?",
+    "options": [
+      "A) Boksit - Konya (Seydişehir)",
+      "B) Bakır - Artvin (Murgul)",
+      "C) Demir - Sivas (Divriği)",
+      "D) Krom - Zonguldak (Ereğli)"
+    ],
+    "answer": "D",
+    "explanation": "Zonguldak Ereğli'de Taş Kömürü çıkarılır. Krom ise Elazığ (Guleman), Muğla (Fethiye) gibi yerlerde çıkarılır."
+  }
+,
+  {
+    "id": 504,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Türkiye'yi Nahçıvan Özerk Cumhuriyeti'ne bağlayan ve 'Umut Köprüsü' olarak da bilinen sınır kapısı hangisidir?",
+    "options": [
+      "A) Gürbulak (İran)",
+      "B) Sarp (Gürcistan)",
+      "C) Dilucu (Nahçıvan)",
+      "D) Habur (Irak)"
+    ],
+    "answer": "C",
+    "explanation": "Iğdır'da bulunan Dilucu Sınır Kapısı, Türkiye'nin Nahçıvan'a açılan tek kapısıdır."
+  },
+  {
+    "id": 505,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Aşağıdaki UNESCO Dünya Mirası Alanlarından hangisi Ege Bölgesi sınırları içerisinde yer almaz?",
+    "options": [
+      "A) Bergama Çok Katmanlı Kültürel Peyzaj Alanı",
+      "B) Efes Antik Kenti",
+      "C) Afrodisias Antik Kenti",
+      "D) Xanthos-Letoon Antik Kentleri"
+    ],
+    "answer": "D",
+    "explanation": "Xanthos-Letoon, Akdeniz Bölgesi'nde, Antalya ve Muğla illeri sınırları içinde yer alır. Diğerleri Ege Bölgesi'ndedir."
+  },
+  {
+    "id": 506,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Aşağıdakilerden hangisi Türkiye'nin ihracatında en büyük paya sahip olan ürün faslıdır?",
+    "options": [
+      "A) Tarım ve gıda ürünleri",
+      "B) Motorlu kara taşıtları (Otomotiv)",
+      "C) Demir-çelik ürünleri",
+      "D) Tekstil ve hazır giyim"
+    ],
+    "answer": "B",
+    "explanation": "Türkiye'nin ihracatında uzun yıllardır en büyük payı otomotiv sektörü ve yan sanayi ürünleri almaktadır."
+  },
+  {
+    "id": 507,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "'Demir İpek Yolu' olarak da bilinen Bakü-Tiflis-Kars (BTK) demir yolu hattı, Türkiye'yi hangi ülkeyi bypass ederek Orta Asya'ya bağlar?",
+    "options": [
+      "A) İran",
+      "B) Ermenistan",
+      "C) Irak",
+      "D) Bulgaristan"
+    ],
+    "answer": "B",
+    "explanation": "Bakü-Tiflis-Kars demir yolu, Türkiye'yi Gürcistan ve Azerbaycan üzerinden Orta Asya'ya bağlarken, kapalı olan Ermenistan sınırını bypass eder."
+  },
+  {
+    "id": 508,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Hem doğal (travertenler) hem de kültürel (antik kent) özellikleriyle UNESCO Karma Miras Listesi'nde yer alan turizm merkezimiz hangisidir?",
+    "options": [
+      "A) Göreme Milli Parkı ve Kapadokya",
+      "B) Nemrut Dağı",
+      "C) Hierapolis-Pamukkale",
+      "D) Efes Antik Kenti"
+    ],
+    "answer": "C",
+    "explanation": "Denizli'de bulunan Hierapolis-Pamukkale, hem kültürel (Hierapolis antik kenti) hem de doğal (Pamukkale travertenleri) özellikleriyle UNESCO Karma Miras Listesi'nde yer alır."
+  },
+  {
+    "id": 509,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Aşağıdakilerden hangisi Türkiye'de ihracatı geliştirmek amacıyla kurulmuş 'Serbest Bölgeler'den biri değildir?",
+    "options": [
+      "A) Mersin Serbest Bölgesi",
+      "B) Ege Serbest Bölgesi (İzmir)",
+      "C) Trakya Serbest Bölgesi (İstanbul)",
+      "D) Ankara Lojistik Üssü"
+    ],
+    "answer": "D",
+    "explanation": "Ankara Lojistik Üssü önemli bir lojistik merkezidir ancak özel kanunla kurulan bir 'Serbest Bölge' statüsünde değildir."
+  },
+  {
+    "id": 510,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "'İnanç Turizmi' açısından büyük öneme sahip olan ve 'Peygamberler Şehri' olarak bilinen ilimiz hangisidir?",
+    "options": [
+      "A) Konya",
+      "B) Şanlıurfa",
+      "C) Mardin",
+      "D) Hatay"
+    ],
+    "answer": "B",
+    "explanation": "Şanlıurfa, Hz. İbrahim'in doğduğu yer olarak kabul edilmesi ve Balıklıgöl gibi mekanlarıyla 'Peygamberler Şehri' olarak anılır."
+  },
+  {
+    "id": 511,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Türkiye'nin en yüksek köprüsü olan 'Beğendik (Botan) Köprüsü' hangi iki ilimiz arasındaki ulaşımı kolaylaştırmaktadır?",
+    "options": [
+      "A) Siirt - Van",
+      "B) Hakkari - Şırnak",
+      "C) Bitlis - Muş",
+      "D) Ağrı - Iğdır"
+    ],
+    "answer": "A",
+    "explanation": "Botan Çayı üzerinde inşa edilen Beğendik Köprüsü, Van ile Siirt arasındaki ulaşımı önemli ölçüde kısaltan stratejik bir projedir."
+  },
+  {
+    "id": 512,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Türkiye'nin en büyük konteyner limanı olan ve bir 'transshipment' (aktarma) merkezi olarak tasarlanan liman hangisidir?",
+    "options": [
+      "A) Mersin Limanı",
+      "B) Ambarlı Limanı (İstanbul)",
+      "C) Asyaport (Tekirdağ)",
+      "D) Aliağa Limanı (İzmir)"
+    ],
+    "answer": "C",
+    "explanation": "Tekirdağ'da bulunan Asyaport, Türkiye'nin ilk transit konteyner limanı (hub port) olup, büyük gemilerden gelen yükleri daha küçük gemilere aktarma konusunda uzmanlaşmıştır."
+  },
+  {
+    "id": 513,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Aşağıdakilerden hangisi Türkiye'nin 'Yavaş Şehir' (Cittaslow) unvanına sahip yerleşim yerlerinden biri değildir?",
+    "options": [
+      "A) Seferihisar (İzmir)",
+      "B) Gökçeada (Çanakkale)",
+      "C) Akyaka (Muğla)",
+      "D) Alaçatı (İzmir)"
+    ],
+    "answer": "D",
+    "explanation": "Alaçatı, popüler bir turizm merkezi olmasına rağmen 'Cittaslow' ağına dahil değildir. Seferihisar Türkiye'nin ilk yavaş şehridir."
+  }
+,
+  {
+    "id": 514,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "İslamiyet öncesi Türk devletlerinde, ülkenin doğu ve batı olarak ikiye ayrılarak yönetildiği idari sisteme ne ad verilir?",
+    "options": [
+      "A) Kurultay",
+      "B) Töre",
+      "C) İkili Teşkilat",
+      "D) Onlu Sistem"
+    ],
+    "answer": "C",
+    "explanation": "İkili teşkilatta, kutsal sayılan doğuyu asıl hükümdar (Kağan) yönetirken, batıyı genellikle kardeşi olan Yabgu yönetirdi."
+  },
+  {
+    "id": 515,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "İslamiyet öncesi Türklerde hükümdarlık yetkisinin Gök Tanrı tarafından verildiğine inanılan anlayışa ne denir?",
+    "options": [
+      "A) Töre",
+      "B) Yuğ",
+      "C) Balbal",
+      "D) Kut"
+    ],
+    "answer": "D",
+    "explanation": "Kut, kan yoluyla hanedan üyelerine geçerdi ve bu durum taht kavgalarına neden olabilirdi."
+  },
+  {
+    "id": 516,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "Kendi adına para bastıran ilk Türk hükümdarı olarak bilinen Baga Tarkan, hangi Türk devletinin hükümdarıdır?",
+    "options": [
+      "A) Göktürkler",
+      "B) Uygurlar",
+      "C) Türgişler",
+      "D) Hazarlar"
+    ],
+    "answer": "C",
+    "explanation": "Türgiş hükümdarı Baga Tarkan, kendi adına para bastırarak Türk tarihinde bir ilki gerçekleştirmiştir."
+  },
+  {
+    "id": 517,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "İslamiyet öncesi Türklerde, ölen kişinin hayattayken öldürdüğü düşman sayısı kadar mezarının başına dikilen taş heykellere ne ad verilir?",
+    "options": [
+      "A) Kurgan",
+      "B) Bengütaş",
+      "C) Balbal",
+      "D) Tamga"
+    ],
+    "answer": "C",
+    "explanation": "Balbalların, öbür dünyada ölen kişiye hizmet edeceğine inanılırdı. Kurgan ise mezar anlamına gelir."
+  },
+  {
+    "id": 518,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Aşağıdakilerden hangisi, Asya Hun Devleti'nin dağılmasıyla başlayan Kavimler Göçü'nün sonuçlarından biri değildir?",
+    "options": [
+      "A) Roma İmparatorluğu'nun ikiye ayrılması",
+      "B) Avrupa'da feodalite rejiminin ortaya çıkması",
+      "C) Avrupa'nın etnik yapısının değişmesi",
+      "D) Yazının icat edilmesi"
+    ],
+    "answer": "D",
+    "explanation": "Yazının icadı, Kavimler Göçü'nden binlerce yıl önce Mezopotamya'da gerçekleşmiş bir olaydır."
+  },
+  {
+    "id": 519,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "Yerleşik hayata geçen ilk Türk devleti olan Uygurlar, aşağıdaki alanların hangisinde diğer Türk devletlerine göre daha az gelişme göstermiştir?",
+    "options": [
+      "A) Mimari",
+      "B) Tarım",
+      "C) Savaşçılık",
+      "D) Sanat"
+    ],
+    "answer": "C",
+    "explanation": "Uygurlar, Maniheizm dininin etkisiyle et yemeyi ve savaşmayı büyük ölçüde bırakmış, bu da askeri yönden zayıflamalarına neden olmuştur."
+  },
+  {
+    "id": 520,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "Çin esaretine son vererek II. Göktürk (Kutluk) Devleti'ni kuran ve 'İlteriş' (Devleti Derleyen, Toplayan) unvanını alan hükümdar kimdir?",
+    "options": [
+      "A) Bumin Kağan",
+      "B) Bilge Kağan",
+      "C) Kapgan Kağan",
+      "D) Kutluk Kağan"
+    ],
+    "answer": "D",
+    "explanation": "Kutluk Kağan, 50 yıllık Çin esaretine son vererek II. Göktürk Devleti'ni kurmuş ve İlteriş unvanını almıştır."
+  },
+  {
+    "id": 521,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "İslamiyet öncesi Türk devletlerinde vergi toplayan görevliye ne ad verilirdi?",
+    "options": [
+      "A) Tudun",
+      "B) Subaşı",
+      "C) Tarkan",
+      "D) Apa"
+    ],
+    "answer": "A",
+    "explanation": "Tudun, vergi memurudur. Subaşı ordu komutanı, Tarkan askeri yönetici, Apa ise sivil yönetici anlamına gelirdi."
+  },
+  {
+    "id": 522,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Aşağıdaki destan-devlet eşleştirmelerinden hangisi yanlıştır?",
+    "options": [
+      "A) Oğuz Kağan Destanı - Asya Hun",
+      "B) Ergenekon Destanı - Göktürkler",
+      "C) Türeyiş Destanı - Uygurlar",
+      "D) Manas Destanı - Avarlar"
+    ],
+    "answer": "D",
+    "explanation": "Manas Destanı, Kırgızlara aittir. Avarların bilinen önemli bir destanı yoktur."
+  },
+  {
+    "id": 523,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "İslamiyet öncesi Türk toplumunun sosyal yapısı küçükten büyüğe doğru nasıl sıralanır?",
+    "options": [
+      "A) Oguş - Urug - Boy - Budun - İl",
+      "B) Boy - Oguş - Urug - Budun - İl",
+      "C) Urug - Oguş - Boy - Budun - İl",
+      "D) Oguş - Boy - Budun - Urug - İl"
+    ],
+    "answer": "A",
+    "explanation": "Sosyal yapı; Oguş (Aile), Urug (Sülale), Boy (Kabile), Budun (Millet) ve İl (Devlet) şeklinde sıralanır."
+  },
+  {
+    "id": 524,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Normalde Akdeniz iklimi ürünü olan zeytinin, Doğu Karadeniz'de (Artvin-Yusufeli) yetişebilmesinin temel nedeni nedir?",
+    "options": [
+      "A) Yükseltinin az olması",
+      "B) Fön rüzgarının oluşturduğu mikroklima etkisi",
+      "C) Toprak yapısının uygun olması",
+      "D) Yıllık yağış miktarının fazla olması"
+    ],
+    "answer": "B",
+    "explanation": "Çoruh Vadisi boyunca esen fön rüzgarları, vadi içinde sıcak ve kurak bir mikroklima oluşturarak zeytin gibi Akdeniz bitkilerinin yetişmesine olanak tanır."
+  },
+  {
+    "id": 525,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Sadece Köyceğiz Gölü ve çevresinde doğal olarak yetişen, yağı parfümeri ve eczacılıkta kullanılan endemik ağaç türü hangisidir?",
+    "options": [
+      "A) Kazdağı Göknarı",
+      "B) Datça Hurması",
+      "C) Sığla (Günlük) Ağacı",
+      "D) İspir Meşesi"
+    ],
+    "answer": "C",
+    "explanation": "Sığla (Günlük) Ağacı, dünyada sadece Türkiye'de (Muğla-Köyceğiz) ve Rodos Adası'nda bulunan endemik bir türdür."
+  },
+  {
+    "id": 526,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Türkiye'de en geniş alanda görülen karasal iklim tipinin en belirgin özelliği olan yağış rejimi nasıldır?",
+    "options": [
+      "A) En fazla yağış kışın, en az yağış yazın düşer.",
+      "B) En fazla yağış ilkbaharda, en az yağış yazın düşer.",
+      "C) En fazla yağış yazın, en az yağış kışın düşer.",
+      "D) Yağışlar tüm mevsime düzenli dağılmıştır."
+    ],
+    "answer": "B",
+    "explanation": "İç Anadolu tipi karasal iklimde konveksiyonel (kırkikindi) yağışlar nedeniyle en fazla yağış ilkbahar aylarında, en az yağış ise yaz kuraklığı nedeniyle yaz aylarında görülür."
+  },
+  {
+    "id": 527,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "İç Anadolu ve Güneydoğu Anadolu'da ormanların tahrip edilmesiyle ortaya çıkan bozkır alanlarına ne ad verilir?",
+    "options": [
+      "A) Alpin Çayır",
+      "B) Antropojen Bozkır",
+      "C) Garig",
+      "D) Psödomaki"
+    ],
+    "answer": "B",
+    "explanation": "İnsan etkisiyle (orman tahribatı) oluşan bozkırlara Antropojen Bozkır denir. Türkiye'deki bozkırların büyük bir kısmı bu şekildedir."
+  },
+  {
+    "id": 528,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Balkanlar üzerinden gelerek Trakya ve Marmara'da etkili olan, kışın kar yağışlarına neden olan soğuk yerel rüzgar hangisidir?",
+    "options": [
+      "A) Lodos",
+      "B) Samyeli (Keşişleme)",
+      "C) Karayel",
+      "D) Poyraz"
+    ],
+    "answer": "C",
+    "explanation": "Karayel, kuzeybatıdan esen soğuk ve nemli bir rüzgardır. Kışın Trakya ve Marmara'da kar yağışlarına neden olur. (Kayıp Sakal kodlaması)."
+  },
+  {
+    "id": 529,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Karadeniz Bölgesi'nin denize bakan yamaçlarında, yükseltiye bağlı olarak görülen orman kuşağı aşağıdakilerden hangisinde doğru sıralanmıştır? (Alçaktan Yükseğe)",
+    "options": [
+      "A) Geniş Yapraklı - İğne Yapraklı - Karma Orman",
+      "B) İğne Yapraklı - Karma Orman - Geniş Yapraklı",
+      "C) Geniş Yapraklı - Karma Orman - İğne Yapraklı",
+      "D) Karma Orman - Geniş Yapraklı - İğne Yapraklı"
+    ],
+    "answer": "C",
+    "explanation": "Kıyıdaki nemli ve ılıman kuşakta geniş yapraklı ağaçlar (kestane, gürgen, kayın), yükselti arttıkça yerini karma ormanlara, daha yükseklerde ise soğuğa dayanıklı iğne yapraklı ağaçlara (ladin, göknar) bırakır."
+  },
+  {
+    "id": 530,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Geçmiş jeolojik dönemlerdeki iklim koşullarında yetişmiş olup, günümüzde sadece belirli ve uygun alanlarda yaşamını sürdürebilen bitkilere 'kalıntı (relikt) bitki' denir. Aşağıdakilerden hangisi bu duruma örnek gösterilebilir?",
+    "options": [
+      "A) Datça Hurması",
+      "B) Sığla Ağacı",
+      "C) Kazdağı Göknarı",
+      "D) Kayın Ağacı (Amanos Dağları)"
+    ],
+    "answer": "D",
+    "explanation": "Normalde bir Karadeniz bitkisi olan Kayın ağacının, Akdeniz iklim kuşağındaki Amanos Dağları'nda bulunması, onun geçmiş buzul dönemlerinden kalma bir relikt bitki olduğunu gösterir."
+  },
+  {
+    "id": 531,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Kış aylarında Doğu Anadolu'daki çukur alanlarda (örneğin Iğdır Ovası) çevresindeki yüksek dağlara göre daha ılıman bir iklimin görülmesinin ve pamuk gibi ürünlerin yetişebilmesinin nedeni nedir?",
+    "options": [
+      "A) Fön rüzgarı etkisi",
+      "B) Sıcaklık terselmesi (inversiyon)",
+      "C) Bakı etkisi",
+      "D) Denizellik etkisi"
+    ],
+    "answer": "B",
+    "explanation": "Kışın soğuk ve ağır hava çukur alanlara çökerken, yükseklerdeki hava daha ılıman kalır. Bu duruma sıcaklık terselmesi denir ve Iğdır gibi yerlerde pamuk tarımına olanak tanır."
+  },
+  {
+    "id": 532,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Karadeniz Bölgesi'nde ormanların tahrip edilmesiyle ortaya çıkan, makilere benzeyen ancak her mevsim yeşil kalmayan yalancı makilere ne ad verilir?",
+    "options": [
+      "A) Garig",
+      "B) Frigana",
+      "C) Antropojen Bozkır",
+      "D) Psödomaki"
+    ],
+    "answer": "D",
+    "explanation": "Psödomaki (Yalancı Maki), Karadeniz'de orman tahribi sonucu oluşan, fındık, üvez, kızılcık gibi bitki topluluklarıdır. Makiden farkı, kışın yaprak döken türler içermesidir."
+  },
+  {
+    "id": 533,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Türkiye'de yıllık sıcaklık farkının en az olduğu bölüm ile en fazla olduğu bölüm sırasıyla hangisidir?",
+    "options": [
+      "A) Doğu Karadeniz - Erzurum-Kars",
+      "B) Kıyı Ege - İç Batı Anadolu",
+      "C) Doğu Karadeniz - Güneydoğu Anadolu",
+      "D) Antalya Bölümü - Konya Bölümü"
+    ],
+    "answer": "A",
+    "explanation": "Nemliliğin en fazla olduğu Doğu Karadeniz kıyılarında yıllık sıcaklık farkı en azdır. Karasallığın ve yükseltinin en şiddetli olduğu Erzurum-Kars bölümünde ise yıllık sıcaklık farkı en fazladır."
   }
 ]
