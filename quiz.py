@@ -164,6 +164,8 @@ def register_quiz_handlers(bot, tirtil_utils):
         if inv.get("joker_ai", 0) > 0: joker_btns.append(InlineKeyboardButton(f"🤖 AI İpucu ({inv['joker_ai']})", callback_data="joker_ai"))
         if joker_btns: markup.add(*joker_btns)
 
+        markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
+
         if user_id in user_timers: user_timers[user_id].cancel()
         msg = bot.send_photo(chat_id, photo, caption=caption, reply_markup=markup)
         users[user_id]["last_question_message_id"] = msg.message_id
@@ -185,6 +187,8 @@ def register_quiz_handlers(bot, tirtil_utils):
         users[user_id].update({"current_answer": q["answer"], "current_question_id": q["id"]})
         photo = create_quiz_image(q['question'], q['options'], q['category'], users[user_id]["level"], users[user_id]['lives'])
         markup = InlineKeyboardMarkup(row_width=4).add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
+
+        markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
 
         if user_id in user_timers: user_timers[user_id].cancel()
         msg = bot.send_photo(chat_id, photo, caption="🔄 **Tekrar Zamanı!** (⏳ 30 sn)", reply_markup=markup)
@@ -224,6 +228,8 @@ def register_quiz_handlers(bot, tirtil_utils):
         if inv.get("joker_audience", 0) > 0: joker_btns.append(InlineKeyboardButton(f"👥 Seyirci ({inv['joker_audience']})", callback_data="joker_audience"))
         if inv.get("joker_ai", 0) > 0: joker_btns.append(InlineKeyboardButton(f"🤖 AI İpucu ({inv['joker_ai']})", callback_data="joker_ai"))
         if joker_btns: markup.add(*joker_btns)
+
+        markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
 
         if user_id in user_timers: user_timers[user_id].cancel()
         cat_display = q['category'].replace("_", " ").title()
@@ -391,6 +397,7 @@ def register_quiz_handlers(bot, tirtil_utils):
             
             markup = InlineKeyboardMarkup(row_width=4).add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in letters])
             # Jokerler eklenebilir
+            markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
             
             if user_id in user_timers: user_timers[user_id].cancel()
             bot.delete_message(chat_id, wait_msg.message_id)
@@ -400,6 +407,36 @@ def register_quiz_handlers(bot, tirtil_utils):
             save_users()
         except Exception as e:
             bot.edit_message_text(f"Hata: {str(e)}", chat_id, wait_msg.message_id)
+
+    @bot.callback_query_handler(func=lambda c: c.data == 'finish_quiz')
+    def finish_quiz_handler(call):
+        user_id = str(call.from_user.id)
+        if user_id not in users:
+            return
+
+        # Zamanlayıcıyı durdur
+        if user_id in user_timers:
+            try:
+                user_timers[user_id].cancel()
+                del user_timers[user_id]
+            except: pass
+
+        # Kullanıcı durumunu temizle
+        u = users[user_id]
+        u.pop("current_answer", None)
+        u.pop("current_question_id", None)
+        u["mode"] = "local"  # Varsayılan moda dön
+        u["lives"] = 3  # Canları sıfırla
+        u.pop("active_bet", None) # Bahsi temizle
+        u.pop("marathon_score", None) # Maratonu sıfırla
+        save_users()
+
+        # Kullanıcıyı bilgilendir
+        try:
+            bot.delete_message(call.message.chat.id, call.message.message_id)
+        except: pass
+        bot.answer_callback_query(call.id, "Test bitirildi.")
+        bot.send_message(call.message.chat.id, "🏁 Test bitirildi. Ana menüye dönmek için /start veya yeni bir teste başlamak için /quiz yazabilirsin.")
 
     @bot.message_handler(commands=['quiz'])
     def quiz(message):

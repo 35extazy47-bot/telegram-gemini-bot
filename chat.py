@@ -483,6 +483,8 @@ def send_question(chat_id, user_id):
     if joker_btns:
         markup.add(*joker_btns)
 
+    markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
+
     # Eski zamanlayıcıyı iptal et
     if user_id in user_timers:
         try: user_timers[user_id].cancel()
@@ -529,6 +531,8 @@ def send_wrong_question(chat_id, user_id):
     row2 = [InlineKeyboardButton("C", callback_data="ans_C"), InlineKeyboardButton("D", callback_data="ans_D")]
     markup.add(*row1)
     markup.add(*row2)
+
+    markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
 
     # Joker yok (Tekrar modunda joker olmaz)
 
@@ -1197,6 +1201,8 @@ def send_global_question(chat_id, user_id):
         if joker_btns:
             markup.add(*joker_btns)
 
+        markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
+
         # Eski zamanlayıcıyı iptal et
         if user_id in user_timers:
             try: user_timers[user_id].cancel()
@@ -1753,6 +1759,36 @@ def daily_reward(message):
     save_users()
     
     bot.reply_to(message, f"🎁 **GÜNLÜK ÖDÜL ALINDI!**\n\n⭐️ EXP: +{total_reward}\n💵 Para: +{money_reward} $\n🔥 Günlük Seri: {streak}. Gün{luck_msg}\n\n_(Her gün gel, ödülünü katla!)_")
+
+@bot.callback_query_handler(func=lambda c: c.data == 'finish_quiz')
+def finish_quiz_handler(call):
+    user_id = str(call.from_user.id)
+    if user_id not in users:
+        return
+
+    # Zamanlayıcıyı durdur
+    if user_id in user_timers:
+        try:
+            user_timers[user_id].cancel()
+            del user_timers[user_id]
+        except: pass
+
+    # Kullanıcı durumunu temizle
+    u = users[user_id]
+    u.pop("current_answer", None)
+    u.pop("current_question_id", None)
+    u["mode"] = "local"  # Varsayılan moda dön
+    u["lives"] = 3  # Canları sıfırla
+    u.pop("active_bet", None) # Bahsi temizle
+    u.pop("marathon_score", None) # Maratonu sıfırla
+    save_users()
+
+    # Kullanıcıyı bilgilendir
+    try:
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+    except: pass
+    bot.answer_callback_query(call.id, "Test bitirildi.")
+    bot.send_message(call.message.chat.id, "🏁 Test bitirildi. Ana menüye dönmek için /start veya yeni bir teste başlamak için /quiz yazabilirsin.")
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("ans_"))
 def handle_quiz_answer_callback(call):
