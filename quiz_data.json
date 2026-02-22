@@ -6643,4 +6643,1056 @@
     "answer": "A",
     "explanation": "Nemliliğin en fazla olduğu Doğu Karadeniz kıyılarında yıllık sıcaklık farkı en azdır. Karasallığın ve yükseltinin en şiddetli olduğu Erzurum-Kars bölümünde ise yıllık sıcaklık farkı en fazladır."
   }
+,
+  {
+    "id": 534,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Türkiye'de buzul şekillerine (sirk gölleri, morenler) rastlanabilen dağlar arasında aşağıdakilerden hangisi yer almaz?",
+    "options": [
+      "A) Kaçkar Dağları",
+      "B) Cilo (Buzul) Dağı",
+      "C) Yıldız Dağları",
+      "D) Erciyes Dağı"
+    ],
+    "answer": "C",
+    "explanation": "Yıldız Dağları'nın yükseltisi 2000 metrenin altında olduğu için (yaklaşık 1031m) buzul şekillerine rastlanmaz."
+  },
+  {
+    "id": 535,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Akdeniz Bölgesi'nde karstik arazilerin geniş yer kaplaması, bölgenin hidrolojik özelliklerini nasıl etkilemiştir?",
+    "options": [
+      "A) Yerüstü sularının bol olmasını sağlamıştır",
+      "B) Yeraltı sularının fakirleşmesine neden olmuştur",
+      "C) Akarsu rejimlerinin düzenli olmasını sağlamıştır",
+      "D) Suların yeraltına sızması nedeniyle yerüstü sularının fakir olmasına yol açmıştır"
+    ],
+    "answer": "D",
+    "explanation": "Karstik araziler geçirimli olduğu için sular kolayca yeraltına sızar, bu da yüzey sularının az, yeraltı sularının zengin olmasını sağlar."
+  },
+  {
+    "id": 536,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Erzurum-Kars Bölümü'nde yaz yağışlarının fazla olması, doğal bitki örtüsü olarak neyin gelişmesini sağlamıştır?",
+    "options": [
+      "A) Maki",
+      "B) Bozkır",
+      "C) Alpin Çayır",
+      "D) Antropojen Bozkır"
+    ],
+    "answer": "C",
+    "explanation": "Yaz yağışları ve serin iklim, yükseklerde gür ot toplulukları olan Alpin Çayırların gelişmesini sağlamıştır."
+  },
+  {
+    "id": 537,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Aşağıdaki ovalardan hangisi oluşum kökeni bakımından 'Karstik Ova' (Polje) grubunda yer alır?",
+    "options": [
+      "A) Bafra Ovası",
+      "B) Elmalı Ovası",
+      "C) Çarşamba Ovası",
+      "D) Gediz Ovası"
+    ],
+    "answer": "B",
+    "explanation": "Elmalı, Kestel, Acıpayam ve Tefenni ovaları (TAKKE kodlaması) Akdeniz'deki karstik ovalardır."
+  },
+  {
+    "id": 538,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Türkiye kıyılarında 'Fiyort' ve 'Skyer' tipi kıyıların görülmemesinin temel nedeni nedir?",
+    "options": [
+      "A) Dağların uzanış yönü",
+      "B) Jeolojik yapı",
+      "C) Matematik Konum (Enlem)",
+      "D) Özel Konum"
+    ],
+    "answer": "C",
+    "explanation": "Bu kıyı tipleri buzul etkisiyle oluşur. Türkiye orta kuşakta olduğu için deniz seviyesinde buzul etkisi görülmez."
+  },
+  {
+    "id": 539,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Türkiye'de rüzgar erozyonunun (korozyon) en şiddetli olduğu ve çölleşme riskinin bulunduğu yöre neresidir?",
+    "options": [
+      "A) Konya - Karapınar",
+      "B) Rize - Çamlıhemşin",
+      "C) Muğla - Menteşe",
+      "D) Hakkari - Yüksekova"
+    ],
+    "answer": "A",
+    "explanation": "Kuraklık ve bitki örtüsü cılızlığı nedeniyle Karapınar çevresi rüzgar erozyonunun en fazla olduğu yerdir."
+  },
+  {
+    "id": 540,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Aşağıdaki göllerden hangisi bir vadinin heyelan sonucu kapanmasıyla oluşan 'Heyelan Set Gölü'dür?",
+    "options": [
+      "A) Beyşehir Gölü",
+      "B) Tortum Gölü",
+      "C) İznik Gölü",
+      "D) Manyas Gölü"
+    ],
+    "answer": "B",
+    "explanation": "Tortum, Sera, Abant, Yedigöller heyelan set gölleridir. Beyşehir, İznik ve Manyas tektonik kökenlidir."
+  },
+  {
+    "id": 541,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Türkiye'de kış aylarında görülen yağışların büyük bir kısmı hangi oluşum türündedir?",
+    "options": [
+      "A) Konveksiyonel (Yükselim)",
+      "B) Orografik (Yamaç)",
+      "C) Cephesel (Frontal)",
+      "D) Muson"
+    ],
+    "answer": "C",
+    "explanation": "Orta kuşakta yer almamız nedeniyle, sıcak ve soğuk hava kütlelerinin karşılaşmasıyla oluşan cephesel yağışlar kışın hakimdir."
+  },
+  {
+    "id": 542,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Volkanik arazilerde, volkanik kum ve tüflerin bulunduğu alanlarda oluşan verimli topraklara ne ad verilir?",
+    "options": [
+      "A) Terra Rossa",
+      "B) Regosol",
+      "C) Podzol",
+      "D) Vertisol"
+    ],
+    "answer": "B",
+    "explanation": "Regosoller, volkanik arazilerdeki kumlu ve tüflü topraklardır. Nevşehir çevresinde patates ve üzüm tarımı için elverişlidir."
+  },
+  {
+    "id": 543,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Aşağıdaki akarsulardan hangisi sularını denize ulaştıramadığı için 'Kapalı Havza' özelliği gösterir?",
+    "options": [
+      "A) Kızılırmak",
+      "B) Yeşilırmak",
+      "C) Aras",
+      "D) Seyhan"
+    ],
+    "answer": "C",
+    "explanation": "Aras ve Kura nehirleri Hazar Denizi'ne (gölüne) döküldüğü için okyanusla bağlantısı yoktur ve kapalı havzadır."
+  },
+  {
+    "id": 544,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Kurak bölgelerde sel sularının bitki örtüsünden yoksun yamaçları aşındırmasıyla oluşan 'Kırgıbayır' (Badlands) topoğrafyası en çok nerede görülür?",
+    "options": [
+      "A) Doğu Karadeniz",
+      "B) İç Anadolu",
+      "C) Yıldız Dağları",
+      "D) Menteşe Yöresi"
+    ],
+    "answer": "B",
+    "explanation": "Bitki örtüsünün cılız olduğu İç Anadolu (özellikle Ürgüp-Göreme çevresi) kırgıbayır oluşumu için en uygun yerdir."
+  },
+  {
+    "id": 545,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Karadeniz'in tuzluluk oranının Akdeniz'den daha az olmasının temel nedeni nedir?",
+    "options": [
+      "A) Derinliğinin az olması",
+      "B) Enlem etkisi (Buharlaşma azlığı) ve bol yağış",
+      "C) Balık çeşidinin fazla olması",
+      "D) Akıntıların yönü"
+    ],
+    "answer": "B",
+    "explanation": "Kuzeyde yer alması (az buharlaşma) ve bol yağış/akarsu ile beslenmesi tuzluluğu düşürür."
+  },
+  {
+    "id": 546,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Ege Bölgesi'nde dağların kıyıya dik uzanmasının bir sonucu olarak kıyıda hangi yer şekli görülmez?",
+    "options": [
+      "A) Delta Ovaları",
+      "B) Koy ve Körfezler",
+      "C) Falez (Yalıyar)",
+      "D) Doğal Limanlar"
+    ],
+    "answer": "C",
+    "explanation": "Dağların dik uzandığı yerlerde kıta sahanlığı geniştir, bu nedenle falez oluşumu zordur. Falezler dağların paralel uzandığı yerlerde (Akdeniz/Karadeniz) görülür."
+  },
+  {
+    "id": 547,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Eski akarsu vadilerinin deniz suları altında kalmasıyla oluşan 'Ria' tipi kıyıya Türkiye'den verilebilecek en iyi örnek neresidir?",
+    "options": [
+      "A) Antalya - Kaş kıyıları",
+      "B) İstanbul Boğazı ve Haliç",
+      "C) Büyükçekmece kıyıları",
+      "D) İzmir kıyıları"
+    ],
+    "answer": "B",
+    "explanation": "İstanbul ve Çanakkale Boğazları ile Haliç, Ria tipi kıyı oluşumunun tipik örnekleridir."
+  },
+  {
+    "id": 548,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Aşağıdaki dağlardan hangisi oluşum bakımından 'Kırıklı Dağ' (Horst) grubunda yer alır?",
+    "options": [
+      "A) Küre Dağları",
+      "B) Kaçkar Dağları",
+      "C) Madra Dağı",
+      "D) Toros Dağları"
+    ],
+    "answer": "C",
+    "explanation": "Ege Bölgesi'ndeki Madra, Yunt, Bozdağlar, Aydın Dağları ve Menteşe Dağları kırıklı (horst) dağlardır."
+  },
+  {
+    "id": 549,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Karadeniz Bölgesi'nde dağların kuzey yamaçlarının güney yamaçlarına göre daha yoğun nüfuslu olması, coğrafyanın hangi genel kuralına terstir?",
+    "options": [
+      "A) Yükselti",
+      "B) Bakı",
+      "C) Eğim",
+      "D) Jeolojik Yapı"
+    ],
+    "answer": "B",
+    "explanation": "Normalde Kuzey Yarımküre'de güney yamaçlar (Bakı) daha sıcaktır. Ancak Karadeniz'de denizellik (nem) nedeniyle kuzey yamaçlar daha ılıman ve nüfusludur."
+  },
+  {
+    "id": 550,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Yüzölçümü küçük olmasına rağmen sanayileşme nedeniyle aritmetik nüfus yoğunluğu en fazla olan ilimiz (İstanbul hariç) hangisidir?",
+    "options": [
+      "A) Konya",
+      "B) Yalova",
+      "C) Ankara",
+      "D) Antalya"
+    ],
+    "answer": "B",
+    "explanation": "Yalova, yüzölçümünün çok küçük olması ve göç alması nedeniyle nüfus yoğunluğu çok yüksektir."
+  },
+  {
+    "id": 551,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Deniz kıyısında, balıkçılıkla geçinen geçici köy altı yerleşmelerine ne ad verilir?",
+    "options": [
+      "A) Kom",
+      "B) Ağıl",
+      "C) Dalyan",
+      "D) Mezra"
+    ],
+    "answer": "C",
+    "explanation": "Dalyan, özellikle Ege ve Akdeniz kıyılarında görülen balıkçılık amaçlı yerleşmelerdir."
+  },
+  {
+    "id": 552,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Türkiye'de kırdan kente göçün en temel nedeni aşağıdakilerden hangisidir?",
+    "options": [
+      "A) Kan davaları",
+      "B) Tarımda makineleşme ve işsizlik",
+      "C) Eğitim yetersizliği",
+      "D) Sağlık sorunları"
+    ],
+    "answer": "B",
+    "explanation": "Tarımda makineleşme insan gücüne duyulan ihtiyacı azaltmış, bu da kırsal işsizliği artırarak göçe neden olmuştur."
+  },
+  {
+    "id": 553,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Aşağıdaki tarım ürünlerinden hangisinin üretimi, uyuşturucu yapımında kullanılabileceği için devlet kontrolündedir?",
+    "options": [
+      "A) Pamuk",
+      "B) Kenevir",
+      "C) Mısır",
+      "D) Ayçiçeği"
+    ],
+    "answer": "B",
+    "explanation": "Kenevir ve Haşhaş, uyuşturucu hammaddesi olabildikleri için devlet izni ve kontrolü ile üretilir."
+  },
+  {
+    "id": 554,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Bir bölgede yıllarca aynı ürünün kesintisiz ekilmesine 'Monokültür' denir. Rize çevresinde monokültür özelliği gösteren ürün hangisidir?",
+    "options": [
+      "A) Fındık",
+      "B) Kivi",
+      "C) Çay",
+      "D) Mısır"
+    ],
+    "answer": "C",
+    "explanation": "Çay, Rize ve çevresinde hakim olan ve bölgeyle özdeşleşen monokültür bitkisidir."
+  },
+  {
+    "id": 555,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Ormanlık alanlara ve genç fidanlara zarar verdiği gerekçesiyle orman köylerinde beslenmesi kısıtlanan hayvan türü hangisidir?",
+    "options": [
+      "A) Koyun",
+      "B) Sığır",
+      "C) Kıl Keçisi",
+      "D) Tiftik Keçisi"
+    ],
+    "answer": "C",
+    "explanation": "Kıl keçisi, ağaç filizlerini yediği için ormanlara zarar verir, bu yüzden Toroslar'da sayısı azaltılmaya çalışılmaktadır."
+  },
+  {
+    "id": 556,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Türkiye'de gezginci arıcılığın yaygın olması ve bitki çeşitliliği nedeniyle bal üretiminde genellikle ilk sırada yer alan ilimiz hangisidir?",
+    "options": [
+      "A) Rize",
+      "B) Ordu",
+      "C) Kars",
+      "D) Hakkari"
+    ],
+    "answer": "B",
+    "explanation": "Ordu, bal üretiminde Türkiye'de genellikle birinci sıradadır. Muğla (çam balı) da önemli bir merkezdir."
+  },
+  {
+    "id": 557,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Toprağın nemli olması nedeniyle 'Nadas' yöntemine en az ihtiyaç duyulan bölgemiz hangisidir?",
+    "options": [
+      "A) İç Anadolu",
+      "B) Güneydoğu Anadolu",
+      "C) Karadeniz",
+      "D) Ege"
+    ],
+    "answer": "C",
+    "explanation": "Her mevsim yağışlı olan Karadeniz'de toprak nemli kaldığı için nadasa (toprağı boş bırakmaya) gerek duyulmaz."
+  },
+  {
+    "id": 558,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Aşağıdaki tarım ürünlerinden hangisinin üretim alanları devlet tarafından sınırlandırılmamıştır?",
+    "options": [
+      "A) Tütün",
+      "B) Pirinç (Çeltik)",
+      "C) Haşhaş",
+      "D) Üzüm"
+    ],
+    "answer": "D",
+    "explanation": "Üzüm, iklim seçiciliği az olan ve devlet sınırlaması olmayan bir üründür. Diğerleri kalite, sağlık veya güvenlik nedeniyle sınırlıdır."
+  },
+  {
+    "id": 559,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Geleneksel olarak Bursa ile anılan ancak günümüzde yaş koza üretiminde Diyarbakır'ın (Kulp) ilk sıraya yerleştiği hayvancılık faaliyeti hangisidir?",
+    "options": [
+      "A) Arıcılık",
+      "B) İpek Böcekçiliği",
+      "C) Kümes Hayvancılığı",
+      "D) Besi Hayvancılığı"
+    ],
+    "answer": "B",
+    "explanation": "İpek böcekçiliği üretim merkezi Bursa'dan Diyarbakır'a kaymıştır."
+  },
+  {
+    "id": 560,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Rize çevresinde kışların ılık geçmesi (Mikroklima) sayesinde yetişme imkanı bulan Akdeniz kökenli meyve hangisidir?",
+    "options": [
+      "A) Muz",
+      "B) İncir",
+      "C) Turunçgiller (Mandalina)",
+      "D) Zeytin"
+    ],
+    "answer": "C",
+    "explanation": "Rize'de fön rüzgarlarının etkisiyle oluşan mikroklima, Turunçgil (özellikle Mandalina) tarımına izin verir."
+  },
+  {
+    "id": 561,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Türkiye'nin dünya üretiminde lider olduğu ve en çok ihraç ettiği tarım ürünü hangisidir?",
+    "options": [
+      "A) İncir",
+      "B) Kayısı",
+      "C) Fındık",
+      "D) Üzüm"
+    ],
+    "answer": "C",
+    "explanation": "Fındık, Türkiye'nin dünyada tartışmasız lider olduğu (%60-70) stratejik bir üründür."
+  },
+  {
+    "id": 562,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Doğal yetişme alanı Karadeniz olmasına rağmen, sulama imkanlarının artmasıyla (GAP) en fazla Akdeniz ve Güneydoğu'da üretilen ürün hangisidir?",
+    "options": [
+      "A) Çay",
+      "B) Mısır",
+      "C) Fındık",
+      "D) Kivi"
+    ],
+    "answer": "B",
+    "explanation": "Mısır, Karadeniz'de doğal olarak yetişir ancak ticari (sanayi) amaçlı üretim sulama ile Akdeniz ve Güneydoğu'da yapılır."
+  },
+  {
+    "id": 563,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Doğu Anadolu'da yaygın olan, hayvancılık yapılan ve etrafı taş duvarlarla çevrili geçici köy altı yerleşmesine ne ad verilir?",
+    "options": [
+      "A) Divan",
+      "B) Mahalle",
+      "C) Kom",
+      "D) Çiftlik"
+    ],
+    "answer": "C",
+    "explanation": "Kom, Doğu Anadolu'da hayvancılık için kurulan geçici yerleşmelerdir."
+  },
+  {
+    "id": 564,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Türkiye'de taş kömürü yataklarının sadece Zonguldak çevresinde bulunmasının temel nedeni nedir?",
+    "options": [
+      "A) İklim koşulları",
+      "B) I. Jeolojik Zamanda (Paleozoik) oluşan arazilerin azlığı",
+      "C) Volkanik faaliyetler",
+      "D) Bitki örtüsü"
+    ],
+    "answer": "B",
+    "explanation": "Taş kömürü I. jeolojik zamanda oluşur. Türkiye genç oluşumlu bir ülke olduğu için bu araziler azdır."
+  },
+  {
+    "id": 565,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Küre'den çıkarılan bakırın Samsun'daki izabe tesislerinde işlenmesinin temel nedeni nedir?",
+    "options": [
+      "A) Hammaddeye yakınlık",
+      "B) Enerji kaynağına yakınlık",
+      "C) Ulaşım (Liman) kolaylığı",
+      "D) Su kaynakları"
+    ],
+    "answer": "C",
+    "explanation": "Samsun, gelişmiş limanı ve iç kesimlerle demiryolu bağlantısı nedeniyle bakır işleme tesisi için seçilmiştir."
+  },
+  {
+    "id": 566,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Türkiye, dünya rezervlerinin yaklaşık %72'sine sahip olduğu hangi madenle stratejik bir üstünlüğe sahiptir?",
+    "options": [
+      "A) Krom",
+      "B) Bor",
+      "C) Mermer",
+      "D) Toryum"
+    ],
+    "answer": "B",
+    "explanation": "Bor mineralleri rezervinde Türkiye açık ara dünya lideridir."
+  },
+  {
+    "id": 567,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Alüminyumun hammaddesi olan Boksit madeninin işlendiği tek tesisimiz nerededir?",
+    "options": [
+      "A) Antalya - Akseki",
+      "B) Konya - Seydişehir",
+      "C) Muğla - Milas",
+      "D) Hatay - Payas"
+    ],
+    "answer": "B",
+    "explanation": "Seydişehir Alüminyum Tesisleri, Türkiye'nin boksit işleyen tek tesisidir."
+  },
+  {
+    "id": 568,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Türkiye'de rüzgar gücü potansiyelinin en yüksek olduğu ve ilk rüzgar santralinin kurulduğu bölge hangisidir?",
+    "options": [
+      "A) Marmara",
+      "B) Akdeniz",
+      "C) Ege",
+      "D) İç Anadolu"
+    ],
+    "answer": "C",
+    "explanation": "Ege Bölgesi (özellikle Çeşme-Alaçatı), rüzgar potansiyeli ve santralleri bakımından ilk sıradadır."
+  },
+  {
+    "id": 569,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Aşağıdaki termik santrallerden hangisi enerji kaynağı olarak 'Doğalgaz' kullanır?",
+    "options": [
+      "A) Yatağan",
+      "B) Çatalağzı",
+      "C) Hamitabat",
+      "D) Afşin-Elbistan"
+    ],
+    "answer": "C",
+    "explanation": "Kırklareli-Hamitabat ve Bursa-Ovaakça santralleri doğalgaz ile çalışır. Yatağan/Afşin linyit, Çatalağzı taş kömürüdür."
+  },
+  {
+    "id": 570,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Türkiye'nin ilk nükleer güç santrali olan Akkuyu Nükleer Santrali hangi ilimizde inşa edilmektedir?",
+    "options": [
+      "A) Sinop",
+      "B) Mersin",
+      "C) Kırklareli",
+      "D) Konya"
+    ],
+    "answer": "B",
+    "explanation": "Akkuyu Nükleer Güç Santrali, Mersin'in Gülnar ilçesinde inşa edilmektedir."
+  },
+  {
+    "id": 571,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Elazığ (Guleman) ve Muğla (Fethiye)'den çıkarılan Krom madeni, en çok hangi limanlardan ihraç edilir?",
+    "options": [
+      "A) İzmir ve İstanbul",
+      "B) Samsun ve Trabzon",
+      "C) Antalya ve İskenderun",
+      "D) Mersin ve Zonguldak"
+    ],
+    "answer": "C",
+    "explanation": "Krom madeni, Antalya'daki ferrokrom tesisleri ve İskenderun limanı üzerinden dünyaya pazarlanır."
+  },
+  {
+    "id": 572,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "İskenderun Demir-Çelik Fabrikası'nın kuruluş yeri seçiminde etkili olan temel faktör nedir?",
+    "options": [
+      "A) Hammaddeye yakınlık",
+      "B) Enerjiye yakınlık",
+      "C) Ulaşım (Liman) ve Pazarlama",
+      "D) Su kaynakları"
+    ],
+    "answer": "C",
+    "explanation": "İskenderun'da demir veya kömür yoktur; fabrika liman avantajı ve ulaşım kolaylığı nedeniyle buraya kurulmuştur."
+  },
+  {
+    "id": 573,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Siyah renkli, parlak ve süs eşyası yapımında kullanılan 'Oltu Taşı' hangi ilimizle özdeşleşmiştir?",
+    "options": [
+      "A) Eskişehir",
+      "B) Erzurum",
+      "C) Kars",
+      "D) Gümüşhane"
+    ],
+    "answer": "B",
+    "explanation": "Oltu taşı Erzurum'un Oltu ilçesinde çıkarılır. Eskişehir'deki ise Lüle taşıdır."
+  },
+  {
+    "id": 574,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Türkiye'de petrolün ilk bulunduğu yer olan ve hammaddeye yakınlık nedeniyle rafineri kurulan ilimiz hangisidir?",
+    "options": [
+      "A) Siirt",
+      "B) Diyarbakır",
+      "C) Batman",
+      "D) Adıyaman"
+    ],
+    "answer": "C",
+    "explanation": "Batman (Raman Dağı), Türkiye'de petrolün ilk bulunduğu yerdir ve Batman Rafinerisi burada kurulmuştur."
+  },
+  {
+    "id": 575,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Petrol ve doğalgaz sondaj kuyularında basıncı dengelemek için kullanılan 'Barit' madeni en çok hangi ilimizde çıkarılır?",
+    "options": [
+      "A) Antalya",
+      "B) Artvin",
+      "C) Kastamonu",
+      "D) Balıkesir"
+    ],
+    "answer": "A",
+    "explanation": "Barit rezervlerinin %90'ından fazlası Antalya (Alanya, Gazipaşa) çevresindedir."
+  },
+  {
+    "id": 576,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Cam sanayisinin ana hammaddesi olan 'Silisli Kum' en kaliteli şekilde hangi bölgemizden temin edilir?",
+    "options": [
+      "A) Ege",
+      "B) Marmara (Trakya)",
+      "C) İç Anadolu",
+      "D) Akdeniz"
+    ],
+    "answer": "B",
+    "explanation": "İstanbul (Çatalca) ve Kırklareli (Kıyıköy) çevresi kaliteli cam kumu yataklarına sahiptir."
+  },
+  {
+    "id": 577,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Türkiye'nin en önemli 'Fosfat' yatakları nerede bulunur?",
+    "options": [
+      "A) Mardin - Mazıdağı",
+      "B) Bingöl - Genç",
+      "C) Bitlis - Tatvan",
+      "D) Malatya - Hekimhan"
+    ],
+    "answer": "A",
+    "explanation": "Gübre yapımında kullanılan fosfatın Türkiye'deki merkezi Mardin-Mazıdağı'dır."
+  },
+  {
+    "id": 578,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Aşağıdaki sanayi tesislerinden hangisi, hammaddenin çabuk bozulabilir olması nedeniyle üretim alanının hemen yanına kurulmak zorundadır?",
+    "options": [
+      "A) Un Fabrikası",
+      "B) Pamuklu Dokuma",
+      "C) Çay Fabrikası",
+      "D) Sigara Fabrikası"
+    ],
+    "answer": "C",
+    "explanation": "Çay yaprağı toplandıktan kısa süre sonra işlenmelidir, bu yüzden fabrikalar Doğu Karadeniz'dedir."
+  },
+  {
+    "id": 579,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Türkiye'nin ve Avrupa'nın en uzun tüneli olan 'Yeni Zigana Tüneli' hangi iki ili birbirine bağlar?",
+    "options": [
+      "A) Rize - Erzurum",
+      "B) Trabzon - Gümüşhane",
+      "C) Artvin - Ardahan",
+      "D) Giresun - Sivas"
+    ],
+    "answer": "B",
+    "explanation": "Yeni Zigana Tüneli (14.5 km), Trabzon ile Gümüşhane'yi bağlayarak tarihi İpek Yolu güzergahını canlandırmıştır."
+  },
+  {
+    "id": 580,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Türkiye'nin uluslararası 'Cittaslow' (Sakin Şehir) ağına katılan ilk ilçesi hangisidir?",
+    "options": [
+      "A) Akyaka (Muğla)",
+      "B) Gökçeada (Çanakkale)",
+      "C) Seferihisar (İzmir)",
+      "D) Taraklı (Sakarya)"
+    ],
+    "answer": "C",
+    "explanation": "İzmir'in Seferihisar ilçesi, 2009 yılında Türkiye'nin ilk sakin şehri olmuştur."
+  },
+  {
+    "id": 581,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "UNESCO Dünya Mirası Listesi'nde yer alan ve 'Binbir Kilise Şehri' olarak bilinen Ani Harabeleri hangi ilimizdedir?",
+    "options": [
+      "A) Van",
+      "B) Ağrı",
+      "C) Kars",
+      "D) Iğdır"
+    ],
+    "answer": "C",
+    "explanation": "Ani Arkeolojik Alanı, Kars il sınırları içinde, Ermenistan sınırında yer alır."
+  },
+  {
+    "id": 582,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Türkiye'nin ve Avrupa'nın deniz üzerine dolgu yapılarak inşa edilen ilk havalimanı hangisidir?",
+    "options": [
+      "A) Rize-Artvin Havalimanı",
+      "B) Ordu-Giresun Havalimanı",
+      "C) Trabzon Havalimanı",
+      "D) İstanbul Havalimanı"
+    ],
+    "answer": "B",
+    "explanation": "Ordu-Giresun Havalimanı, denizin doldurulmasıyla yapılan ilk projedir. Rize-Artvin ikincisidir."
+  },
+  {
+    "id": 583,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Türkiye'nin önemli kış turizmi merkezlerinden biri olan ve 2011 Üniversitelerarası Kış Oyunları'na ev sahipliği yapan Palandöken hangi ildedir?",
+    "options": [
+      "A) Kayseri",
+      "B) Bursa",
+      "C) Erzurum",
+      "D) Kars"
+    ],
+    "answer": "C",
+    "explanation": "Palandöken Kayak Merkezi Erzurum'dadır."
+  },
+  {
+    "id": 584,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Konya Ovası Projesi (KOP) kapsamında inşa edilen 'Mavi Tünel' ile hangi nehrin suları Konya Ovası'na aktarılmaktadır?",
+    "options": [
+      "A) Kızılırmak",
+      "B) Göksu",
+      "C) Seyhan",
+      "D) Manavgat Çayı"
+    ],
+    "answer": "B",
+    "explanation": "Göksu Nehri'nin suları Mavi Tünel ile Konya Ovası'nın sulanması için iç bölgelere çevrilmiştir."
+  },
+  {
+    "id": 585,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Türkiye'nin İran ile olan en işlek sınır kapısı hangisidir?",
+    "options": [
+      "A) Kapıköy",
+      "B) Esendere",
+      "C) Gürbulak",
+      "D) Dilucu"
+    ],
+    "answer": "C",
+    "explanation": "Ağrı'daki Gürbulak Sınır Kapısı, tarihi İpek Yolu üzerinde olup İran ile en yoğun ticaretin yapıldığı kapıdır."
+  },
+  {
+    "id": 586,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Kayalara oyulmuş yapısıyla inanç turizmi açısından büyük önem taşıyan Sümela Manastırı hangi ilimizdedir?",
+    "options": [
+      "A) Giresun",
+      "B) Trabzon",
+      "C) Rize",
+      "D) Artvin"
+    ],
+    "answer": "B",
+    "explanation": "Sümela Manastırı, Trabzon'un Maçka ilçesindeki Altındere Vadisi'nde yer alır."
+  },
+  {
+    "id": 587,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Yer şekillerinin engebeli olması nedeniyle demir yolu ulaşımının bulunmadığı coğrafi bölüm hangisidir?",
+    "options": [
+      "A) Yukarı Sakarya",
+      "B) Adana Bölümü",
+      "C) Doğu Karadeniz",
+      "D) Kıyı Ege"
+    ],
+    "answer": "C",
+    "explanation": "Doğu Karadeniz kıyı şeridinde ve iç kesimlerinde (Trabzon, Rize, Artvin) demir yolu yoktur."
+  },
+  {
+    "id": 588,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Türkiye'de kruvaziyer (dev yolcu gemisi) turizminin en önemli merkezlerinden biri olan limanımız hangisidir?",
+    "options": [
+      "A) Samsun",
+      "B) Mersin",
+      "C) Kuşadası",
+      "D) İskenderun"
+    ],
+    "answer": "C",
+    "explanation": "Aydın-Kuşadası Limanı, Efes Antik Kenti'ne yakınlığı nedeniyle kruvaziyer gemilerinin en çok uğradığı limandır."
+  },
+  {
+    "id": 589,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "1958 yılında ilan edilen Türkiye'nin ilk Milli Parkı hangisidir?",
+    "options": [
+      "A) Kuş Cenneti Milli Parkı",
+      "B) Yozgat Çamlığı Milli Parkı",
+      "C) Uludağ Milli Parkı",
+      "D) Karatepe-Aslantaş Milli Parkı"
+    ],
+    "answer": "B",
+    "explanation": "Yozgat Çamlığı, Türkiye'nin ilan edilen ilk milli parkıdır."
+  },
+  {
+    "id": 590,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Güneydoğu Anadolu Projesi (GAP) kapsamında Fırat Nehri üzerine inşa edilen Türkiye'nin en büyük barajı hangisidir?",
+    "options": [
+      "A) Keban",
+      "B) Karakaya",
+      "C) Atatürk",
+      "D) Birecik"
+    ],
+    "answer": "C",
+    "explanation": "Atatürk Barajı, dolgu hacmi ve göl alanı bakımından Türkiye'nin en büyük barajıdır."
+  },
+  {
+    "id": 591,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "İç Anadolu'yu Batı Karadeniz'e bağlayan 'Ilgaz 15 Temmuz İstiklal Tüneli' hangi iki il arasındadır?",
+    "options": [
+      "A) Ankara - Bolu",
+      "B) Kastamonu - Çankırı",
+      "C) Karabük - Zonguldak",
+      "D) Sinop - Samsun"
+    ],
+    "answer": "B",
+    "explanation": "Ilgaz Tüneli, Kastamonu ile Çankırı arasındaki ulaşımı kolaylaştırır."
+  },
+  {
+    "id": 592,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Türkiye'nin Ermenistan ile olan sınır kapılarından hangisi diplomatik sorunlar nedeniyle kapalıdır?",
+    "options": [
+      "A) Sarp",
+      "B) Akyaka",
+      "C) Kapıköy",
+      "D) Türkgözü"
+    ],
+    "answer": "B",
+    "explanation": "Kars'taki Akyaka ve Iğdır'daki Alican sınır kapıları Ermenistan ile olan sorunlar nedeniyle kapalıdır."
+  },
+  {
+    "id": 593,
+    "category": "cografya_hizmet",
+    "level": 3,
+    "question": "Dünyanın en iyi korunmuş antik tiyatrolarından birine sahip olan 'Aspendos' hangi ilimizdedir?",
+    "options": [
+      "A) İzmir",
+      "B) Aydın",
+      "C) Antalya",
+      "D) Muğla"
+    ],
+    "answer": "C",
+    "explanation": "Aspendos Antik Tiyatrosu, Antalya'nın Serik ilçesindedir."
+  }
+,
+  {
+    "id": 594,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "İranlı şair Firdevsi'nin 'Şehname' adlı eserinde 'Afrasiyab' olarak geçen ve İskitler (Sakalar) ile özdeşleşen efsanevi Türk hükümdarı kimdir?",
+    "options": [
+      "A) Mete Han",
+      "B) Alper Tunga",
+      "C) Teoman",
+      "D) Attila"
+    ],
+    "answer": "B",
+    "explanation": "Alper Tunga, İskitlerin en büyük hükümdarıdır ve İran destanı Şehname'de Afrasiyab olarak anlatılır."
+  },
+  {
+    "id": 595,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "İslamiyet öncesi Türk devletlerinde hükümdarın erkek çocukları olan Tiginlerin eğitimiyle ilgilenen tecrübeli devlet adamlarına ne ad verilir?",
+    "options": [
+      "A) Atabey",
+      "B) Lala",
+      "C) İnal (Ataman)",
+      "D) Subaşı"
+    ],
+    "answer": "C",
+    "explanation": "İslamiyet öncesinde Tigin eğitmenlerine İnal, İnanç veya Ataman denirdi. Atabey Selçuklu, Lala ise Osmanlı dönemindedir."
+  },
+  {
+    "id": 596,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "1071 Malazgirt Savaşı sırasında Bizans ordusunda paralı askerlik yaparken taraf değiştirerek Selçuklu ordusuna katılan Türk boyu hangisidir?",
+    "options": [
+      "A) Hazarlar",
+      "B) Avarlar",
+      "C) Peçenekler",
+      "D) Kıpçaklar"
+    ],
+    "answer": "C",
+    "explanation": "Peçenekler ve Uzlar, Malazgirt Savaşı'nda Bizans safından Selçuklu safına geçerek savaşın kazanılmasında etkili olmuşlardır."
+  },
+  {
+    "id": 597,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Büyük Selçuklu Devleti'nde sultan başkentte olmadığı zamanlarda devlet işlerine vekalet eden divan hangisidir?",
+    "options": [
+      "A) Divan-ı İstifa",
+      "B) Divan-ı İşraf",
+      "C) Divan-ı Niyabet",
+      "D) Divan-ı Arz"
+    ],
+    "answer": "C",
+    "explanation": "Divan-ı Niyabet (Niyabet-i Saltanat), hükümdar yokken devlet işlerini yürüten vekalet makamıdır."
+  },
+  {
+    "id": 598,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Anadolu Selçuklu Devleti'nde ticareti geliştirmek amacıyla uygulanan ve tüccarların zararlarını karşılamayı taahhüt eden sistem nedir?",
+    "options": [
+      "A) Ahilik Teşkilatı",
+      "B) Devlet Sigortası",
+      "C) İkta Sistemi",
+      "D) Gümrük Birliği"
+    ],
+    "answer": "B",
+    "explanation": "Anadolu Selçukluları, yabancı tüccarları çekmek ve ticareti canlandırmak için dünyada ilk kez devlet sigortası uygulamasını başlatmıştır."
+  },
+  {
+    "id": 599,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Batı dünyasında 'Avicenna' olarak bilinen ve 'El-Kanun fi't-Tıb' (Tıbbın Kanunu) adlı eseri yüzyıllarca Avrupa'da ders kitabı olarak okutulan bilgin kimdir?",
+    "options": [
+      "A) Farabi",
+      "B) Biruni",
+      "C) İbn-i Sina",
+      "D) Harezmi"
+    ],
+    "answer": "C",
+    "explanation": "İbn-i Sina, tıp alanındaki çalışmalarıyla tanınır ve 'Tıbbın Hükümdarı' olarak anılır."
+  },
+  {
+    "id": 600,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde IV. Mehmet döneminde çıkan ve 30'a yakın devlet adamının Sultanahmet Meydanı'ndaki çınar ağacına asılmasıyla sonuçlanan isyan hangisidir?",
+    "options": [
+      "A) Patrona Halil İsyanı",
+      "B) Kabakçı Mustafa İsyanı",
+      "C) Vaka-i Vakvakiye (Çınar Vakası)",
+      "D) Edirne Vakası"
+    ],
+    "answer": "C",
+    "explanation": "1656 yılında yeniçerilerin isyanı sonucu devlet adamlarının idam edildiği bu olaya, mitolojik vakvak ağacına benzetilerek Vaka-i Vakvakiye denmiştir."
+  },
+  {
+    "id": 601,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı toprak sisteminde, toprağını mazeretsiz olarak üç yıl üst üste ekmeyen köylüden alınan ceza niteliğindeki vergi hangisidir?",
+    "options": [
+      "A) Çiftbozan",
+      "B) Avarız",
+      "C) Haraç",
+      "D) İspenç"
+    ],
+    "answer": "A",
+    "explanation": "Çiftbozan vergisi, tarımsal üretimin sürekliliğini sağlamak amacıyla toprağı boş bırakanlardan alınırdı."
+  },
+  {
+    "id": 602,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Lale Devri'nin en ünlü minyatür sanatçısı kimdir?",
+    "options": [
+      "A) Matrakçı Nasuh",
+      "B) Levni",
+      "C) Nakkaş Osman",
+      "D) Nigari"
+    ],
+    "answer": "B",
+    "explanation": "Asıl adı Abdülcelil Çelebi olan Levni, Lale Devri'nin eğlence ve yaşam tarzını yansıtan eserleriyle tanınan en ünlü nakkaştır."
+  },
+  {
+    "id": 603,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Milli Mücadele'nin yol haritasını belirleyen Amasya Genelgesi'ni imzalayan veya onaylayan komutanlar arasında aşağıdakilerden hangisi yoktur?",
+    "options": [
+      "A) Rauf Orbay",
+      "B) Refet Bele",
+      "C) Ali Fuat Cebesoy",
+      "D) İsmet İnönü"
+    ],
+    "answer": "D",
+    "explanation": "İsmet İnönü o tarihte Amasya'da değildir ve genelgede imzası yoktur. Genelgeyi Atatürk, Rauf Orbay, Refet Bele, Ali Fuat Cebesoy imzalamış; Kazım Karabekir ve Cemal Paşa onaylamıştır."
+  },
+  {
+    "id": 604,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "I. TBMM'de Mustafa Kemal Paşa ve arkadaşlarının oluşturduğu, inkılapları ve Milli Mücadele'yi yürüten grup hangisidir?",
+    "options": [
+      "A) Tesanüd Grubu",
+      "B) İstiklal Grubu",
+      "C) Müdafaa-i Hukuk Grubu (I. Grup)",
+      "D) Halk Zümresi"
+    ],
+    "answer": "C",
+    "explanation": "Mustafa Kemal Paşa önderliğindeki grup, Anadolu ve Rumeli Müdafaa-i Hukuk Grubu (I. Grup) adını almıştır. Muhalifler ise II. Grup olarak bilinir."
+  },
+  {
+    "id": 605,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Lozan Barış Antlaşması'na göre Türkiye ile Yunanistan arasındaki sınır olarak kabul edilen nehir hangisidir?",
+    "options": [
+      "A) Arda",
+      "B) Tunca",
+      "C) Meriç",
+      "D) Sakarya"
+    ],
+    "answer": "C",
+    "explanation": "Meriç Nehri, Lozan Antlaşması ile Türkiye-Yunanistan sınırı olarak kabul edilmiştir."
+  },
+  {
+    "id": 606,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "II. Dünya Savaşı yıllarında, İngiltere Başbakanı Churchill'in Türkiye'yi savaşa sokmak amacıyla İsmet İnönü ile 1943'te yaptığı görüşme hangisidir?",
+    "options": [
+      "A) Kahire Görüşmesi",
+      "B) Adana Görüşmesi",
+      "C) Moskova Konferansı",
+      "D) Tahran Konferansı"
+    ],
+    "answer": "B",
+    "explanation": "İsmet İnönü ve Churchill, Adana'nın Yenice istasyonunda bir tren vagonunda görüşmüşlerdir (Adana Görüşmesi)."
+  },
+  {
+    "id": 607,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "1947 yılında ABD Başkanı tarafından açıklanan ve Sovyet tehdidi altındaki Türkiye ve Yunanistan'a askeri ve ekonomik yardımı öngören belge hangisidir?",
+    "options": [
+      "A) Marshall Planı",
+      "B) Truman Doktrini",
+      "C) Eisenhower Doktrini",
+      "D) Monroe Doktrini"
+    ],
+    "answer": "B",
+    "explanation": "Truman Doktrini, Soğuk Savaş'ın ilanı sayılır ve Türkiye ile Yunanistan'a 400 milyon dolarlık yardımı öngörür."
+  },
+  {
+    "id": 608,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "Kıbrıs Türk Federe Devleti'nin (KTFD) ve daha sonra Kuzey Kıbrıs Türk Cumhuriyeti'nin (KKTC) kurucu cumhurbaşkanı kimdir?",
+    "options": [
+      "A) Fazıl Küçük",
+      "B) Rauf Denktaş",
+      "C) Derviş Eroğlu",
+      "D) Mustafa Akıncı"
+    ],
+    "answer": "B",
+    "explanation": "Rauf Denktaş, Kıbrıs Türk halkının varoluş mücadelesinin lideri ve KKTC'nin kurucu cumhurbaşkanıdır."
+  }
 ]
