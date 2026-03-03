@@ -6,8 +6,6 @@ import time
 import random
 from datetime import datetime, timedelta, timezone
 import io
-import requests
-import html
 from dotenv import load_dotenv
 from flask import Flask
 from telebot import TeleBot, types
@@ -222,11 +220,6 @@ def create_weekly_leaderboard_image(sorted_users):
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio
 
-def send_morning_broadcast():
-    for uid, u in users.items():
-        try: bot.send_message(uid, f"☀️ **GÜNAYDIN {u.get('name', 'Dostum').upper()}!**\nBugün piyasalar hareketli, bol kazançlar! 🚀")
-        except: pass
-
 def give_weekly_reward():
     """Haftanın en çok soru çözen kullanıcısını bulur, ödüllendirir ve rozet verir."""
     print("🏆 Haftalık ödül süreci başladı...")
@@ -295,9 +288,7 @@ def admin_panel(message):
     # Satır 1: Kullanıcı Yönetimi
     markup.add(InlineKeyboardButton(f"⏳ Onay ({pending_count})", callback_data="admin_pending_list"), InlineKeyboardButton("👥 Üyeler", callback_data="admin_user_list"))
     # Satır 2: Özel Listeler
-    markup.add(InlineKeyboardButton("🚫 Yasaklılar", callback_data="admin_banned_list"), InlineKeyboardButton("👑 VIP'ler", callback_data="admin_vip_list"))
-    markup.add(InlineKeyboardButton("📉 Tüm Emirler", callback_data="admin_all_orders"))
-    markup.add(InlineKeyboardButton("📊 Eko. Analiz", callback_data="admin_economy_stats"), InlineKeyboardButton("📚 Konu Analizi", callback_data="admin_topic_stats"))
+    markup.add(InlineKeyboardButton("🚫 Yasaklılar", callback_data="admin_banned_list"), InlineKeyboardButton("👑 VIP'ler", callback_data="admin_vip_list"), InlineKeyboardButton(" Konu Analizi", callback_data="admin_topic_stats"))
     # Satır 3: İletişim & Anket
     markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("📊 Anket", callback_data="admin_help_anket"), InlineKeyboardButton("✉️ Özel Mesaj", callback_data="admin_help_dm"))
     # Satır 4: Yönetim
@@ -345,19 +336,6 @@ def admin_callbacks(call):
     elif call.data == "admin_vip_list":
         vips = [u for u in users.values() if u.get("level", 1) >= 15]
         bot.send_message(call.message.chat.id, "👑 **VIP Üyeler:**\n" + "\n".join([f"• {u.get('name')}" for u in vips]) if vips else "VIP yok.")
-
-    elif call.data == "admin_all_orders":
-        text = "📉 **Bekleyen Emirler:**\n"
-        for uid, u in users.items():
-            for o in u.get("limit_orders", []):
-                item_name = TRADE_GOODS.get(o['item'], {}).get('name', o['item'])
-                text += f"👤 {escape_md(u.get('name'))}: {o['type']} {escape_md(item_name)} @ {o['target']}$\n"
-        bot.send_message(call.message.chat.id, text if len(text) > 25 else "Emir yok.")
-
-    elif call.data == "admin_economy_stats":
-        total_money = sum(u.get("money", 0) for u in users.values())
-        total_bank = sum(u.get("bank_balance", 0) for u in users.values())
-        bot.send_message(call.message.chat.id, f"📊 **Ekonomi:**\n💵 Cüzdan: {total_money} $\n🏦 Banka: {total_bank} $\n💰 Toplam: {total_money+total_bank} $")
 
     elif call.data == "admin_topic_stats":
         global_stats = {}
@@ -532,21 +510,16 @@ def admin_backup_command(message):
     wait_msg = bot.reply_to(message, "💾 Veritabanı yedeği hazırlanıyor...")
     
     try:
-        # 1. Kullanıcı Verileri (Memory -> JSON)
+        # Kullanıcı Verileri (Memory -> JSON)
         users_json = json.dumps(users, ensure_ascii=False, indent=2)
         users_file = io.BytesIO(users_json.encode('utf-8'))
         users_file.name = f"users_backup_{datetime.now().strftime('%Y-%m-%d_%H-%M')}.json"
         
-        # 2. Market Verileri (Memory -> JSON)
-        market_data = {
-            "prices": market_prices, "volumes": market_volumes, "last_prices": last_prices,
-            "price_history": price_history, "news": market_news, "trend": market_trend,
-            "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S") if last_market_update else None
-        }
-        market_json = json.dumps(market_data, ensure_ascii=False, indent=2)
-        market_file = io.BytesIO(market_json.encode('utf-8'))
-        market_file.name = f"market_backup_{datetime.now().strftime('%Y-%m-%d_%H-%M')}.json"
-        
+        bot.send_document(message.chat.id, users_file, caption="👤 **Kullanıcı Veritabanı**")
+        bot.delete_message(message.chat.id, wait_msg.message_id)
+    except Exception as e:
+        bot.edit_message_text(f"❌ Yedekleme hatası: {e}", message.chat.id, wait_msg.message_id)
+
 @bot.message_handler(commands=['gunluk'])
 def daily_reward(message):
     user_id = str(message.from_user.id)
@@ -688,13 +661,22 @@ def language_selected(call):
                 f"👋 **Hoş Geldin, {user_text}!**\n\n"
                 "Ben, senin için geliştirilmiş yapay zeka destekli bir asistanım. Hem eğlenip hem öğrenebileceğin harika özelliklerim var! 🚀\n"
                 "Aşağıdaki **☰ Menü** butonundan tüm komutlara erişebilirsin.\n\n"
-                "🎮 **Oyun & Yarışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/quiz` - KPSS Soruları Çöz 📚\n🔹 `/maraton` - Tek Hakla İlerle 🏃‍♂️\n🔹 `/duello` - PvP Düello ⚔️\n\n"
-                "💰 **Ekonomi & Ticaret**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/banka` - Banka & Faiz 🏦\n🔹 `/borsa` - Kapalıçarşı 📈\n🔹 `/kaz` - Maden Kaz ⛏️\n🔹 `/market` - Eşya Al 🛒\n\n"
+                "🎮 **Oyun & Yarışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/quiz` - KPSS Soruları Çöz 📚\n🔹 `/maraton` - Tek Hakla İlerle 🏃‍♂️\n🔹 `/duello` - Düello At ⚔️\n\n"
                 "👤 **Profil & Araçlar**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - İstatistikler 📊\n🔹 `/envanter` - Çantan 🎒\n🔹 `/top10` - Liderlik 🏆\n\n"
             ), "btn": "📩 Geliştiriciye Mesaj Gönder"
         },
         "en": {
             "text": f"👋 **Welcome, {user_text}!**\n\nI am an AI-powered assistant. Use the **Menu** button to access commands.", "btn": "📩 Contact Developer"
+        },
+        "bg": {
+            "text": (
+                f"👋 **Добре дошъл, {user_text}!**\n\n"
+                "Аз съм AI асистент, създаден за теб. Имам страхотни функции за забавление и учене! 🚀\n"
+                "Можете да получите достъп до всички команди от бутона **☰ Меню** по-долу.\n\n"
+                "🎮 **Игри и Викторини**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/quiz` - Решаване на въпроси 📚\n🔹 `/maraton` - Маратон режим 🏃‍♂️\n🔹 `/duello` - PvP Дуел ⚔️\n\n"
+                "👤 **Профил и Инструменти**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - Вашата статистика 📊\n🔹 `/envanter` - Инвентар 🎒\n🔹 `/top10` - Класация 🏆\n\n"
+            ), "btn": "📩 Свържи се с разработчика"
+        }
     }
     selected = messages.get(lang_code, messages["en"])
     
