@@ -18,7 +18,6 @@ from PIL import Image, ImageDraw, ImageFont
 import database
 from database import *
 from quiz import register_quiz_handlers
-from market import register_market_handlers, update_market, apply_bank_interest
 
 # --- Bot ve API Başlatma ---
 bot = TeleBot(BOT_TOKEN)
@@ -223,27 +222,6 @@ def create_weekly_leaderboard_image(sorted_users):
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio
 
-def create_tarot_image(cards):
-    width, height = 800, 450
-    img = Image.new('RGB', (width, height), color=(25, 20, 40))
-    draw = ImageDraw.Draw(img)
-    try:
-        font_path = "arial.ttf"
-        if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-        title_font, label_font = ImageFont.truetype(font_path, 36), ImageFont.truetype(font_path, 20)
-    except: title_font, label_font = ImageFont.load_default(), ImageFont.load_default()
-
-    draw.text((260, 30), "🔮 TAROT FALI 🔮", font=title_font, fill=(186, 85, 211))
-    positions = ["GEÇMİŞ", "ŞİMDİ", "GELECEK"]
-    for i, card_name in enumerate(cards):
-        x = 80 + (i * 240)
-        draw.rectangle([(x, 100), (x + 180, 380)], fill=(48, 25, 52), outline=(255, 215, 0), width=3)
-        draw.text((x + 50, 115), positions[i], font=label_font, fill=(200, 200, 200))
-        draw.text((x + 20, 200), card_name, font=label_font, fill=(255, 255, 255))
-
-    bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
-    return bio
-
 def send_morning_broadcast():
     for uid, u in users.items():
         try: bot.send_message(uid, f"☀️ **GÜNAYDIN {u.get('name', 'Dostum').upper()}!**\nBugün piyasalar hareketli, bol kazançlar! 🚀")
@@ -326,7 +304,7 @@ def admin_panel(message):
     markup.add(InlineKeyboardButton("🎁 Hediye", callback_data="admin_help_hediye"), InlineKeyboardButton("🔨 Ban", callback_data="admin_help_ban"))
     markup.add(InlineKeyboardButton("💾 Yedek Al", callback_data="admin_backup"))
 
-    bot.send_message(message.chat.id, text, reply_markup=markup)
+    bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="Markdown")
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("admin_"))
 def admin_callbacks(call):
@@ -569,12 +547,6 @@ def admin_backup_command(message):
         market_file = io.BytesIO(market_json.encode('utf-8'))
         market_file.name = f"market_backup_{datetime.now().strftime('%Y-%m-%d_%H-%M')}.json"
         
-        bot.send_document(message.chat.id, users_file, caption="👤 **Kullanıcı Veritabanı**")
-        bot.send_document(message.chat.id, market_file, caption="📈 **Piyasa Veritabanı**")
-        bot.delete_message(message.chat.id, wait_msg.message_id)
-    except Exception as e:
-        bot.edit_message_text(f"❌ Yedekleme hatası: {e}", message.chat.id, wait_msg.message_id)
-
 @bot.message_handler(commands=['gunluk'])
 def daily_reward(message):
     user_id = str(message.from_user.id)
@@ -611,56 +583,6 @@ def daily_reward(message):
 
     bot.reply_to(message, f"🎁 **GÜNLÜK ÖDÜL ALINDI!**\n\n⭐️ EXP: +{total_reward}\n💵 Para: +{money_reward} $\n🔥 Seri: {streak}. Gün{luck_msg}")
 
-@bot.message_handler(commands=['ozet'])
-def get_summary(message):
-    if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
-    try:
-        topic = message.text.replace("/ozet", "").strip()
-        if not topic: bot.reply_to(message, "⚠️ Konu yazmalısın."); return
-        res = safe_generate_content(f"'{topic}' konusunu KPSS öğrencisi için maddeler halinde özetle.")
-        bot.reply_to(message, f"📝 **ÖZET: {topic.upper()}**\n\n{res.text}", parse_mode="Markdown")
-    except: bot.reply_to(message, "Hata oluştu.")
-
-@bot.message_handler(commands=['ruya'])
-def dream_interpret(message):
-    if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
-    try:
-        dream = message.text.replace("/ruya", "").strip()
-        if not dream: bot.reply_to(message, "⚠️ Rüyayı yazmalısın."); return
-        res = safe_generate_content(f"Rüya tabircisi gibi konuş. Şu rüyayı yorumla: '{dream}'")
-        bot.reply_to(message, f"🌙 **RÜYA TABİRİ**\n\n{res.text}")
-    except: bot.reply_to(message, "Hata oluştu.")
-
-@bot.message_handler(commands=['tarot'])
-def tarot_reading(message):
-    if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
-    msg = bot.reply_to(message, "🔮 Niyetini yaz...")
-    bot.register_next_step_handler(msg, perform_tarot_reading)
-
-def perform_tarot_reading(message):
-    try:
-        cards = ["Deli", "Büyücü", "Azize", "İmparatoriçe", "İmparator", "Aşıklar", "Savaş Arabası", "Güç", "Ermiş", "Kader Çarkı", "Adalet", "Asılan Adam", "Ölüm", "Denge", "Şeytan", "Yıkılan Kule", "Yıldız", "Ay", "Güneş", "Mahkeme", "Dünya"]
-        drawn = random.sample(cards, 3)
-        res = safe_generate_content(f"Tarot falı bak. Soru: '{message.text}'. Kartlar: {drawn}. Yorumla.")
-        photo = create_tarot_image(drawn)
-        bot.send_photo(message.chat.id, photo, caption=f"🔮 **TAROT FALI**\n\n{res.text[:900]}")
-    except: bot.reply_to(message, "Fal bakılamadı.")
-
-@bot.message_handler(commands=['burc'])
-def daily_horoscope(message):
-    if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
-    msg = bot.reply_to(message, "♈ Burcunu yaz...")
-    bot.register_next_step_handler(msg, lambda m: bot.reply_to(m, safe_generate_content(f"{m.text} burcu için günlük yorum yap.").text))
-
-@bot.message_handler(commands=['bilgi'])
-def random_fact(message):
-    if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
-    bot.reply_to(message, safe_generate_content("İlginç bir genel kültür bilgisi ver.").text)
-
-@bot.message_handler(commands=['tarihtebugun'])
-def history_today(message):
-    bot.reply_to(message, safe_generate_content(f"Tarihte bugün ({datetime.now().strftime('%d %B')}) ne oldu?").text)
-
 @bot.message_handler(commands=['pomodoro'])
 def start_pomodoro(message):
     msg = bot.reply_to(message, "🍅 **Pomodoro Başladı!**\n\n25 dakika boyunca odaklan. Süre bitince seni etiketleyip haber vereceğim! 📚\n_(Botu sessize alma)_")
@@ -675,13 +597,9 @@ def start_pomodoro(message):
 @bot.message_handler(commands=['help', 'yardim', 'menu'])
 def help_guide(message):
     markup = InlineKeyboardMarkup(row_width=2)
-    markup.row(
+    markup.add(
         InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
-        InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy")
-    )
-    markup.row(
-        InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile"),
-        InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai")
+        InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile")
     )
     bot.send_message(message.chat.id, "📚 **BOT YARDIM MENÜSÜ**\n\nLütfen bilgi almak istediğin kategoriyi seç: 👇", reply_markup=markup, parse_mode="Markdown")
 
@@ -694,27 +612,15 @@ def help_callback(call):
         text = (
             "🎮 **OYUN MODLARI**\n\n🔹 `/quiz` - Kategorili KPSS soruları çöz.\n🔹 `/maraton` - Tek canla ne kadar gidebilirsin?\n🔹 `/gorevler` - Günlük görevleri tamamla.\n🔹 `/clock` - Zamana karşı Global sorular.\n🔹 `/duello <@kisi> <para>` - Oyuncuya meydan oku.\n🔹 `/duello <para>` - Botla zar atışı yap.\n🔹 `/bahis <para>` - Sıradaki soruya bahis oyna."
         )
-    elif category == "help_economy":
-        text = (
-            "💰 **EKONOMİ & TİCARET**\n\n🔹 `/banka` - Banka hesabını yönet (Günlük %5 Faiz).\n🔹 `/kredi <miktar>` - Kredi çek.\n🔹 `/borsa` - Kapalıçarşı fiyatlarını gör.\n🔹 `/analiz` - Piyasa analizi satın al.\n🔹 `/grafik_detay <mal>` - Detaylı grafik.\n🔹 `/dedikodu` - İçeriden bilgi al.\n🔹 `/kara_borsa` - Riskli ucuz pazar.\n🔹 `/al <mal> <adet>` - Mal Al.\n🔹 `/sat <mal> <adet>` - Mal Sat.\n🔹 `/emir_ver` - Otomatik emir gir.\n🔹 `/kaz` - Madene in.\n🔹 `/market` - Eşya satın al.\n🔹 `/transfer` - Para gönder."
-        )
     elif category == "help_profile":
         text = (
             "👤 **PROFİL & ARAÇLAR**\n\n🔹 `/profil` - Profil kartını gör.\n🔹 `/envanter` - Çantanı gör.\n🔹 `/top10` - Liderlik tablosu.\n🔹 `/yanlislarim` - Hatalarını tekrar et.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/soruekle` - Soru öner."
         )
-    elif category == "help_ai":
-        text = (
-            "🔮 **AI & DİĞER ARAÇLAR**\n\n🔹 `/ozet <konu>` - Konu özeti çıkar.\n🔹 `/dogruyanlis` - Bilgi yarışması.\n🔹 `/ruya <metin>` - Rüya tabiri.\n🔹 `/tarot` - 3 kart tarot falı.\n🔹 `/burc` - Günlük burç yorumu.\n🔹 `/bilgi` - İlginç bir bilgi öğren.\n🔹 `/tarihtebugun` - Tarihte bugün."
-        )
     elif category == "help_back":
         markup = InlineKeyboardMarkup(row_width=2)
-        markup.row(
+        markup.add(
             InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
-            InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy")
-        )
-        markup.row(
-            InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile"),
-            InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai")
+            InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile")
         )
         bot.edit_message_text("📚 **BOT YARDIM MENÜSÜ**\n\nLütfen bilgi almak istediğin kategoriyi seç: 👇", call.message.chat.id, call.message.message_id, reply_markup=markup, parse_mode="Markdown")
         return
@@ -785,35 +691,18 @@ def language_selected(call):
                 "🎮 **Oyun & Yarışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/quiz` - KPSS Soruları Çöz 📚\n🔹 `/maraton` - Tek Hakla İlerle 🏃‍♂️\n🔹 `/duello` - PvP Düello ⚔️\n\n"
                 "💰 **Ekonomi & Ticaret**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/banka` - Banka & Faiz 🏦\n🔹 `/borsa` - Kapalıçarşı 📈\n🔹 `/kaz` - Maden Kaz ⛏️\n🔹 `/market` - Eşya Al 🛒\n\n"
                 "👤 **Profil & Araçlar**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - İstatistikler 📊\n🔹 `/envanter` - Çantan 🎒\n🔹 `/top10` - Liderlik 🏆\n\n"
-                "🔮 **Ekstra**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/ruya`, `/tarot`, `/burc`, `/ozet`"
             ), "btn": "📩 Geliştiriciye Mesaj Gönder"
         },
         "en": {
             "text": f"👋 **Welcome, {user_text}!**\n\nI am an AI-powered assistant. Use the **Menu** button to access commands.", "btn": "📩 Contact Developer"
-        },
-        "bg": {
-            "text": (
-                f"👋 **Добре дошъл, {user_text}!**\n\n"
-                "Аз съм AI асистент, създаден за теб. Имам страхотни функции за забавление и учене! 🚀\n"
-                "Можете да получите достъп до всички команди от бутона **☰ Меню** по-долу.\n\n"
-                "🎮 **Игри и Викторини**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/quiz` - Решаване на въпроси 📚\n🔹 `/maraton` - Маратон режим 🏃‍♂️\n🔹 `/duello` - PvP Дуел ⚔️\n\n"
-                "💰 **Икономика и Търговия**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/banka` - Банка и лихви 🏦\n🔹 `/borsa` - Търговия на пазара 📈\n🔹 `/kaz` - Копаене ⛏️\n🔹 `/market` - Купи предмети 🛒\n\n"
-                "👤 **Профил и Инструменти**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - Вашата статистика 📊\n🔹 `/envanter` - Инвентар 🎒\n🔹 `/top10` - Класация 🏆\n\n"
-                "🔮 **Екстра Функции**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/ruya`, `/tarot`, `/burc`, `/ozet`"
-            ), "btn": "📩 Свържи се с разработчика"
-        }
     }
     selected = messages.get(lang_code, messages["en"])
     
     markup = InlineKeyboardMarkup()
     # Kategorili Menü Butonları
-    markup.row(
+    markup.add(
         InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
-        InlineKeyboardButton("💰 Ekonomi", callback_data="help_economy")
-    )
-    markup.row(
-        InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile"),
-        InlineKeyboardButton("🔮 AI & Diğer", callback_data="help_ai")
+        InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile")
     )
     markup.add(
         InlineKeyboardButton(text=selected["btn"], url=f"https://t.me/{DEVELOPER_USERNAME}")
@@ -991,16 +880,8 @@ def scheduler_thread():
             database.last_rewarded_week = current_week_str
             database.save_market_data()
             time.sleep(65) # Tekrar çalışmasını önle
-
-        if now_utc3.hour == 8 and now_utc3.minute == 0:
-            send_morning_broadcast(); time.sleep(65)
-        if now_utc3.hour == 9 and now_utc3.minute == 0:
-            apply_bank_interest(bot); time.sleep(65)
-        if (datetime.now() - database.last_market_update).total_seconds() > 90:
-            try:
-                update_market(bot)
-            except Exception as e:
-                print(f"⚠️ Scheduler hatası: {e}")
+        
+        # Ekonomi ile ilgili periyodik görevler kaldırıldı.
         time.sleep(20)
 
 # --- Botu Çalıştırma ---
@@ -1018,41 +899,10 @@ if __name__ == "__main__":
         types.BotCommand("clock", "Global Yarışma"),
         types.BotCommand("dogruyanlis", "Doğru/Yanlış Oyunu"),
         types.BotCommand("duello", "Düello At"),
-        types.BotCommand("bahis", "Bahis Oyna"),
         types.BotCommand("yanlislarim", "Yanlışlarını Tekrar Et"),
-        types.BotCommand("borsa", "Kapalıçarşı Piyasası"),
-        types.BotCommand("al", "Mal Satın Al"),
-        types.BotCommand("sat", "Mal Sat"),
-        types.BotCommand("market", "Eşya ve Joker Al"),
-        types.BotCommand("banka", "Banka Hesabı"),
-        types.BotCommand("kredi", "Kredi Çek"),
-        types.BotCommand("yatir", "Bankaya Yatır"),
-        types.BotCommand("cek", "Bankadan Çek"),
-        types.BotCommand("transfer", "Para Gönder"),
-        types.BotCommand("kaz", "Maden Kaz"),
-        types.BotCommand("portfoyum", "Yatırımlarını Gör"),
-        types.BotCommand("emir", "Bekleyen Emirler"),
-        types.BotCommand("emir_ver", "Otomatik Emir Gir"),
-        types.BotCommand("analiz", "Piyasa Analizi"),
-        types.BotCommand("grafik", "Fiyat Grafiği"),
-        types.BotCommand("dedikodu", "Piyasa Tüyosu"),
-        types.BotCommand("kara_borsa", "Kara Borsa"),
-        types.BotCommand("zenginler", "En Zenginler"),
-        types.BotCommand("ozet", "Konu Özeti"),
-        types.BotCommand("ruya", "Rüya Tabiri"),
-        types.BotCommand("tarot", "Tarot Falı"),
-        types.BotCommand("burc", "Burç Yorumu"),
-        types.BotCommand("bilgi", "İlginç Bilgi"),
-        types.BotCommand("tarihtebugun", "Tarihte Bugün"),
         types.BotCommand("pomodoro", "Pomodoro Sayacı"),
         types.BotCommand("soruekle", "Soru Öner"),
         types.BotCommand("top10", "Liderlik Tablosu"),
-        types.BotCommand("halkaarz", "Aktif Halka Arz"),
-        types.BotCommand("talepet", "Halka Arza Katıl"),
-        types.BotCommand("talep_iptal", "Halka Arz Talebini İptal Et"),
-        types.BotCommand("sirket_kur", "Kendi Şirketini Kur (50k$)"),
-        types.BotCommand("halkaarz_yap", "Şirketini Borsaya Aç"),
-        types.BotCommand("sirketim", "Şirket Yönetim Paneli"),
         types.BotCommand("haftaliktop10", "Haftalık Liderlik"),
         types.BotCommand("istatistik", "Günlük İstatistikler"),
         types.BotCommand("help", "Yardım"),
@@ -1064,7 +914,6 @@ if __name__ == "__main__":
         'get_badges': get_badges
     }
     register_quiz_handlers(bot, tirtil_utils)
-    register_market_handlers(bot, tirtil_utils)
 
     scheduler = threading.Thread(target=scheduler_thread, daemon=True)
     scheduler.start()
