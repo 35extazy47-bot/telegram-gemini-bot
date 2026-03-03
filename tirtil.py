@@ -16,6 +16,7 @@ from PIL import Image, ImageDraw, ImageFont
 import database
 from database import *
 from quiz import register_quiz_handlers
+from study import register_study_handlers
 
 # --- Bot ve API Başlatma ---
 bot = TeleBot(BOT_TOKEN)
@@ -888,6 +889,10 @@ if __name__ == "__main__":
         types.BotCommand("haftaliktop10", "Haftalık Liderlik"),
         types.BotCommand("istatistik", "Günlük İstatistikler"),
         types.BotCommand("help", "Yardım"),
+        types.BotCommand("kart", "Bilgi Kartı (Flashcard)"),
+        types.BotCommand("plan", "Ders Çalışma Programı"),
+        types.BotCommand("ozet", "Konu Özeti"),
+        types.BotCommand("motivasyon", "Motivasyon"),
     ])
     
     tirtil_utils = {
@@ -896,6 +901,7 @@ if __name__ == "__main__":
         'get_badges': get_badges
     }
     register_quiz_handlers(bot, tirtil_utils)
+    register_study_handlers(bot, tirtil_utils)
 
     scheduler = threading.Thread(target=scheduler_thread, daemon=True)
     scheduler.start()
