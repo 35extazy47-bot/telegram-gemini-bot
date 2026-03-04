@@ -84,6 +84,7 @@ active_news_item = None
 active_news_direction = None
 active_global_modifier = 0.0
 last_rewarded_week = "" # Haftalık ödülün verildiği son haftayı takip eder
+maintenance_mode = False # Bakım modu durumu
 
 # --- IPO (Halka Arz) Verisi ---
 active_ipo = {"is_active": False}
@@ -150,7 +151,7 @@ def save_users():
 
 def save_market_data():
     """Borsa verilerini kaydeder."""
-    global market_prices, market_volumes, last_prices, price_history, market_news, market_trend, last_market_update
+    global market_prices, market_volumes, last_prices, price_history, market_news, market_trend, last_market_update, maintenance_mode
     data = {
         "prices": market_prices,
         "volumes": market_volumes,
@@ -161,6 +162,7 @@ def save_market_data():
         "trend": market_trend,
         "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S") if last_market_update else None,
         "last_rewarded_week": last_rewarded_week,
+        "maintenance_mode": maintenance_mode,
         "active_ipo": active_ipo,
         "public_companies": public_companies,
         "shared_files": shared_files
@@ -182,7 +184,7 @@ def save_market_data():
 
 def load_market_data():
     """Borsa verilerini yükler."""
-    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, volume_history, market_trend, last_rewarded_week, active_ipo, public_companies, shared_files
+    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, volume_history, market_trend, last_rewarded_week, active_ipo, public_companies, shared_files, maintenance_mode
     data = None
     
     if db is not None:
@@ -235,6 +237,7 @@ def load_market_data():
             market_news = data.get("news", market_news)
             market_trend = data.get("trend", 0)
             last_rewarded_week = data.get("last_rewarded_week", "")
+            maintenance_mode = data.get("maintenance_mode", False)
             
             # IPO verisini güvenli bir şekilde yükle
             loaded_ipo = data.get("active_ipo", {})

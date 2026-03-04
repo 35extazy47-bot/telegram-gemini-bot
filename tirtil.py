@@ -22,6 +22,15 @@ from study import register_study_handlers
 bot = TeleBot(BOT_TOKEN)
 client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 
+# --- BAKIM MODU KONTROLÜ (Interceptor) ---
+@bot.message_handler(func=lambda m: database.maintenance_mode and m.from_user.username != DEVELOPER_USERNAME)
+def maintenance_msg(message):
+    bot.reply_to(message, "🚧 **SİSTEM BAKIMDA** 🚧\n\nŞu anda bakım çalışması yapılıyor. Lütfen daha sonra tekrar deneyin.", parse_mode="Markdown")
+
+@bot.callback_query_handler(func=lambda c: database.maintenance_mode and c.from_user.username != DEVELOPER_USERNAME)
+def maintenance_call(call):
+    bot.answer_callback_query(call.id, "🚧 Sistem bakımda!", show_alert=True)
+
 # --- Yardımcı Fonksiyonlar ---
 def safe_generate_content(prompt_content):
     """Modeller arası geçiş yaparak hata riskini azaltır."""
@@ -323,7 +332,8 @@ def admin_panel(message):
     markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("📊 Anket", callback_data="admin_help_anket"), InlineKeyboardButton("✉️ Özel Mesaj", callback_data="admin_help_dm"))
     # Satır 4: Yönetim
     markup.add(InlineKeyboardButton("🎁 Hediye", callback_data="admin_help_hediye"), InlineKeyboardButton("🔨 Ban", callback_data="admin_help_ban"))
-    markup.add(InlineKeyboardButton("💾 Yedek Al", callback_data="admin_backup"))
+    status_icon = "🔴" if database.maintenance_mode else "🟢"
+    markup.add(InlineKeyboardButton("💾 Yedek Al", callback_data="admin_backup"), InlineKeyboardButton(f"{status_icon} Bakım Modu", callback_data="admin_toggle_maintenance"))
 
     bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="Markdown")
 
@@ -378,6 +388,13 @@ def admin_callbacks(call):
                 text += f"{i}. {data.get('name', 'Bilinmiyor')} - Lvl {data.get('level', 1)} | {data.get('exp', 0)} EXP\n"
             bot.send_message(call.message.chat.id, text)
         bot.answer_callback_query(call.id)
+
+    elif call.data == "admin_toggle_maintenance":
+        database.maintenance_mode = not database.maintenance_mode
+        database.save_market_data()
+        status = "AKTİF" if database.maintenance_mode else "PASİF"
+        bot.answer_callback_query(call.id, f"Bakım modu {status} edildi.")
+        admin_panel(call.message) # Paneli yenile
 
     elif call.data == "admin_weekly_top10":
         current_week_str = datetime.now().strftime("%Y-%W")
