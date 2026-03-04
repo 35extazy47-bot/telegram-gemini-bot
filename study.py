@@ -3,17 +3,16 @@ import random
 import os
 from datetime import datetime
 from database import shared_files, save_market_data
-
 try:
     from fpdf import FPDF
 except ImportError:
     FPDF = None
 
 # Bu değişkenler tirtil.py'den register fonksiyonu aracılığıyla alınacak
-safe_generate_content = None
-check_daily_limit = None
-users = None
-save_users = None
+safe_generate_content = lambda x: None
+check_daily_limit = lambda x: True
+users = {}
+save_users = lambda: None
 
 def register_study_handlers(bot, utils):
     """Ders ve çalışma ile ilgili komutları bota kaydeder."""
