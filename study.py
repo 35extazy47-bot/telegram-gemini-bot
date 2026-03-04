@@ -131,6 +131,44 @@ def register_study_handlers(bot, utils):
         except Exception as e:
             bot.reply_to(message, f"Hata: {e}")
 
+    @bot.message_handler(commands=['deneme_ekle'])
+    def add_exam_result(message):
+        user_id = str(message.from_user.id)
+        try:
+            # /deneme_ekle <Ad> <Net>
+            args = message.text.split(maxsplit=2)
+            if len(args) < 3:
+                bot.reply_to(message, "⚠️ Kullanım: `/deneme_ekle <Deneme Adı> <Net>`\nÖrnek: `/deneme_ekle TG-1 85.5`", parse_mode="Markdown")
+                return
+            
+            name = args[1]
+            net = float(args[2])
+            
+            if "exams" not in users[user_id]: users[user_id]["exams"] = []
+            
+            users[user_id]["exams"].append({"date": datetime.now().strftime("%Y-%m-%d"), "name": name, "net": net})
+            save_users()
+            bot.reply_to(message, f"✅ **{name}** denemesi kaydedildi! (Net: {net})")
+        except ValueError:
+            bot.reply_to(message, "❌ Net kısmı sayı olmalı. (Örn: 75.5)")
+        except Exception as e:
+            bot.reply_to(message, f"Hata: {e}")
+
+    @bot.message_handler(commands=['denemelerim'])
+    def list_exams(message):
+        user_id = str(message.from_user.id)
+        exams = users[user_id].get("exams", [])
+        if not exams:
+            bot.reply_to(message, "📂 Henüz kayıtlı deneme sonucun yok.")
+            return
+        text = "📊 **DENEME SONUÇLARIN**\n\n"
+        for i, ex in enumerate(exams[-10:], 1):
+            text += f"{i}. {ex['name']} ({ex['date']}): **{ex['net']} Net**\n"
+        if len(exams) > 0:
+            avg = sum(e['net'] for e in exams[-10:]) / len(exams[-10:])
+            text += f"\n📈 **Son 10 Deneme Ortalaması:** {avg:.2f} Net"
+        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
     @bot.message_handler(commands=['notlarim'])
     def view_notes(message):
         user_id = str(message.from_user.id)

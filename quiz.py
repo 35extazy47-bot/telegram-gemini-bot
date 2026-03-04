@@ -239,6 +239,34 @@ def register_quiz_handlers(bot, tirtil_utils):
         user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
         save_users()
 
+    def send_ai_question(chat_id, user_id):
+        queue = users[user_id].get("ai_quiz_queue", [])
+        if not queue:
+            bot.send_message(chat_id, "🏁 **AI Testi Tamamlandı!**\nUmarım faydalı olmuştur. 🤖")
+            users[user_id]["mode"] = "local"
+            save_users()
+            return
+
+        q = queue[0] # Sıradaki soru
+        users[user_id]["current_ai_question"] = q 
+        users[user_id]["current_answer"] = q["answer"]
+        
+        photo = create_quiz_image(q['question'], q['options'], "AI TEST", users[user_id]["level"], users[user_id]['lives'])
+        
+        markup = InlineKeyboardMarkup(row_width=4)
+        markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
+        markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
+
+        if user_id in user_timers: user_timers[user_id].cancel()
+        
+        topic = users[user_id].get('ai_quiz_topic', 'Genel')
+        msg = bot.send_photo(chat_id, photo, caption=f"🤖 **AI Tarafından Oluşturuldu**\n📂 Konu: {topic}\n👇 Doğru şıkkı seç! (⏳ 45 sn)", reply_markup=markup)
+        users[user_id]["last_question_message_id"] = msg.message_id
+        
+        user_timers[user_id] = Timer(45.0, question_timeout, args=[chat_id, user_id])
+        user_timers[user_id].start()
+        save_users()
+
     def evaluate_quiz_answer(chat_id, user_id, answer, bot, message_id_to_delete=None):
         if user_id not in users or "current_answer" not in users[user_id]: return
         if user_id in user_timers: user_timers[user_id].cancel(); del user_timers[user_id]
@@ -263,7 +291,10 @@ def register_quiz_handlers(bot, tirtil_utils):
         u["weekly_questions_solved"] = u.get("weekly_questions_solved", 0) + 1
 
         q_id = users[user_id].get("current_question_id")
-        question_data = next((q for q in QUIZ_QUESTIONS if q["id"] == q_id), None)
+        if u.get("mode") == "ai_quiz":
+            question_data = u.get("current_ai_question")
+        else:
+            question_data = next((q for q in QUIZ_QUESTIONS if q["id"] == q_id), None)
 
         try:
             if message_id_to_delete: bot.delete_message(chat_id, message_id_to_delete)
@@ -372,6 +403,10 @@ def register_quiz_handlers(bot, tirtil_utils):
         if u.get("mode") == "global": send_global_question(chat_id, user_id)
         elif u.get("mode") == "retry": send_wrong_question(chat_id, user_id)
         elif u.get("mode") == "weakness": send_weakness_question(chat_id, user_id)
+        elif u.get("mode") == "ai_quiz":
+            if u.get("ai_quiz_queue"):
+                u["ai_quiz_queue"].pop(0)
+            send_ai_question(chat_id, user_id)
         else: send_question(chat_id, user_id)
 
     def send_global_question(chat_id, user_id):
@@ -562,6 +597,41 @@ def register_quiz_handlers(bot, tirtil_utils):
         bot.answer_callback_query(call.id, "📉 Antrenman başlıyor...")
         bot.send_message(call.message.chat.id, "📉 **ZAYIF KONU ANTRENMANI**\n\nBaşarı oranın %50'nin altında olduğu konulardan sorular geliyor.\nBaşarana kadar devam! 🚀")
         send_weakness_question(call.message.chat.id, user_id)
+
+    @bot.message_handler(commands=['test_olustur'])
+    def create_ai_quiz(message):
+        user_id = str(message.from_user.id)
+        if not check_daily_limit(user_id): bot.reply_to(message, "⛔ Günlük AI limitin doldu!"); return
+        
+        try:
+            topic = message.text.replace("/test_olustur", "").strip()
+            if len(topic) < 3:
+                bot.reply_to(message, "⚠️ Hangi konuda test istiyorsun?\nÖrnek: `/test_olustur Osmanlı Duraklama Dönemi`", parse_mode="Markdown")
+                return
+                
+            wait_msg = bot.reply_to(message, f"🤖 **'{topic}'** hakkında 5 soruluk test hazırlanıyor... Lütfen bekle.")
+            
+            prompt = f"""
+            KPSS formatında '{topic}' konusuyla ilgili 5 adet çoktan seçmeli soru hazırla.
+            Zorluk seviyesi orta-zor olsun.
+            Çıktıyı SADECE şu JSON formatında ver, başka hiçbir metin yazma:
+            [
+                {{ "question": "Soru metni", "options": ["A) Şık1", "B) Şık2", "C) Şık3", "D) Şık4"], "answer": "A", "explanation": "Kısa açıklama" }}, ...
+            ]
+            """
+            response = safe_generate_content(prompt)
+            text_resp = response.text.replace("```json", "").replace("```", "").strip()
+            questions = json.loads(text_resp)
+            
+            users[user_id]["ai_quiz_queue"] = questions
+            users[user_id]["ai_quiz_topic"] = topic
+            users[user_id]["mode"] = "ai_quiz"
+            save_users()
+            
+            bot.delete_message(message.chat.id, wait_msg.message_id)
+            send_ai_question(message.chat.id, user_id)
+        except Exception as e:
+            bot.reply_to(message, f"Test oluşturulurken hata oluştu: {e}")
 
     @bot.callback_query_handler(func=lambda c: c.data.startswith("cat_"))
     def category_selected(call):

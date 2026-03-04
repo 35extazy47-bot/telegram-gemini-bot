@@ -955,6 +955,9 @@ if __name__ == "__main__":
         types.BotCommand("ders_notu", "AI Ders Notu (PDF)"),
         types.BotCommand("dosya_yukle", "Kütüphaneye Ekle"),
         types.BotCommand("dosya_ara", "Kütüphanede Ara"),
+        types.BotCommand("test_olustur", "AI ile Test Hazırla"),
+        types.BotCommand("deneme_ekle", "Deneme Neti Ekle"),
+        types.BotCommand("denemelerim", "Deneme Sonuçlarım"),
     ])
     
     tirtil_utils = {
