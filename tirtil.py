@@ -670,8 +670,7 @@ def language_selected(call):
                 "Aşağıdaki **☰ Menü** butonundan tüm komutlara erişebilirsin.\n\n"
                 "🎮 **Oyun & Yarışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/quiz` - KPSS Soruları Çöz 📚\n🔹 `/maraton` - Tek Hakla İlerle 🏃‍♂️\n🔹 `/duello` - Düello At ⚔️\n\n"
                 "📚 **Ders & Çalışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/kart` - Bilgi Kartı 📇\n🔹 `/plan` - Ders Programı 📅\n🔹 `/ozet` - Konu Özeti 📝\n🔹 `/motivasyon` - Motivasyon 🔥\n\n"
-                "� **Profil & Araçlar**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - İstatistikler 📊\n🔹 `/envanter` - Çantan 🎒\n🔹 `/top10` - Liderlik 🏆\n\n"
-            ), "btn": "📩 Geliştiriciye Mesaj Gönder"
+                "tn": "📩 Geliştiriciye Mesaj Gönder"
         },
         "en": {
             "text": f"👋 **Welcome, {user_text}!**\n\nI am an AI-powered assistant. Use the **Menu** button to access commands.", "btn": "📩 Contact Developer"
@@ -901,12 +900,15 @@ if __name__ == "__main__":
         types.BotCommand("plan", "Ders Çalışma Programı"),
         types.BotCommand("ozet", "Konu Özeti"),
         types.BotCommand("motivasyon", "Motivasyon"),
+        types.BotCommand("notal", "Ders Notu Al"),
+        types.BotCommand("notlarim", "Notlarımı Gör"),
+        types.BotCommand("kaynak", "Kaynak Tavsiyesi"),
     ])
     
     tirtil_utils = {
         'get_rank': get_rank, 'check_daily_limit': check_daily_limit, 
         'update_quest_progress': update_quest_progress, 'safe_generate_content': safe_generate_content,
-        'get_badges': get_badges
+        'get_badges': get_badges,ers': save_users
     }
     register_quiz_handlers(bot, tirtil_utils)
     register_study_handlers(bot, tirtil_utils)
