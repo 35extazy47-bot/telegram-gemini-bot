@@ -127,7 +127,35 @@ def create_profile_image(user_id, user_data):
     if percent > 0: draw.rectangle([bar_x, bar_y, bar_x + int(bar_w * percent), bar_y + bar_h], fill=(46,204,113))
     draw.text((bar_x, bar_y - 20), f"EXP: {exp} / {target_xp}", font=small_font, fill=(200,200,200))
     
-    # Diğer istatistikler buraya eklenebilir
+    # İstatistikler
+    y_start = 180
+    col1, col2, col3 = 30, 230, 430
+    
+    total = user_data.get('total_questions', 0)
+    correct = user_data.get('total_correct', 0)
+    success_rate = (correct / total * 100) if total > 0 else 0
+    
+    draw.text((col1, y_start), "📝 Toplam Soru", font=normal_font, fill=(170, 170, 170))
+    draw.text((col1, y_start + 25), str(total), font=header_font, fill=(255, 255, 255))
+    
+    draw.text((col2, y_start), "🎯 Başarı", font=normal_font, fill=(170, 170, 170))
+    draw.text((col2, y_start + 25), f"%{success_rate:.1f}", font=header_font, fill=(255, 255, 255))
+    
+    # Son Deneme
+    exams = user_data.get("exams", [])
+    last_exam_text = "Yok"
+    if exams:
+        last = exams[-1]
+        name_short = last['name'][:12] + ".." if len(last['name']) > 12 else last['name']
+        last_exam_text = f"{name_short}\n({last['net']} Net)"
+    
+    draw.text((col3, y_start), "📝 Son Deneme", font=normal_font, fill=(170, 170, 170))
+    draw.text((col3, y_start + 25), last_exam_text, font=header_font, fill=(255, 215, 0))
+    
+    # Rozetler
+    badges = get_badges(user_data)
+    draw.text((col1, y_start + 80), "🏅 Rozetler", font=normal_font, fill=(170, 170, 170))
+    draw.text((col1, y_start + 105), badges[:40], font=small_font, fill=(255, 215, 0))
     
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio
@@ -756,9 +784,13 @@ def my_profile(message):
     if user_id not in users: return
     u = users[user_id]
     u.update({"name": message.from_user.first_name, "username": message.from_user.username}); save_users()
+    
+    exams = u.get("exams", [])
+    last_exam_info = f"\n📝 Son Deneme: {exams[-1]['name']} ({exams[-1]['net']} Net)" if exams else ""
+    
     try:
         photo = create_profile_image(user_id, u)
-        bot.send_photo(message.chat.id, photo, caption=f"👤 **{u.get('name')}** Profil Kartı")
+        bot.send_photo(message.chat.id, photo, caption=f"👤 **{u.get('name')}** Profil Kartı{last_exam_info}")
     except Exception as e:
         bot.reply_to(message, f"Profil hatası: {e}")
 
