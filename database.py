@@ -88,6 +88,7 @@ last_rewarded_week = "" # Haftalık ödülün verildiği son haftayı takip eder
 # --- IPO (Halka Arz) Verisi ---
 active_ipo = {"is_active": False}
 public_companies = {} # Kullanıcıların kurduğu ve borsaya açılan şirketler
+shared_files = [] # Kullanıcıların paylaştığı dosyalar
 
 # --- Data Loading/Saving Functions ---
 def load_users():
@@ -161,7 +162,8 @@ def save_market_data():
         "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S") if last_market_update else None,
         "last_rewarded_week": last_rewarded_week,
         "active_ipo": active_ipo,
-        "public_companies": public_companies
+        "public_companies": public_companies,
+        "shared_files": shared_files
     }
     
     if db is not None:
@@ -180,7 +182,7 @@ def save_market_data():
 
 def load_market_data():
     """Borsa verilerini yükler."""
-    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, volume_history, market_trend, last_rewarded_week, active_ipo, public_companies
+    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, volume_history, market_trend, last_rewarded_week, active_ipo, public_companies, shared_files
     data = None
     
     if db is not None:
@@ -238,6 +240,8 @@ def load_market_data():
             loaded_ipo = data.get("active_ipo", {})
             if isinstance(loaded_ipo, dict):
                 active_ipo.update(loaded_ipo)
+            
+            shared_files = data.get("shared_files", [])
             
             if "last_update" in data and data["last_update"] is not None:
                 try:
