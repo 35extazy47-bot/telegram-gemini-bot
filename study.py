@@ -3,13 +3,12 @@ import random
 import os
 from datetime import datetime
 from database import shared_files, save_market_data
-try:
-    from fpdf import FPDF
-except ImportError:
-    FPDF = None
+
+FPDF = None
 
 # Bu değişkenler tirtil.py'den register fonksiyonu aracılığıyla alınacak
-safe_generate_content = lambda x: type('obj', (object,), {'text': ''})()
+class MockResponse: text = ""
+safe_generate_content = lambda x: MockResponse()
 check_daily_limit = lambda x: True
 users = {}
 save_users = lambda: None
