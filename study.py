@@ -9,10 +9,7 @@ except ImportError:
     FPDF = None
 
 # Bu değişkenler tirtil.py'den register fonksiyonu aracılığıyla alınacak
-class MockResponse:
-    text = ""
-
-safe_generate_content = lambda x: MockResponse()
+safe_generate_content = lambda x: type('obj', (object,), {'text': ''})()
 check_daily_limit = lambda x: True
 users = {}
 save_users = lambda: None
