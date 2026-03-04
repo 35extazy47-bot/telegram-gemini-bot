@@ -2,8 +2,6 @@ import json
 import random
 import os
 from datetime import datetime
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-import database
 from database import shared_files, save_market_data
 
 try:
