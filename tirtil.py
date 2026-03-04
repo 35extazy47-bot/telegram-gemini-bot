@@ -290,6 +290,7 @@ def admin_panel(message):
     markup.add(InlineKeyboardButton(f"⏳ Onay ({pending_count})", callback_data="admin_pending_list"), InlineKeyboardButton("👥 Üyeler", callback_data="admin_user_list"))
     # Satır 2: Özel Listeler
     markup.add(InlineKeyboardButton("🚫 Yasaklılar", callback_data="admin_banned_list"), InlineKeyboardButton("👑 VIP'ler", callback_data="admin_vip_list"), InlineKeyboardButton(" Konu Analizi", callback_data="admin_topic_stats"))
+    markup.add(InlineKeyboardButton("🏆 Genel Top 10", callback_data="admin_top10"), InlineKeyboardButton("📅 Haftalık Top 10", callback_data="admin_weekly_top10"))
     # Satır 3: İletişim & Anket
     markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("📊 Anket", callback_data="admin_help_anket"), InlineKeyboardButton("✉️ Özel Mesaj", callback_data="admin_help_dm"))
     # Satır 4: Yönetim
@@ -337,6 +338,37 @@ def admin_callbacks(call):
     elif call.data == "admin_vip_list":
         vips = [u for u in users.values() if u.get("level", 1) >= 15]
         bot.send_message(call.message.chat.id, "👑 **VIP Üyeler:**\n" + "\n".join([f"• {u.get('name')}" for u in vips]) if vips else "VIP yok.")
+
+    elif call.data == "admin_top10":
+        sorted_users = sorted(users.items(), key=lambda x: (x[1].get("level", 1), x[1].get("exp", 0)), reverse=True)[:10]
+        try:
+            photo = create_leaderboard_image(sorted_users)
+            bot.send_photo(call.message.chat.id, photo, caption="🏆 **Liderlik Tablosu**\nZirve yarışında son durum! 🚀")
+        except:
+            text = "🏆 **Liderlik Tablosu (Top 10)** 🏆\n\n"
+            for i, (uid, data) in enumerate(sorted_users, 1):
+                text += f"{i}. {data.get('name', 'Bilinmiyor')} - Lvl {data.get('level', 1)} | {data.get('exp', 0)} EXP\n"
+            bot.send_message(call.message.chat.id, text)
+        bot.answer_callback_query(call.id)
+
+    elif call.data == "admin_weekly_top10":
+        current_week_str = datetime.now().strftime("%Y-%W")
+        weekly_players = [
+            (uid, u_data) for uid, u_data in users.items() 
+            if u_data.get("last_weekly_question_week") == current_week_str and u_data.get("weekly_questions_solved", 0) > 0
+        ]
+        sorted_users = sorted(weekly_players, key=lambda x: x[1].get("weekly_questions_solved", 0), reverse=True)[:10]
+        
+        if not sorted_users:
+            bot.answer_callback_query(call.id, "Bu hafta henüz kimse soru çözmedi.")
+            return
+
+        try:
+            photo = create_weekly_leaderboard_image(sorted_users)
+            bot.send_photo(call.message.chat.id, photo, caption=f"🏆 **Haftanın En Çalışkanları**\n(Pazartesi sıfırlanır)")
+        except Exception as e:
+            bot.send_message(call.message.chat.id, f"Liderlik tablosu oluşturulamadı: {e}")
+        bot.answer_callback_query(call.id)
 
     elif call.data == "admin_topic_stats":
         global_stats = {}
@@ -717,6 +749,7 @@ def my_profile(message):
 
 @bot.message_handler(commands=['top10'])
 def leaderboard(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
     sorted_users = sorted(users.items(), key=lambda x: (x[1].get("level", 1), x[1].get("exp", 0)), reverse=True)[:10]
     try:
         photo = create_leaderboard_image(sorted_users)
@@ -729,6 +762,7 @@ def leaderboard(message):
 
 @bot.message_handler(commands=['haftaliktop10'])
 def weekly_leaderboard(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
     current_week_str = datetime.now().strftime("%Y-%W")
     
     # Sadece bu hafta soru çözenleri al ve sırala
@@ -894,8 +928,6 @@ if __name__ == "__main__":
         types.BotCommand("yanlislarim", "Yanlışlarını Tekrar Et"),
         types.BotCommand("pomodoro", "Pomodoro Sayacı"),
         types.BotCommand("soruekle", "Soru Öner"),
-        types.BotCommand("top10", "Liderlik Tablosu"),
-        types.BotCommand("haftaliktop10", "Haftalık Liderlik"),
         types.BotCommand("istatistik", "Günlük İstatistikler"),
         types.BotCommand("help", "Yardım"),
         types.BotCommand("kart", "Bilgi Kartı (Flashcard)"),
