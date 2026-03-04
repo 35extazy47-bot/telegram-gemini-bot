@@ -290,7 +290,7 @@ def admin_panel(message):
     markup.add(InlineKeyboardButton(f"⏳ Onay ({pending_count})", callback_data="admin_pending_list"), InlineKeyboardButton("👥 Üyeler", callback_data="admin_user_list"))
     # Satır 2: Özel Listeler
     markup.add(InlineKeyboardButton("🚫 Yasaklılar", callback_data="admin_banned_list"), InlineKeyboardButton("👑 VIP'ler", callback_data="admin_vip_list"), InlineKeyboardButton(" Konu Analizi", callback_data="admin_topic_stats"))
-    markup.add(InlineKeyboardButton("🏆 Genel Top 10", callback_data="admin_top10"), InlineKeyboardButton("📅 Haftalık Top 10", callback_data="admin_weekly_top10"))
+    markup.add(InlineKeyboardButton("🏆 Genel Top 10", callback_data="admin_top10"), InlineKeyboardButton("📅 Haftalık Top 10", callback_data="admin_weekly_top10"), InlineKeyboardButton("🕒 Son Aktiflik", callback_data="admin_last_active"))
     # Satır 3: İletişim & Anket
     markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("📊 Anket", callback_data="admin_help_anket"), InlineKeyboardButton("✉️ Özel Mesaj", callback_data="admin_help_dm"))
     # Satır 4: Yönetim
@@ -369,6 +369,21 @@ def admin_callbacks(call):
         except Exception as e:
             bot.send_message(call.message.chat.id, f"Liderlik tablosu oluşturulamadı: {e}")
         bot.answer_callback_query(call.id)
+
+    elif call.data == "admin_last_active":
+        active_list = []
+        for uid, u in users.items():
+            dates = []
+            if u.get("last_gemini_date"): dates.append(u["last_gemini_date"])
+            if u.get("last_question_date"): dates.append(u["last_question_date"])
+            if u.get("join_date"): dates.append(u["join_date"][:10])
+            
+            last_active = max(dates) if dates else "Yok"
+            active_list.append((u.get("name", "Bilinmiyor"), last_active))
+        
+        active_list.sort(key=lambda x: x[1], reverse=True)
+        text = "🕒 **Son Aktiflik Durumu (İlk 30)**\n\n" + "\n".join([f"{i}. {escape_md(name)}: {date}" for i, (name, date) in enumerate(active_list[:30], 1)])
+        bot.send_message(call.message.chat.id, text, parse_mode="Markdown"); bot.answer_callback_query(call.id)
 
     elif call.data == "admin_topic_stats":
         global_stats = {}
