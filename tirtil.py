@@ -1008,6 +1008,9 @@ if __name__ == "__main__":
         types.BotCommand("deneme_ekle", "Deneme Neti Ekle"),
         types.BotCommand("denemelerim", "Deneme Sonuçlarım"),
         types.BotCommand("quiz_duello", "Bilgi Yarışması Düellosu"),
+        types.BotCommand("soru_kayit", "Soru Sayısı Ekle"),
+        types.BotCommand("gunluk_soru", "Günlük Soru Takibi"),
+        types.BotCommand("coz", "AI Soru Çözücü"),
     ])
     
     tirtil_utils = {

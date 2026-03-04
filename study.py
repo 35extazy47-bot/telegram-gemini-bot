@@ -1,6 +1,8 @@
 import json
 import random
 import os
+import io
+from PIL import Image
 from datetime import datetime
 from database import shared_files, save_market_data
 
@@ -168,6 +170,75 @@ def register_study_handlers(bot, utils):
             avg = sum(e['net'] for e in exams[-10:]) / len(exams[-10:])
             text += f"\n📈 **Son 10 Deneme Ortalaması:** {avg:.2f} Net"
         bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['soru_kayit'])
+    def log_questions(message):
+        user_id = str(message.from_user.id)
+        try:
+            args = message.text.split()
+            if len(args) < 3:
+                bot.reply_to(message, "⚠️ Kullanım: `/soru_kayit <Ders> <Sayı>`\nÖrnek: `/soru_kayit Matematik 50`", parse_mode="Markdown")
+                return
+            
+            subject = args[1].capitalize()
+            count = int(args[2])
+            today = datetime.now().strftime("%Y-%m-%d")
+            
+            if "study_stats" not in users[user_id]: users[user_id]["study_stats"] = {}
+            if "questions" not in users[user_id]["study_stats"]: users[user_id]["study_stats"]["questions"] = {}
+            if today not in users[user_id]["study_stats"]["questions"]: users[user_id]["study_stats"]["questions"][today] = {}
+            
+            current = users[user_id]["study_stats"]["questions"][today].get(subject, 0)
+            users[user_id]["study_stats"]["questions"][today][subject] = current + count
+            save_users()
+            
+            bot.reply_to(message, f"✅ **{subject}** dersinden {count} soru eklendi.\n📅 Bugün toplam: {current + count}")
+        except ValueError:
+            bot.reply_to(message, "❌ Sayı girmelisin.")
+        except Exception as e:
+            bot.reply_to(message, f"Hata: {e}")
+
+    @bot.message_handler(commands=['gunluk_soru'])
+    def daily_question_stats(message):
+        user_id = str(message.from_user.id)
+        today = datetime.now().strftime("%Y-%m-%d")
+        stats = users[user_id].get("study_stats", {}).get("questions", {}).get(today, {})
+        
+        if not stats:
+            bot.reply_to(message, "📂 Bugün henüz soru kaydı girmedin.")
+            return
+            
+        text = f"📅 **BUGÜNKÜ PERFORMANSIN ({today})**\n\n"
+        total = 0
+        for subj, count in stats.items():
+            text += f"🔹 {subj}: {count} Soru\n"
+            total += count
+        text += f"\n∑ **TOPLAM:** {total} Soru"
+        
+        if total < 50: text += "\n\n💡 *Biraz daha gayret!*"
+        elif total > 200: text += "\n\n🔥 *Harikasın, şov yapıyorsun!*"
+        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['coz'])
+    def solve_question_photo(message):
+        target_msg = message.reply_to_message if message.reply_to_message else message
+        if not target_msg.photo:
+            bot.reply_to(message, "⚠️ Bir soru fotoğrafına yanıt vererek `/coz` yazmalısın veya fotoğrafı gönderirken altına `/coz` yazmalısın.")
+            return
+
+        if not check_daily_limit(str(message.from_user.id)): bot.reply_to(message, "⛔ Günlük AI limitin doldu!"); return
+
+        wait_msg = bot.reply_to(message, "👀 Soru inceleniyor ve çözülüyor... Lütfen bekle.")
+        try:
+            file_info = bot.get_file(target_msg.photo[-1].file_id)
+            downloaded_file = bot.download_file(file_info.file_path)
+            image = Image.open(io.BytesIO(downloaded_file))
+            
+            response = safe_generate_content(["Bu soruyu adım adım, anlaşılır bir şekilde çöz. Cevabı net bir şekilde belirt.", image])
+            bot.delete_message(message.chat.id, wait_msg.message_id)
+            bot.reply_to(message, f"🧠 **SORU ÇÖZÜMÜ**\n\n{response.text}", parse_mode="Markdown")
+        except Exception as e:
+            bot.edit_message_text(f"Hata oluştu: {e}", message.chat.id, wait_msg.message_id)
 
     @bot.message_handler(commands=['notlarim'])
     def view_notes(message):
