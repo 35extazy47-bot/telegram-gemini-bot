@@ -19,6 +19,8 @@ from database import (
     user_timers, pending_duels
 )
 
+active_quiz_duels = {}
+
 # Bu fonksiyonlar tirtil.py'den register fonksiyonu aracılığıyla alınacak
 get_rank = None
 check_daily_limit = None
@@ -756,6 +758,157 @@ def register_quiz_handlers(bot, tirtil_utils):
         users[user_id].pop("dy_answer", None); users[user_id].pop("dy_explanation", None); save_users()
         bot.edit_message_text(msg, call.message.chat.id, call.message.message_id)
         
+    @bot.message_handler(commands=['quiz_duello'])
+    def quiz_duel_request(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        
+        args = message.text.split()
+        if len(args) < 2 or not args[1].startswith("@"):
+            bot.reply_to(message, "⚠️ Kullanım: `/quiz_duello <@kullanici>`\nÖrnek: `/quiz_duello @Ali`", parse_mode="Markdown")
+            return
+            
+        target_username = args[1][1:]
+        target_id = next((uid for uid, u in users.items() if u.get("username") == target_username), None)
+        
+        if not target_id:
+            bot.reply_to(message, "❌ Kullanıcı bulunamadı.")
+            return
+        if target_id == user_id:
+            bot.reply_to(message, "❌ Kendinle yarışamazsın.")
+            return
+
+        duel_id = str(uuid.uuid4())[:8]
+        pending_duels[duel_id] = {
+            "type": "quiz",
+            "challenger": user_id,
+            "target": target_id
+        }
+        
+        markup = InlineKeyboardMarkup()
+        markup.add(
+            InlineKeyboardButton("✅ Kabul Et", callback_data=f"qduel_accept_{duel_id}"),
+            InlineKeyboardButton("❌ Reddet", callback_data=f"qduel_reject_{duel_id}")
+        )
+        
+        bot.send_message(target_id, f"🧠 **BİLGİ YARIŞMASI DÜELLOSU!**\n\n@{users[user_id]['username']} sana meydan okuyor!\n3 Soru, En çok bilen kazanır.\n\nKabul ediyor musun?", reply_markup=markup)
+        bot.reply_to(message, f"✅ Meydan okuma gönderildi: @{target_username}")
+
+    @bot.callback_query_handler(func=lambda c: c.data.startswith("qduel_"))
+    def quiz_duel_response(call):
+        action, duel_id = call.data.split("_")[1], call.data.split("_")[2]
+        if duel_id not in pending_duels:
+            bot.answer_callback_query(call.id, "⚠️ Teklif geçersiz.")
+            return
+            
+        duel_data = pending_duels[duel_id]
+        if str(call.from_user.id) != duel_data["target"]:
+            bot.answer_callback_query(call.id, "⛔ Bu teklif sana değil.")
+            return
+            
+        if action == "reject":
+            bot.delete_message(call.message.chat.id, call.message.message_id)
+            bot.send_message(duel_data["challenger"], f"❌ @{users[duel_data['target']]['username']} düelloyu reddetti.")
+            del pending_duels[duel_id]
+            return
+            
+        # Kabul edildi
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        start_quiz_duel(duel_id)
+
+    def start_quiz_duel(duel_id):
+        data = pending_duels.pop(duel_id)
+        p1, p2 = data["challenger"], data["target"]
+        
+        questions = random.sample(QUIZ_QUESTIONS, 3)
+        active_quiz_duels[duel_id] = {
+            "p1": p1, "p2": p2,
+            "scores": {p1: 0, p2: 0},
+            "questions": questions,
+            "current_index": 0,
+            "answers": {},
+            "timers": []
+        }
+        
+        bot.send_message(p1, "⚔️ **DÜELLO BAŞLIYOR!**\nİlk soru geliyor...")
+        bot.send_message(p2, "⚔️ **DÜELLO BAŞLIYOR!**\nİlk soru geliyor...")
+        time.sleep(2)
+        send_duel_question(duel_id)
+
+    def send_duel_question(duel_id):
+        duel = active_quiz_duels.get(duel_id)
+        if not duel: return
+        
+        idx = duel["current_index"]
+        if idx >= len(duel["questions"]):
+            finish_quiz_duel(duel_id)
+            return
+            
+        q = duel["questions"][idx]
+        duel["answers"] = {} 
+        
+        photo = create_quiz_image(q['question'], q['options'], "DÜELLO", idx+1, 0)
+        markup = InlineKeyboardMarkup(row_width=2).add(*[InlineKeyboardButton(s, callback_data=f"dans_{s}_{duel_id}") for s in ["A", "B", "C", "D"]])
+        
+        try: bot.send_photo(duel["p1"], photo, caption=f"❓ **SORU {idx+1}/{len(duel['questions'])}**\n(⏳ 20 sn)", reply_markup=markup)
+        except: pass
+        
+        photo.seek(0)
+        try: bot.send_photo(duel["p2"], photo, caption=f"❓ **SORU {idx+1}/{len(duel['questions'])}**\n(⏳ 20 sn)", reply_markup=markup)
+        except: pass
+
+        t = Timer(20.0, duel_timeout, args=[duel_id, idx]); t.start()
+        duel["timers"] = [t]
+
+    def duel_timeout(duel_id, q_index):
+        duel = active_quiz_duels.get(duel_id)
+        if not duel or duel["current_index"] != q_index: return
+        evaluate_duel_round(duel_id)
+
+    @bot.callback_query_handler(func=lambda c: c.data.startswith("dans_"))
+    def handle_duel_answer_callback(call):
+        _, ans, duel_id = call.data.split("_")
+        user_id = str(call.from_user.id)
+        duel = active_quiz_duels.get(duel_id)
+        
+        if not duel or user_id not in [duel["p1"], duel["p2"]]: return
+        if user_id in duel["answers"]: bot.answer_callback_query(call.id, "Zaten cevap verdin."); return
+            
+        duel["answers"][user_id] = ans
+        bot.answer_callback_query(call.id, f"Cevabın alındı: {ans}")
+        bot.edit_message_caption("✅ Cevabın alındı, rakip bekleniyor...", call.message.chat.id, call.message.message_id)
+        
+        if len(duel["answers"]) == 2:
+            for t in duel["timers"]: t.cancel()
+            evaluate_duel_round(duel_id)
+
+    def evaluate_duel_round(duel_id):
+        duel = active_quiz_duels.get(duel_id)
+        if not duel: return
+        q, p1, p2 = duel["questions"][duel["current_index"]], duel["p1"], duel["p2"]
+        correct, a1, a2 = q["answer"], duel["answers"].get(p1), duel["answers"].get(p2)
+        
+        if a1 == correct: duel["scores"][p1] += 1
+        if a2 == correct: duel["scores"][p2] += 1
+        
+        duel["current_index"] += 1
+        time.sleep(1)
+        send_duel_question(duel_id)
+
+    def finish_quiz_duel(duel_id):
+        duel = active_quiz_duels.pop(duel_id, None)
+        if not duel: return
+        p1, p2 = duel["p1"], duel["p2"]
+        s1, s2 = duel["scores"][p1], duel["scores"][p2]
+        
+        res = f"🏁 **DÜELLO BİTTİ!**\n\n👤 {users[p1]['name']}: {s1} Doğru\n👤 {users[p2]['name']}: {s2} Doğru\n\n"
+        if s1 > s2: res += f"🏆 **KAZANAN:** {users[p1]['name']}! (+300 EXP)"; users[p1]["exp"] += 300
+        elif s2 > s1: res += f"🏆 **KAZANAN:** {users[p2]['name']}! (+300 EXP)"; users[p2]["exp"] += 300
+        else: res += "🤝 **BERABERE!** (+100 EXP)"; users[p1]["exp"] += 100; users[p2]["exp"] += 100
+        
+        save_users()
+        bot.send_message(p1, res); bot.send_message(p2, res)
+
     @bot.message_handler(commands=['duello'])
     def duel_handler(message):
         user_id = str(message.from_user.id)
