@@ -573,7 +573,8 @@ def help_guide(message):
     markup = InlineKeyboardMarkup(row_width=2)
     markup.add(
         InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
-        InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile")
+        InlineKeyboardButton("📚 Ders & Çalışma", callback_data="help_study"),
+        InlineKeyboardButton(" Profil & Araçlar", callback_data="help_profile")
     )
     bot.send_message(message.chat.id, "📚 **BOT YARDIM MENÜSÜ**\n\nLütfen bilgi almak istediğin kategoriyi seç: 👇", reply_markup=markup, parse_mode="Markdown")
 
@@ -586,6 +587,10 @@ def help_callback(call):
         text = (
             "🎮 **OYUN MODLARI**\n\n🔹 `/quiz` - Kategorili KPSS soruları çöz.\n🔹 `/maraton` - Tek canla ne kadar gidebilirsin?\n🔹 `/gorevler` - Günlük görevleri tamamla.\n🔹 `/clock` - Zamana karşı Global sorular.\n🔹 `/duello <@kisi> <para>` - Oyuncuya meydan oku.\n🔹 `/duello <para>` - Botla zar atışı yap.\n🔹 `/bahis <para>` - Sıradaki soruya bahis oyna."
         )
+    elif category == "help_study":
+        text = (
+            "📚 **DERS & ÇALIŞMA**\n\n🔹 `/kart <ders>` - Bilgi kartı ile çalış.\n🔹 `/plan` - Günlük ders çalışma programı hazırla.\n🔹 `/ozet <konu>` - İstediğin konunun özetini çıkar.\n🔹 `/motivasyon` - Motivasyon sözü al.\n🔹 `/pomodoro` - Ders çalışma sayacı."
+        )
     elif category == "help_profile":
         text = (
             "👤 **PROFİL & ARAÇLAR**\n\n🔹 `/profil` - Profil kartını gör.\n🔹 `/envanter` - Çantanı gör.\n🔹 `/top10` - Liderlik tablosu.\n🔹 `/yanlislarim` - Hatalarını tekrar et.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/soruekle` - Soru öner."
@@ -594,6 +599,7 @@ def help_callback(call):
         markup = InlineKeyboardMarkup(row_width=2)
         markup.add(
             InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
+            InlineKeyboardButton("📚 Ders & Çalışma", callback_data="help_study"),
             InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile")
         )
         bot.edit_message_text("📚 **BOT YARDIM MENÜSÜ**\n\nLütfen bilgi almak istediğin kategoriyi seç: 👇", call.message.chat.id, call.message.message_id, reply_markup=markup, parse_mode="Markdown")
@@ -663,7 +669,8 @@ def language_selected(call):
                 "Ben, senin için geliştirilmiş yapay zeka destekli bir asistanım. Hem eğlenip hem öğrenebileceğin harika özelliklerim var! 🚀\n"
                 "Aşağıdaki **☰ Menü** butonundan tüm komutlara erişebilirsin.\n\n"
                 "🎮 **Oyun & Yarışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/quiz` - KPSS Soruları Çöz 📚\n🔹 `/maraton` - Tek Hakla İlerle 🏃‍♂️\n🔹 `/duello` - Düello At ⚔️\n\n"
-                "👤 **Profil & Araçlar**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - İstatistikler 📊\n🔹 `/envanter` - Çantan 🎒\n🔹 `/top10` - Liderlik 🏆\n\n"
+                "📚 **Ders & Çalışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/kart` - Bilgi Kartı 📇\n🔹 `/plan` - Ders Programı 📅\n🔹 `/ozet` - Konu Özeti 📝\n🔹 `/motivasyon` - Motivasyon 🔥\n\n"
+                "� **Profil & Araçlar**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - İstatistikler 📊\n🔹 `/envanter` - Çantan 🎒\n🔹 `/top10` - Liderlik 🏆\n\n"
             ), "btn": "📩 Geliştiriciye Mesaj Gönder"
         },
         "en": {
@@ -685,6 +692,7 @@ def language_selected(call):
     # Kategorili Menü Butonları
     markup.add(
         InlineKeyboardButton("🎮 Oyunlar", callback_data="help_games"),
+        InlineKeyboardButton("📚 Ders & Çalışma", callback_data="help_study"),
         InlineKeyboardButton("👤 Profil & Araçlar", callback_data="help_profile")
     )
     markup.add(
