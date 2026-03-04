@@ -240,6 +240,102 @@ def register_study_handlers(bot, utils):
         except Exception as e:
             bot.edit_message_text(f"Hata oluştu: {e}", message.chat.id, wait_msg.message_id)
 
+    @bot.message_handler(commands=['basla'])
+    def start_study_session(message):
+        user_id = str(message.from_user.id)
+        try:
+            args = message.text.split(maxsplit=1)
+            if len(args) < 2:
+                bot.reply_to(message, "⚠️ Hangi ders? Örnek: `/basla Tarih`", parse_mode="Markdown")
+                return
+            
+            subject = args[1].capitalize()
+            
+            if "active_study_session" in users[user_id]:
+                bot.reply_to(message, "⚠️ Zaten devam eden bir çalışman var. Önce onu bitir: `/bitir`")
+                return
+            
+            users[user_id]["active_study_session"] = {
+                "start_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "subject": subject
+            }
+            save_users()
+            bot.reply_to(message, f"⏱️ **{subject}** çalışması başladı!\nOdaklan ve bitirdiğinde `/bitir` yaz.")
+        except Exception as e:
+            bot.reply_to(message, f"Hata: {e}")
+
+    @bot.message_handler(commands=['bitir'])
+    def stop_study_session(message):
+        user_id = str(message.from_user.id)
+        session = users[user_id].get("active_study_session")
+        
+        if not session:
+            bot.reply_to(message, "⚠️ Aktif bir çalışma oturumu yok. Başlamak için: `/basla <Ders>`")
+            return
+            
+        start_time = datetime.strptime(session["start_time"], "%Y-%m-%d %H:%M:%S")
+        end_time = datetime.now()
+        duration = end_time - start_time
+        minutes = int(duration.total_seconds() / 60)
+        
+        if minutes < 1:
+            bot.reply_to(message, "⚠️ 1 dakikadan kısa sürdü, kaydedilmedi.")
+            del users[user_id]["active_study_session"]
+            save_users()
+            return
+            
+        subject = session["subject"]
+        today = datetime.now().strftime("%Y-%m-%d")
+        
+        if "study_stats" not in users[user_id]: users[user_id]["study_stats"] = {}
+        if "time" not in users[user_id]["study_stats"]: users[user_id]["study_stats"]["time"] = {}
+        if today not in users[user_id]["study_stats"]["time"]: users[user_id]["study_stats"]["time"][today] = {}
+        
+        current_time = users[user_id]["study_stats"]["time"][today].get(subject, 0)
+        users[user_id]["study_stats"]["time"][today][subject] = current_time + minutes
+        
+        del users[user_id]["active_study_session"]
+        save_users()
+        
+        bot.reply_to(message, f"🛑 **Çalışma Bitti!**\n\n📚 Ders: {subject}\n⏱️ Süre: {minutes} dakika\n💾 Günlüğe kaydedildi.")
+
+    @bot.message_handler(commands=['nedir'])
+    def define_term(message):
+        if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
+        try:
+            term = message.text.replace("/nedir", "").strip()
+            if len(term) < 2:
+                bot.reply_to(message, "⚠️ Ne olduğunu merak ettiğin terimi yaz.\nÖrnek: `/nedir Kut Anlayışı`", parse_mode="Markdown")
+                return
+            
+            prompt = f"KPSS müfredatına uygun olarak '{term}' nedir? Çok kısa, net ve akılda kalıcı bir tanım yap. 2 cümleyi geçmesin."
+            response = safe_generate_content(prompt)
+            bot.reply_to(message, f"📖 **NEDİR?**\n\n**{term}:** {response.text}", parse_mode="Markdown")
+        except Exception as e:
+            bot.reply_to(message, f"Hata: {e}")
+
+    @bot.message_handler(commands=['gunluk_calisma'])
+    def daily_study_time(message):
+        user_id = str(message.from_user.id)
+        today = datetime.now().strftime("%Y-%m-%d")
+        stats = users[user_id].get("study_stats", {}).get("time", {}).get(today, {})
+        
+        if not stats:
+            bot.reply_to(message, "📂 Bugün henüz süre tutarak çalışmadın.")
+            return
+            
+        text = f"⏱️ **BUGÜNKÜ ÇALIŞMA SÜRELERİN ({today})**\n\n"
+        total_min = 0
+        for subj, minutes in stats.items():
+            text += f"🔹 {subj}: {minutes} dk\n"
+            total_min += minutes
+        
+        hours = total_min // 60
+        mins = total_min % 60
+        text += f"\n∑ **TOPLAM:** {hours} sa {mins} dk"
+        
+        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
     @bot.message_handler(commands=['notlarim'])
     def view_notes(message):
         user_id = str(message.from_user.id)

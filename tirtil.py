@@ -1011,6 +1011,10 @@ if __name__ == "__main__":
         types.BotCommand("soru_kayit", "Soru Sayısı Ekle"),
         types.BotCommand("gunluk_soru", "Günlük Soru Takibi"),
         types.BotCommand("coz", "AI Soru Çözücü"),
+        types.BotCommand("basla", "Kronometre Başlat"),
+        types.BotCommand("bitir", "Kronometre Durdur"),
+        types.BotCommand("gunluk_calisma", "Çalışma Sürelerim"),
+        types.BotCommand("nedir", "Terim Nedir?"),
     ])
     
     tirtil_utils = {
