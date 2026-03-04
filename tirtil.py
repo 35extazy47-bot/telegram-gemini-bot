@@ -668,7 +668,7 @@ def help_callback(call):
         )
     elif category == "help_profile":
         text = (
-            "👤 **PROFİL & ARAÇLAR**\n\n🔹 `/profil` - Profil kartını gör.\n🔹 `/envanter` - Çantanı gör.\n🔹 `/top10` - Liderlik tablosu.\n🔹 `/yanlislarim` - Hatalarını tekrar et.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/soruekle` - Soru öner."
+            "👤 **PROFİL & ARAÇLAR**\n\n🔹 `/profil` - Profil kartını gör.\n🔹 `/envanter` - Çantanı gör.\n🔹 `/yanlislarim` - Hatalarını tekrar et.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/soruekle` - Soru öner."
         )
     elif category == "help_back":
         markup = InlineKeyboardMarkup(row_width=2)
@@ -745,7 +745,7 @@ def language_selected(call):
                 "Aşağıdaki **☰ Menü** butonundan tüm komutlara erişebilirsin.\n\n"
                 "🎮 **Oyun & Yarışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/quiz` - KPSS Soruları Çöz 📚\n🔹 `/maraton` - Tek Hakla İlerle 🏃‍♂️\n🔹 `/duello` - Düello At ⚔️\n\n"
                 "📚 **Ders & Çalışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/kart` - Bilgi Kartı 📇\n🔹 `/plan` - Ders Programı 📅\n🔹 `/ozet` - Konu Özeti 📝\n🔹 `/motivasyon` - Motivasyon 🔥\n🔹 `/ders_notu` - AI Ders Notu 📄\n🔹 `/dosya_yukle` - Dosya Paylaş 📤\n🔹 `/dosya_ara` - Kütüphane 🔍\n\n"
-                "👤 **Profil & Araçlar**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - İstatistikler 📊\n🔹 `/envanter` - Çantan 🎒\n🔹 `/top10` - Liderlik 🏆\n\n"
+                "👤 **Profil & Araçlar**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - İstatistikler 📊\n🔹 `/envanter` - Çantan 🎒\n\n"
             ),
             "btn": "📩 Geliştiriciye Mesaj Gönder"
         },
@@ -758,7 +758,7 @@ def language_selected(call):
                 "Аз съм AI асистент, създаден за теб. Имам страхотни функции за забавление и учене! 🚀\n"
                 "Можете да получите достъп до всички команди от бутона **☰ Меню** по-долу.\n\n"
                 "🎮 **Игри и Викторини**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/quiz` - Решаване на въпроси 📚\n🔹 `/maraton` - Маратон режим 🏃‍♂️\n🔹 `/duello` - PvP Дуел ⚔️\n\n"
-                "👤 **Профил и Инструменти**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - Вашата статистика 📊\n🔹 `/envanter` - Инвентар 🎒\n🔹 `/top10` - Класация 🏆\n\n"
+                "👤 **Профил и Инструменти**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - Вашата статистика 📊\n🔹 `/envanter` - Инвентар 🎒\n\n"
             ), "btn": "📩 Свържи се с разработчика"
         }
     }
