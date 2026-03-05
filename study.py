@@ -364,7 +364,13 @@ def register_study_handlers(bot, utils):
             res = safe_generate_content(f"KPSS öğrencisi için '{subject}' dersine yönelik en iyi YouTube kanalları, soru bankaları ve çalışma taktiklerini öner. Samimi ol.")
             try: bot.delete_message(message.chat.id, wait_msg.message_id)
             except: pass
-            bot.send_message(message.chat.id, f"📚 KAYNAK TAVSİYELERİ: {subject.upper()}\n\n{res.text}")
+            
+            full_text = f"📚 KAYNAK TAVSİYELERİ: {subject.upper()}\n\n{res.text}"
+            if len(full_text) > 4000:
+                for i in range(0, len(full_text), 4000):
+                    bot.send_message(message.chat.id, full_text[i:i+4000])
+            else:
+                bot.send_message(message.chat.id, full_text)
         except Exception as e:
             print(f"Kaynak hatası: {e}")
             bot.reply_to(message, f"Hata oluştu: {e}")
