@@ -76,11 +76,19 @@ def register_study_handlers(bot, utils):
                 "Samimi bir koç gibi konuş. Emoji kullan."
             )
             response = safe_generate_content(prompt)
-            
-            bot.delete_message(message.chat.id, wait_msg.message_id)
-            bot.send_message(message.chat.id, f"📅 **GÜNLÜK ÇALIŞMA PLANI**\n\n{response.text}", parse_mode="Markdown")
+
+            try: bot.delete_message(message.chat.id, wait_msg.message_id)
+            except: pass
+
+            full_text = f"📅 GÜNLÜK ÇALIŞMA PLANI\n\n{response.text}"
+            if len(full_text) > 4000:
+                for i in range(0, len(full_text), 4000):
+                    bot.send_message(message.chat.id, full_text[i:i+4000])
+            else:
+                bot.send_message(message.chat.id, full_text)
         except Exception as e:
-            bot.edit_message_text("Plan hazırlanamadı.", message.chat.id, wait_msg.message_id)
+            print(f"Plan hatası: {e}")
+            bot.reply_to(message, f"Hata oluştu: {e}")
 
     @bot.message_handler(commands=['ozet'])
     def get_summary(message):
