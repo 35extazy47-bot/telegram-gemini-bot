@@ -87,14 +87,23 @@ def register_study_handlers(bot, utils):
         if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
         try:
             topic = message.text.replace("/ozet", "").strip()
-            if not topic: bot.reply_to(message, "⚠️ Hangi konuyu özetleyeyim? Örnek: `/ozet Islahat Fermanı`", parse_mode="Markdown"); return
+            if not topic: bot.reply_to(message, "⚠️ Hangi konuyu özetleyeyim? Örnek: `/ozet Islahat Fermanı`"); return
             
             wait_msg = bot.reply_to(message, f"📚 '{topic}' konusu özetleniyor...")
             res = safe_generate_content(f"'{topic}' konusunu KPSS öğrencisi için maddeler halinde, akılda kalıcı şekilde özetle.")
             
             bot.delete_message(message.chat.id, wait_msg.message_id)
-            bot.reply_to(message, f"📝 **ÖZET: {topic.upper()}**\n\n{res.text}", parse_mode="Markdown")
-        except: bot.reply_to(message, "Hata oluştu.")
+            
+            full_text = f"📝 ÖZET: {topic.upper()}\n\n{res.text}"
+            if len(full_text) > 4000:
+                bot.reply_to(message, full_text[:4000])
+                for i in range(4000, len(full_text), 4000):
+                    bot.send_message(message.chat.id, full_text[i:i+4000])
+            else:
+                bot.reply_to(message, full_text)
+        except Exception as e:
+            print(f"Özet hatası: {e}")
+            bot.reply_to(message, f"Hata oluştu: {e}")
 
     @bot.message_handler(commands=['motivasyon'])
     def motivation(message):
