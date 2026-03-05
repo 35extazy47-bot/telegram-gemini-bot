@@ -430,11 +430,15 @@ def admin_callbacks(call):
         active_list = []
         for uid, u in users.items():
             dates = []
-            if u.get("last_gemini_date"): dates.append(u["last_gemini_date"])
-            if u.get("last_question_date"): dates.append(u["last_question_date"])
+            # Aktivite belirten tüm tarih alanlarını kontrol et
+            if u.get("last_active_date"): dates.append(u.get("last_active_date")) # /start komutundan
+            if u.get("last_gemini_date"): dates.append(u.get("last_gemini_date")) # AI komutlarından
+            if u.get("last_question_date"): dates.append(u.get("last_question_date")) # Quiz'den
+            if u.get("last_daily_reward"): dates.append(u.get("last_daily_reward")) # /gunluk komutundan
+            if u.get("last_mine_time"): dates.append(u.get("last_mine_time")[:10]) # /kaz komutundan
             if u.get("join_date"): dates.append(u["join_date"][:10])
             
-            last_active = max(dates) if dates else "Yok"
+            last_active = max(dates) if dates else "Bilinmiyor"
             active_list.append((u.get("name", "Bilinmiyor"), last_active))
         
         active_list.sort(key=lambda x: x[1], reverse=True)
@@ -729,6 +733,10 @@ def start_message(message):
 
     if not users.get(user_id, {}).get("is_approved", True):
         bot.send_message(message.chat.id, "⏳ **Onay Bekleniyor...**"); return
+
+    # Onaylı ve mevcut kullanıcılar için son aktiflik tarihini güncelle
+    users[user_id]["last_active_date"] = datetime.now().strftime("%Y-%m-%d")
+    save_users()
 
     text = "👋 **Hoş Geldin!**\nLütfen dil seçimi yap.\nPlease select your language."
     keyboard = types.InlineKeyboardMarkup()
