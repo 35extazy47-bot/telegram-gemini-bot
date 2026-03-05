@@ -362,9 +362,12 @@ def register_study_handlers(bot, utils):
             if not subject: bot.reply_to(message, "⚠️ Hangi ders? Örnek: `/kaynak Coğrafya`", parse_mode="Markdown"); return
             wait_msg = bot.reply_to(message, f"📚 **{subject}** için kaynaklar araştırılıyor...")
             res = safe_generate_content(f"KPSS öğrencisi için '{subject}' dersine yönelik en iyi YouTube kanalları, soru bankaları ve çalışma taktiklerini öner. Samimi ol.")
-            bot.delete_message(message.chat.id, wait_msg.message_id)
-            bot.send_message(message.chat.id, f"📚 **KAYNAK TAVSİYELERİ: {subject.upper()}**\n\n{res.text}", parse_mode="Markdown")
-        except: bot.reply_to(message, "Hata oluştu.")
+            try: bot.delete_message(message.chat.id, wait_msg.message_id)
+            except: pass
+            bot.send_message(message.chat.id, f"📚 KAYNAK TAVSİYELERİ: {subject.upper()}\n\n{res.text}")
+        except Exception as e:
+            print(f"Kaynak hatası: {e}")
+            bot.reply_to(message, f"Hata oluştu: {e}")
 
     @bot.message_handler(commands=['ders_notu'])
     def generate_lecture_note(message):
