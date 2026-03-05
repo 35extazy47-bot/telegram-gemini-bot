@@ -166,6 +166,17 @@ def create_profile_image(user_id, user_data):
     draw.text((col1, y_start + 80), "🏅 Rozetler", font=normal_font, fill=(170, 170, 170))
     draw.text((col1, y_start + 105), badges[:40], font=small_font, fill=(255, 215, 0))
     
+    # Favori Ders (En çok çözülen)
+    topic_stats = user_data.get("topic_stats", {})
+    fav_cat = "Yok"
+    if topic_stats:
+        fav_cat_key = max(topic_stats, key=lambda k: topic_stats[k].get("correct", 0) + topic_stats[k].get("incorrect", 0))
+        fav_cat = fav_cat_key.replace("_", " ").title()
+        if len(fav_cat) > 14: fav_cat = fav_cat[:12] + ".."
+    
+    draw.text((col3, y_start + 80), "🧠 Favori Ders", font=normal_font, fill=(170, 170, 170))
+    draw.text((col3, y_start + 105), fav_cat, font=small_font, fill=(255, 215, 0))
+
     bio = io.BytesIO(); img.save(bio, 'PNG'); bio.seek(0)
     return bio
 
