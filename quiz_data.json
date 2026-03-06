@@ -7695,4 +7695,568 @@
     "answer": "B",
     "explanation": "Rauf Denktaş, Kıbrıs Türk halkının varoluş mücadelesinin lideri ve KKTC'nin kurucu cumhurbaşkanıdır."
   }
+,
+  {
+    "id": 609,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Kavimler Göçü'nü başlatarak Avrupa Hun Devleti'nin temellerini atan hükümdar kimdir?",
+    "options": [
+      "A) Attila",
+      "B) Balamir",
+      "C) Uldız",
+      "D) Rua"
+    ],
+    "answer": "B",
+    "explanation": "Balamir, Hunları batıya doğru göç ettirerek Kavimler Göçü'nü başlatmıştır."
+  },
+  {
+    "id": 610,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Uygur Devleti'nin başkenti neresidir?",
+    "options": [
+      "A) Ötüken",
+      "B) Karabalgasun (Ordu-Balık)",
+      "C) Semerkant",
+      "D) Balasagun"
+    ],
+    "answer": "B",
+    "explanation": "Uygurlar yerleşik hayata geçtikten sonra başkentlerini Ötüken'den Karabalgasun'a taşımışlardır."
+  },
+  {
+    "id": 611,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Çin kaynaklarına göre 'Türk' adının anlamı nedir?",
+    "options": [
+      "A) Güçlü, Kuvvetli",
+      "B) Miğfer",
+      "C) Olgunluk Çağı",
+      "D) Türeyen"
+    ],
+    "answer": "B",
+    "explanation": "Çin kaynaklarında Türk adı, miğfere benzediği için 'Miğfer' olarak geçer."
+  },
+  {
+    "id": 612,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Kaşgarlı Mahmut'un Divan-ı Lügati't Türk adlı eserinde 'Türk' adının anlamı nasıl tanımlanmıştır?",
+    "options": [
+      "A) Kanun Nizam Sahibi",
+      "B) Miğfer",
+      "C) Olgunluk Çağı",
+      "D) Terk Edilmiş"
+    ],
+    "answer": "C",
+    "explanation": "Kaşgarlı Mahmut, Türk adını 'Olgunluk Çağı' olarak tanımlamıştır."
+  },
+  {
+    "id": 613,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "İslamiyet öncesi Türk devletlerinde 'Hükümet'e ne ad verilirdi?",
+    "options": [
+      "A) Ayukı",
+      "B) Kurultay",
+      "C) Yargu",
+      "D) Toy"
+    ],
+    "answer": "A",
+    "explanation": "Eski Türklerde hükümete 'Ayukı', başındaki kişiye ise 'Aygucı' (Başbakan) denirdi."
+  },
+  {
+    "id": 614,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "İlk Türk devletlerinde Kurultay (Toy) üyelerine ne ad verilir?",
+    "options": [
+      "A) Şad",
+      "B) Toygun",
+      "C) Bitikçi",
+      "D) Tamgacı"
+    ],
+    "answer": "B",
+    "explanation": "Kurultay'a katılma hakkı olan boy beyleri ve devlet ileri gelenlerine 'Toygun' denir."
+  },
+  {
+    "id": 615,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "Uygurlar döneminde tapınakları süsleyen ressamlara ne ad verilirdi?",
+    "options": [
+      "A) Bedizci",
+      "B) Baksı",
+      "C) Kam",
+      "D) Ozan"
+    ],
+    "answer": "A",
+    "explanation": "Uygurlarda fresk ve minyatür sanatıyla uğraşan ressamlara 'Bedizci' denirdi."
+  },
+  {
+    "id": 616,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Türk tarihinde kağıt parayı (Çav) ilk kez kullanan devlet hangisidir?",
+    "options": [
+      "A) Göktürkler",
+      "B) Hazarlar",
+      "C) Uygurlar",
+      "D) Türgişler"
+    ],
+    "answer": "C",
+    "explanation": "Ticarette gelişen Uygurlar, 'Çav' adı verilen kağıt parayı kullanmışlardır."
+  },
+  {
+    "id": 617,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 1,
+    "question": "Asya Hun Devleti'nin bilinen ilk hükümdarı ve kurucusu kimdir?",
+    "options": [
+      "A) Mete Han",
+      "B) Teoman",
+      "C) Ki-ok",
+      "D) Çi-çi"
+    ],
+    "answer": "B",
+    "explanation": "Asya Hun Devleti'nin bilinen ilk hükümdarı Teoman'dır (Tuman)."
+  },
+  {
+    "id": 618,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "İstanbul'u kuşatan ilk Türk devleti hangisidir?",
+    "options": [
+      "A) Avarlar",
+      "B) Bulgarlar",
+      "C) Peçenekler",
+      "D) Hunlar"
+    ],
+    "answer": "A",
+    "explanation": "Avarlar, Sasanilerle işbirliği yaparak İstanbul'u iki kez kuşatmışlardır."
+  }
+,
+  {
+    "id": 619,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Karahanlı Devleti'nin İslamiyet'i resmi din olarak kabul eden hükümdarı kimdir?",
+    "options": [
+      "A) Bilge Kül Kadir Han",
+      "B) Satuk Buğra Han",
+      "C) Yusuf Kadir Han",
+      "D) Bögü Kağan"
+    ],
+    "answer": "B",
+    "explanation": "Satuk Buğra Han, İslamiyet'i kabul ederek Abdülkerim adını almış ve Karahanlıların İslamlaşmasını sağlamıştır."
+  },
+  {
+    "id": 620,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Büyük Selçuklu Devleti'nin kurucusu olan ve Abbasi Halifesi tarafından 'Doğunun ve Batının Sultanı' unvanı verilen hükümdar kimdir?",
+    "options": [
+      "A) Çağrı Bey",
+      "B) Alparslan",
+      "C) Tuğrul Bey",
+      "D) Melikşah"
+    ],
+    "answer": "C",
+    "explanation": "Tuğrul Bey, Bağdat Seferi ile halifeyi Büveyhoğulları baskısından kurtarmış ve bu unvanı almıştır."
+  },
+  {
+    "id": 621,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Mısır'da kurulan ikinci Türk-İslam devleti hangisidir?",
+    "options": [
+      "A) Tolunoğulları",
+      "B) İhşidiler (Akşitler)",
+      "C) Eyyubiler",
+      "D) Memlükler"
+    ],
+    "answer": "B",
+    "explanation": "Tolunoğulları'ndan sonra Mısır'da kurulan ikinci Türk devleti İhşidilerdir. Kutsal topraklara (Hicaz) hakim olan ilk Türk devletidir."
+  },
+  {
+    "id": 622,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Büyük Selçuklu Devleti döneminde Vezir Nizamülmülk tarafından kurulan ünlü eğitim kurumları hangisidir?",
+    "options": [
+      "A) Yağıbasan Medresesi",
+      "B) Nizamiye Medreseleri",
+      "C) Karatay Medresesi",
+      "D) Sahn-ı Seman Medresesi"
+    ],
+    "answer": "B",
+    "explanation": "Nizamiye Medreseleri, dönemin üniversitesi niteliğindedir ve Batınilik faaliyetlerine karşı fikri mücadele vermiştir."
+  },
+  {
+    "id": 623,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Malazgirt Savaşı'ndan sonra Erzurum ve çevresinde kurulan, Anadolu'daki ilk Türk beyliği hangisidir?",
+    "options": [
+      "A) Danişmentliler",
+      "B) Mengücekliler",
+      "C) Artuklular",
+      "D) Saltuklular"
+    ],
+    "answer": "D",
+    "explanation": "Ebul Kasım Saltuk tarafından Erzurum'da kurulan Saltuklular, Anadolu'da kurulan ilk Türk beyliğidir."
+  },
+  {
+    "id": 624,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "UNESCO Dünya Mirası Listesi'nde yer alan Divriği Ulu Camii ve Darüşşifası hangi beylik dönemine aittir?",
+    "options": [
+      "A) Saltuklular",
+      "B) Mengücekliler",
+      "C) Danişmentliler",
+      "D) Artuklular"
+    ],
+    "answer": "B",
+    "explanation": "Sivas-Divriği'de bulunan bu eser Mengücekliler dönemine aittir."
+  },
+  {
+    "id": 625,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Anadolu Selçuklu Devleti'nde donanma komutanlarına ne ad verilirdi?",
+    "options": [
+      "A) Subaşı",
+      "B) Emir-i Dad",
+      "C) Melikü's Sevahil",
+      "D) Pervane"
+    ],
+    "answer": "C",
+    "explanation": "Sahillerin Meliki anlamına gelen Melikü's Sevahil (veya Reisü'l Bahr), donanma komutanıdır."
+  },
+  {
+    "id": 626,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Türk-İslam devletlerinde hükümdar ile halk ve hükümdar ile divan üyeleri arasındaki görüşmeleri düzenleyen görevli kimdir?",
+    "options": [
+      "A) Hacip",
+      "B) Atabey",
+      "C) Alemdar",
+      "D) Camedar"
+    ],
+    "answer": "A",
+    "explanation": "Hacip (Hacibü'l Hüccab), saray teşkilatının en yetkili ismidir ve protokolü düzenler."
+  },
+  {
+    "id": 627,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Edip Ahmet Yükneki tarafından yazılan ve 'Hakikatlerin Eşiği' anlamına gelen eser hangisidir?",
+    "options": [
+      "A) Kutadgu Bilig",
+      "B) Atabetü'l Hakayık",
+      "C) Divan-ı Hikmet",
+      "D) Şehname"
+    ],
+    "answer": "B",
+    "explanation": "Atabetü'l Hakayık, 12. yüzyılda yazılmış, ahlaki öğütler içeren didaktik bir eserdir."
+  },
+  {
+    "id": 628,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Büyük Selçuklu Devleti'nde ordunun ihtiyaçlarını karşılayan, askerlerin maaşlarını düzenleyen ve askeri işlere bakan divan hangisidir?",
+    "options": [
+      "A) Divan-ı İstifa",
+      "B) Divan-ı İşraf",
+      "C) Divan-ı Tuğra",
+      "D) Divan-ı Arz"
+    ],
+    "answer": "D",
+    "explanation": "Divan-ı Arz (Arz-ül Ceyş), bugünkü Savunma Bakanlığı veya Genelkurmay Başkanlığı benzeri askeri işlerden sorumlu divandır."
+  }
+,
+  {
+    "id": 629,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde 'Bağdat Fatihi' olarak bilinen padişah kimdir?",
+    "options": [
+      "A) Yavuz Sultan Selim",
+      "B) IV. Murat",
+      "C) Kanuni Sultan Süleyman",
+      "D) II. Osman"
+    ],
+    "answer": "B",
+    "explanation": "IV. Murat, 1638 yılında Bağdat'ı geri alarak 'Bağdat Fatihi' unvanını almıştır."
+  },
+  {
+    "id": 630,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nin Batı'da en geniş sınırlara ulaştığı antlaşma hangisidir?",
+    "options": [
+      "A) Bucaş Antlaşması",
+      "B) Ferhat Paşa Antlaşması",
+      "C) Vasvar Antlaşması",
+      "D) Zitvatorok Antlaşması"
+    ],
+    "answer": "A",
+    "explanation": "1672 Bucaş Antlaşması ile Lehistan'dan Podolya alınmış ve Batı'da en geniş sınırlara ulaşılmıştır."
+  },
+  {
+    "id": 631,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nin Doğu'da en geniş sınırlara ulaştığı antlaşma hangisidir?",
+    "options": [
+      "A) Amasya Antlaşması",
+      "B) Kasr-ı Şirin Antlaşması",
+      "C) Ferhat Paşa Antlaşması",
+      "D) Nasuh Paşa Antlaşması"
+    ],
+    "answer": "C",
+    "explanation": "1590 Ferhat Paşa Antlaşması ile İran'dan toprak alınmış ve Doğu'da en geniş sınırlara ulaşılmıştır."
+  },
+  {
+    "id": 632,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Mimar Sinan'ın 'Ustalık Eserim' dediği cami hangisidir?",
+    "options": [
+      "A) Şehzade Camii",
+      "B) Süleymaniye Camii",
+      "C) Selimiye Camii",
+      "D) Fatih Camii"
+    ],
+    "answer": "C",
+    "explanation": "Edirne'de bulunan Selimiye Camii, Mimar Sinan'ın ustalık eseri olarak kabul edilir."
+  },
+  {
+    "id": 633,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde Yeniçeri Ocağı'nı kaldırmayı düşünen ilk padişah kimdir?",
+    "options": [
+      "A) III. Selim",
+      "B) II. Osman (Genç Osman)",
+      "C) I. Ahmet",
+      "D) IV. Murat"
+    ],
+    "answer": "B",
+    "explanation": "Hotin Seferi sırasındaki disiplinsizlikleri gören II. Osman, ocağı kaldırmayı düşünmüş ancak yeniçeriler tarafından öldürülmüştür."
+  },
+  {
+    "id": 634,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Akdeniz'in bir Türk gölü haline gelmesini sağlayan deniz zaferi hangisidir?",
+    "options": [
+      "A) Cerbe Deniz Savaşı",
+      "B) İnebahtı Deniz Savaşı",
+      "C) Preveze Deniz Savaşı",
+      "D) Sapienza Deniz Savaşı"
+    ],
+    "answer": "C",
+    "explanation": "1538 Preveze Deniz Savaşı ile Barbaros Hayrettin Paşa Haçlı donanmasını yenmiş ve Akdeniz Türk gölü olmuştur."
+  },
+  {
+    "id": 635,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Lale Devri'ni sona erdiren isyan hangisidir?",
+    "options": [
+      "A) Kabakçı Mustafa İsyanı",
+      "B) Patrona Halil İsyanı",
+      "C) Canberdi Gazali İsyanı",
+      "D) Celali İsyanları"
+    ],
+    "answer": "B",
+    "explanation": "1730 Patrona Halil İsyanı ile Lale Devri sona ermiş, III. Ahmet tahttan indirilmiştir."
+  },
+  {
+    "id": 636,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde 'Duraklama Dönemi içinde Yükselme Dönemi'ni yaşatan sadrazam ailesi hangisidir?",
+    "options": [
+      "A) Sokullu Ailesi",
+      "B) Çandarlı Ailesi",
+      "C) Köprülüler Ailesi",
+      "D) Nevşehirli Damat İbrahim Paşa Ailesi"
+    ],
+    "answer": "C",
+    "explanation": "Köprülü Mehmet Paşa ile başlayan Köprülüler Dönemi, devlet otoritesinin yeniden sağlandığı başarılı bir dönemdir."
+  },
+  {
+    "id": 637,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Don-Volga ve Süveyş Kanalı projelerini gündeme getiren ünlü Osmanlı sadrazamı kimdir?",
+    "options": [
+      "A) Pargalı İbrahim Paşa",
+      "B) Sokullu Mehmet Paşa",
+      "C) Lütfi Paşa",
+      "D) Rüstem Paşa"
+    ],
+    "answer": "B",
+    "explanation": "Sokullu Mehmet Paşa, Rusya'nın güneye inmesini engellemek ve Baharat Yolu'nu canlandırmak için bu projeleri düşünmüştür."
+  },
+  {
+    "id": 638,
+    "category": "tarih_osmanli",
+    "level": 1,
+    "question": "Osmanlı Devleti'nde devlet işlerinin görüşüldüğü en yüksek yönetim organı olan Divan-ı Hümayun'u kuran padişah kimdir?",
+    "options": [
+      "A) Osman Bey",
+      "B) Orhan Bey",
+      "C) I. Murat",
+      "D) Fatih Sultan Mehmet"
+    ],
+    "answer": "B",
+    "explanation": "Orhan Bey, devlet teşkilatlanması kapsamında Divan-ı Hümayun'u kurmuştur."
+  }
+,
+  {
+    "id": 639,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Milli Mücadele döneminde Doğu Anadolu'da Ermenilerin çoğunlukta olmadığını ve Türklerin soykırım yapmadığını belgeleyen ABD kaynaklı rapor hangisidir?",
+    "options": [
+      "A) Amiral Bristol Raporu",
+      "B) General Harbord Raporu",
+      "C) Milne Hattı Raporu",
+      "D) Sandler Raporu"
+    ],
+    "answer": "B",
+    "explanation": "General Harbord Raporu, Doğu Anadolu'da Ermeni iddialarının asılsız olduğunu ortaya koyan önemli bir uluslararası belgedir."
+  },
+  {
+    "id": 640,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "1 Temmuz 1926'da yürürlüğe giren ve Türk karasularında yolcu ve yük taşıma hakkını sadece Türk gemilerine veren kanun hangisidir?",
+    "options": [
+      "A) Teşvik-i Sanayi Kanunu",
+      "B) Kabotaj Kanunu",
+      "C) Misak-ı İktisadi",
+      "D) Soyadı Kanunu"
+    ],
+    "answer": "B",
+    "explanation": "Kabotaj Kanunu ile Türk denizlerinde ticaret yapma hakkı millileştirilmiş ve denizcilikte bağımsızlık sağlanmıştır."
+  },
+  {
+    "id": 641,
+    "category": "tarih_inkilap",
+    "level": 1,
+    "question": "Mustafa Kemal Paşa, Mondros Ateşkesi'nden sonra İstanbul'a geldiğinde İtilaf donanmasını görünce yanındaki yaveri Cevat Abbas'a hangi tarihi sözü söylemiştir?",
+    "options": [
+      "A) Ordular! İlk hedefiniz Akdeniz'dir.",
+      "B) Hattı müdafaa yoktur, sathı müdafaa vardır.",
+      "C) Geldikleri gibi giderler.",
+      "D) Ya istiklal ya ölüm!"
+    ],
+    "answer": "C",
+    "explanation": "Mustafa Kemal, 13 Kasım 1918'de İstanbul Boğazı'ndaki işgal gemilerini görünce 'Geldikleri gibi giderler' demiştir."
+  },
+  {
+    "id": 642,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "İstiklal Marşı'nın ilk yayımlandığı yerel gazete hangisidir?",
+    "options": [
+      "A) Hakimiyet-i Milliye",
+      "B) İrade-i Milliye",
+      "C) Açıksöz",
+      "D) Ceride-i Resmiye"
+    ],
+    "answer": "C",
+    "explanation": "İstiklal Marşı ilk olarak Kastamonu'da çıkan Açıksöz gazetesinde, daha sonra Sebilürreşad dergisinde yayımlanmıştır."
+  },
+  {
+    "id": 643,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Sovyet Rusya ile imzalanan Moskova Antlaşması ile Gürcistan'a bırakılan ve Misak-ı Milli'den verilen ilk taviz olan yer neresidir?",
+    "options": [
+      "A) Musul",
+      "B) Batum",
+      "C) Hatay",
+      "D) Batı Trakya"
+    ],
+    "answer": "B",
+    "explanation": "Batum'un Gürcistan'a bırakılması, Misak-ı Milli sınırlarından verilen ilk tavizdir."
+  },
+  {
+    "id": 644,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Mustafa Kemal Paşa'nın Milli Mücadele döneminde katıldığı son kongre hangisidir?",
+    "options": [
+      "A) Sivas Kongresi",
+      "B) Erzurum Kongresi",
+      "C) Afyon Kongresi",
+      "D) Pozantı Kongresi"
+    ],
+    "answer": "D",
+    "explanation": "Mustafa Kemal Paşa ve Fevzi Çakmak'ın katıldığı Pozantı Kongresi, Kilikyalılar Cemiyeti tarafından düzenlenmiş son kongredir."
+  },
+  {
+    "id": 645,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Cumhuriyet döneminde ilk genel nüfus sayımı hangi yıl yapılmıştır?",
+    "options": [
+      "A) 1923",
+      "B) 1927",
+      "C) 1935",
+      "D) 1940"
+    ],
+    "answer": "B",
+    "explanation": "Türkiye Cumhuriyeti'nin ilk genel nüfus sayımı 1927 yılında yapılmış ve nüfus yaklaşık 13.6 milyon olarak tespit edilmiştir."
+  },
+  {
+    "id": 646,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Türk kadınlarına verilen siyasi hakların kronolojik sıralaması (Belediye, Muhtar, Vekil) dikkate alındığında, kadınların elde ettiği ilk siyasi hak hangisidir?",
+    "options": [
+      "A) Milletvekili seçme ve seçilme",
+      "B) Muhtar olma",
+      "C) Belediye seçimlerine katılma",
+      "D) Parti kurma"
+    ],
+    "answer": "C",
+    "explanation": "Kadınlara siyasi haklar 1930 (Belediye), 1933 (Muhtar) ve 1934 (Vekil) yıllarında verilmiştir. İlk hak Belediye seçimleridir."
+  },
+  {
+    "id": 647,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Mustafa Kemal Atatürk'ün naaşı, 1953 yılında Anıtkabir tamamlanana kadar geçici olarak nerede muhafaza edilmiştir?",
+    "options": [
+      "A) Dolmabahçe Sarayı",
+      "B) Etnografya Müzesi",
+      "C) Çankaya Köşkü",
+      "D) I. TBMM Binası"
+    ],
+    "answer": "B",
+    "explanation": "Atatürk'ün naaşı 1938'den 1953'e kadar Ankara Etnografya Müzesi'nde kalmıştır."
+  },
+  {
+    "id": 648,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Halkın kültürel ve sosyal gelişimini sağlamak amacıyla 1932 yılında kurulan ve Türk Ocakları'nın yerini alan kurum hangisidir?",
+    "options": [
+      "A) Köy Enstitüleri",
+      "B) Millet Mektepleri",
+      "C) Halkevleri",
+      "D) Türk Tarih Kurumu"
+    ],
+    "answer": "C",
+    "explanation": "Halkevleri, Cumhuriyet devrimlerini halka benimsetmek ve kültürel kalkınmayı sağlamak amacıyla 1932'de açılmıştır."
+  }
 ]
