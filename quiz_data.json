@@ -8259,4 +8259,709 @@
     "answer": "C",
     "explanation": "Halkevleri, Cumhuriyet devrimlerini halka benimsetmek ve kültürel kalkınmayı sağlamak amacıyla 1932'de açılmıştır."
   }
+,
+  {
+    "id": 649,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "II. Dünya Savaşı sürecinde Müttefik Devletlerin Türkiye'nin savaşa katılması konusunda ısrarcı oldukları ve İsmet İnönü'nün Roosevelt ve Churchill ile görüştüğü konferans hangisidir?",
+    "options": [
+      "A) Yalta Konferansı",
+      "B) Tahran Konferansı",
+      "C) II. Kahire Konferansı",
+      "D) Potsdam Konferansı"
+    ],
+    "answer": "C",
+    "explanation": "1943 yılında yapılan II. Kahire Konferansı'nda Türkiye'nin savaşa katılması konusu görüşülmüştür."
+  },
+  {
+    "id": 650,
+    "category": "tarih_cagdas",
+    "level": 1,
+    "question": "1950-1960 yılları arasında Türkiye'de iktidarda olan siyasi parti hangisidir?",
+    "options": [
+      "A) Cumhuriyet Halk Partisi",
+      "B) Adalet Partisi",
+      "C) Demokrat Parti",
+      "D) Anavatan Partisi"
+    ],
+    "answer": "C",
+    "explanation": "1950 seçimlerini kazanan Demokrat Parti, 1960 darbesine kadar 10 yıl boyunca iktidarda kalmıştır."
+  },
+  {
+    "id": 651,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "Soğuk Savaş döneminde Doğu ve Batı blokları arasında yer almayarak tarafsız kalmayı seçen devletlerin oluşturduğu hareketin adı nedir?",
+    "options": [
+      "A) Bağlantısızlar Hareketi",
+      "B) Demir Perde Ülkeleri",
+      "C) Üçüncü Dünya Ülkeleri",
+      "D) Müttefik Devletler"
+    ],
+    "answer": "A",
+    "explanation": "Bandung Konferansı ile temelleri atılan Bağlantısızlar Hareketi, bloklara katılmayan ülkelerden oluşur."
+  },
+  {
+    "id": 652,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "Kıbrıs'ın Yunanistan'a bağlanması fikrini savunan ve adadaki Rumların benimsediği düşünce akımı nedir?",
+    "options": [
+      "A) Megali İdea",
+      "B) Enosis",
+      "C) EOKA",
+      "D) Akritas"
+    ],
+    "answer": "B",
+    "explanation": "Enosis, Kıbrıs'ın Yunanistan ile birleşmesini hedefleyen siyasi hedeftir. EOKA ise bu amaçla kurulan terör örgütüdür."
+  },
+  {
+    "id": 653,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "1991 yılında Sovyetler Birliği'nin dağılmasıyla bağımsızlığını ilan eden ilk Türk Cumhuriyeti hangisidir?",
+    "options": [
+      "A) Kazakistan",
+      "B) Özbekistan",
+      "C) Azerbaycan",
+      "D) Kırgızistan"
+    ],
+    "answer": "C",
+    "explanation": "Azerbaycan, 30 Ağustos 1991'de bağımsızlığını ilan ederek SSCB'den ayrılan ilk Türk Cumhuriyeti olmuştur."
+  },
+  {
+    "id": 654,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "Türkiye'nin Avrupa Ekonomik Topluluğu (AET) ile imzaladığı ve ortaklık sürecini başlatan ilk antlaşma hangisidir?",
+    "options": [
+      "A) Katma Protokol",
+      "B) Gümrük Birliği Antlaşması",
+      "C) Ankara Antlaşması",
+      "D) Roma Antlaşması"
+    ],
+    "answer": "C",
+    "explanation": "1963 yılında imzalanan Ankara Antlaşması, Türkiye ile AET (AB) arasındaki ortaklık sürecini başlatan temel belgedir."
+  },
+  {
+    "id": 655,
+    "category": "tarih_cagdas",
+    "level": 1,
+    "question": "II. Dünya Savaşı'ndan sonra dünya barışını korumak amacıyla 1945 yılında kurulan uluslararası örgüt hangisidir?",
+    "options": [
+      "A) Milletler Cemiyeti",
+      "B) NATO",
+      "C) Birleşmiş Milletler",
+      "D) Avrupa Konseyi"
+    ],
+    "answer": "C",
+    "explanation": "Birleşmiş Milletler (BM), II. Dünya Savaşı sonrası San Francisco Konferansı ile kurulmuştur."
+  },
+  {
+    "id": 656,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "1971 yılında Türk Silahlı Kuvvetleri'nin hükümete verdiği muhtıra (12 Mart Muhtırası) sonucunda istifa eden Başbakan kimdir?",
+    "options": [
+      "A) Bülent Ecevit",
+      "B) Süleyman Demirel",
+      "C) Nihat Erim",
+      "D) Necmettin Erbakan"
+    ],
+    "answer": "B",
+    "explanation": "12 Mart 1971 Muhtırası üzerine dönemin Başbakanı Süleyman Demirel istifa etmiştir."
+  },
+  {
+    "id": 657,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "Bosna Hersek'in bağımsızlık mücadelesinin lideri olan ve 'Bilge Kral' olarak anılan devlet adamı kimdir?",
+    "options": [
+      "A) Aliya İzzetbegoviç",
+      "B) İbrahim Rugova",
+      "C) Cahar Dudayev",
+      "D) Ebulfeyz Elçibey"
+    ],
+    "answer": "A",
+    "explanation": "Aliya İzzetbegoviç, Bosna Hersek'in ilk cumhurbaşkanıdır ve Bilge Kral olarak tanınır."
+  },
+  {
+    "id": 658,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "1996 yılında Türkiye ile Yunanistan'ı savaşın eşiğine getiren kriz hangisidir?",
+    "options": [
+      "A) Kıta Sahanlığı Krizi",
+      "B) FIR Hattı Sorunu",
+      "C) Kardak Krizi",
+      "D) Batı Trakya Sorunu"
+    ],
+    "answer": "C",
+    "explanation": "Kardak Kayalıkları'na Yunan bayrağı dikilmesiyle başlayan kriz, iki ülkeyi savaşın eşiğine getirmiştir."
+  }
+,
+  {
+    "id": 659,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Bir adanın kıyı kordonu (kıyı oku) ile karaya bağlanması sonucu oluşan yer şekline 'Tombolo' (Saplıada) denir. Türkiye'deki en belirgin örneği hangisidir?",
+    "options": [
+      "A) Çatalca Yarımadası",
+      "B) Kapıdağ Yarımadası",
+      "C) Gelibolu Yarımadası",
+      "D) Datça Yarımadası"
+    ],
+    "answer": "B",
+    "explanation": "Balıkesir'deki Kapıdağ Yarımadası ve Sinop İnceburun, Türkiye'nin en tipik tombolo örnekleridir."
+  },
+  {
+    "id": 660,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Türkiye'de güneybatıdan esen, sıcak ve nemli olan, kışın karların erimesine ve bazen soba zehirlenmelerine neden olan rüzgar hangisidir?",
+    "options": [
+      "A) Poyraz",
+      "B) Karayel",
+      "C) Lodos",
+      "D) Keşişleme (Samyeli)"
+    ],
+    "answer": "C",
+    "explanation": "Lodos, güneybatıdan eser ve 'Gözü yaşlı' olarak bilinir; yağış getirir ve sıcaklığı artırır."
+  },
+  {
+    "id": 661,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Dalgaların biriktirdiği kumların bir koyun önünü kapatmasıyla oluşan göllere 'Lagün' (Deniz Kulağı) denir. Aşağıdakilerden hangisi buna örnektir?",
+    "options": [
+      "A) Sapanca Gölü",
+      "B) Büyükçekmece Gölü",
+      "C) İznik Gölü",
+      "D) Manyas Gölü"
+    ],
+    "answer": "B",
+    "explanation": "Büyükçekmece, Küçükçekmece ve Terkos (Durusu) gölleri, kıyı set gölü (lagün) oluşumuna örnektir."
+  },
+  {
+    "id": 662,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "İstanbul ve Çanakkale Boğazlarının oluşumu ile Egeid karasının çökerek Ege Denizi'nin oluşması hangi jeolojik zamanda gerçekleşmiştir?",
+    "options": [
+      "A) I. Jeolojik Zaman (Paleozoik)",
+      "B) II. Jeolojik Zaman (Mezozoik)",
+      "C) III. Jeolojik Zaman (Tersiyer)",
+      "D) IV. Jeolojik Zaman (Kuvaterner)"
+    ],
+    "answer": "D",
+    "explanation": "Anadolu'nun toptan yükselmesi, boğazların oluşumu ve Ege Denizi'nin oluşumu IV. Jeolojik Zaman'da (Kuvaterner) gerçekleşmiştir."
+  },
+  {
+    "id": 663,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Akarsuların taşıyıp biriktirdiği malzemelerden oluşan, mineralce zengin ve tarımsal verimi yüksek olan taşınmış topraklara ne ad verilir?",
+    "options": [
+      "A) Alüvyal Topraklar",
+      "B) Terra Rossa",
+      "C) Çernezyom",
+      "D) Podzol"
+    ],
+    "answer": "A",
+    "explanation": "Delta ovalarında ve vadi tabanlarında görülen alüvyal topraklar, taşınmış (azonal) topraklardır ve çok verimlidir."
+  },
+  {
+    "id": 664,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Türkiye akarsularının genel olarak denge profiline ulaşmamış olmasının (yatak eğimlerinin fazla olmasının) temel nedeni nedir?",
+    "options": [
+      "A) Yağış rejiminin düzensiz olması",
+      "B) Akarsu boylarının kısa olması",
+      "C) Türkiye'nin genç oluşumlu ve yüksek bir ülke olması",
+      "D) Bitki örtüsünün cılız olması"
+    ],
+    "answer": "C",
+    "explanation": "Türkiye yakın jeolojik zamanda oluştuğu ve toptan yükseldiği için akarsular yataklarını derine aşındırır ve denge profiline uzaktır."
+  },
+  {
+    "id": 665,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Akdeniz ve Ege'de makilerin tahrip edildiği alanlarda ortaya çıkan; lavanta, kekik, süpürge otu gibi kısa boylu çalı topluluklarına ne ad verilir?",
+    "options": [
+      "A) Psödomaki",
+      "B) Garig",
+      "C) Antropojen Bozkır",
+      "D) Savan"
+    ],
+    "answer": "B",
+    "explanation": "Makilerin tahribiyle Garig (Frigana), ormanların tahribiyle Maki (Akdeniz) veya Psödomaki (Karadeniz) oluşur."
+  },
+  {
+    "id": 666,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Türkiye'nin en alçak platosu olan, aşınarak deniz seviyesine yaklaşmış (peneplenleşmiş) ve sanayi/nüfus yoğunluğu en fazla olan plato hangisidir?",
+    "options": [
+      "A) Haymana Platosu",
+      "B) Bozok Platosu",
+      "C) Çatalca-Kocaeli Platosu",
+      "D) Teke Platosu"
+    ],
+    "answer": "C",
+    "explanation": "İstanbul'un da üzerinde bulunduğu Çatalca-Kocaeli Platosu, aşınım (peneplen) platosudur ve yükseltisi en azdır."
+  },
+  {
+    "id": 667,
+    "category": "cografya_fiziki",
+    "level": 3,
+    "question": "Kıyıya paralel uzanan dağların çökmesi ve deniz sularının vadileri doldurmasıyla oluşan, kıyı önünde adacıkların bulunduğu 'Dalmaçya Kıyı Tipi' Türkiye'de nerede görülür?",
+    "options": [
+      "A) İzmir - Çeşme",
+      "B) Antalya - Finike - Kaş",
+      "C) Mersin - Taşucu",
+      "D) Muğla - Bodrum"
+    ],
+    "answer": "B",
+    "explanation": "Türkiye'de Dalmaçya kıyı tipinin en belirgin örneği Antalya'nın Finike ve Kaş ilçeleri arasındaki kıyılardır."
+  },
+  {
+    "id": 668,
+    "category": "cografya_fiziki",
+    "level": 2,
+    "question": "Türkiye'de heyelan olaylarının en fazla Karadeniz Bölgesi'nde görülmesinde aşağıdakilerden hangisi etkili değildir?",
+    "options": [
+      "A) Eğimli arazi yapısı",
+      "B) Bol yağış ve kar erimeleri",
+      "C) Killi toprak yapısı",
+      "D) Volkanik arazinin yaygın olması"
+    ],
+    "answer": "D",
+    "explanation": "Heyelanı tetikleyen faktörler eğim, yağış ve killi topraktır. Karadeniz'de volkanik arazi yaygın değildir ve heyelanın ana sebebi bu değildir."
+  }
+,
+  {
+    "id": 669,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Batı Karadeniz Bölümü'nde (Sakarya, Bolu, Düzce) yaygın olan, birkaç mahallenin birleşmesiyle oluşan sürekli köy altı yerleşmesi hangisidir?",
+    "options": [
+      "A) Kom",
+      "B) Divan",
+      "C) Oba",
+      "D) Dalyan"
+    ],
+    "answer": "B",
+    "explanation": "Divan, Batı Karadeniz'e özgü, birkaç mahallenin bir muhtarlık altında toplandığı sürekli yerleşmelerdir."
+  },
+  {
+    "id": 670,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Türkiye'de seracılık faaliyetlerinin en fazla Akdeniz Bölgesi'nde gelişmiş olmasının temel nedeni nedir?",
+    "options": [
+      "A) Toprak verimliliği",
+      "B) Sulama imkanları",
+      "C) Kış sıcaklıklarının yüksek ve güneşli gün sayısının fazla olması",
+      "D) Pazarlama kolaylığı"
+    ],
+    "answer": "C",
+    "explanation": "Seracılıkta ısıtma maliyetini düşürmek için kış ılıklığı ve güneşlenme süresi en önemli faktördür."
+  },
+  {
+    "id": 671,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Doğal koşullardan (iklimden) en az etkilenen ve verimi yüksek olan hayvancılık türü hangisidir?",
+    "options": [
+      "A) Mera Hayvancılığı",
+      "B) Arıcılık",
+      "C) İpek Böcekçiliği",
+      "D) Besi ve Ahır Hayvancılığı"
+    ],
+    "answer": "D",
+    "explanation": "Kapalı alanlarda modern yöntemlerle yapılan besi ve ahır hayvancılığı iklim şartlarından etkilenmez."
+  },
+  {
+    "id": 672,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Türkiye'de hasat dönemi en uzun süren (ilk hasadın Çukurova'da, son hasadın Erzurum-Kars'ta yapıldığı) tarım ürünü hangisidir?",
+    "options": [
+      "A) Buğday",
+      "B) Pamuk",
+      "C) Mısır",
+      "D) Zeytin"
+    ],
+    "answer": "A",
+    "explanation": "Buğday, Türkiye'nin hemen her yerinde yetiştiği için, iklim çeşitliliğine bağlı olarak hasat süresi en geniş üründür."
+  },
+  {
+    "id": 673,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Üretiminde Şanlıurfa ve Gaziantep'in ilk sıralarda yer aldığı, kuraklığa dayanıklı ve 'Yeşil Altın' olarak da anılan tarım ürünü hangisidir?",
+    "options": [
+      "A) Fındık",
+      "B) Antep Fıstığı",
+      "C) Yer Fıstığı",
+      "D) Soya Fasulyesi"
+    ],
+    "answer": "B",
+    "explanation": "Antep Fıstığı, Güneydoğu Anadolu'nun kurak iklimine uyum sağlamış en önemli ekonomik değerlerden biridir."
+  },
+  {
+    "id": 674,
+    "category": "cografya_beseri_tarim",
+    "level": 1,
+    "question": "Türkiye'de en yaygın görülen ve genellikle yazın hayvan otlatmak veya dinlenmek amacıyla çıkılan geçici köy altı yerleşmesi hangisidir?",
+    "options": [
+      "A) Yayla",
+      "B) Ağıl",
+      "C) Kom",
+      "D) Dam"
+    ],
+    "answer": "A",
+    "explanation": "Yayla, Türkiye'de en yaygın köy altı yerleşmesidir. Karadeniz ve Akdeniz'de turizm, diğer yerlerde hayvancılık amaçlıdır."
+  },
+  {
+    "id": 675,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Sulak alanları ve bataklıkları seven, Türkiye'de en çok Samsun ve İstanbul çevresinde yetiştirilen hayvan türü hangisidir?",
+    "options": [
+      "A) Kıl Keçisi",
+      "B) Tiftik Keçisi",
+      "C) Manda",
+      "D) Merinos Koyunu"
+    ],
+    "answer": "C",
+    "explanation": "Manda (Su Sığırı), suyu çok sever ve Türkiye'de en çok Samsun (Kızılırmak Deltası) ve İstanbul (Çatalca) çevresinde bulunur."
+  },
+  {
+    "id": 676,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Gelişmiş ülkelerde olduğu gibi Türkiye'de de çalışan nüfusun en fazla istihdam edildiği ekonomik sektör hangisidir?",
+    "options": [
+      "A) Tarım",
+      "B) Sanayi",
+      "C) Hizmet",
+      "D) İnşaat"
+    ],
+    "answer": "C",
+    "explanation": "Türkiye'de çalışan nüfusun %50'den fazlası hizmet sektöründe (eğitim, sağlık, turizm, ulaşım vb.) istihdam edilmektedir."
+  },
+  {
+    "id": 677,
+    "category": "cografya_beseri_tarim",
+    "level": 1,
+    "question": "Kurak ve yarı kurak iklim bölgelerinde (İç Anadolu, Güneydoğu Anadolu) kırsal kesimde en yaygın kullanılan mesken yapı malzemesi nedir?",
+    "options": [
+      "A) Ahşap",
+      "B) Taş",
+      "C) Kerpiç (Toprak)",
+      "D) Betonarme"
+    ],
+    "answer": "C",
+    "explanation": "Yağışın az, bitki örtüsünün cılız olduğu yerlerde en kolay bulunan malzeme toprak olduğu için kerpiç evler yaygındır."
+  },
+  {
+    "id": 678,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Tüketim merkezlerine (büyük şehirlere) yakınlık nedeniyle Marmara ve Ege bölgelerinde yoğunlaşan hayvancılık faaliyeti hangisidir?",
+    "options": [
+      "A) Arıcılık",
+      "B) İpek Böcekçiliği",
+      "C) Kümes Hayvancılığı",
+      "D) Mera Hayvancılığı"
+    ],
+    "answer": "C",
+    "explanation": "Beyaz et ve yumurta çabuk bozulabildiği için kümes hayvancılığı nüfusun yoğun olduğu büyük şehirlerin çevresinde gelişmiştir."
+  }
+,
+  {
+    "id": 679,
+    "category": "cografya_maden_sanayi",
+    "level": 2,
+    "question": "Sıvı halde bulunan tek maden olan, İzmir-Ödemiş ve Konya-Sarayönü çevresinde çıkarılan maden hangisidir?",
+    "options": [
+      "A) Cıva",
+      "B) Kurşun",
+      "C) Çinko",
+      "D) Antimon"
+    ],
+    "answer": "A",
+    "explanation": "Cıva doğada sıvı halde bulunan tek metal madendir."
+  },
+  {
+    "id": 680,
+    "category": "cografya_maden_sanayi",
+    "level": 1,
+    "question": "Aşağıdaki enerji kaynaklarından hangisi 'Yenilenebilir' (Tükenmeyen) enerji kaynakları grubunda yer almaz?",
+    "options": [
+      "A) Rüzgar",
+      "B) Güneş",
+      "C) Doğalgaz",
+      "D) Jeotermal"
+    ],
+    "answer": "C",
+    "explanation": "Doğalgaz, petrol ve kömür gibi fosil yakıtlar yenilenemeyen enerji kaynaklarıdır."
+  },
+  {
+    "id": 681,
+    "category": "cografya_maden_sanayi",
+    "level": 2,
+    "question": "Türkiye'de elektrik enerjisi üretiminde iklim koşullarından (yağış miktarından) en fazla etkilenen kaynak hangisidir?",
+    "options": [
+      "A) Doğalgaz",
+      "B) Linyit",
+      "C) Hidroelektrik",
+      "D) Nükleer"
+    ],
+    "answer": "C",
+    "explanation": "Hidroelektrik santraller barajlardaki su ile çalıştığı için kuraklık dönemlerinde üretim düşer."
+  },
+  {
+    "id": 682,
+    "category": "cografya_maden_sanayi",
+    "level": 2,
+    "question": "Artvin-Murgul, Kastamonu-Küre ve Elazığ-Maden'de çıkarılan, elektrik-elektronik sanayisinde iletken olarak kullanılan maden hangisidir?",
+    "options": [
+      "A) Bakır",
+      "B) Krom",
+      "C) Boksit",
+      "D) Barit"
+    ],
+    "answer": "A",
+    "explanation": "Bakır, iyi bir iletken olduğu için kablo ve elektrik sanayisinde yaygın kullanılır."
+  },
+  {
+    "id": 683,
+    "category": "cografya_maden_sanayi",
+    "level": 1,
+    "question": "Türkiye'de petrol üretiminin tamamına yakınının karşılandığı coğrafi bölge hangisidir?",
+    "options": [
+      "A) Ege",
+      "B) Marmara",
+      "C) Güneydoğu Anadolu",
+      "D) Karadeniz"
+    ],
+    "answer": "C",
+    "explanation": "Batman, Adıyaman ve Siirt gibi illerin bulunduğu Güneydoğu Anadolu, petrolün çıkarıldığı ana bölgedir."
+  },
+  {
+    "id": 684,
+    "category": "cografya_maden_sanayi",
+    "level": 1,
+    "question": "Aşağıdaki sanayi kollarından hangisi hammadde olarak toprağı kullanır?",
+    "options": [
+      "A) Petrokimya",
+      "B) Orman Ürünleri",
+      "C) Cam ve Seramik",
+      "D) Dokuma"
+    ],
+    "answer": "C",
+    "explanation": "Cam, seramik, çimento ve tuğla sanayisinin hammaddesi topraktır."
+  },
+  {
+    "id": 685,
+    "category": "cografya_maden_sanayi",
+    "level": 2,
+    "question": "Rusya'dan Karadeniz'in altından geçerek Samsun'a ulaşan doğalgaz boru hattının adı nedir?",
+    "options": [
+      "A) TANAP",
+      "B) Mavi Akım",
+      "C) Türk Akımı",
+      "D) Bakü-Tiflis-Erzurum"
+    ],
+    "answer": "B",
+    "explanation": "Mavi Akım, Rusya doğalgazını Karadeniz tabanından Türkiye'ye taşıyan hattır."
+  },
+  {
+    "id": 686,
+    "category": "cografya_maden_sanayi",
+    "level": 2,
+    "question": "Paslanmaz çelik yapımında kullanılan ve Türkiye'nin dünya rezervlerinde önemli bir paya sahip olduğu maden hangisidir?",
+    "options": [
+      "A) Demir",
+      "B) Krom",
+      "C) Manganez",
+      "D) Kurşun"
+    ],
+    "answer": "B",
+    "explanation": "Krom, çeliğin sertleştirilmesi ve paslanmazlık özelliği kazandırılmasında kullanılır."
+  },
+  {
+    "id": 687,
+    "category": "cografya_maden_sanayi",
+    "level": 2,
+    "question": "Aşağıdaki illerden hangisi sanayi faaliyetlerinin gelişmişliği bakımından diğerlerinden daha geridedir?",
+    "options": [
+      "A) Kocaeli",
+      "B) Bursa",
+      "C) Gaziantep",
+      "D) Sinop"
+    ],
+    "answer": "D",
+    "explanation": "Sinop, ulaşım zorlukları ve hinterlandının dar olması nedeniyle sanayisi az gelişmiş illerdendir."
+  },
+  {
+    "id": 688,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Şırnak-Silopi'de çıkarılan ve termik santralde yakıt olarak kullanılan, petrole benzeyen katı yakıt hangisidir?",
+    "options": [
+      "A) Linyit",
+      "B) Antrasit",
+      "C) Asfaltit",
+      "D) Turba"
+    ],
+    "answer": "C",
+    "explanation": "Asfaltit, petrol kökenli katı bir yakıttır ve Şırnak'ta çıkarılır."
+  }
+, 
+  {
+    "id": 669,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Batı Karadeniz Bölümü'nde (Sakarya, Bolu, Düzce) yaygın olan, birkaç mahallenin birleşmesiyle oluşan sürekli köy altı yerleşmesi hangisidir?",
+    "options": [
+      "A) Kom",
+      "B) Divan",
+      "C) Oba",
+      "D) Dalyan"
+    ],
+    "answer": "B",
+    "explanation": "Divan, Batı Karadeniz'e özgü, birkaç mahallenin bir muhtarlık altında toplandığı sürekli yerleşmelerdir."
+  },
+  {
+    "id": 670,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Türkiye'de seracılık faaliyetlerinin en fazla Akdeniz Bölgesi'nde gelişmiş olmasının temel nedeni nedir?",
+    "options": [
+      "A) Toprak verimliliği",
+      "B) Sulama imkanları",
+      "C) Kış sıcaklıklarının yüksek ve güneşli gün sayısının fazla olması",
+      "D) Pazarlama kolaylığı"
+    ],
+    "answer": "C",
+    "explanation": "Seracılıkta ısıtma maliyetini düşürmek için kış ılıklığı ve güneşlenme süresi en önemli faktördür."
+  },
+  {
+    "id": 671,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Doğal koşullardan (iklimden) en az etkilenen ve verimi yüksek olan hayvancılık türü hangisidir?",
+    "options": [
+      "A) Mera Hayvancılığı",
+      "B) Arıcılık",
+      "C) İpek Böcekçiliği",
+      "D) Besi ve Ahır Hayvancılığı"
+    ],
+    "answer": "D",
+    "explanation": "Kapalı alanlarda modern yöntemlerle yapılan besi ve ahır hayvancılığı iklim şartlarından etkilenmez."
+  },
+  {
+    "id": 672,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Türkiye'de hasat dönemi en uzun süren (ilk hasadın Çukurova'da, son hasadın Erzurum-Kars'ta yapıldığı) tarım ürünü hangisidir?",
+    "options": [
+      "A) Buğday",
+      "B) Pamuk",
+      "C) Mısır",
+      "D) Zeytin"
+    ],
+    "answer": "A",
+    "explanation": "Buğday, Türkiye'nin hemen her yerinde yetiştiği için, iklim çeşitliliğine bağlı olarak hasat süresi en geniş üründür."
+  },
+  {
+    "id": 673,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Üretiminde Şanlıurfa ve Gaziantep'in ilk sıralarda yer aldığı, kuraklığa dayanıklı ve 'Yeşil Altın' olarak da anılan tarım ürünü hangisidir?",
+    "options": [
+      "A) Fındık",
+      "B) Antep Fıstığı",
+      "C) Yer Fıstığı",
+      "D) Soya Fasulyesi"
+    ],
+    "answer": "B",
+    "explanation": "Antep Fıstığı, Güneydoğu Anadolu'nun kurak iklimine uyum sağlamış en önemli ekonomik değerlerden biridir."
+  },
+  {
+    "id": 674,
+    "category": "cografya_beseri_tarim",
+    "level": 1,
+    "question": "Türkiye'de en yaygın görülen ve genellikle yazın hayvan otlatmak veya dinlenmek amacıyla çıkılan geçici köy altı yerleşmesi hangisidir?",
+    "options": [
+      "A) Yayla",
+      "B) Ağıl",
+      "C) Kom",
+      "D) Dam"
+    ],
+    "answer": "A",
+    "explanation": "Yayla, Türkiye'de en yaygın köy altı yerleşmesidir. Karadeniz ve Akdeniz'de turizm, diğer yerlerde hayvancılık amaçlıdır."
+  },
+  {
+    "id": 675,
+    "category": "cografya_beseri_tarim",
+    "level": 3,
+    "question": "Sulak alanları ve bataklıkları seven, Türkiye'de en çok Samsun ve İstanbul çevresinde yetiştirilen hayvan türü hangisidir?",
+    "options": [
+      "A) Kıl Keçisi",
+      "B) Tiftik Keçisi",
+      "C) Manda",
+      "D) Merinos Koyunu"
+    ],
+    "answer": "C",
+    "explanation": "Manda (Su Sığırı), suyu çok sever ve Türkiye'de en çok Samsun (Kızılırmak Deltası) ve İstanbul (Çatalca) çevresinde bulunur."
+  },
+  {
+    "id": 676,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Gelişmiş ülkelerde olduğu gibi Türkiye'de de çalışan nüfusun en fazla istihdam edildiği ekonomik sektör hangisidir?",
+    "options": [
+      "A) Tarım",
+      "B) Sanayi",
+      "C) Hizmet",
+      "D) İnşaat"
+    ],
+    "answer": "C",
+    "explanation": "Türkiye'de çalışan nüfusun %50'den fazlası hizmet sektöründe (eğitim, sağlık, turizm, ulaşım vb.) istihdam edilmektedir."
+  },
+  {
+    "id": 677,
+    "category": "cografya_beseri_tarim",
+    "level": 1,
+    "question": "Kurak ve yarı kurak iklim bölgelerinde (İç Anadolu, Güneydoğu Anadolu) kırsal kesimde en yaygın kullanılan mesken yapı malzemesi nedir?",
+    "options": [
+      "A) Ahşap",
+      "B) Taş",
+      "C) Kerpiç (Toprak)",
+      "D) Betonarme"
+    ],
+    "answer": "C",
+    "explanation": "Yağışın az, bitki örtüsünün cılız olduğu yerlerde en kolay bulunan malzeme toprak olduğu için kerpiç evler yaygındır."
+  },
+  {
+    "id": 678,
+    "category": "cografya_beseri_tarim",
+    "level": 2,
+    "question": "Tüketim merkezlerine (büyük şehirlere) yakınlık nedeniyle Marmara ve Ege bölgelerinde yoğunlaşan hayvancılık faaliyeti hangisidir?",
+    "options": [
+      "A) Arıcılık",
+      "B) İpek Böcekçiliği",
+      "C) Kümes Hayvancılığı",
+      "D) Mera Hayvancılığı"
+    ],
+    "answer": "C",
+    "explanation": "Beyaz et ve yumurta çabuk bozulabildiği için kümes hayvancılığı nüfusun yoğun olduğu büyük şehirlerin çevresinde gelişmiştir."
+  }
 ]
