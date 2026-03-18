@@ -8964,4 +8964,430 @@
     "answer": "C",
     "explanation": "Beyaz et ve yumurta çabuk bozulabildiği için kümes hayvancılığı nüfusun yoğun olduğu büyük şehirlerin çevresinde gelişmiştir."
   }
+
+,
+  {
+    "id": 689,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "Avrupa Hunlarının Bizans ile imzaladığı ve Bizans'ın Hunlara ödediği vergiyi iki katına çıkaran antlaşma hangisidir?",
+    "options": [
+      "A) Margus Antlaşması",
+      "B) Anatolius Antlaşması",
+      "C) Zitvatorok Antlaşması",
+      "D) Prut Antlaşması"
+    ],
+    "answer": "A",
+    "explanation": "Margus Antlaşması (434) ile Bizans, Hunlara ödediği vergiyi iki katına çıkarmayı kabul etmiştir."
+  },
+  {
+    "id": 690,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "I. Göktürk Devleti döneminde Sasanilere karşı Bizans ile ittifak kurmak amacıyla İstanbul'a gönderilen Türk elçisi kimdir?",
+    "options": [
+      "A) Zemarkhos",
+      "B) Maniakh",
+      "C) Tonyukuk",
+      "D) Yolluğ Tigin"
+    ],
+    "answer": "B",
+    "explanation": "İstemi Yabgu tarafından görevlendirilen Soğdlu tüccar Maniakh, Bizans'a elçi olarak gönderilmiştir."
+  },
+  {
+    "id": 691,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "İslamiyet öncesi Türk devletlerinde hükümdarın eşi olan ve devlet yönetiminde söz sahibi olan 'Hatun'lara verilen diğer unvan nedir?",
+    "options": [
+      "A) Katun",
+      "B) Ece",
+      "C) Umay",
+      "D) Kancık"
+    ],
+    "answer": "A",
+    "explanation": "Hatun (Katun), kağanla birlikte kurultaya katılır ve elçileri kabul ederdi."
+  },
+  {
+    "id": 692,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "Uygurların yerleşik hayata geçmesiyle gelişen ve Türk tiyatrosunun temeli sayılan sanat etkinliği hangisidir?",
+    "options": [
+      "A) Yuğ",
+      "B) Sagu",
+      "C) Orta Oyunu",
+      "D) Kopuz"
+    ],
+    "answer": "C",
+    "explanation": "Uygurlar döneminde görülen 'Orta Oyunu' (Kög), Türk tiyatrosunun ilk örneklerinden kabul edilir."
+  },
+  {
+    "id": 693,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Asya Hun hükümdarı Mete Han'ın Çin'i mağlup etmesine rağmen Çin topraklarına yerleşmeyip sadece vergiye bağlamasının temel nedeni nedir?",
+    "options": [
+      "A) Çin'in askeri gücünden çekinmesi",
+      "B) Türklerin kalabalık Çin nüfusu içinde asimile olmasını engellemek",
+      "C) Çin topraklarının verimsiz olması",
+      "D) İpek Yolu'nu denetim altına almak istemesi"
+    ],
+    "answer": "B",
+    "explanation": "Mete Han, Türklerin milli benliklerini kaybetmemesi (asimile olmaması) için Çin'e yerleşmemiştir."
+  },
+  {
+    "id": 694,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "İslamiyet öncesi Türk hukukunda (Töre) 'Könilik' kavramı neyi ifade eder?",
+    "options": [
+      "A) İyilik",
+      "B) Eşitlik",
+      "C) Adalet",
+      "D) İnsanlık"
+    ],
+    "answer": "C",
+    "explanation": "Töre'nin değişmez hükümlerinden Könilik; adalet, Tüzlük; eşitlik, Uzluk; iyilik demektir."
+  },
+  {
+    "id": 695,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "Asya Hun Devleti'nin yıkılmasından sonra Afganistan ve Kuzey Hindistan bölgesinde kurulan ve Mazdek İsyanı'nın bastırılmasında Sasanilere yardım eden Türk devleti hangisidir?",
+    "options": [
+      "A) Tabgaçlar",
+      "B) Akhunlar (Eftalitler)",
+      "C) Türgişler",
+      "D) Karluklar"
+    ],
+    "answer": "B",
+    "explanation": "Akhunlar (Eftalitler), İpek Yolu üzerinde hakimiyet kurmuş ve Sasanilerle ilişkilerde bulunmuştur."
+  },
+  {
+    "id": 696,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 2,
+    "question": "Göktürk Kitabeleri'ni (Orhun Abideleri) ilk kez okuyarak 1893 yılında bilim dünyasına açıklayan Danimarkalı filolog kimdir?",
+    "options": [
+      "A) V. Thomsen",
+      "B) W. Radloff",
+      "C) Jean Paul Roux",
+      "D) Barthold"
+    ],
+    "answer": "A",
+    "explanation": "William Thomsen, Orhun Abideleri'ni çözerek 'Türk' ve 'Tengri' kelimelerini okuyan ilk kişidir."
+  },
+  {
+    "id": 697,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "İslamiyet öncesi Türk devletlerinde devletin dış yazışmalarından, mühürlemeden ve diplomasiden sorumlu olan görevli kimdir?",
+    "options": [
+      "A) Subaşı",
+      "B) Apa",
+      "C) Tamgacı (Bitikçi)",
+      "D) Aygucı"
+    ],
+    "answer": "C",
+    "explanation": "Tamgacı (veya Bitikçi), devletin resmi belgelerini hazırlar ve hükümdarın mührünü basardı."
+  },
+  {
+    "id": 698,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "İslamiyet öncesi Türk devletleri arasında ordusunda ücretli asker bulunduran tek devlet hangisidir?",
+    "options": [
+      "A) Hazarlar",
+      "B) Bulgarlar",
+      "C) Peçenekler",
+      "D) Kıpçaklar"
+    ],
+    "answer": "A",
+    "explanation": "Ticaretle zenginleşen Hazarlar, ordularında ücretli askerlere yer veren istisnai Türk devletidir."
+  }
+
+,
+  {
+    "id": 699,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Büyük Selçuklu Devleti'nde, Batınilik faaliyetlerine karşı fikri mücadele vermek ve devlet adamı yetiştirmek amacıyla kurulan eğitim kurumları hangisidir?",
+    "options": [
+      "A) Sahn-ı Seman Medreseleri",
+      "B) Yağıbasan Medresesi",
+      "C) Nizamiye Medreseleri",
+      "D) Cacabey Medresesi"
+    ],
+    "answer": "C",
+    "explanation": "Vezir Nizamülmülk tarafından kurulan Nizamiye Medreseleri, dönemin en önemli eğitim kurumlarıdır ve Batıniliğe karşı Sünni İslam düşüncesini savunmuştur."
+  },
+  {
+    "id": 700,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Anadolu Selçuklu Devleti'nde, Antalya'yı fethederek denizcilik faaliyetlerini başlatan ve ilk tersaneyi kuran hükümdar kimdir?",
+    "options": [
+      "A) I. Alaeddin Keykubat",
+      "B) I. Gıyaseddin Keyhüsrev",
+      "C) II. Kılıçarslan",
+      "D) I. İzzeddin Keykavus"
+    ],
+    "answer": "B",
+    "explanation": "I. Gıyaseddin Keyhüsrev, Antalya'yı alarak Anadolu Selçuklu Devleti'ni Akdeniz'e ulaştırmış ve denizciliği başlatmıştır. I. Alaeddin Keykubat ise Alanya'daki tersane ile denizciliği zirveye taşımıştır."
+  },
+  {
+    "id": 701,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "'El-Medinetü'l Fazıla' (Erdemli Şehir) adlı eseriyle tanınan ve Batı'da 'Alpharabus' olarak bilinen ünlü Türk-İslam filozofu kimdir?",
+    "options": [
+      "A) İbn-i Sina",
+      "B) Biruni",
+      "C) Farabi",
+      "D) Gazali"
+    ],
+    "answer": "C",
+    "explanation": "Farabi, İslam felsefesinin kurucularından sayılır ve 'Muallim-i Sani' (İkinci Öğretmen) olarak da bilinir."
+  },
+  {
+    "id": 702,
+    "category": "tarih_ilk_turk_islam",
+    "level": 1,
+    "question": "1243 yılında Anadolu Selçuklu Devleti'nin Moğollara yenilerek yıkılış sürecine girdiği ve Anadolu'da Türk siyasi birliğinin bozulduğu savaş hangisidir?",
+    "options": [
+      "A) Yassıçemen Savaşı",
+      "B) Kösedağ Savaşı",
+      "C) Miryokefalon Savaşı",
+      "D) Ayn Calut Savaşı"
+    ],
+    "answer": "B",
+    "explanation": "Kösedağ Savaşı'ndaki ağır yenilgi sonrası Anadolu Selçuklu Devleti Moğol hakimiyetine girmiş ve II. Beylikler Dönemi başlamıştır."
+  },
+  {
+    "id": 703,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Türk-İslam devletlerinde hükümdarın çocukları olan meliklerin eğitimiyle ilgilenen ve onlara eyaletlerde danışmanlık yapan tecrübeli devlet adamlarına ne ad verilirdi?",
+    "options": [
+      "A) Lala",
+      "B) Atabey",
+      "C) Hacip",
+      "D) Subaşı"
+    ],
+    "answer": "B",
+    "explanation": "Atabeyler, melikleri eyaletlerde yönetici olarak yetiştirirlerdi. Zamanla güçlenerek kendi devletlerini kurmuşlardır."
+  },
+  {
+    "id": 704,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Malazgirt Savaşı'ndan sonra Sivas merkezli olarak kurulan ve Anadolu'daki ilk medrese olan Yağıbasan Medresesi'ni inşa eden beylik hangisidir?",
+    "options": [
+      "A) Saltuklular",
+      "B) Artuklular",
+      "C) Mengücekliler",
+      "D) Danişmentliler"
+    ],
+    "answer": "D",
+    "explanation": "Danişmentliler, Anadolu'da kurulan ilk beylikler arasında en güçlü olanıdır ve Tokat-Niksar'da Yağıbasan Medresesi'ni yapmışlardır."
+  },
+  {
+    "id": 705,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Mısır'da kurulan ve 1260 Ayn Calut Savaşı'nda Moğolları yenerek batıya doğru ilerleyişlerini durduran tek Türk devleti hangisidir?",
+    "options": [
+      "A) Eyyubiler",
+      "B) Tolunoğulları",
+      "C) Memlükler",
+      "D) İhşidiler"
+    ],
+    "answer": "C",
+    "explanation": "Sultan Baybars komutasındaki Memlük ordusu, Ayn Calut'ta Moğolları tarihte ilk kez durduran ordu olmuştur."
+  },
+  {
+    "id": 706,
+    "category": "tarih_ilk_turk_islam",
+    "level": 1,
+    "question": "Karahanlılar döneminde yazılan ve Türk dilinin ilk sözlüğü ve ansiklopedisi kabul edilen 'Divan-ı Lügati't-Türk' adlı eserin yazarı kimdir?",
+    "options": [
+      "A) Yusuf Has Hacip",
+      "B) Edip Ahmet Yükneki",
+      "C) Ahmet Yesevi",
+      "D) Kaşgarlı Mahmut"
+    ],
+    "answer": "D",
+    "explanation": "Kaşgarlı Mahmut, eserini Araplara Türkçeyi öğretmek amacıyla yazmış ve eserin sonuna bir de Türk dünyası haritası eklemiştir."
+  },
+  {
+    "id": 707,
+    "category": "tarih_ilk_turk_islam",
+    "level": 2,
+    "question": "Anadolu Selçuklu Devleti döneminde, esnaf ve zanaatkarların hem mesleki hem de ahlaki eğitimini sağlayan, sosyal ve ekonomik bir örgütlenme olan yapı hangisidir?",
+    "options": [
+      "A) Fütüvvet Teşkilatı",
+      "B) Ahilik Teşkilatı",
+      "C) Lonca Teşkilatı",
+      "D) İkta Sistemi"
+    ],
+    "answer": "B",
+    "explanation": "Ahi Evran tarafından kurulan Ahilik Teşkilatı, Anadolu'da esnaf dayanışmasını sağlamış ve meslek ahlakını yerleştirmiştir."
+  },
+  {
+    "id": 708,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Büyük Selçuklu Devleti'nin yıkılış sürecine girmesine neden olan ve Sultan Sencer'in Karahitaylara yenildiği 1141 tarihli savaş hangisidir?",
+    "options": [
+      "A) Dandanakan Savaşı",
+      "B) Pasinler Savaşı",
+      "C) Katvan Savaşı",
+      "D) Malazgirt Savaşı"
+    ],
+    "answer": "C",
+    "explanation": "Katvan Savaşı'ndaki ağır yenilgi, Büyük Selçuklu Devleti'nin otoritesini sarsmış ve yıkılışını hızlandırmıştır."
+  }
+
+,
+  {
+    "id": 709,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde, II. Viyana Kuşatması'nın başarısızlıkla sonuçlanması üzerine idam edilen sadrazam kimdir?",
+    "options": [
+      "A) Köprülü Fazıl Ahmet Paşa",
+      "B) Merzifonlu Kara Mustafa Paşa",
+      "C) Tarhuncu Ahmet Paşa",
+      "D) Sokullu Mehmet Paşa"
+    ],
+    "answer": "B",
+    "explanation": "1683'teki II. Viyana Kuşatması'nın hezimetle sonuçlanmasının sorumlusu olarak görülen Sadrazam Merzifonlu Kara Mustafa Paşa, Padişah IV. Mehmet'in emriyle Belgrad'da idam edilmiştir."
+  },
+  {
+    "id": 710,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde, Batı tarzında askeri ıslahatlar yapan ve 'Hendesehane'yi kuran ilk padişah kimdir?",
+    "options": [
+      "A) III. Selim",
+      "B) II. Mahmut",
+      "C) I. Mahmut",
+      "D) I. Abdülhamit"
+    ],
+    "answer": "C",
+    "explanation": "I. Mahmut, Humbaracı Ocağı'nı ıslah ederek ve subay yetiştirmek için Hendesehane'yi kurarak Batı tarzı askeri ıslahatları başlatan ilk padişahtır."
+  },
+  {
+    "id": 711,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nin Kuzey Afrika'da kaybettiği ilk toprak parçası hangisidir?",
+    "options": [
+      "A) Mısır",
+      "B) Tunus",
+      "C) Cezayir",
+      "D) Trablusgarp"
+    ],
+    "answer": "C",
+    "explanation": "Fransa, 1830 yılında Cezayir'i işgal ederek Osmanlı'nın Kuzey Afrika'daki ilk toprak kaybına neden olmuştur."
+  },
+  {
+    "id": 712,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde 'Ekber ve Erşed' sistemini getirerek veraset sisteminde son değişikliği yapan padişah kimdir?",
+    "options": [
+      "A) Fatih Sultan Mehmet",
+      "B) I. Ahmet",
+      "C) II. Osman",
+      "D) IV. Murat"
+    ],
+    "answer": "B",
+    "explanation": "I. Ahmet, taht kavgalarını önlemek amacıyla hanedanın en yaşlı (erşed) ve en akıllı (ekber) üyesinin padişah olmasını öngören sistemi getirmiştir."
+  },
+  {
+    "id": 713,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nin Avusturya karşısındaki siyasi üstünlüğünü kaybettiği ve 'mütekabiliyet' (denklik) esasına dayanan ilk antlaşma hangisidir?",
+    "options": [
+      "A) Karlofça Antlaşması",
+      "B) Vasvar Antlaşması",
+      "C) Zitvatorok Antlaşması",
+      "D) İstanbul Antlaşması (1533)"
+    ],
+    "answer": "C",
+    "explanation": "1606 Zitvatorok Antlaşması ile Avusturya Arşidükü, Osmanlı Padişahı'na denk sayılmış ve Osmanlı'nın Avrupa'daki siyasi üstünlüğü sona ermiştir."
+  },
+  {
+    "id": 714,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde ilk daimi elçilik hangi padişah döneminde ve nerede açılmıştır?",
+    "options": [
+      "A) III. Ahmet - Paris",
+      "B) II. Mahmut - Viyana",
+      "C) III. Selim - Londra",
+      "D) Abdülmecid - Berlin"
+    ],
+    "answer": "C",
+    "explanation": "Nizam-ı Cedit reformları çerçevesinde ilk daimi elçilik III. Selim döneminde Londra'da açılmıştır (Yusuf Agah Efendi)."
+  },
+  {
+    "id": 715,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde 'Müsadere' usulünü (devletin, memurun malına el koyması) kaldıran padişah kimdir?",
+    "options": [
+      "A) III. Selim",
+      "B) II. Mahmut",
+      "C) Abdülmecid",
+      "D) II. Abdülhamit"
+    ],
+    "answer": "B",
+    "explanation": "II. Mahmut, özel mülkiyeti güvence altına almak amacıyla müsadere usulünü büyük ölçüde kaldırmıştır. Tanzimat Fermanı ile tamamen kaldırılmıştır."
+  },
+  {
+    "id": 716,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nin Kutsal İttifak Savaşları (1683-1699) sonucunda Batı'da ilk kez büyük çapta toprak kaybettiği antlaşma hangisidir?",
+    "options": [
+      "A) Bucaş Antlaşması",
+      "B) Karlofça Antlaşması",
+      "C) Pasarofça Antlaşması",
+      "D) Küçük Kaynarca Antlaşması"
+    ],
+    "answer": "B",
+    "explanation": "1699 Karlofça Antlaşması ile Osmanlı Devleti, Macaristan, Podolya ve Mora gibi önemli toprakları kaybederek gerileme dönemine girmiştir."
+  },
+  {
+    "id": 717,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde ilk kez 'Şeyhülislam' idam ettiren padişah kimdir?",
+    "options": [
+      "A) Yavuz Sultan Selim",
+      "B) Kanuni Sultan Süleyman",
+      "C) IV. Murat",
+      "D) II. Osman (Genç Osman)"
+    ],
+    "answer": "C",
+    "explanation": "IV. Murat, devlet otoritesini yeniden sağlamak için sert tedbirler almış ve Şeyhülislam Ahizade Hüseyin Efendi'yi idam ettirmiştir."
+  },
+  {
+    "id": 718,
+    "category": "tarih_osmanli",
+    "level": 2,
+    "question": "Osmanlı Devleti'nde 'Nizam-ı Cedit' adı verilen Batı tarzı orduyu kuran padişah kimdir?",
+    "options": [
+      "A) I. Mahmut",
+      "B) I. Abdülhamit",
+      "C) III. Selim",
+      "D) II. Mahmut"
+    ],
+    "answer": "C",
+    "explanation": "III. Selim, Nizam-ı Cedit (Yeni Düzen) reformları kapsamında Batı tarzında talimli bir ordu kurmuştur."
+  }
 ]
