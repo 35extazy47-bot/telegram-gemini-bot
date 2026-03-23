@@ -39,6 +39,25 @@ CHRONOLOGY_DATA = [
     ("Kıbrıs Barış Harekatı", 1974), ("1980 Darbesi", 1980), ("Gümrük Birliği", 1996)
 ]
 
+# --- Boşluk Doldurma Verileri (Soru, [Doğru Cevaplar Listesi]) ---
+FILL_BLANK_DATA = [
+    ("Mustafa Kemal Atatürk 19 Mayıs 1919'da _________ iline çıkarak Milli Mücadele'yi başlatmıştır.", ["samsun"]),
+    ("Türkiye Cumhuriyeti'nin başkenti _________ ilidir.", ["ankara"]),
+    ("Malazgirt Savaşı _________ yılında yapılmıştır.", ["1071"]),
+    ("İstanbul'u fetheden Osmanlı padişahı _________ Sultan Mehmet'tir.", ["fatih", "2. mehmet", "ii. mehmet"]),
+    ("Türkiye'nin en yüksek dağı _________ Dağı'dır.", ["ağrı"]),
+    ("İstiklal Marşı'nın şairi _________ Ersoy'dur.", ["mehmet akif"]),
+    ("Cumhuriyet _________ yılında ilan edilmiştir.", ["1923"]),
+    ("Hatay _________ yılında anavatana katılmıştır.", ["1939"]),
+    ("Osmanlı Devleti'nin kurucusu _________ Bey'dir.", ["osman"]),
+    ("İlk Türk devletlerinde devleti yöneten hükümdara _________ unvanı verilir.", ["kağan", "han", "hakan"]),
+    ("Asya Hun Devleti'nin en parlak dönemi _________ Han zamanıdır.", ["mete"]),
+    ("Müslümanların ilk kıblesi _________ şehrindedir.", ["kudüs"]),
+    ("Türkiye'nin en büyük gölü _________ Gölü'dür.", ["van"]),
+    ("Lozan Antlaşması _________ yılında imzalanmıştır.", ["1923"]),
+    ("UNESCO koruması altındaki Pamukkale _________ ilimizdedir.", ["denizli"])
+]
+
 # Bu fonksiyonlar tirtil.py'den register fonksiyonu aracılığıyla alınacak
 get_rank = None
 check_daily_limit = None
@@ -825,6 +844,41 @@ def register_quiz_handlers(bot, tirtil_utils):
         users[user_id].pop("chrono_answer", None)
         users[user_id].pop("chrono_data", None)
         save_users()
+
+    @bot.message_handler(commands=['bosluk'])
+    def start_fill_in_the_blank(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        
+        question_data = random.choice(FILL_BLANK_DATA)
+        question, answers = question_data
+        
+        users[user_id]["fill_blank_answers"] = answers
+        users[user_id]["fill_blank_question"] = question
+        save_users()
+        
+        msg = bot.send_message(message.chat.id, f"✍️ **BOŞLUK DOLDURMA**\n\n{question}\n\n_Cevabını yazıp gönder... (Sadece boşluğa gelecek kelimeyi yaz)_", parse_mode="Markdown")
+        bot.register_next_step_handler(msg, check_fill_in_the_blank_answer)
+
+    def check_fill_in_the_blank_answer(message):
+        user_id = str(message.from_user.id)
+        if "fill_blank_answers" not in users.get(user_id, {}): return
+        
+        # Komut girildiyse iptal et
+        if message.text.startswith("/"):
+            bot.reply_to(message, "⚠️ Oyun iptal edildi.")
+            users[user_id].pop("fill_blank_answers", None); users[user_id].pop("fill_blank_question", None); save_users(); return
+
+        user_input = message.text.strip().lower()
+        correct_answers = users[user_id]["fill_blank_answers"]
+        
+        if user_input in correct_answers:
+            users[user_id]["exp"] += 30; bot.reply_to(message, f"✅ **TEBRİKLER!** Doğru bildin.\n💰 Kazanç: +30 EXP")
+        else:
+            correct_display = correct_answers[0].title(); q = users[user_id].get("fill_blank_question", "").replace("_________", f"**{correct_display}**")
+            bot.reply_to(message, f"❌ **YANLIŞ...**\n\nDoğrusu: {correct_display}\n\n_{q}_", parse_mode="Markdown")
+        
+        users[user_id].pop("fill_blank_answers", None); users[user_id].pop("fill_blank_question", None); save_users()
 
     @bot.message_handler(commands=['tekrar'])
     def start_smart_review(message):
