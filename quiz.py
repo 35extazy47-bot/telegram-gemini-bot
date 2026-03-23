@@ -14,6 +14,11 @@ from PIL import Image, ImageDraw, ImageFont
 from deep_translator import GoogleTranslator
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+try:
+    from gtts import gTTS
+except ImportError:
+    gTTS = None
+
 from database import (
     users, save_users, QUIZ_QUESTIONS, DEVELOPER_USERNAME,
     user_timers, pending_duels
@@ -879,6 +884,56 @@ def register_quiz_handlers(bot, tirtil_utils):
             bot.reply_to(message, f"❌ **YANLIŞ...**\n\nDoğrusu: {correct_display}\n\n_{q}_", parse_mode="Markdown")
         
         users[user_id].pop("fill_blank_answers", None); users[user_id].pop("fill_blank_question", None); save_users()
+
+    @bot.message_handler(commands=['sesli'])
+    def start_voice_quiz(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        
+        if not gTTS:
+            bot.reply_to(message, "⚠️ Bu özellik için sunucuda 'gTTS' kütüphanesi eksik.\n`pip install gTTS` komutu ile yüklenmelidir.", parse_mode="Markdown")
+            return
+
+        wait_msg = bot.send_message(message.chat.id, "🎤 **Sesli Soru Hazırlanıyor...**\nLütfen bekleyin, hoparlörünüzü açın! 🔊")
+        
+        try:
+            # Rastgele bir soru seç
+            q = random.choice(QUIZ_QUESTIONS)
+            
+            users[user_id].update({"current_answer": q["answer"], "current_question_id": q["id"]})
+            
+            # Metni seslendirme için hazırla (Daha doğal okunması için düzenleme)
+            text = f"Soru: {q['question']}\n\n"
+            text += f"A şıkkı: {q['options'][0]}\n"
+            text += f"B şıkkı: {q['options'][1]}\n"
+            text += f"C şıkkı: {q['options'][2]}\n"
+            text += f"D şıkkı: {q['options'][3]}\n"
+            
+            # Ses dosyasını bellekte oluştur
+            tts = gTTS(text=text, lang='tr')
+            voice_data = io.BytesIO()
+            tts.write_to_fp(voice_data)
+            voice_data.seek(0)
+            
+            # Klavye
+            markup = InlineKeyboardMarkup(row_width=4)
+            markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
+            markup.add(InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
+            
+            bot.delete_message(message.chat.id, wait_msg.message_id)
+            
+            caption = f"🔊 **SESLİ SORU**\n\n_{q['question']}_\n\n👇 Cevabını seç! (⏳ 45 sn)"
+            msg = bot.send_voice(message.chat.id, voice_data, caption=caption, reply_markup=markup, parse_mode="Markdown")
+            
+            users[user_id]["last_question_message_id"] = msg.message_id
+            
+            # Ses dinleme süresi için zamanlayıcıyı biraz daha uzun tutuyoruz (45 sn)
+            if user_id in user_timers: user_timers[user_id].cancel()
+            user_timers[user_id] = Timer(45.0, question_timeout, args=[message.chat.id, user_id]); user_timers[user_id].start()
+            save_users()
+            
+        except Exception as e:
+            bot.edit_message_text(f"Ses oluşturulurken hata: {e}", message.chat.id, wait_msg.message_id)
 
     @bot.message_handler(commands=['tekrar'])
     def start_smart_review(message):
