@@ -9390,4 +9390,286 @@
     "answer": "C",
     "explanation": "III. Selim, Nizam-ı Cedit (Yeni Düzen) reformları kapsamında Batı tarzında talimli bir ordu kurmuştur."
   }
+
+,
+  {
+    "id": 719,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Milli Mücadele döneminde, İstanbul Hükümeti'nin Temsil Heyeti'ni resmen tanıdığı ve Temsil Heyeti'nin siyasi bir güç olarak varlığını kabul ettirdiği olay hangisidir?",
+    "options": [
+      "A) Erzurum Kongresi",
+      "B) Sivas Kongresi",
+      "C) Amasya Görüşmeleri",
+      "D) Bilecik Görüşmeleri"
+    ],
+    "answer": "C",
+    "explanation": "Amasya Görüşmeleri (20-22 Ekim 1919) ile İstanbul Hükümeti, Temsil Heyeti'nin hukuki varlığını resmen tanımıştır."
+  },
+  {
+    "id": 720,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "I. İnönü Savaşı'nın kazanılmasının ardından, İtilaf Devletleri'nin TBMM Hükümeti'ni Londra Konferansı'na davet etmesi, TBMM'nin hangi alandaki ilk başarısı olarak kabul edilir?",
+    "options": [
+      "A) Askeri",
+      "B) Ekonomik",
+      "C) Diplomatik (Uluslararası tanınma)",
+      "D) Sosyal"
+    ],
+    "answer": "C",
+    "explanation": "Londra Konferansı'na davet edilmesi, İtilaf Devletleri'nin TBMM Hükümeti'ni hukuken tanıdığının ilk göstergesidir."
+  },
+  {
+    "id": 721,
+    "category": "tarih_inkilap",
+    "level": 1,
+    "question": "Kurtuluş Savaşı'nda Güney Cephesi'nde Fransızlara karşı mücadele eden ve 'Maraş Kahramanı' unvanını alan kişi kimdir?",
+    "options": [
+      "A) Şahin Bey",
+      "B) Sütçü İmam",
+      "C) Ali Saip Bey",
+      "D) Rıdvan Hoca"
+    ],
+    "answer": "B",
+    "explanation": "Sütçü İmam, Maraş'ın işgaline karşı ilk direnişi başlatan ve Maraş'ın kurtuluşunda önemli rol oynayan halk kahramanıdır."
+  },
+  {
+    "id": 722,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Lozan Barış Antlaşması'nda Türkiye'nin lehine çözülen ve kapitülasyonların tamamen kaldırılmasını sağlayan ilke hangisidir?",
+    "options": [
+      "A) Milliyetçilik",
+      "B) Laiklik",
+      "C) Tam bağımsızlık",
+      "D) Halkçılık"
+    ],
+    "answer": "C",
+    "explanation": "Kapitülasyonların kaldırılması, Türkiye'nin ekonomik ve siyasi bağımsızlığını tam anlamıyla kazanması anlamına gelir."
+  },
+  {
+    "id": 723,
+    "category": "tarih_inkilap",
+    "level": 1,
+    "question": "Cumhuriyetin ilk yıllarında, çok partili hayata geçiş denemelerinden biri olan ve Fethi Okyar tarafından kurulan parti hangisidir?",
+    "options": [
+      "A) Terakkiperver Cumhuriyet Fırkası",
+      "B) Demokrat Parti",
+      "C) Serbest Cumhuriyet Fırkası",
+      "D) Milli Kalkınma Partisi"
+    ],
+    "answer": "C",
+    "explanation": "1930 yılında Ali Fethi Okyar tarafından kurulan Serbest Cumhuriyet Fırkası, ikinci çok partili hayat denemesidir."
+  },
+  {
+    "id": 724,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Atatürk'ün 'Hayatta en hakiki mürşit ilimdir' sözü, onun hangi ilkesiyle doğrudan ilişkilidir?",
+    "options": [
+      "A) Milliyetçilik ve Halkçılık",
+      "B) Laiklik ve İnkılapçılık",
+      "C) Devletçilik ve Cumhuriyetçilik",
+      "D) Halkçılık ve Devletçilik"
+    ],
+    "answer": "B",
+    "explanation": "Bu söz, akıl ve bilimi rehber edinmeyi vurgulayarak laiklik ve sürekli gelişimi ifade eden inkılapçılık ilkeleriyle doğrudan bağlantılıdır."
+  },
+  {
+    "id": 725,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "1924 Anayasası'nda yapılan 1937 değişikliği ile anayasaya dahil edilen Atatürk ilkelerinden hangisi, ekonomik bağımsızlık ve kalkınmayı ön planda tutar?",
+    "options": [
+      "A) Cumhuriyetçilik",
+      "B) Milliyetçilik",
+      "C) Devletçilik",
+      "D) Halkçılık"
+    ],
+    "answer": "C",
+    "explanation": "Devletçilik ilkesi, özellikle 1929 Dünya Ekonomik Krizi sonrası ekonomik kalkınmada devletin öncü rolünü vurgular."
+  },
+  {
+    "id": 726,
+    "category": "tarih_inkilap",
+    "level": 1,
+    "question": "Türk Tarih Kurumu ve Türk Dil Kurumu'nun kurulması, Atatürk'ün hangi ilkesiyle doğrudan ilişkilidir?",
+    "options": [
+      "A) Laiklik",
+      "B) Halkçılık",
+      "C) Milliyetçilik",
+      "D) İnkılapçılık"
+    ],
+    "answer": "C",
+    "explanation": "Türk Tarih Kurumu ve Türk Dil Kurumu, Türk milletinin tarihini ve dilini araştırarak milli bilinci güçlendirmeyi amaçlamıştır."
+  },
+  {
+    "id": 727,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "1929 Dünya Ekonomik Krizi'nin Türkiye üzerindeki etkilerini azaltmak amacıyla uygulanan ekonomi politikası hangisidir?",
+    "options": [
+      "A) Liberal Ekonomi",
+      "B) Karma Ekonomi",
+      "C) Devletçilik",
+      "D) Serbest Piyasa Ekonomisi"
+    ],
+    "answer": "C",
+    "explanation": "1929 Krizi sonrası özel sektörün yetersiz kalması üzerine Türkiye, ekonomik kalkınmada devletin öncü rolünü benimseyen Devletçilik politikasını uygulamıştır."
+  },
+  {
+    "id": 728,
+    "category": "tarih_inkilap",
+    "level": 2,
+    "question": "Türkiye'nin II. Dünya Savaşı'na girmemesini sağlayan ve denge politikası izlemesinde etkili olan Cumhurbaşkanı kimdir?",
+    "options": [
+      "A) Mustafa Kemal Atatürk",
+      "B) İsmet İnönü",
+      "C) Celal Bayar",
+      "D) Adnan Menderes"
+    ],
+    "answer": "B",
+    "explanation": "II. Dünya Savaşı boyunca Türkiye'nin Cumhurbaşkanı olan İsmet İnönü, ülkeyi savaşın yıkıcı etkilerinden korumak için denge ve tarafsızlık politikası izlemiştir."
+  },
+  {
+    "id": 729,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "1955 yılında kurulan Bağdat Paktı'ndan, 1959'da Irak'ın çekilmesi üzerine örgütün merkezi Ankara'ya taşınmış ve adı değiştirilmiştir. Bu yeni örgütün adı nedir?",
+    "options": [
+      "A) NATO",
+      "B) CENTO",
+      "C) SEATO",
+      "D) Sadabat Paktı"
+    ],
+    "answer": "B",
+    "explanation": "Irak'ın çekilmesiyle Bağdat Paktı'nın adı Merkezi Antlaşma Teşkilatı (CENTO) olarak değiştirilmiş ve merkez Ankara olmuştur."
+  },
+  {
+    "id": 730,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "1964 yılında Türkiye'nin Kıbrıs'a müdahale etmesini engellemek amacıyla ABD Başkanı tarafından gönderilen ve Türk-Amerikan ilişkilerinde güven bunalımına yol açan mektup hangisidir?",
+    "options": [
+      "A) Truman Doktrini",
+      "B) Marshall Planı",
+      "C) Johnson Mektubu",
+      "D) Kennedy Mektubu"
+    ],
+    "answer": "C",
+    "explanation": "ABD Başkanı Lyndon B. Johnson'ın İsmet İnönü'ye gönderdiği mektup, Türkiye'nin Kıbrıs'a müdahalesini sert bir dille engellemiştir."
+  },
+  {
+    "id": 731,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "24 Ocak 1980 Kararları olarak bilinen ekonomik istikrar tedbirlerinin mimarı olan ve daha sonra Başbakanlık ve Cumhurbaşkanlığı yapan devlet adamı kimdir?",
+    "options": [
+      "A) Süleyman Demirel",
+      "B) Turgut Özal",
+      "C) Necmettin Erbakan",
+      "D) Mesut Yılmaz"
+    ],
+    "answer": "B",
+    "explanation": "Dönemin DPT Müsteşarı Turgut Özal, 24 Ocak Kararları ile Türkiye ekonomisinin dışa açılmasını sağlayan programı hazırlamıştır."
+  },
+  {
+    "id": 732,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "1974 Kıbrıs Barış Harekatı'nın ikinci aşamasını başlatan 'Ayşe tatile çıksın' parolasını Cenevre Konferansı'ndan Ankara'ya ileten dönemin Dışişleri Bakanı kimdir?",
+    "options": [
+      "A) Hasan Esat Işık",
+      "B) Turan Güneş",
+      "C) Hayrettin Erkmen",
+      "D) İhsan Sabri Çağlayangil"
+    ],
+    "answer": "B",
+    "explanation": "Dönemin Dışişleri Bakanı Turan Güneş, görüşmelerin tıkanması üzerine kızı Ayşe'nin adını kullanarak bu parolayı iletmiştir."
+  },
+  {
+    "id": 733,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "1997 yılında Necmettin Erbakan'ın öncülüğünde kurulan ve Türkiye dahil 8 gelişmekte olan İslam ülkesinin ekonomik işbirliğini hedefleyen örgüt hangisidir?",
+    "options": [
+      "A) İİT (İslam İşbirliği Teşkilatı)",
+      "B) D-8 (Developing 8)",
+      "C) EİT (Ekonomik İşbirliği Teşkilatı)",
+      "D) KEİ (Karadeniz Ekonomik İşbirliği)"
+    ],
+    "answer": "B",
+    "explanation": "D-8 (Gelişen Sekiz Ülke); Türkiye, İran, Pakistan, Bangladeş, Malezya, Endonezya, Mısır ve Nijerya'dan oluşur."
+  },
+  {
+    "id": 734,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "1961 Anayasası ile kurulan ve 1982 Anayasası ile kaldırılan, TBMM'nin Millet Meclisi dışındaki diğer kanadını oluşturan yasama organı hangisidir?",
+    "options": [
+      "A) Danışma Meclisi",
+      "B) Temsilciler Meclisi",
+      "C) Cumhuriyet Senatosu",
+      "D) Ayan Meclisi"
+    ],
+    "answer": "C",
+    "explanation": "1961 Anayasası çift meclisli bir sistem getirmiş (Millet Meclisi ve Cumhuriyet Senatosu), 1980 darbesi sonrası bu yapı kaldırılmıştır."
+  },
+  {
+    "id": 735,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "Soğuk Savaş döneminde, 1960 yılında Adana İncirlik Üssü'nden kalkan ABD casus uçağının SSCB tarafından düşürülmesiyle ortaya çıkan uluslararası kriz hangisidir?",
+    "options": [
+      "A) Küba Füze Krizi",
+      "B) U-2 Krizi",
+      "C) Berlin Buhranı",
+      "D) Kore Savaşı"
+    ],
+    "answer": "B",
+    "explanation": "ABD'ye ait U-2 casus uçağının Sovyet topraklarında düşürülmesi, Türkiye'yi de içine alan büyük bir krize neden olmuştur."
+  },
+  {
+    "id": 736,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "1953 yılında SSCB tehdidine karşı Türkiye, Yunanistan ve Yugoslavya arasında imzalanan dostluk ve işbirliği antlaşması hangisidir?",
+    "options": [
+      "A) Balkan Antantı",
+      "B) Balkan Paktı",
+      "C) Sadabat Paktı",
+      "D) Akdeniz Paktı"
+    ],
+    "answer": "B",
+    "explanation": "1934 Balkan Antantı ile karıştırılmamalıdır. 1953 Balkan Paktı, Soğuk Savaş döneminde Sovyet tehdidine karşı kurulmuştur."
+  },
+  {
+    "id": 737,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "SSCB'nin dağılmasından sonra Türk dilli ülkeler arasındaki kalkınma işbirliğini geliştirmek amacıyla 1992 yılında Türkiye tarafından kurulan kurum hangisidir?",
+    "options": [
+      "A) TÜRKSOY",
+      "B) TİKA",
+      "C) YEE (Yunus Emre Enstitüsü)",
+      "D) Türk Keneşi"
+    ],
+    "answer": "B",
+    "explanation": "Türk İşbirliği ve Koordinasyon Ajansı Başkanlığı (TİKA), 1992 yılında kurulmuş ve Orta Asya Türk Cumhuriyetlerine yönelik faaliyetlere başlamıştır."
+  },
+  {
+    "id": 738,
+    "category": "tarih_cagdas",
+    "level": 2,
+    "question": "1955 yılında Atatürk'ün Selanik'teki evine bomba atıldığı haberi üzerine İstanbul'da başlayan ve azınlıklara ait işyerlerinin tahrip edildiği olay hangisidir?",
+    "options": [
+      "A) Varlık Vergisi Olayları",
+      "B) 6-7 Eylül Olayları",
+      "C) Kanlı Pazar",
+      "D) 1 Mayıs Olayları"
+    ],
+    "answer": "B",
+    "explanation": "6-7 Eylül Olayları, Demokrat Parti döneminde yaşanan ve Rum vatandaşların mülklerine zarar verilen toplumsal bir olaydır."
+  }
 ]
