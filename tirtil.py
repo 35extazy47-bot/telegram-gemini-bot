@@ -1111,6 +1111,7 @@ if __name__ == "__main__":
         types.BotCommand("ayarlar", "Bildirim Ayarları"),
         types.BotCommand("kart", "Bilgi Kartı (Flashcard)"),
         types.BotCommand("plan", "Ders Çalışma Programı"),
+        types.BotCommand("koc", "Akıllı Koç Analizi"),
         types.BotCommand("ozet", "Konu Özeti"),
         types.BotCommand("motivasyon", "Motivasyon"),
         types.BotCommand("notal", "Ders Notu Al"),

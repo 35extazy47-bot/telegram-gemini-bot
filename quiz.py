@@ -935,6 +935,50 @@ def register_quiz_handlers(bot, tirtil_utils):
         except Exception as e:
             bot.edit_message_text(f"Ses oluşturulurken hata: {e}", message.chat.id, wait_msg.message_id)
 
+    @bot.message_handler(commands=['koc'])
+    def get_coach_analysis(message):
+        user_id = str(message.from_user.id)
+        if not check_daily_limit(user_id):
+            bot.reply_to(message, "⛔ Günlük AI limitin doldu! Yarın tekrar dene.")
+            return
+
+        stats = users[user_id].get("topic_stats", {})
+        if not stats:
+            bot.reply_to(message, "📊 Analiz için henüz yeterli soru çözmedin. Biraz daha pratik yap!")
+            return
+
+        wait_msg = bot.reply_to(message, "🤖 Akıllı Koç, başarı karneni inceliyor ve sana özel tavsiyeler hazırlıyor... 🧠")
+
+        # İstatistikleri AI için daha anlaşılır hale getir
+        analysis_data = {}
+        for cat, data in stats.items():
+            total = data.get("correct", 0) + data.get("incorrect", 0)
+            if total > 5: # Analiz için en az 5 soru çözülmüş olsun
+                success_rate = (data.get("correct", 0) / total) * 100
+                analysis_data[cat.replace("_", " ").title()] = {
+                    "dogru": data.get("correct", 0),
+                    "yanlis": data.get("incorrect", 0),
+                    "basari_yuzdesi": f"%{int(success_rate)}"
+                }
+        
+        if not analysis_data:
+            bot.edit_message_text("📊 Analiz için henüz yeterli soru çözmedin. Biraz daha pratik yap!", message.chat.id, wait_msg.message_id)
+            return
+
+        try:
+            prompt = (
+                "Sen bir KPSS ders koçusun. Öğrencinin derslerdeki başarı istatistikleri aşağıda JSON formatında verilmiştir. "
+                "Bu istatistikleri analiz et. Öğrencinin güçlü ve zayıf yönlerini belirle. Özellikle en zayıf olduğu 2-3 konuya odaklanmasını söyle. "
+                "Bu zayıf konular için somut çalışma önerileri (örneğin 'bu konuyu tekrar et', 'bu konudan bol soru çöz' gibi) sun. "
+                "Motive edici bir kapanış cümlesi yaz. Samimi ve destekleyici bir dil kullan. Emoji kullanmayı unutma. "
+                f"İstatistikler:\n{json.dumps(analysis_data, ensure_ascii=False, indent=2)}"
+            )
+            response = safe_generate_content(prompt)
+            bot.delete_message(message.chat.id, wait_msg.message_id)
+            bot.reply_to(message, f"🧑‍🏫 **AKILLI KOÇ ANALİZİ**\n\n{response.text}", parse_mode="Markdown")
+        except Exception as e:
+            bot.edit_message_text(f"Analiz yapılırken bir hata oluştu: {e}", message.chat.id, wait_msg.message_id)
+
     @bot.message_handler(commands=['tekrar'])
     def start_smart_review(message):
         user_id = str(message.from_user.id)
