@@ -21,6 +21,24 @@ from database import (
 
 active_quiz_duels = {}
 
+# --- Kronoloji Oyunu Verileri (Olay, Yıl) ---
+CHRONOLOGY_DATA = [
+    ("Malazgirt Savaşı", 1071), ("Miryokefalon Savaşı", 1176), ("Kösedağ Savaşı", 1243),
+    ("Söğüt'ün Alınması", 1299), ("Bursa'nın Fethi", 1326), ("Ankara Savaşı", 1402),
+    ("İstanbul'un Fethi", 1453), ("Ridaniye Seferi", 1517), ("Preveze Deniz Zaferi", 1538),
+    ("İnebahtı Deniz Savaşı", 1571), ("Viyana Kuşatması (II)", 1683), ("Karlofça Antlaşması", 1699),
+    ("Pasarofça Antlaşması", 1718), ("Küçük Kaynarca", 1774), ("Yaş Antlaşması", 1792),
+    ("Sened-i İttifak", 1808), ("Tanzimat Fermanı", 1839), ("Islahat Fermanı", 1856),
+    ("I. Meşrutiyet", 1876), ("93 Harbi", 1877), ("II. Meşrutiyet", 1908),
+    ("31 Mart Vakası", 1909), ("Trablusgarp Savaşı", 1911), ("Balkan Savaşları", 1912),
+    ("I. Dünya Savaşı", 1914), ("Çanakkale Zaferi", 1915), ("Mondros Ateşkesi", 1918),
+    ("Samsun'a Çıkış", 1919), ("Sivas Kongresi", 1919), ("TBMM'nin Açılışı", 1920),
+    ("Sakarya Savaşı", 1921), ("Büyük Taarruz", 1922), ("Cumhuriyetin İlanı", 1923),
+    ("Halifeliğin Kaldırılması", 1924), ("Hatay'ın Katılması", 1939), ("Çok Partili Hayat", 1946),
+    ("NATO Üyeliği", 1952), ("6-7 Eylül Olayları", 1955), ("1960 Darbesi", 1960),
+    ("Kıbrıs Barış Harekatı", 1974), ("1980 Darbesi", 1980), ("Gümrük Birliği", 1996)
+]
+
 # Bu fonksiyonlar tirtil.py'den register fonksiyonu aracılığıyla alınacak
 get_rank = None
 check_daily_limit = None
@@ -746,6 +764,67 @@ def register_quiz_handlers(bot, tirtil_utils):
         
         bot.send_message(message.chat.id, f"⏳ **MİNİ DENEME SINAVI BAŞLIYOR!**\n\n📝 Toplam Soru: {len(exam_q_ids)}\n⏱️ Süre tutuluyor.\n\nBaşarılar! 🚀")
         send_exam_question(message.chat.id, user_id)
+
+    @bot.message_handler(commands=['kronoloji'])
+    def start_chronology(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        
+        # Rastgele 4 olay seç
+        selection = random.sample(CHRONOLOGY_DATA, 4)
+        
+        # Doğru sıralamayı (yıla göre) bul ve indeksleri (1,2,3,4) belirle
+        correct_order = sorted(selection, key=lambda x: x[1])
+        # Seçilen listedeki olayların doğru sıralamadaki yerini bul (Örn: Seçilen listenin 3.sü aslında 1. sırada olmalı)
+        # Basitçe: Kullanıcıdan seçilen listedeki numaraları doğru sırayla yazmasını isteyeceğiz.
+        correct_indices = [selection.index(event) + 1 for event in correct_order]
+        
+        users[user_id]["chrono_answer"] = correct_indices
+        users[user_id]["chrono_data"] = selection
+        
+        text = "📅 **KRONOLOJİ OYUNU**\n\nAşağıdaki olayları **ESKİDEN YENİYE (Tarih Sırasına Göre)** sırala.\nCevabını rakamlar arasında boşluk bırakarak yaz.\n__Örnek: 3 1 4 2__\n\n"
+        
+        for i, (event, year) in enumerate(selection, 1):
+            text += f"**{i}.** {event}\n"
+            
+        msg = bot.send_message(message.chat.id, text, parse_mode="Markdown")
+        bot.register_next_step_handler(msg, check_chronology_answer)
+
+    def check_chronology_answer(message):
+        user_id = str(message.from_user.id)
+        if "chrono_answer" not in users.get(user_id, {}): return
+        
+        try:
+            user_input = message.text.strip().replace(",", " ").replace("-", " ").split()
+            user_order = [int(x) for x in user_input]
+            
+            if len(user_order) != 4:
+                bot.reply_to(message, "⚠️ Lütfen 4 rakam girin (Örn: 3 1 4 2). Tekrar dene: /kronoloji")
+                return
+                
+            correct_indices = users[user_id]["chrono_answer"]
+            selection = users[user_id]["chrono_data"]
+            sorted_events = sorted(selection, key=lambda x: x[1])
+
+            if user_order == correct_indices:
+                users[user_id]["exp"] += 50
+                res_text = "🎉 **TEBRİKLER!** Doğru sıraladın.\n💰 Kazanç: +50 EXP\n\n✅ **Doğru Sıralama:**\n"
+            else:
+                res_text = "❌ **YANLIŞ OLDU...**\n\n✅ **Doğru Sıralama:**\n"
+            
+            for event, year in sorted_events:
+                res_text += f"🔹 {year}: {event}\n"
+            
+            save_users()
+            bot.send_message(message.chat.id, res_text, parse_mode="Markdown")
+            
+        except ValueError:
+            bot.reply_to(message, "⚠️ Sadece rakam girmelisin. Tekrar dene: /kronoloji")
+        
+        # Temizlik
+        users[user_id].pop("chrono_answer", None)
+        users[user_id].pop("chrono_data", None)
+        save_users()
 
     @bot.message_handler(commands=['tekrar'])
     def start_smart_review(message):
