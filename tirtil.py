@@ -1095,6 +1095,7 @@ if __name__ == "__main__":
         types.BotCommand("quiz", "Soru Çöz (KPSS)"),
         types.BotCommand("maraton", "Maraton Modu"),
         types.BotCommand("clock", "Global Yarışma"),
+        types.BotCommand("deneme", "Sınav Simülasyonu (Mini Deneme)"),
         types.BotCommand("dogruyanlis", "Doğru/Yanlış Oyunu"),
         types.BotCommand("duello", "Düello At"),
         types.BotCommand("yanlislarim", "Yanlışlarını Tekrar Et"),

@@ -195,6 +195,88 @@ def register_quiz_handlers(bot, tirtil_utils):
         
         user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start(); save_users()
 
+    def finish_exam_simulation(chat_id, user_id):
+        stats = users[user_id].get("exam_stats", {})
+        start_str = users[user_id].get("exam_start")
+        
+        duration_str = "0 dk"
+        if start_str:
+            start = datetime.strptime(start_str, "%Y-%m-%d %H:%M:%S")
+            diff = datetime.now() - start
+            mins = int(diff.total_seconds() / 60)
+            secs = int(diff.total_seconds() % 60)
+            duration_str = f"{mins} dk {secs} sn"
+
+        correct = stats.get("correct", 0)
+        incorrect = stats.get("incorrect", 0)
+        empty = stats.get("empty", 0)
+        total = users[user_id].get("exam_total", 20)
+        
+        net = correct - (incorrect / 4)
+        exp_gain = max(0, int(net * 10)) # Net başına 10 EXP
+        
+        users[user_id]["exp"] += exp_gain
+        
+        # İstatistiğe kaydet (study.py'deki denemelerim komutuyla uyumlu)
+        if "exams" not in users[user_id]: users[user_id]["exams"] = []
+        users[user_id]["exams"].append({
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            "name": "Mini Deneme",
+            "net": net
+        })
+        
+        text = (
+            f"🏁 **DENEME SINAVI SONUCU** 🏁\n\n"
+            f"⏱️ Süre: {duration_str}\n"
+            f"✅ Doğru: {correct}\n"
+            f"❌ Yanlış: {incorrect}\n"
+            f"⭕ Boş: {empty}\n\n"
+            f"📊 **NET: {net:.2f}**\n"
+            f"⭐️ Kazanılan EXP: +{exp_gain}"
+        )
+        
+        users[user_id]["mode"] = "local"
+        users[user_id].pop("exam_queue", None)
+        users[user_id].pop("exam_stats", None)
+        users[user_id].pop("exam_start", None)
+        users[user_id].pop("exam_total", None)
+        users[user_id].pop("current_answer", None)
+        save_users()
+        
+        bot.send_message(chat_id, text)
+
+    def send_exam_question(chat_id, user_id):
+        queue = users[user_id].get("exam_queue", [])
+        if not queue:
+            finish_exam_simulation(chat_id, user_id)
+            return
+
+        q_id = queue[0]
+        q = next((item for item in QUIZ_QUESTIONS if item["id"] == q_id), None)
+        if not q:
+            users[user_id]["exam_queue"].pop(0)
+            send_exam_question(chat_id, user_id)
+            return
+
+        users[user_id].update({"current_answer": q["answer"], "current_question_id": q["id"]})
+        
+        # Kaçıncı soru olduğunu hesapla
+        current_idx = users[user_id]["exam_total"] - len(queue) + 1
+        total = users[user_id]["exam_total"]
+        
+        photo = create_quiz_image(q['question'], q['options'], f"DENEME ({current_idx}/{total})", users[user_id]["level"], users[user_id]['lives'])
+        
+        markup = InlineKeyboardMarkup(row_width=4)
+        markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
+        markup.add(InlineKeyboardButton("⏭ Boş Bırak", callback_data="ans_EMPTY"))
+        markup.add(InlineKeyboardButton("🏁 Sınavı Bitir", callback_data="finish_quiz"))
+
+        if user_id in user_timers: user_timers[user_id].cancel()
+        
+        msg = bot.send_photo(chat_id, photo, caption=f"📝 **Soru {current_idx}/{total}**", reply_markup=markup)
+        users[user_id]["last_question_message_id"] = msg.message_id
+        save_users()
+
     def question_timeout(chat_id, user_id):
         evaluate_quiz_answer(chat_id, user_id, "TIMEOUT", bot)
 
@@ -369,6 +451,23 @@ def register_quiz_handlers(bot, tirtil_utils):
         correct_msgs = ["✅ **Harikasın!**", "🔥 **Alev aldı buralar!**", "🧠 **Zeka küpü!**", "🎯 **Tam isabet!**"]
         wrong_msgs = ["❌ **Ah be! Yanlış oldu.**", "🐢 **Biraz daha dikkat!**", "🤔 **Mantıklıydı ama...**", "💥 **Patladık!**"]
 
+        # --- EXAM (DENEME) MODU ---
+        if u.get("mode") == "exam":
+            if u.get("exam_queue"): u["exam_queue"].pop(0)
+            
+            if answer == "EMPTY" or answer == "TIMEOUT":
+                u["exam_stats"]["empty"] += 1
+            elif answer == correct:
+                u["exam_stats"]["correct"] += 1
+            else:
+                u["exam_stats"]["incorrect"] += 1
+            
+            save_users()
+            # Deneme modunda anlık bildirim yok, sonraki soruya geç
+            send_exam_question(chat_id, user_id)
+            return
+        # --------------------------
+
         # --- AKILLI TEKRAR MODU ---
         if u.get("mode") == "spaced_repetition":
             if u.get("sr_queue"): u["sr_queue"].pop(0) # Kuyruktan düş
@@ -521,6 +620,13 @@ def register_quiz_handlers(bot, tirtil_utils):
         user_id = str(call.from_user.id)
         if user_id not in users:
             return
+            
+        # Eğer deneme sınavındaysa, sınavı puanlayarak bitir
+        if users[user_id].get("mode") == "exam":
+            finish_exam_simulation(call.message.chat.id, user_id)
+            try: bot.delete_message(call.message.chat.id, call.message.message_id)
+            except: pass
+            return
 
         # Zamanlayıcıyı durdur
         if user_id in user_timers:
@@ -610,6 +716,36 @@ def register_quiz_handlers(bot, tirtil_utils):
         kb.add(InlineKeyboardButton("🔙 Geri", callback_data="main_quiz_menu"))
         
         bot.edit_message_text("📰 **Güncel Bilgiler Alt Başlıkları**\nLütfen bir konu seç:", call.message.chat.id, call.message.message_id, reply_markup=kb, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['deneme'])
+    def start_exam(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        
+        # Soru seçimi: Dengeli dağılım (8 Tarih, 6 Coğrafya, 3 Vatandaşlık, 3 Güncel)
+        cats = {"tarih": 8, "cografya": 6, "vatandaslik": 3, "guncel": 3}
+        exam_q_ids = []
+        
+        for cat_key, count in cats.items():
+            pool = [q["id"] for q in QUIZ_QUESTIONS if cat_key in q["category"].lower()]
+            if len(pool) >= count:
+                exam_q_ids.extend(random.sample(pool, count))
+            else:
+                exam_q_ids.extend(pool)
+                
+        random.shuffle(exam_q_ids)
+        
+        users[user_id].update({
+            "mode": "exam",
+            "exam_queue": exam_q_ids,
+            "exam_total": len(exam_q_ids),
+            "exam_stats": {"correct": 0, "incorrect": 0, "empty": 0},
+            "exam_start": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        })
+        save_users()
+        
+        bot.send_message(message.chat.id, f"⏳ **MİNİ DENEME SINAVI BAŞLIYOR!**\n\n📝 Toplam Soru: {len(exam_q_ids)}\n⏱️ Süre tutuluyor.\n\nBaşarılar! 🚀")
+        send_exam_question(message.chat.id, user_id)
 
     @bot.message_handler(commands=['tekrar'])
     def start_smart_review(message):
