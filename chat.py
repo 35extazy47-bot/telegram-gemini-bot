@@ -179,6 +179,8 @@ def load_market_data():
             
 load_market_data()
 
+BOT_START_TIME = datetime.now()
+
 # 📰 Borsa Haber Şablonları
 NEWS_TEMPLATES = {
     "ipek": {
@@ -990,16 +992,26 @@ def question_stats(message):
     user_id = str(message.from_user.id)
     if not users.get(user_id, {}).get("is_approved", True): return
     
-    stats = {}
+    cat_stats = {}
+    level_stats = {1: 0, 2: 0, 3: 0}
     total = len(QUIZ_QUESTIONS)
     
     for q in QUIZ_QUESTIONS:
         cat = q["category"].capitalize()
-        stats[cat] = stats.get(cat, 0) + 1
+        cat_stats[cat] = cat_stats.get(cat, 0) + 1
+        lvl = q.get("level", 1)
+        level_stats[lvl] = level_stats.get(lvl, 0) + 1
         
     text = f"📊 **SORU BANKASI DURUMU**\n\n🗂 **Toplam Soru:** {total}\n\n"
-    for cat, count in stats.items():
+    
+    text += "**📂 Kategorilere Göre:**\n"
+    for cat, count in cat_stats.items():
         text += f"🔹 {cat}: {count} soru\n"
+        
+    text += "\n**📈 Zorluk Derecesine Göre:**\n"
+    text += f"🟢 Kolay (Lvl 1): {level_stats.get(1, 0)} soru\n"
+    text += f"🟡 Orta (Lvl 2): {level_stats.get(2, 0)} soru\n"
+    text += f"🔴 Zor (Lvl 3): {level_stats.get(3, 0)} soru\n"
         
     bot.reply_to(message, text)
 
@@ -3786,6 +3798,20 @@ def order_history(message):
     
     bot.send_message(message.chat.id, text)
 
+@bot.message_handler(commands=['uptime'])
+def show_uptime(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    
+    delta = datetime.now() - BOT_START_TIME
+    days = delta.days
+    hours, remainder = divmod(delta.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    
+    text = f"🤖 **BOT DURUMU**\n\n⏱️ **Çalışma Süresi:** {days} gün, {hours} saat, {minutes} dakika\n📅 **Başlangıç:** {BOT_START_TIME.strftime('%d.%m.%Y %H:%M')}"
+    
+    bot.reply_to(message, text, parse_mode="Markdown")
+
 @bot.message_handler(commands=['emir_iptal'])
 def cancel_order(message):
     user_id = str(message.from_user.id)
@@ -4694,6 +4720,7 @@ if __name__ == "__main__":
         bot.set_my_commands([
             BotCommand("menu", "Ana Menüyü Aç"),
             BotCommand("quiz", "Soru Çöz"),
+            BotCommand("sorudurumu", "Soru Bankası Durumu"),
             BotCommand("market", "Market"),
             BotCommand("profil", "Profilim"),
             BotCommand("portfoyum", "Portföyüm"),

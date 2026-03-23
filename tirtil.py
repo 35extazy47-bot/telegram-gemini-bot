@@ -51,6 +51,9 @@ from database import *
 from quiz import register_quiz_handlers
 from study import register_study_handlers
 
+# --- Bot Başlangıç Zamanı ---
+BOT_START_TIME = datetime.now()
+
 # --- Bot ve API Başlatma ---
 bot = TeleBot(BOT_TOKEN)
 client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
@@ -368,6 +371,20 @@ def send_daily_review_notifications():
                 count += 1
             except: pass
     print(f"🔔 {count} kişiye hatırlatma gönderildi.")
+
+@bot.message_handler(commands=['uptime'])
+def show_uptime(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    
+    delta = datetime.now() - BOT_START_TIME
+    days = delta.days
+    hours, remainder = divmod(delta.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    
+    text = f"🤖 **BOT DURUMU**\n\n⏱️ **Çalışma Süresi:** {days} gün, {hours} saat, {minutes} dakika\n📅 **Başlangıç:** {BOT_START_TIME.strftime('%d.%m.%Y %H:%M')}"
+    
+    bot.reply_to(message, text, parse_mode="Markdown")
 
 # --- Admin & Genel Komutlar ---
 @bot.message_handler(commands=['admin_panel'])
