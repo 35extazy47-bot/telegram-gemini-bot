@@ -312,6 +312,30 @@ def give_weekly_reward():
     save_users()
     print("🏆 Haftalık ödül süreci tamamlandı.")
 
+def send_daily_review_notifications():
+    """Günlük tekrarı gelen kullanıcılara bildirim gönderir."""
+    print("🔔 Günlük tekrar bildirimleri kontrol ediliyor...")
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    count = 0
+    
+    for user_id, user_data in list(users.items()):
+        if not user_data.get("is_approved", True) or user_data.get("is_banned", False):
+            continue
+            
+        sr_data = user_data.get("spaced_repetition", {})
+        if not sr_data:
+            continue
+            
+        # Tekrar tarihi gelmiş veya geçmiş soruları say
+        due_count = sum(1 for data in sr_data.values() if data.get("next_review", "9999-99-99") <= today_str)
+        
+        if due_count > 0:
+            try:
+                bot.send_message(user_id, f"🧠 **HATIRLATMA**\n\nBugün tekrar etmen gereken **{due_count}** soru birikti.\nUnutmadan hafızanı tazelemek için: `/tekrar`", parse_mode="Markdown")
+                count += 1
+            except: pass
+    print(f"🔔 {count} kişiye hatırlatma gönderildi.")
+
 # --- Admin & Genel Komutlar ---
 @bot.message_handler(commands=['admin_panel'])
 def admin_panel(message):
@@ -990,6 +1014,11 @@ def scheduler_thread():
             database.save_market_data()
             time.sleep(65) # Tekrar çalışmasını önle
         
+        # Günlük Tekrar Bildirimi (Her gün 20:00)
+        if now_utc3.hour == 20 and now_utc3.minute == 0:
+            send_daily_review_notifications()
+            time.sleep(65)
+        
         # Ekonomi ile ilgili periyodik görevler kaldırıldı.
         time.sleep(20)
 
@@ -1009,7 +1038,9 @@ if __name__ == "__main__":
         types.BotCommand("dogruyanlis", "Doğru/Yanlış Oyunu"),
         types.BotCommand("duello", "Düello At"),
         types.BotCommand("yanlislarim", "Yanlışlarını Tekrar Et"),
+        types.BotCommand("tekrar", "Akıllı Tekrar (Leitner)"),
         types.BotCommand("pomodoro", "Pomodoro Sayacı"),
+        types.BotCommand("sorudurumu", "Soru Bankası Durumu"),
         types.BotCommand("soruekle", "Soru Öner"),
         types.BotCommand("istatistik", "Günlük İstatistikler"),
         types.BotCommand("help", "Yardım"),
