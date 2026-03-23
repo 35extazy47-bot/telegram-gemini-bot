@@ -1,9 +1,9 @@
+Flask
 pyTelegramBotAPI
 python-dotenv
-flask
-google-genai
-requests
-deep-translator
-pillow
 pymongo
-dnspython
+Pillow
+deep-translator
+requests
+gTTS
+google-genai
