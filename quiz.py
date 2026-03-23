@@ -14,10 +14,11 @@ from PIL import Image, ImageDraw, ImageFont
 from deep_translator import GoogleTranslator
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+gTTS = None
 try:
     from gtts import gTTS
 except ImportError:
-    gTTS = None
+    pass
 
 from database import (
     users, save_users, QUIZ_QUESTIONS, DEVELOPER_USERNAME,
