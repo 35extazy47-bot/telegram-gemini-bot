@@ -985,6 +985,65 @@ def show_daily_quests(message):
     if all_done: text += "\n🎉 **Tebrikler! Bugünün tüm görevlerini bitirdin!**"
     bot.reply_to(message, text, parse_mode="Markdown")
 
+def check_and_send_notifications():
+    """Kullanıcıların tercih ettiği saatte bildirim gönderir."""
+    # Türkiye Saati
+    now = datetime.now(timezone.utc) + timedelta(hours=3)
+    now_str = now.strftime("%H:%M")
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    
+    count = 0
+    for user_id, user_data in list(users.items()):
+        if not user_data.get("is_approved", True) or user_data.get("is_banned", False): continue
+        
+        # Tercih edilen saat (Varsayılan 20:00)
+        pref_time = user_data.get("notification_time", "20:00")
+        if pref_time != now_str: continue 
+        
+        sr_data = user_data.get("spaced_repetition", {})
+        if not sr_data: continue
+        
+        due_count = sum(1 for data in sr_data.values() if data.get("next_review", "9999-99-99") <= today_str)
+        
+        if due_count > 0:
+            try:
+                bot.send_message(user_id, f"🧠 **HATIRLATMA**\n\nBugün tekrar etmen gereken **{due_count}** soru birikti.\nUnutmadan hafızanı tazelemek için: `/tekrar`", parse_mode="Markdown")
+                count += 1
+            except: pass
+    if count > 0: print(f"🔔 {now_str} bildirimleri: {count} kişiye gönderildi.")
+
+@bot.message_handler(commands=['ayarlar'])
+def settings_menu(message):
+    user_id = str(message.from_user.id)
+    if not users.get(user_id, {}).get("is_approved", True): return
+    
+    user_time = users[user_id].get("notification_time", "20:00") or "Kapalı"
+    text = f"⚙️ **AYARLAR**\n\n🕒 **Günlük Tekrar Bildirimi:** {user_time}\n\nTekrar hatırlatmalarını hangi saatte almak istersin?"
+    
+    markup = InlineKeyboardMarkup()
+    times = ["09:00", "12:00", "18:00", "20:00", "22:00", "OFF"]
+    btns = [InlineKeyboardButton(t if t != "OFF" else "🔕 Kapat", callback_data=f"set_time_{t}") for t in times]
+    markup.add(*btns[:3]); markup.add(*btns[3:])
+    
+    bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="Markdown")
+
+@bot.callback_query_handler(func=lambda c: c.data.startswith("set_time_"))
+def set_notification_time(call):
+    user_id = str(call.from_user.id)
+    new_time = call.data.replace("set_time_", "")
+    
+    if new_time == "OFF":
+        users[user_id]["notification_time"] = None
+        msg = "🔕 Bildirimler kapatıldı."
+    else:
+        users[user_id]["notification_time"] = new_time
+        msg = f"✅ Bildirim saati **{new_time}** olarak ayarlandı."
+        
+    save_users()
+    bot.answer_callback_query(call.id, msg)
+    try: bot.delete_message(call.message.chat.id, call.message.message_id)
+    except: pass
+
 @bot.message_handler(func=lambda message: not message.text.startswith("/"))
 def handle_message(message):
     user_id = str(message.from_user.id)
@@ -1003,8 +1062,14 @@ def handle_message(message):
 
 # --- Periyodik Görevler ---
 def scheduler_thread():
+    last_checked_minute = -1
     while True:
         now_utc3 = datetime.now(timezone.utc) + timedelta(hours=3)
+
+        # Dakikalık Bildirim Kontrolü
+        if now_utc3.minute != last_checked_minute:
+            check_and_send_notifications()
+            last_checked_minute = now_utc3.minute
 
         # Haftalık Ödül (Pazartesi 05:00)
         current_week_str = now_utc3.strftime("%Y-%W")
@@ -1013,11 +1078,6 @@ def scheduler_thread():
             database.last_rewarded_week = current_week_str
             database.save_market_data()
             time.sleep(65) # Tekrar çalışmasını önle
-        
-        # Günlük Tekrar Bildirimi (Her gün 20:00)
-        if now_utc3.hour == 20 and now_utc3.minute == 0:
-            send_daily_review_notifications()
-            time.sleep(65)
         
         # Ekonomi ile ilgili periyodik görevler kaldırıldı.
         time.sleep(20)
@@ -1044,6 +1104,7 @@ if __name__ == "__main__":
         types.BotCommand("soruekle", "Soru Öner"),
         types.BotCommand("istatistik", "Günlük İstatistikler"),
         types.BotCommand("help", "Yardım"),
+        types.BotCommand("ayarlar", "Bildirim Ayarları"),
         types.BotCommand("kart", "Bilgi Kartı (Flashcard)"),
         types.BotCommand("plan", "Ders Çalışma Programı"),
         types.BotCommand("ozet", "Konu Özeti"),
