@@ -141,6 +141,60 @@ def register_quiz_handlers(bot, tirtil_utils):
     update_quest_progress = tirtil_utils['update_quest_progress']
     safe_generate_content = tirtil_utils['safe_generate_content']
 
+    # --- Akıllı Tekrar Sistemi (Leitner Kutuları) ---
+    SPACED_INTERVALS = {1: 1, 2: 3, 3: 7, 4: 14, 5: 30} # Kutu: Gün
+
+    def schedule_review(user_id, q_id, success):
+        user_id, q_id = str(user_id), str(q_id)
+        if "spaced_repetition" not in users[user_id]: users[user_id]["spaced_repetition"] = {}
+        sr_data = users[user_id]["spaced_repetition"]
+        today = datetime.now()
+        
+        if not success:
+            # Yanlışsa 1. kutuya (Yarın tekrar)
+            next_date = today + timedelta(days=SPACED_INTERVALS[1])
+            sr_data[q_id] = {"box": 1, "next_review": next_date.strftime("%Y-%m-%d")}
+        else:
+            # Doğruysa kutu yükselir
+            if q_id in sr_data:
+                current_box = sr_data[q_id].get("box", 1)
+                if current_box >= 5:
+                    if q_id in sr_data: del sr_data[q_id] # Mezun oldu
+                else:
+                    new_box = current_box + 1
+                    next_date = today + timedelta(days=SPACED_INTERVALS.get(new_box, 30))
+                    sr_data[q_id] = {"box": new_box, "next_review": next_date.strftime("%Y-%m-%d")}
+        save_users()
+
+    def send_spaced_question(chat_id, user_id):
+        queue = users[user_id].get("sr_queue", [])
+        if not queue:
+            bot.send_message(chat_id, "🎉 **Harika!** Bugünkü akıllı tekrarlarını tamamladın. Bilgiler hafızana kazındı! 🧠✨")
+            users[user_id]["mode"] = "local"; save_users(); return
+
+        q_id = queue[0]
+        q = next((item for item in QUIZ_QUESTIONS if item["id"] == q_id), None)
+        
+        # Soru silinmişse geç
+        if not q:
+            users[user_id]["sr_queue"].pop(0)
+            if str(q_id) in users[user_id].get("spaced_repetition", {}): del users[user_id]["spaced_repetition"][str(q_id)]
+            save_users(); send_spaced_question(chat_id, user_id); return
+
+        users[user_id].update({"current_answer": q["answer"], "current_question_id": q["id"]})
+        
+        box_num = users[user_id].get("spaced_repetition", {}).get(str(q_id), {}).get("box", 1)
+        photo = create_quiz_image(q['question'], q['options'], f"TEKRAR (Kutu {box_num})", users[user_id]["level"], users[user_id]['lives'])
+        
+        markup = InlineKeyboardMarkup(row_width=4).add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
+        markup.add(InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
+
+        if user_id in user_timers: user_timers[user_id].cancel()
+        msg = bot.send_photo(chat_id, photo, caption=f"🔄 **AKILLI TEKRAR**\nKalan: {len(queue)}\n👇 Doğru şıkkı seç! (⏳ 30 sn)", reply_markup=markup)
+        users[user_id]["last_question_message_id"] = msg.message_id
+        
+        user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start(); save_users()
+
     def question_timeout(chat_id, user_id):
         evaluate_quiz_answer(chat_id, user_id, "TIMEOUT", bot)
 
@@ -315,6 +369,22 @@ def register_quiz_handlers(bot, tirtil_utils):
         correct_msgs = ["✅ **Harikasın!**", "🔥 **Alev aldı buralar!**", "🧠 **Zeka küpü!**", "🎯 **Tam isabet!**"]
         wrong_msgs = ["❌ **Ah be! Yanlış oldu.**", "🐢 **Biraz daha dikkat!**", "🤔 **Mantıklıydı ama...**", "💥 **Patladık!**"]
 
+        # --- AKILLI TEKRAR MODU ---
+        if u.get("mode") == "spaced_repetition":
+            if u.get("sr_queue"): u["sr_queue"].pop(0) # Kuyruktan düş
+            if answer == correct:
+                bot.send_dice(chat_id, emoji="🎯"); u["exp"] += 10
+                schedule_review(user_id, q_id, True)
+                photo = create_quiz_result_image(True, correct, 10, 0, answer)
+                msg = bot.send_photo(chat_id, photo, caption="✅ **Doğru!** Bir sonraki kutuya terfi etti. 📦⬆️")
+                Timer(1.5, lambda: bot.delete_message(chat_id, msg.message_id)).start()
+            else:
+                schedule_review(user_id, q_id, False)
+                photo = create_quiz_result_image(False, correct, 0, 0, answer)
+                bot.send_photo(chat_id, photo, caption=f"❌ **Yanlış!** Soru 1. Kutuya döndü. Yarın tekrar soracağım. 📦⬇️\nDoğru Cevap: {correct}")
+            u.pop("current_answer", None); save_users(); send_spaced_question(chat_id, user_id); return
+        # --------------------------
+
         if u.get("mode") == "marathon":
             if answer == correct:
                 u["marathon_score"] = u.get("marathon_score", 0) + 1
@@ -372,7 +442,8 @@ def register_quiz_handlers(bot, tirtil_utils):
             
             if u.get("mode") == "local": u.setdefault("wrong_answers", []).append(q_id)
             
-            # İstatistik Güncelleme (Yanlış)
+            # İstatistik ve Akıllı Tekrar Ekleme
+            if u.get("mode") == "local": schedule_review(user_id, q_id, False) # Yanlışsa sisteme ekle
             u["topic_stats"][cat]["incorrect"] += 1
             
             u["lives"] -= 1; exp = max(0, exp - 10); earned_exp_display = -10
@@ -539,6 +610,23 @@ def register_quiz_handlers(bot, tirtil_utils):
         kb.add(InlineKeyboardButton("🔙 Geri", callback_data="main_quiz_menu"))
         
         bot.edit_message_text("📰 **Güncel Bilgiler Alt Başlıkları**\nLütfen bir konu seç:", call.message.chat.id, call.message.message_id, reply_markup=kb, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['tekrar'])
+    def start_smart_review(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        
+        sr_data = users[user_id].get("spaced_repetition", {})
+        today_str = datetime.now().strftime("%Y-%m-%d")
+        due = [int(qid) for qid, data in sr_data.items() if data["next_review"] <= today_str]
+        
+        if not due:
+            bot.reply_to(message, "✅ **Bugünlük tekrarın yok!**\nYanlış yaptığın sorular buraya otomatik eklenir ve zamanı gelince sorulur.")
+            return
+            
+        users[user_id].update({"mode": "spaced_repetition", "sr_queue": due}); save_users()
+        bot.reply_to(message, f"🧠 **AKILLI TEKRAR SİSTEMİ**\n\nBugün tekrar etmen gereken **{len(due)}** soru var.\nLeitner sistemi ile hafızanı güçlendirelim! 🚀")
+        send_spaced_question(message.chat.id, user_id)
 
     @bot.message_handler(commands=['karnem'])
     def show_report_card(message):
@@ -1008,9 +1096,18 @@ def register_quiz_handlers(bot, tirtil_utils):
     def question_stats(message):
         user_id = str(message.from_user.id)
         if not users.get(user_id, {}).get("is_approved", True): return
-        stats = {}
+        
+        cat_stats = {}
+        level_stats = {1: 0, 2: 0, 3: 0}
+        
         for q in QUIZ_QUESTIONS:
             cat = q["category"].capitalize()
-            stats[cat] = stats.get(cat, 0) + 1
-        text = f"📊 **SORU BANKASI**\n🗂 Toplam: {len(QUIZ_QUESTIONS)}\n" + "\n".join([f"🔹 {k}: {v}" for k, v in stats.items()])
+            cat_stats[cat] = cat_stats.get(cat, 0) + 1
+            lvl = q.get("level", 1)
+            level_stats[lvl] = level_stats.get(lvl, 0) + 1
+            
+        text = f"📊 **SORU BANKASI**\n🗂 Toplam: {len(QUIZ_QUESTIONS)}\n\n**📂 Kategoriler:**\n" + "\n".join([f"🔹 {k}: {v}" for k, v in cat_stats.items()])
+        text += "\n\n**📈 Zorluk Analizi:**\n"
+        text += f"🟢 Kolay (Lvl 1): {level_stats.get(1, 0)}\n🟡 Orta (Lvl 2): {level_stats.get(2, 0)}\n🔴 Zor (Lvl 3): {level_stats.get(3, 0)}"
+        
         bot.reply_to(message, text)
