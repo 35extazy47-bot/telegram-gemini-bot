@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import threading
 from threading import Timer
@@ -6,6 +7,38 @@ import time
 import random
 from datetime import datetime, timedelta, timezone
 import io
+
+# --- Başlangıç Kütüphane Kontrolü ---
+def check_libs():
+    """Bot başlamadan önce gerekli kütüphaneleri kontrol eder."""
+    required = {
+        "dotenv": "python-dotenv",
+        "flask": "Flask",
+        "telebot": "pyTelegramBotAPI",
+        "google.genai": "google-genai",
+        "PIL": "Pillow",
+        "pymongo": "pymongo",
+        "deep_translator": "deep-translator",
+        "requests": "requests",
+        "gtts": "gTTS"
+    }
+    missing = []
+    for mod, pkg in required.items():
+        try: __import__(mod)
+        except ImportError: missing.append(pkg)
+    
+    if missing:
+        print("\n" + "!"*60)
+        print("🛑 EKSİK KÜTÜPHANELER TESPİT EDİLDİ!")
+        print("!"*60)
+        print(f"\nEksik Paketler: {', '.join(missing)}")
+        print(f"\n📥 Hemen yüklemek için şu komutu çalıştırın:\npip install {' '.join(missing)}")
+        print("\n" + "!"*60 + "\n")
+        sys.exit(1)
+
+check_libs()
+# ------------------------------------
+
 from dotenv import load_dotenv
 from flask import Flask
 from telebot import TeleBot, types
