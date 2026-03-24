@@ -20,6 +20,11 @@ try:
 except ImportError:
     pass
 
+try:
+    from fpdf import FPDF
+except ImportError:
+    FPDF = None
+
 import database
 from database import (
     users, save_users, QUIZ_QUESTIONS, DEVELOPER_USERNAME,
@@ -1308,6 +1313,92 @@ def register_quiz_handlers(bot, tirtil_utils):
         
         save_users()
         bot.answer_callback_query(call.id, "🗑️ Soru favorilerden silindi.")
+
+    @bot.message_handler(commands=['pdf_olustur'])
+    def pdf_creator_menu(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        
+        markup = InlineKeyboardMarkup()
+        markup.add(InlineKeyboardButton("📂 Favori Sorularım", callback_data="make_pdf_fav"))
+        markup.add(InlineKeyboardButton("❌ Yanlış Yaptıklarım", callback_data="make_pdf_wrong"))
+        
+        bot.send_message(message.chat.id, "📄 **PDF SORU BANKASI**\n\nHangi listenden PDF test oluşturmak istersin?", reply_markup=markup, parse_mode="Markdown")
+
+    @bot.callback_query_handler(func=lambda c: c.data.startswith("make_pdf_"))
+    def generate_pdf_action(call):
+        user_id = str(call.from_user.id)
+        action = call.data.replace("make_pdf_", "")
+        
+        if not FPDF:
+            bot.answer_callback_query(call.id, "⚠️ Sunucuda 'fpdf2' kütüphanesi eksik!", show_alert=True)
+            return
+
+        question_list = []
+        title = ""
+        
+        if action == "fav":
+            saved_ids = users[user_id].get("saved_ids", [])
+            question_list = [q for q in QUIZ_QUESTIONS if q["id"] in saved_ids]
+            title = "FAVORİ SORULARIM"
+        else:
+            wrong_ids = users[user_id].get("wrong_answers", [])
+            question_list = [q for q in QUIZ_QUESTIONS if q["id"] in wrong_ids]
+            title = "YANLIŞ YAPTIKLARIM"
+            
+        if not question_list:
+            bot.answer_callback_query(call.id, "⚠️ Bu listen boş!", show_alert=True)
+            return
+            
+        bot.answer_callback_query(call.id, "PDF hazırlanıyor...")
+        wait_msg = bot.send_message(call.message.chat.id, "📄 PDF oluşturuluyor, lütfen bekle...")
+        
+        try:
+            pdf = FPDF()
+            pdf.add_page()
+            
+            # Font Ayarı (Türkçe karakterler için)
+            font_path = "arial.ttf"
+            if not os.path.exists(font_path):
+                # Linux sunucular için yedek font yolları
+                candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"]
+                font_path = next((f for f in candidates if os.path.exists(f)), font_path)
+
+            try:
+                pdf.add_font("TrArial", "", font_path, uni=True)
+                pdf.set_font("TrArial", size=12)
+            except:
+                pdf.set_font("Arial", size=12) # Fallback
+
+            pdf.set_font_size(16)
+            pdf.cell(0, 10, txt=f"KPSS CALISMA BOTU - {title}", ln=1, align='C')
+            pdf.ln(10)
+            pdf.set_font_size(12)
+            
+            answers = []
+            for i, q in enumerate(question_list, 1):
+                pdf.multi_cell(0, 10, txt=f"{i}) {q['question']}")
+                for opt in q['options']:
+                    pdf.cell(0, 8, txt=f"   {opt}", ln=1)
+                pdf.ln(5)
+                answers.append(f"{i}-{q['answer']}")
+
+            # Cevap Anahtarı Sayfası
+            pdf.add_page()
+            pdf.cell(0, 10, txt="CEVAP ANAHTARI", ln=1, align='C')
+            pdf.ln(10)
+            pdf.multi_cell(0, 10, txt="  ".join(answers))
+
+            file_name = f"Test_{action}_{user_id}.pdf"
+            pdf.output(file_name)
+            
+            with open(file_name, "rb") as f:
+                bot.send_document(call.message.chat.id, f, caption=f"📄 **{title}**\n📝 Toplam Soru: {len(question_list)}")
+            
+            os.remove(file_name)
+            bot.delete_message(call.message.chat.id, wait_msg.message_id)
+        except Exception as e:
+            bot.edit_message_text(f"PDF hatası: {e}", call.message.chat.id, wait_msg.message_id)
 
     @bot.callback_query_handler(func=lambda c: c.data.startswith("cat_"))
     def category_selected(call):

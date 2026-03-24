@@ -7,3 +7,4 @@ deep-translator
 requests
 gTTS
 google-genai
+fpdf2
