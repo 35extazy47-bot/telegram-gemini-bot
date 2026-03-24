@@ -547,6 +547,43 @@ def register_study_handlers(bot, utils):
             bot.delete_message(call.message.chat.id, wait_msg.message_id); bot.send_message(call.message.chat.id, msg_text, reply_markup=markup, parse_mode="Markdown")
         except Exception as e: bot.delete_message(call.message.chat.id, wait_msg.message_id); bot.send_message(call.message.chat.id, f"Hata: {e}")
 
+    @bot.message_handler(content_types=['voice'])
+    def handle_voice_note(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        
+        if not check_daily_limit(user_id):
+            bot.reply_to(message, "⛔ Günlük AI limitin doldu!"); return
+
+        wait_msg = bot.reply_to(message, "🎧 Sesli notun dinleniyor ve özetleniyor...", parse_mode="Markdown")
+
+        try:
+            file_info = bot.get_file(message.voice.file_id)
+            downloaded_file = bot.download_file(file_info.file_path)
+            
+            prompt_parts = [
+                "Bu ses kaydını deşifre et ve içeriğini net, anlaşılır bir ders notu olarak özetle. Önemli terimleri vurgula.",
+                {"mime_type": "audio/ogg", "data": downloaded_file}
+            ]
+            
+            response = safe_generate_content(prompt_parts)
+            note_content = response.text
+            
+            if "notes" not in users[user_id]: users[user_id]["notes"] = {}
+            category = "Sesli Notlar"
+            if category not in users[user_id]["notes"]: users[user_id]["notes"][category] = []
+            
+            users[user_id]["notes"][category].append(f"🎙️ {datetime.now().strftime('%d.%m %H:%M')}\n{note_content}")
+            save_users()
+            
+            bot.delete_message(message.chat.id, wait_msg.message_id)
+            bot.reply_to(message, f"📝 **SESLİ NOT KAYDEDİLDİ**\n\n{note_content}\n\n_Notlarına /notlarim ile ulaşabilirsin._", parse_mode="Markdown")
+            
+        except Exception as e:
+            try: bot.delete_message(message.chat.id, wait_msg.message_id)
+            except: pass
+            bot.reply_to(message, f"Hata: {e}")
+
     @bot.message_handler(commands=['harita'])
     def generate_mind_map(message):
         user_id = str(message.from_user.id)
