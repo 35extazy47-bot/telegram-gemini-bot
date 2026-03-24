@@ -7,6 +7,11 @@ from datetime import datetime
 from database import shared_files, save_market_data
 
 FPDF = None
+gTTS = None
+try:
+    from gtts import gTTS
+except ImportError:
+    pass
 
 # Bu değişkenler tirtil.py'den register fonksiyonu aracılığıyla alınacak
 class MockResponse: text = ""
@@ -468,6 +473,37 @@ def register_study_handlers(bot, utils):
             
             bot.delete_message(message.chat.id, wait_msg.message_id)
             bot.send_message(message.chat.id, f"🗺️ **KAVRAM HARİTASI: {topic.upper()}**\n\n{response.text}")
+        except Exception as e:
+            bot.reply_to(message, f"Hata oluştu: {e}")
+
+    @bot.message_handler(commands=['sesli_ozet'])
+    def voice_summary(message):
+        user_id = str(message.from_user.id)
+        if not check_daily_limit(user_id):
+            bot.reply_to(message, "⛔ Günlük AI limitin doldu!"); return
+        
+        if not gTTS:
+            bot.reply_to(message, "⚠️ Bu özellik için sunucuda 'gTTS' kütüphanesi eksik.\n`pip install gTTS` komutu ile yüklenmelidir.", parse_mode="Markdown")
+            return
+
+        try:
+            topic = message.text.replace("/sesli_ozet", "").strip()
+            if not topic:
+                bot.reply_to(message, "⚠️ Hangi konuyu sesli anlatayım?\nÖrnek: `/sesli_ozet Kurtuluş Savaşı`", parse_mode="Markdown")
+                return
+            
+            wait_msg = bot.reply_to(message, f"🎧 **'{topic}'** için podcast hazırlanıyor... (Biraz sürebilir)")
+            
+            prompt = f"'{topic}' konusunu KPSS'ye hazırlanan bir öğrenci için samimi, akıcı bir radyo programcısı gibi anlat. Önemli yerleri vurgula. Metin çok uzun olmasın (yaklaşık 1-2 dakika okunacak kadar). Sadece okunacak metni ver."
+            response = safe_generate_content(prompt)
+            
+            tts = gTTS(text=response.text, lang='tr')
+            voice_data = io.BytesIO()
+            tts.write_to_fp(voice_data)
+            voice_data.seek(0)
+            
+            bot.delete_message(message.chat.id, wait_msg.message_id)
+            bot.send_voice(message.chat.id, voice_data, caption=f"🎧 **PODCAST: {topic.upper()}**\n\n_Bot tarafından seslendirildi._")
         except Exception as e:
             bot.reply_to(message, f"Hata oluştu: {e}")
 
