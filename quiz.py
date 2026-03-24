@@ -1314,6 +1314,15 @@ def register_quiz_handlers(bot, tirtil_utils):
         save_users()
         bot.answer_callback_query(call.id, "🗑️ Soru favorilerden silindi.")
 
+    @bot.callback_query_handler(func=lambda c: c.data == 'start_vocab_quiz')
+    def start_vocab_quiz_callback(call):
+        user_id = str(call.from_user.id)
+        if not users.get(user_id, {}).get("ai_quiz_queue"):
+            bot.answer_callback_query(call.id, "⚠️ Test verisi bulunamadı.", show_alert=True); return
+        users[user_id]["mode"] = "ai_quiz"; save_users()
+        bot.answer_callback_query(call.id, "Test başlıyor...")
+        send_ai_question(call.message.chat.id, user_id)
+
     @bot.message_handler(commands=['pdf_olustur'])
     def pdf_creator_menu(message):
         user_id = str(message.from_user.id)

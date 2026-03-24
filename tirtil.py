@@ -811,7 +811,7 @@ def help_callback(call):
         )
     elif category == "help_study":
         text = (
-            "📚 **DERS & ÇALIŞMA**\n\n🔹 `/pdf_olustur` - Soru bankası oluştur. (YENİ!) 📄\n🔹 `/hedef <sinav> <tarih>` - Sınav sayacı kur.\n🔹 `/harita <konu>` - Kavram haritası çıkar.\n🔹 `/metin_test` - Notundan test oluştur.\n🔹 `/sesli_ozet <konu>` - Konuyu sesli dinle.\n🔹 `/kart <ders>` - Bilgi kartı ile çalış.\n🔹 `/plan` - Günlük ders çalışma programı hazırla.\n🔹 `/ozet <konu>` - İstediğin konunun özetini çıkar.\n🔹 `/motivasyon` - Motivasyon sözü al.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/ders_notu <konu>` - AI ile PDF not oluştur.\n🔹 `/dosya_yukle` - Kütüphaneye dosya ekle.\n🔹 `/dosya_ara` - Kütüphanede dosya ara."
+            "📚 **DERS & ÇALIŞMA**\n\n🔹 `/kelime_avcisi` - İngilizce kelime çalış. (YENİ!) 🇬🇧\n🔹 `/pdf_olustur` - Soru bankası oluştur.\n🔹 `/hedef <sinav> <tarih>` - Sınav sayacı kur.\n🔹 `/harita <konu>` - Kavram haritası çıkar.\n🔹 `/metin_test` - Notundan test oluştur.\n🔹 `/sesli_ozet <konu>` - Konuyu sesli dinle.\n🔹 `/kart <ders>` - Bilgi kartı ile çalış.\n🔹 `/plan` - Günlük ders çalışma programı hazırla.\n🔹 `/ozet <konu>` - İstediğin konunun özetini çıkar.\n🔹 `/motivasyon` - Motivasyon sözü al.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/ders_notu <konu>` - AI ile PDF not oluştur.\n🔹 `/dosya_yukle` - Kütüphaneye dosya ekle.\n🔹 `/dosya_ara` - Kütüphanede dosya ara."
         )
     elif category == "help_profile":
         text = (

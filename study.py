@@ -4,6 +4,7 @@ import os
 import io
 from PIL import Image
 from datetime import datetime
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from database import shared_files, save_market_data
 
 FPDF = None
@@ -442,6 +443,56 @@ def register_study_handlers(bot, utils):
             bot.delete_message(message.chat.id, wait_msg.message_id)
         except Exception as e:
             bot.reply_to(message, f"Not oluşturulurken hata: {e}")
+
+    @bot.message_handler(commands=['kelime_avcisi'])
+    def vocab_builder_menu(message):
+        user_id = str(message.from_user.id)
+        if not check_daily_limit(user_id):
+            bot.reply_to(message, "⛔ Günlük AI limitin doldu!"); return
+        
+        markup = InlineKeyboardMarkup()
+        markup.add(InlineKeyboardButton("🇬🇧 Genel İngilizce", callback_data="vocab_genel"))
+        markup.add(InlineKeyboardButton("🎓 YDS / YÖKDİL", callback_data="vocab_yds"))
+        
+        bot.reply_to(message, "🇬🇧 **İNGİLİZCE KELİME AVCISI**\n\nHangi seviyede çalışma yapmak istersin?", reply_markup=markup)
+
+    @bot.callback_query_handler(func=lambda c: c.data.startswith("vocab_"))
+    def generate_vocab_card(call):
+        user_id = str(call.from_user.id)
+        level = "YDS/YÖKDİL (Akademik)" if "yds" in call.data else "Günlük Konuşma (A2-B1)"
+        
+        bot.answer_callback_query(call.id, "Kelimeler hazırlanıyor...")
+        wait_msg = bot.send_message(call.message.chat.id, f"🤖 **{level}** seviyesinde kelimeler ve test hazırlanıyor... 🇬🇧")
+        
+        try:
+            prompt = f"""
+            İngilizce öğrenen bir Türk öğrenci için '{level}' seviyesinde 5 adet önemli İngilizce kelime seç.
+            Her kelime için: Kelime, Türkçe anlamı ve İngilizce örnek cümle ver.
+            Ayrıca bu 5 kelimeyi test etmek için 5 adet çoktan seçmeli soru (quiz) hazırla.
+            
+            Çıktıyı SADECE şu JSON formatında ver, başka hiçbir metin yazma:
+            {{
+                "words": [
+                    {{"word": "Kelime1", "meaning": "Anlamı", "sentence": "Örnek cümle"}}, ...
+                ],
+                "quiz": [
+                    {{"question": "Soru metni...", "options": ["A) ...", "B) ...", "C) ...", "D) ..."], "answer": "A", "explanation": "Açıklama"}}, ...
+                ]
+            }}
+            """
+            response = safe_generate_content(prompt)
+            text_resp = response.text.replace("```json", "").replace("```", "").strip()
+            if text_resp.startswith("json"): text_resp = text_resp[4:].strip()
+            
+            data = json.loads(text_resp)
+            msg_text = f"🇬🇧 **GÜNÜN KELİMELERİ ({level})**\n\n"
+            for w in data["words"]: msg_text += f"🔹 **{w['word']}**: {w['meaning']}\n   _{w['sentence']}_\n\n"
+            msg_text += "👇 Kelimeleri öğrendiysen teste geç!"
+            
+            users[user_id]["ai_quiz_queue"] = data["quiz"]; users[user_id]["ai_quiz_topic"] = f"Kelime Avcısı ({level})"; save_users()
+            markup = InlineKeyboardMarkup().add(InlineKeyboardButton("🧠 Testi Başlat", callback_data="start_vocab_quiz"))
+            bot.delete_message(call.message.chat.id, wait_msg.message_id); bot.send_message(call.message.chat.id, msg_text, reply_markup=markup, parse_mode="Markdown")
+        except Exception as e: bot.delete_message(call.message.chat.id, wait_msg.message_id); bot.send_message(call.message.chat.id, f"Hata: {e}")
 
     @bot.message_handler(commands=['harita'])
     def generate_mind_map(message):
