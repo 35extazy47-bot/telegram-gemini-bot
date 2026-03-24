@@ -441,8 +441,14 @@ def register_study_handlers(bot, utils):
             for i, note in enumerate(notes, 1):
                 text += f"   {i}. {note}\n"
             text += "\n"
-            
-        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+        if len(text) > 4096:
+            # Mesaj çok uzunsa parçalara ayırarak gönder
+            for i in range(0, len(text), 4096):
+                bot.send_message(message.chat.id, text[i:i+4096], parse_mode="Markdown")
+        else:
+            bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
 
     @bot.message_handler(commands=['kaynak'])
     def recommend_resources(message):
@@ -591,7 +597,13 @@ def register_study_handlers(bot, utils):
             save_users()
             
             bot.delete_message(message.chat.id, wait_msg.message_id)
-            bot.reply_to(message, f"📝 **SESLİ NOT KAYDEDİLDİ**\n\n{note_content}\n\n_Notlarına /notlarim ile ulaşabilirsin._", parse_mode="Markdown")
+            full_text = f"📝 **SESLİ NOT KAYDEDİLDİ**\n\n{note_content}\n\n_Notlarına /notlarim ile ulaşabilirsin._"
+            if len(full_text) > 4096:
+                bot.reply_to(message, full_text[:4096], parse_mode="Markdown")
+                for i in range(4096, len(full_text), 4096):
+                    bot.send_message(message.chat.id, full_text[i:i+4096], parse_mode="Markdown")
+            else:
+                bot.reply_to(message, full_text, parse_mode="Markdown")
             
         except Exception as e:
             try: bot.delete_message(message.chat.id, wait_msg.message_id)
@@ -627,7 +639,12 @@ def register_study_handlers(bot, utils):
             response = safe_generate_content(prompt)
             
             bot.delete_message(message.chat.id, wait_msg.message_id)
-            bot.send_message(message.chat.id, f"🗺️ **KAVRAM HARİTASI: {topic.upper()}**\n\n{response.text}")
+            full_text = f"🗺️ **KAVRAM HARİTASI: {topic.upper()}**\n\n{response.text}"
+            if len(full_text) > 4096:
+                for i in range(0, len(full_text), 4096):
+                    bot.send_message(message.chat.id, full_text[i:i+4096])
+            else:
+                bot.send_message(message.chat.id, full_text)
         except Exception as e:
             bot.reply_to(message, f"Hata oluştu: {e}")
 

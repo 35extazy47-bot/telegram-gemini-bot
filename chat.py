@@ -2123,18 +2123,23 @@ def evaluate_quiz_answer(chat_id, user_id, answer, message_id_to_delete=None):
         user_answer=answer
     )
 
-    msg = bot.send_photo(
-        chat_id,
-        result_photo,
-        caption=f"{result}\n\n📊 Level: {level} | ⭐️ EXP: {exp}/{level*100}"
-    )
-    
-    def auto_delete():
-        try:
-            bot.delete_message(chat_id, msg.message_id)
-        except:
-            pass
-    Timer(5.0, auto_delete).start()
+    full_caption = f"{result}\n\n📊 Level: {level} | ⭐️ EXP: {exp}/{level*100}"
+    if len(full_caption) > 1024:
+        bot.send_photo(chat_id, result_photo)
+        # Send text separately, splitting if needed
+        if len(full_caption) > 4096:
+            for i in range(0, len(full_caption), 4096):
+                bot.send_message(chat_id, full_caption[i:i+4096])
+        else:
+            bot.send_message(chat_id, full_caption)
+    else:
+        msg = bot.send_photo(chat_id, result_photo, caption=full_caption)
+        def auto_delete():
+            try:
+                bot.delete_message(chat_id, msg.message_id)
+            except:
+                pass
+        Timer(5.0, auto_delete).start()
 
     users[user_id].pop("current_answer", None)
     save_users()
@@ -2853,7 +2858,13 @@ def get_summary(message):
         prompt = f"KPSS öğrencisi için '{topic}' konusunu maddeler halinde, akılda kalıcı ve özet şekilde anlat. Çok uzun olmasın, önemli noktaları vurgula. En sona bu konuyla ilgili 1 adet çoktan seçmeli örnek soru ve cevabını ekle."
         response = safe_generate_content(prompt)
         bot.delete_message(message.chat.id, wait_msg.message_id)
-        bot.reply_to(message, f"📝 **KONU ÖZETİ: {topic.upper()}**\n\n{response.text}", parse_mode="Markdown")
+        full_text = f"📝 **KONU ÖZETİ: {topic.upper()}**\n\n{response.text}"
+        if len(full_text) > 4096:
+            bot.reply_to(message, full_text[:4096], parse_mode="Markdown")
+            for i in range(4096, len(full_text), 4096):
+                bot.send_message(message.chat.id, full_text[i:i+4096], parse_mode="Markdown")
+        else:
+            bot.reply_to(message, full_text, parse_mode="Markdown")
     except Exception as e:
         print(f"Ozet Hatasi: {e}")
         bot.edit_message_text("Özet çıkarırken bir hata oluştu.", message.chat.id, wait_msg.message_id)
@@ -3795,8 +3806,15 @@ def order_history(message):
         text += f"📦 {order['item']} x{order['amount']}\n"
         text += f"💵 Fiyat: {order['price']} $ | Toplam: {order['total']} $\n"
         text += "───────────────\n"
-    
-    bot.send_message(message.chat.id, text)
+    if len(text) > 4096:
+        # Mesaj çok uzunsa parçalara ayırarak gönder
+        for i in range(0, len(text), 4096):
+            try:
+                bot.send_message(message.chat.id, text[i:i+4096])
+            except Exception as e:
+                print(f"Mesaj gönderim hatası (parçalı): {e}")
+    else:
+        bot.send_message(message.chat.id, text)
 
 @bot.message_handler(commands=['uptime'])
 def show_uptime(message):
@@ -4008,7 +4026,13 @@ def dream_interpret(message):
         prompt = f"Sen mistik, bilge ve biraz gizemli konuşan bir rüya tabircisisin. Kullanıcının şu rüyasını yorumla: '{dream_text}'. Geleceğe dair (uydurma ama eğlenceli) kehanetlerde bulun. Kısa ve öz olsun."
         response = safe_generate_content(prompt)
         bot.delete_message(message.chat.id, wait_msg.message_id)
-        bot.reply_to(message, f"🌙 **RÜYA TABİRİ** 🌙\n\n{response.text}")
+        full_text = f"🌙 **RÜYA TABİRİ** 🌙\n\n{response.text}"
+        if len(full_text) > 4096:
+            bot.reply_to(message, full_text[:4096])
+            for i in range(4096, len(full_text), 4096):
+                bot.send_message(message.chat.id, full_text[i:i+4096])
+        else:
+            bot.reply_to(message, full_text)
     except Exception as e:
         print(f"Ruya Hatasi: {e}")
         bot.edit_message_text("Rüyalar alemi şu an kapalı... Daha sonra tekrar dene.", message.chat.id, wait_msg.message_id)
@@ -4146,7 +4170,15 @@ def perform_tarot_reading(message):
         caption = f"🃏 **TAROT FALI** 🃏\n\n❓ **Soru:** {question}\n\n🔮 **Yorum:**\n{response.text}"
         
         bot.delete_message(message.chat.id, wait_msg.message_id)
-        bot.send_photo(message.chat.id, photo, caption=caption, parse_mode="Markdown")
+        if len(caption) > 1024:
+            bot.send_photo(message.chat.id, photo)
+            if len(caption) > 4096:
+                for i in range(0, len(caption), 4096):
+                    bot.send_message(message.chat.id, caption[i:i+4096], parse_mode="Markdown")
+            else:
+                bot.send_message(message.chat.id, caption, parse_mode="Markdown")
+        else:
+            bot.send_photo(message.chat.id, photo, caption=caption, parse_mode="Markdown")
     except Exception as e:
         bot.edit_message_text("Kartlar şu an kapalı... Enerji akışı bozuk.", message.chat.id, wait_msg.message_id)
 
@@ -4185,7 +4217,13 @@ def perform_horoscope_reading(message):
         response = safe_generate_content(prompt)
         
         bot.delete_message(message.chat.id, wait_msg.message_id)
-        bot.reply_to(message, f"✨ **GÜNLÜK BURÇ YORUMU ({sign.upper()})** ✨\n\n{response.text}", parse_mode="Markdown")
+        full_text = f"✨ **GÜNLÜK BURÇ YORUMU ({sign.upper()})** ✨\n\n{response.text}"
+        if len(full_text) > 4096:
+            bot.reply_to(message, full_text[:4096], parse_mode="Markdown")
+            for i in range(4096, len(full_text), 4096):
+                bot.send_message(message.chat.id, full_text[i:i+4096], parse_mode="Markdown")
+        else:
+            bot.reply_to(message, full_text, parse_mode="Markdown")
     except Exception as e:
         print(f"Burc Hatasi: {e}")
         bot.edit_message_text("Yıldızlar şu an bulutlu... Daha sonra tekrar dene.", message.chat.id, wait_msg.message_id)
@@ -4453,7 +4491,13 @@ def handle_message(message):
 
     try:
         response = safe_generate_content(message.text)
-        bot.reply_to(message, response.text)
+        full_text = response.text
+        if len(full_text) > 4096:
+            bot.reply_to(message, full_text[:4096])
+            for i in range(4096, len(full_text), 4096):
+                bot.send_message(message.chat.id, full_text[i:i+4096])
+        else:
+            bot.reply_to(message, full_text)
     except Exception as e:
         print(f"Sohbet Hatasi: {e}")
         bot.reply_to(message, "Bir hata oluştu knk 😅")

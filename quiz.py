@@ -705,12 +705,30 @@ def register_quiz_handlers(bot, tirtil_utils):
         u.update({"level": level, "exp": exp, "streak": streak, "total_questions": u.get("total_questions", 0) + 1})
 
         if u["lives"] <= 0:
-            bot.send_message(chat_id, f"{result}\n\n💀 **OYUN BİTTİ!** 💀\nCanların tükendi.\n\n🔄 /quiz ile tekrar başla!")
+            full_text = f"{result}\n\n💀 **OYUN BİTTİ!** 💀\nCanların tükendi.\n\n🔄 /quiz ile tekrar başla!"
+            if len(full_text) > 4096:
+                # Mesaj çok uzunsa parçalara ayırarak gönder
+                for i in range(0, len(full_text), 4096):
+                    try:
+                        bot.send_message(chat_id, full_text[i:i+4096])
+                    except Exception as e:
+                        print(f"Mesaj gönderim hatası (parçalı): {e}")
+            else:
+                bot.send_message(chat_id, full_text)
             u["lives"] = 3; u.pop("current_answer", None); save_users(); return
 
+        full_caption = f"{result}\n\n📊 Level: {level} | ⭐️ EXP: {exp}/{level*100}"
         result_photo = create_quiz_result_image(answer == correct, correct, earned_exp_display, streak, answer)
-        msg = bot.send_photo(chat_id, result_photo, caption=f"{result}\n\n📊 Level: {level} | ⭐️ EXP: {exp}/{level*100}")
-        Timer(5.0, lambda: bot.delete_message(chat_id, msg.message_id) if msg else None).start()
+        if len(full_caption) > 1024:
+            bot.send_photo(chat_id, result_photo)
+            if len(full_caption) > 4096:
+                for i in range(0, len(full_caption), 4096):
+                    bot.send_message(chat_id, full_caption[i:i+4096])
+            else:
+                bot.send_message(chat_id, full_caption)
+        else:
+            msg = bot.send_photo(chat_id, result_photo, caption=full_caption)
+            Timer(5.0, lambda: bot.delete_message(chat_id, msg.message_id) if msg else None).start()
 
         u.pop("current_answer", None); save_users()
         
@@ -1082,7 +1100,13 @@ def register_quiz_handlers(bot, tirtil_utils):
             )
             response = safe_generate_content(prompt)
             bot.delete_message(message.chat.id, wait_msg.message_id)
-            bot.reply_to(message, f"🧑‍🏫 **AKILLI KOÇ ANALİZİ**\n\n{response.text}", parse_mode="Markdown")
+            full_text = f"🧑‍🏫 **AKILLI KOÇ ANALİZİ**\n\n{response.text}"
+            if len(full_text) > 4096:
+                bot.reply_to(message, full_text[:4096], parse_mode="Markdown")
+                for i in range(4096, len(full_text), 4096):
+                    bot.send_message(message.chat.id, full_text[i:i+4096], parse_mode="Markdown")
+            else:
+                bot.reply_to(message, full_text, parse_mode="Markdown")
         except Exception as e:
             bot.edit_message_text(f"Analiz yapılırken bir hata oluştu: {e}", message.chat.id, wait_msg.message_id)
 
@@ -1143,7 +1167,15 @@ def register_quiz_handlers(bot, tirtil_utils):
             markup.add(InlineKeyboardButton("📉 Zayıf Konulara Çalış (%50 Altı)", callback_data="start_weakness_quiz"))
             text += "💡 **İpucu:** Başarısız olduğun konular tespit edildi. Aşağıdaki butona basarak sadece bu konulardan soru çözebilirsin."
             
-        bot.send_message(message.chat.id, text, parse_mode="Markdown", reply_markup=markup)
+        if len(text) > 4096:
+            # Mesaj çok uzunsa parçalara ayırarak gönder
+            for i in range(0, len(text), 4096):
+                # Sadece son parçaya buton ekle
+                current_markup = markup if i + 4096 >= len(text) else None
+                bot.send_message(message.chat.id, text[i:i+4096], parse_mode="Markdown", reply_markup=current_markup)
+        else:
+            bot.send_message(message.chat.id, text, parse_mode="Markdown", reply_markup=markup)
+
 
     @bot.callback_query_handler(func=lambda c: c.data == "start_weakness_quiz")
     def start_weakness_quiz_callback(call):

@@ -44,7 +44,13 @@ def register_fun_handlers(bot, utils):
             topic = message.text.replace("/ozet", "").strip()
             if not topic: bot.reply_to(message, "⚠️ Konu yazmalısın."); return
             res = safe_generate_content(f"'{topic}' konusunu KPSS öğrencisi için maddeler halinde özetle.")
-            bot.reply_to(message, f"📝 **ÖZET: {topic.upper()}**\n\n{res.text}", parse_mode="Markdown")
+            full_text = f"📝 **ÖZET: {topic.upper()}**\n\n{res.text}"
+            if len(full_text) > 4096:
+                bot.reply_to(message, full_text[:4096], parse_mode="Markdown")
+                for i in range(4096, len(full_text), 4096):
+                    bot.send_message(message.chat.id, full_text[i:i+4096], parse_mode="Markdown")
+            else:
+                bot.reply_to(message, full_text, parse_mode="Markdown")
         except: bot.reply_to(message, "Hata oluştu.")
 
     @bot.message_handler(commands=['ruya'])
@@ -54,7 +60,13 @@ def register_fun_handlers(bot, utils):
             dream = message.text.replace("/ruya", "").strip()
             if not dream: bot.reply_to(message, "⚠️ Rüyayı yazmalısın."); return
             res = safe_generate_content(f"Rüya tabircisi gibi konuş. Şu rüyayı yorumla: '{dream}'")
-            bot.reply_to(message, f"🌙 **RÜYA TABİRİ**\n\n{res.text}")
+            full_text = f"🌙 **RÜYA TABİRİ**\n\n{res.text}"
+            if len(full_text) > 4096:
+                bot.reply_to(message, full_text[:4096])
+                for i in range(4096, len(full_text), 4096):
+                    bot.send_message(message.chat.id, full_text[i:i+4096])
+            else:
+                bot.reply_to(message, full_text)
         except: bot.reply_to(message, "Hata oluştu.")
 
     @bot.message_handler(commands=['tarot'])
@@ -69,20 +81,47 @@ def register_fun_handlers(bot, utils):
             drawn = random.sample(cards, 3)
             res = safe_generate_content(f"Tarot falı bak. Soru: '{message.text}'. Kartlar: {drawn}. Yorumla.")
             photo = create_tarot_image(drawn)
-            bot.send_photo(message.chat.id, photo, caption=f"🔮 **TAROT FALI**\n\n{res.text[:900]}")
+            caption = f"🔮 **TAROT FALI**\n\n{res.text}"
+            if len(caption) > 1024:
+                bot.send_photo(message.chat.id, photo)
+                if len(caption) > 4096:
+                    for i in range(0, len(caption), 4096):
+                        bot.send_message(message.chat.id, caption[i:i+4096])
+                else:
+                    bot.send_message(message.chat.id, caption)
+            else:
+                bot.send_photo(message.chat.id, photo, caption=caption)
         except: bot.reply_to(message, "Fal bakılamadı.")
 
     @bot.message_handler(commands=['burc'])
     def daily_horoscope(message):
         if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
         msg = bot.reply_to(message, "♈ Burcunu yaz...")
-        bot.register_next_step_handler(msg, lambda m: bot.reply_to(m, safe_generate_content(f"{m.text} burcu için günlük yorum yap.").text))
+        def send_horoscope(m):
+            text = safe_generate_content(f"{m.text} burcu için günlük yorum yap.").text
+            if len(text) > 4096:
+                bot.reply_to(m, text[:4096])
+                for i in range(4096, len(text), 4096):
+                    bot.send_message(m.chat.id, text[i:i+4096])
+            else:
+                bot.reply_to(m, text)
+        bot.register_next_step_handler(msg, send_horoscope)
 
     @bot.message_handler(commands=['bilgi'])
     def random_fact(message):
         if not check_daily_limit(message.from_user.id): bot.reply_to(message, "⛔ Günlük limit doldu."); return
-        bot.reply_to(message, safe_generate_content("İlginç bir genel kültür bilgisi ver.").text)
+        text = safe_generate_content("İlginç bir genel kültür bilgisi ver.").text
+        if len(text) > 4096:
+            for i in range(0, len(text), 4096):
+                bot.send_message(message.chat.id, text[i:i+4096])
+        else:
+            bot.reply_to(message, text)
 
     @bot.message_handler(commands=['tarihtebugun'])
     def history_today(message):
-        bot.reply_to(message, safe_generate_content(f"Tarihte bugün ({datetime.now().strftime('%d %B')}) ne oldu?").text)
+        text = safe_generate_content(f"Tarihte bugün ({datetime.now().strftime('%d %B')}) ne oldu?").text
+        if len(text) > 4096:
+            for i in range(0, len(text), 4096):
+                bot.send_message(message.chat.id, text[i:i+4096])
+        else:
+            bot.reply_to(message, text)
