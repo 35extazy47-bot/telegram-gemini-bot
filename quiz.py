@@ -667,6 +667,14 @@ def register_quiz_handlers(bot, tirtil_utils):
             
             if bet_amount > 0: win_amount = bet_amount * 2; total_points += win_amount; result += f"\n🎲 **BAHİS KAZANDIN!** (+{win_amount} EXP)"; u["active_bet"] = 0
             exp += total_points; earned_exp_display = total_points
+
+            # --- STUDY BUDDY SCORE UPDATE ---
+            if user_id in active_sessions:
+                active_sessions[user_id]["score"] += 1
+                partner_id = active_sessions[user_id]["partner"]
+                partner_score = active_sessions.get(partner_id, {}).get("score", 0)
+                result += f"\n\n🤝 **Çalışma Arkadaşı:**\nSen: {active_sessions[user_id]['score']} ✅ | O: {partner_score} ✅"
+            # -------------------------------
         else:
             if u.get("inventory", {}).get("streak_saver", 0) > 0:
                 u["inventory"]["streak_saver"] -= 1; streak_saved = True

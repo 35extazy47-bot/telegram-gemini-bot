@@ -91,6 +91,8 @@ maintenance_mode = False # Bakım modu durumu
 active_ipo = {"is_active": False}
 public_companies = {} # Kullanıcıların kurduğu ve borsaya açılan şirketler
 shared_files = [] # Kullanıcıların paylaştığı dosyalar
+study_pool = {} # Çalışma arkadaşı arayanlar havuzu { "Tarih": [uid1], ... }
+active_sessions = {} # Aktif çalışma oturumları { "uid": { "partner": "uid2", "score": 0 } }
 
 # --- Data Loading/Saving Functions ---
 def load_users():

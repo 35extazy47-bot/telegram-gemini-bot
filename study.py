@@ -5,6 +5,7 @@ import io
 from PIL import Image
 import uuid
 from datetime import datetime
+from threading import Timer
 
 import matplotlib
 matplotlib.use('Agg') # Non-GUI backend
@@ -13,7 +14,7 @@ import matplotlib.dates as mdates
 import numpy as np
 
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-from database import shared_files, save_market_data
+from database import shared_files, save_market_data, study_pool, active_sessions
 
 FPDF = None
 gTTS = None
@@ -812,3 +813,75 @@ def register_study_handlers(bot, utils):
                     deleted_entry = schedule[day].pop(i)
                     save_users(); bot.reply_to(message, f"🗑️ Silindi: **{deleted_entry['subject']}** ({deleted_entry['time']})"); return
         bot.reply_to(message, "❌ Bu ID'ye sahip bir program bulunamadı.")
+
+    @bot.message_handler(commands=['calisma_arkadasi'])
+    def study_buddy_init(message):
+        user_id = str(message.from_user.id)
+        if user_id in active_sessions:
+            bot.reply_to(message, "⚠️ Zaten aktif bir çalışma arkadaşın var! Bitirmek için: `/arkadas_bitir`", parse_mode="Markdown")
+            return
+            
+        markup = InlineKeyboardMarkup()
+        subjects = ["Tarih", "Coğrafya", "Vatandaşlık", "Genel"]
+        for sub in subjects:
+            markup.add(InlineKeyboardButton(f"📚 {sub}", callback_data=f"buddy_join_{sub}"))
+            
+        bot.reply_to(message, "🤝 **ÇALIŞMA ARKADAŞI BUL**\n\nHangi dersten soru çözmek istersin? Seninle aynı dersi seçen biriyle eşleşeceksin ve 30 dakika boyunca skorlarınız yarışacak.", reply_markup=markup, parse_mode="Markdown")
+
+    @bot.callback_query_handler(func=lambda c: c.data.startswith("buddy_join_"))
+    def buddy_join_queue(call):
+        user_id = str(call.from_user.id)
+        subject = call.data.replace("buddy_join_", "")
+        
+        # Temizlik (Eski kuyruktan çıkar)
+        for s in study_pool:
+            if user_id in study_pool[s]:
+                study_pool[s].remove(user_id)
+        
+        if subject not in study_pool: study_pool[subject] = []
+        
+        # Eşleşme Kontrolü
+        if study_pool[subject]:
+            partner_id = study_pool[subject].pop(0)
+            if partner_id == user_id: # Kendisiyle eşleşmesin
+                study_pool[subject].append(user_id)
+                bot.answer_callback_query(call.id, "Sıraya alındın.")
+                return
+
+            # Eşleşme Başladı
+            start_buddy_session(user_id, partner_id, subject, bot)
+            try: bot.delete_message(call.message.chat.id, call.message.message_id)
+            except: pass
+        else:
+            study_pool[subject].append(user_id)
+            bot.edit_message_text(f"⏳ **{subject}** için arkadaş aranıyor...\nBekleme listesindesin.", call.message.chat.id, call.message.message_id, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['arkadas_bitir'])
+    def stop_buddy_session_cmd(message):
+        user_id = str(message.from_user.id)
+        if user_id not in active_sessions:
+            bot.reply_to(message, "⚠️ Aktif bir çalışma oturumun yok.")
+            return
+        end_buddy_session(user_id, bot, "Kullanıcı isteğiyle sonlandırıldı.")
+
+def start_buddy_session(u1, u2, subject, bot):
+    active_sessions[u1] = {"partner": u2, "score": 0, "subject": subject}
+    active_sessions[u2] = {"partner": u1, "score": 0, "subject": subject}
+    
+    msg = f"🤝 **EŞLEŞME BAŞARILI!** ({subject})\n\n30 dakikalık çalışma maratonu başladı! Birbirinizin doğru sayılarını göreceksiniz.\nHadi soru çözmeye başla! 🚀\n`/quiz`"
+    try: bot.send_message(u1, msg, parse_mode="Markdown")
+    except: pass
+    try: bot.send_message(u2, msg, parse_mode="Markdown")
+    except: pass
+    
+    Timer(1800, lambda: end_buddy_session(u1, bot, "Süre doldu!")).start()
+
+def end_buddy_session(user_id, bot, reason):
+    if user_id not in active_sessions: return
+    partner_id = active_sessions[user_id]["partner"]
+    s1, s2 = active_sessions.get(user_id, {}).get("score", 0), active_sessions.get(partner_id, {}).get("score", 0)
+    msg = f"🏁 **ÇALIŞMA OTURUMU BİTTİ**\nNeden: {reason}\n\n📊 **Skorlar:**\nSen: {s1} Doğru\nArkadaşın: {s2} Doğru\n\nTebrikler! 🎉"
+    try: bot.send_message(user_id, msg); bot.send_message(partner_id, msg.replace(f"Sen: {s1}", f"Sen: {s2}").replace(f"Arkadaşın: {s2}", f"Arkadaşın: {s1}"))
+    except: pass
+    if user_id in active_sessions: del active_sessions[user_id]
+    if partner_id in active_sessions: del active_sessions[partner_id]
