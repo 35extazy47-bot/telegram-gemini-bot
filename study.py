@@ -438,6 +438,39 @@ def register_study_handlers(bot, utils):
         except Exception as e:
             bot.reply_to(message, f"Not oluşturulurken hata: {e}")
 
+    @bot.message_handler(commands=['harita'])
+    def generate_mind_map(message):
+        user_id = str(message.from_user.id)
+        if not check_daily_limit(user_id):
+            bot.reply_to(message, "⛔ Günlük AI limitin doldu!"); return
+        
+        try:
+            topic = message.text.replace("/harita", "").strip()
+            if not topic:
+                bot.reply_to(message, "⚠️ Hangi konu için kavram haritası oluşturayım?\nÖrnek: `/harita Osmanlı Duraklama Dönemi`", parse_mode="Markdown")
+                return
+            
+            wait_msg = bot.reply_to(message, f"🗺️ **'{topic}'** için kavram haritası oluşturuluyor...")
+            
+            prompt = f"""
+            '{topic}' konusu için detaylı bir kavram haritası (zihin haritası) oluştur.
+            Hiyerarşik bir yapı kullan. Ana başlık, alt başlıklar ve detaylar olsun.
+            Görselliği artırmak için emojiler ve ağaç yapısı (dallar) kullan.
+            Metin tabanlı bir şema olsun. Cevabı sadece şema olarak ver.
+            Örnek yapı:
+            🌳 ANA KONU
+            ├── 🌿 Alt Başlık 1
+            │   ├── 🍃 Detay A
+            │   └── 🍃 Detay B
+            └── 🌿 Alt Başlık 2
+            """
+            response = safe_generate_content(prompt)
+            
+            bot.delete_message(message.chat.id, wait_msg.message_id)
+            bot.send_message(message.chat.id, f"🗺️ **KAVRAM HARİTASI: {topic.upper()}**\n\n{response.text}")
+        except Exception as e:
+            bot.reply_to(message, f"Hata oluştu: {e}")
+
     @bot.message_handler(commands=['dosya_yukle'])
     def upload_file_instruction(message):
         if not message.reply_to_message or not message.reply_to_message.document:
