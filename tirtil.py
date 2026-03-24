@@ -417,8 +417,12 @@ def admin_panel(message):
     markup.add(InlineKeyboardButton("📢 Duyuru", callback_data="admin_help_duyuru"), InlineKeyboardButton("📊 Anket", callback_data="admin_help_anket"), InlineKeyboardButton("✉️ Özel Mesaj", callback_data="admin_help_dm"))
     # Satır 4: Yönetim
     markup.add(InlineKeyboardButton("🎁 Hediye", callback_data="admin_help_hediye"), InlineKeyboardButton("🔨 Ban", callback_data="admin_help_ban"))
+    
     status_icon = "🔴" if database.maintenance_mode else "🟢"
-    markup.add(InlineKeyboardButton("💾 Yedek Al", callback_data="admin_backup"), InlineKeyboardButton(f"{status_icon} Bakım Modu", callback_data="admin_toggle_maintenance"))
+    timer_icon = "⏳" if database.quiz_timer_enabled else "🛑"
+    
+    markup.add(InlineKeyboardButton(f"{timer_icon} Zamanlayıcı Ayarları", callback_data="admin_timer_menu"), InlineKeyboardButton(f"{status_icon} Bakım Modu", callback_data="admin_toggle_maintenance"))
+    markup.add(InlineKeyboardButton("💾 Yedek Al", callback_data="admin_backup"))
 
     bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode="Markdown")
 
@@ -480,6 +484,24 @@ def admin_callbacks(call):
         status = "AKTİF" if database.maintenance_mode else "PASİF"
         bot.answer_callback_query(call.id, f"Bakım modu {status} edildi.")
         admin_panel(call.message) # Paneli yenile
+
+    elif call.data == "admin_timer_menu":
+        status = "AÇIK ✅" if database.quiz_timer_enabled else "KAPALI 🛑"
+        text = f"⏳ **ZAMANLAYICI YÖNETİMİ**\n\n🌍 **Global Durum:** {status}\n\nHerkes için açıp kapatabilir veya belirli bir kullanıcıya özel komut uygulayabilirsin:\n`/timer_user <ID> <ac/kapa>`"
+        
+        markup = InlineKeyboardMarkup()
+        markup.add(InlineKeyboardButton("🌍 Global Zamanlayıcıyı Değiştir", callback_data="admin_toggle_global_timer"))
+        markup.add(InlineKeyboardButton("🔙 Ana Menü", callback_data="admin_main_menu")) # Geri butonu admin_panel fonksiyonunu çağırabilir ama callback data lazım
+        
+        bot.edit_message_text(text, call.message.chat.id, call.message.message_id, reply_markup=markup, parse_mode="Markdown")
+    
+    elif call.data == "admin_toggle_global_timer":
+        database.quiz_timer_enabled = not database.quiz_timer_enabled
+        database.save_market_data()
+        bot.answer_callback_query(call.id, "Zamanlayıcı durumu değiştirildi.")
+        # Menüyü yenilemek için tekrar menü handler'ını çağırıyoruz (Callback data hilesi ile)
+        call.data = "admin_timer_menu"
+        admin_callbacks(call)
 
     elif call.data == "admin_weekly_top10":
         current_week_str = datetime.now().strftime("%Y-%W")
@@ -554,6 +576,25 @@ def admin_callbacks(call):
     elif call.data == "admin_help_ban": bot.send_message(call.message.chat.id, "🚫 `/ban <ID>`\n✅ `/unban <ID>`")
     elif "help" in call.data:
         bot.answer_callback_query(call.id, "Komut kullanımı için koda bakınız.", show_alert=True)
+    elif call.data == "admin_main_menu":
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        admin_panel(call.message) # Mesaj objesi ile ana menüyü çağır
+
+@bot.message_handler(commands=['timer_user'])
+def admin_user_timer_toggle(message):
+    if message.from_user.username != DEVELOPER_USERNAME: return
+    try:
+        args = message.text.split()
+        if len(args) < 3:
+            bot.reply_to(message, "⚠️ Kullanım: `/timer_user <ID> <ac/kapa>`"); return
+        
+        target_id, status = args[1], args[2].lower()
+        if target_id not in users: bot.reply_to(message, "❌ Kullanıcı bulunamadı."); return
+        
+        users[target_id]["timer_enabled"] = (status == "ac")
+        save_users()
+        bot.reply_to(message, f"✅ Kullanıcı ({users[target_id].get('name')}) için zamanlayıcı: **{'AÇIK' if status=='ac' else 'KAPALI'}**")
+    except Exception as e: bot.reply_to(message, f"Hata: {e}")
 
 @bot.message_handler(commands=['duyuru'])
 def admin_broadcast(message):

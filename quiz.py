@@ -20,6 +20,7 @@ try:
 except ImportError:
     pass
 
+import database
 from database import (
     users, save_users, QUIZ_QUESTIONS, DEVELOPER_USERNAME,
     user_timers, pending_duels
@@ -233,10 +234,17 @@ def register_quiz_handlers(bot, tirtil_utils):
         markup.add(InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
 
         if user_id in user_timers: user_timers[user_id].cancel()
-        msg = bot.send_photo(chat_id, photo, caption=f"🔄 **AKILLI TEKRAR**\nKalan: {len(queue)}\n👇 Doğru şıkkı seç! (⏳ 30 sn)", reply_markup=markup)
+        
+        # Timer Kontrolü
+        is_timer_on = database.quiz_timer_enabled and users[user_id].get("timer_enabled", True)
+        time_text = "(⏳ 30 sn)" if is_timer_on else "(⏳ ∞)"
+        
+        msg = bot.send_photo(chat_id, photo, caption=f"🔄 **AKILLI TEKRAR**\nKalan: {len(queue)}\n👇 Doğru şıkkı seç! {time_text}", reply_markup=markup)
         users[user_id]["last_question_message_id"] = msg.message_id
         
-        user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start(); save_users()
+        if is_timer_on:
+            user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
+        save_users()
 
     def finish_exam_simulation(chat_id, user_id):
         stats = users[user_id].get("exam_stats", {})
@@ -332,7 +340,11 @@ def register_quiz_handlers(bot, tirtil_utils):
         users[user_id].update({"current_answer": q["answer"], "current_question_id": q["id"]})
         mode_prefix = f"🏃‍♂️ **MARATON: {users[user_id].get('marathon_score', 0) + 1}. SORU**\n" if users[user_id].get("mode") == "marathon" else ""
         photo = create_quiz_image(q['question'], q['options'], category, level, users[user_id]['lives'])
-        caption = f"{mode_prefix}👇 Doğru şıkkı seç! (⏳ 30 sn)"
+        
+        # Timer Kontrolü
+        is_timer_on = database.quiz_timer_enabled and users[user_id].get("timer_enabled", True)
+        time_text = "(⏳ 30 sn)" if is_timer_on else "(⏳ ∞)"
+        caption = f"{mode_prefix}👇 Doğru şıkkı seç! {time_text}"
 
         markup = InlineKeyboardMarkup(row_width=4)
         markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
@@ -351,7 +363,8 @@ def register_quiz_handlers(bot, tirtil_utils):
         msg = bot.send_photo(chat_id, photo, caption=caption, reply_markup=markup)
         users[user_id]["last_question_message_id"] = msg.message_id
         
-        user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
+        if is_timer_on:
+            user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
         save_users()
 
     def send_wrong_question(chat_id, user_id):
@@ -372,10 +385,15 @@ def register_quiz_handlers(bot, tirtil_utils):
         markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
 
         if user_id in user_timers: user_timers[user_id].cancel()
-        msg = bot.send_photo(chat_id, photo, caption="🔄 **Tekrar Zamanı!** (⏳ 30 sn)", reply_markup=markup)
+        
+        # Timer Kontrolü
+        is_timer_on = database.quiz_timer_enabled and users[user_id].get("timer_enabled", True)
+        time_text = "(⏳ 30 sn)" if is_timer_on else "(⏳ ∞)"
+        msg = bot.send_photo(chat_id, photo, caption=f"🔄 **Tekrar Zamanı!** {time_text}", reply_markup=markup)
         users[user_id]["last_question_message_id"] = msg.message_id
         
-        user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
+        if is_timer_on:
+            user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
         save_users()
 
     def send_weakness_question(chat_id, user_id):
@@ -414,10 +432,15 @@ def register_quiz_handlers(bot, tirtil_utils):
 
         if user_id in user_timers: user_timers[user_id].cancel()
         cat_display = q['category'].replace("_", " ").title()
-        msg = bot.send_photo(chat_id, photo, caption=f"📉 **Zayıf Konu Çalışması**\n📂 Konu: {cat_display}\n👇 Doğru şıkkı seç! (⏳ 30 sn)", reply_markup=markup)
+        
+        # Timer Kontrolü
+        is_timer_on = database.quiz_timer_enabled and users[user_id].get("timer_enabled", True)
+        time_text = "(⏳ 30 sn)" if is_timer_on else "(⏳ ∞)"
+        msg = bot.send_photo(chat_id, photo, caption=f"📉 **Zayıf Konu Çalışması**\n📂 Konu: {cat_display}\n👇 Doğru şıkkı seç! {time_text}", reply_markup=markup)
         users[user_id]["last_question_message_id"] = msg.message_id
         
-        user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
+        if is_timer_on:
+            user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
         save_users()
 
     def send_ai_question(chat_id, user_id):
@@ -441,11 +464,15 @@ def register_quiz_handlers(bot, tirtil_utils):
         if user_id in user_timers: user_timers[user_id].cancel()
         
         topic = users[user_id].get('ai_quiz_topic', 'Genel')
-        msg = bot.send_photo(chat_id, photo, caption=f"🤖 **AI Tarafından Oluşturuldu**\n📂 Konu: {topic}\n👇 Doğru şıkkı seç! (⏳ 45 sn)", reply_markup=markup)
+        
+        # Timer Kontrolü
+        is_timer_on = database.quiz_timer_enabled and users[user_id].get("timer_enabled", True)
+        time_text = "(⏳ 45 sn)" if is_timer_on else "(⏳ ∞)"
+        msg = bot.send_photo(chat_id, photo, caption=f"🤖 **AI Tarafından Oluşturuldu**\n📂 Konu: {topic}\n👇 Doğru şıkkı seç! {time_text}", reply_markup=markup)
         users[user_id]["last_question_message_id"] = msg.message_id
         
-        user_timers[user_id] = Timer(45.0, question_timeout, args=[chat_id, user_id])
-        user_timers[user_id].start()
+        if is_timer_on:
+            user_timers[user_id] = Timer(45.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
         save_users()
 
     def evaluate_quiz_answer(chat_id, user_id, answer, bot, message_id_to_delete=None):
@@ -651,9 +678,16 @@ def register_quiz_handlers(bot, tirtil_utils):
             
             if user_id in user_timers: user_timers[user_id].cancel()
             bot.delete_message(chat_id, wait_msg.message_id)
-            msg = bot.send_photo(chat_id, photo, caption=f"🌍 **Global Quiz** | {item['category']} (⏳ 30 sn)", reply_markup=markup)
+            
+            # Timer Kontrolü (Global Modda da geçerli olsun)
+            is_timer_on = database.quiz_timer_enabled and users[user_id].get("timer_enabled", True)
+            time_text = "(⏳ 30 sn)" if is_timer_on else "(⏳ ∞)"
+            
+            msg = bot.send_photo(chat_id, photo, caption=f"🌍 **Global Quiz** | {item['category']} {time_text}", reply_markup=markup)
             users[user_id]["last_question_message_id"] = msg.message_id
-            user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
+            
+            if is_timer_on:
+                user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
             save_users()
         except Exception as e:
             bot.edit_message_text(f"Hata: {str(e)}", chat_id, wait_msg.message_id)

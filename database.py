@@ -84,6 +84,7 @@ active_news_item = None
 active_news_direction = None
 active_global_modifier = 0.0
 last_rewarded_week = "" # Haftalık ödülün verildiği son haftayı takip eder
+quiz_timer_enabled = True # Global Quiz Zamanlayıcısı (Varsayılan: Açık)
 maintenance_mode = False # Bakım modu durumu
 
 # --- IPO (Halka Arz) Verisi ---
@@ -151,7 +152,7 @@ def save_users():
 
 def save_market_data():
     """Borsa verilerini kaydeder."""
-    global market_prices, market_volumes, last_prices, price_history, market_news, market_trend, last_market_update, maintenance_mode
+    global market_prices, market_volumes, last_prices, price_history, market_news, market_trend, last_market_update, maintenance_mode, quiz_timer_enabled
     data = {
         "prices": market_prices,
         "volumes": market_volumes,
@@ -162,6 +163,7 @@ def save_market_data():
         "trend": market_trend,
         "last_update": last_market_update.strftime("%Y-%m-%d %H:%M:%S") if last_market_update else None,
         "last_rewarded_week": last_rewarded_week,
+        "quiz_timer_enabled": quiz_timer_enabled,
         "maintenance_mode": maintenance_mode,
         "active_ipo": active_ipo,
         "public_companies": public_companies,
@@ -184,7 +186,7 @@ def save_market_data():
 
 def load_market_data():
     """Borsa verilerini yükler."""
-    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, volume_history, market_trend, last_rewarded_week, active_ipo, public_companies, shared_files, maintenance_mode
+    global market_prices, market_volumes, last_prices, market_news, last_market_update, price_history, volume_history, market_trend, last_rewarded_week, active_ipo, public_companies, shared_files, maintenance_mode, quiz_timer_enabled
     data = None
     
     if db is not None:
@@ -238,6 +240,7 @@ def load_market_data():
             market_trend = data.get("trend", 0)
             last_rewarded_week = data.get("last_rewarded_week", "")
             maintenance_mode = data.get("maintenance_mode", False)
+            quiz_timer_enabled = data.get("quiz_timer_enabled", True)
             
             # IPO verisini güvenli bir şekilde yükle
             loaded_ipo = data.get("active_ipo", {})
