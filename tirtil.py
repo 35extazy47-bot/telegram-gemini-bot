@@ -811,7 +811,7 @@ def help_callback(call):
         )
     elif category == "help_study":
         text = (
-            "📚 **DERS & ÇALIŞMA**\n\n🔹 `/harita <konu>` - Kavram haritası çıkar.\n🔹 `/metin_test` - Notundan test oluştur.\n🔹 `/sesli_ozet <konu>` - Konuyu sesli dinle. (YENİ!)\n🔹 `/kart <ders>` - Bilgi kartı ile çalış.\n🔹 `/plan` - Günlük ders çalışma programı hazırla.\n🔹 `/ozet <konu>` - İstediğin konunun özetini çıkar.\n🔹 `/motivasyon` - Motivasyon sözü al.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/ders_notu <konu>` - AI ile PDF not oluştur.\n🔹 `/dosya_yukle` - Kütüphaneye dosya ekle.\n🔹 `/dosya_ara` - Kütüphanede dosya ara."
+            "📚 **DERS & ÇALIŞMA**\n\n🔹 `/hedef <sinav> <tarih>` - Sınav sayacı kur. (YENİ!)\n🔹 `/harita <konu>` - Kavram haritası çıkar.\n🔹 `/metin_test` - Notundan test oluştur.\n🔹 `/sesli_ozet <konu>` - Konuyu sesli dinle.\n🔹 `/kart <ders>` - Bilgi kartı ile çalış.\n🔹 `/plan` - Günlük ders çalışma programı hazırla.\n🔹 `/ozet <konu>` - İstediğin konunun özetini çıkar.\n🔹 `/motivasyon` - Motivasyon sözü al.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/ders_notu <konu>` - AI ile PDF not oluştur.\n🔹 `/dosya_yukle` - Kütüphaneye dosya ekle.\n🔹 `/dosya_ara` - Kütüphanede dosya ara."
         )
     elif category == "help_profile":
         text = (
@@ -1103,6 +1103,40 @@ def check_and_send_notifications():
             except: pass
     if count > 0: print(f"🔔 {now_str} bildirimleri: {count} kişiye gönderildi.")
 
+def send_exam_countdown():
+    """Kullanıcılara sınav geri sayımını hatırlatır."""
+    print("⏳ Sınav geri sayım bildirimleri gönderiliyor...")
+    today = datetime.now()
+    count = 0
+    
+    motivation_quotes = [
+        "Başarı, vazgeçmeyenlerin ödülüdür. 💪",
+        "Bugün çalışırsan, yarın hayaline ulaşırsın. 🚀",
+        "Zorluklar seni durdurmasın, güçlendirsin. ⚡",
+        "Hedefe giden yol, küçük adımlarla başlar. 👣",
+        "Yapabileceğine inan, yolun yarısını geçtin bile! 🌟",
+        "Ertelemek, başarının en büyük düşmanıdır. Şimdi başla! ⏱️"
+    ]
+    
+    for user_id, user_data in list(users.items()):
+        if not user_data.get("is_approved", True) or user_data.get("is_banned", False): continue
+        
+        goal = user_data.get("exam_goal")
+        if goal:
+            try:
+                exam_date = datetime.strptime(goal["date"], "%Y-%m-%d")
+                remaining = (exam_date.date() - today.date()).days
+                
+                if remaining < 0: continue # Sınav geçmiş
+                
+                msg = f"📅 **GÜNAYDIN! SINAV SAYACI**\n\n🎯 **{goal['name']}** sınavına **{remaining}** gün kaldı!\n\n💡 _Günün Sözü: {random.choice(motivation_quotes)}_"
+                if remaining == 0: msg = f"🚨 **BUGÜN BÜYÜK GÜN!** 🚨\n\n🎯 **{goal['name']}** sınavında başarılar dilerim! Emeklerinin karşılığını alacaksın. 🤲💙"
+                
+                bot.send_message(user_id, msg, parse_mode="Markdown")
+                count += 1
+            except: pass
+    print(f"⏳ {count} kişiye sınav hatırlatması gönderildi.")
+
 @bot.message_handler(commands=['ayarlar'])
 def settings_menu(message):
     user_id = str(message.from_user.id)
@@ -1161,6 +1195,10 @@ def scheduler_thread():
         if now_utc3.minute != last_checked_minute:
             check_and_send_notifications()
             last_checked_minute = now_utc3.minute
+            
+            # Sabah 08:30'da sınav sayacı
+            if now_utc3.hour == 8 and now_utc3.minute == 30:
+                send_exam_countdown()
 
         # Haftalık Ödül (Pazartesi 05:00)
         current_week_str = now_utc3.strftime("%Y-%W")

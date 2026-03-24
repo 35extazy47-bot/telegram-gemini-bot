@@ -476,6 +476,42 @@ def register_study_handlers(bot, utils):
         except Exception as e:
             bot.reply_to(message, f"Hata oluştu: {e}")
 
+    @bot.message_handler(commands=['hedef'])
+    def set_exam_goal(message):
+        user_id = str(message.from_user.id)
+        
+        try:
+            # /hedef KPSS 2024-07-14
+            args = message.text.split(maxsplit=2)
+            if len(args) < 3:
+                bot.reply_to(message, "⚠️ Kullanım: `/hedef <Sınav Adı> <YYYY-AA-GG>`\nÖrnek: `/hedef KPSS 2024-07-14`", parse_mode="Markdown")
+                return
+            
+            exam_name = args[1]
+            date_str = args[2]
+            
+            # Tarih formatı kontrolü
+            exam_date = datetime.strptime(date_str, "%Y-%m-%d")
+            today = datetime.now()
+            
+            if exam_date < today:
+                bot.reply_to(message, "⚠️ Geçmiş bir tarihe hedef koyamazsın.")
+                return
+                
+            users[user_id]["exam_goal"] = {
+                "name": exam_name,
+                "date": date_str
+            }
+            save_users()
+            
+            remaining = (exam_date.date() - today.date()).days
+            bot.reply_to(message, f"✅ **HEDEF KAYDEDİLDİ!**\n\n🎯 Sınav: {exam_name}\n📅 Tarih: {date_str}\n⏳ Kalan Süre: {remaining} Gün\n\n_Her sabah 08:30'da sana hatırlatacağım!_ ⏰", parse_mode="Markdown")
+            
+        except ValueError:
+            bot.reply_to(message, "⚠️ Tarih formatı hatalı. Yıl-Ay-Gün (2024-07-14) şeklinde olmalı.")
+        except Exception as e:
+            bot.reply_to(message, f"Hata: {e}")
+
     @bot.message_handler(commands=['sesli_ozet'])
     def voice_summary(message):
         user_id = str(message.from_user.id)
