@@ -895,8 +895,8 @@ def language_selected(call):
                 "Ben, senin için geliştirilmiş yapay zeka destekli bir asistanım. Hem eğlenip hem öğrenebileceğin harika özelliklerim var! 🚀\n"
                 "Aşağıdaki **☰ Menü** butonundan tüm komutlara erişebilirsin.\n\n"
                 "🎮 **Oyun & Yarışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/quiz` - KPSS Soruları Çöz 📚\n🔹 `/maraton` - Tek Hakla İlerle 🏃‍♂️\n🔹 `/duello` - Düello At ⚔️\n\n"
-                "📚 **Ders & Çalışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/kart` - Bilgi Kartı 📇\n🔹 `/plan` - Ders Programı 📅\n🔹 `/ozet` - Konu Özeti 📝\n🔹 `/motivasyon` - Motivasyon 🔥\n🔹 `/ders_notu` - AI Ders Notu 📄\n🔹 `/dosya_yukle` - Dosya Paylaş 📤\n🔹 `/dosya_ara` - Kütüphane 🔍\n\n"
-                "👤 **Profil & Araçlar**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - İstatistikler 📊\n🔹 `/envanter` - Çantan 🎒\n\n"
+                "📚 **Ders & Çalışma**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/hedef` - Sınav Sayacı (YENİ!) 🎯\n🔹 `/metin_test` - Notundan Test (YENİ!) 📄\n🔹 `/harita` - Kavram Haritası (YENİ!) 🗺️\n🔹 `/sesli_ozet` - Sesli Özet (YENİ!) 🎧\n🔹 `/kart` - Bilgi Kartı 📇\n🔹 `/plan` - Ders Programı 📅\n🔹 `/ozet` - Konu Özeti 📝\n🔹 `/ders_notu` - AI Ders Notu 📄\n\n"
+                "👤 **Profil & Araçlar**\n━━━━━━━━━━━━━━━━━━━━\n🔹 `/profil` - İstatistikler 📊\n🔹 `/kayitli_sorular` - Favoriler (YENİ!) 💾\n🔹 `/envanter` - Çantan 🎒\n\n"
             ),
             "btn": "📩 Geliştiriciye Mesaj Gönder"
         },
@@ -1238,6 +1238,11 @@ if __name__ == "__main__":
         types.BotCommand("istatistik", "Günlük İstatistikler"),
         types.BotCommand("help", "Yardım"),
         types.BotCommand("ayarlar", "Bildirim Ayarları"),
+        types.BotCommand("hedef", "Sınav Geri Sayım (YENİ)"),
+        types.BotCommand("metin_test", "Notundan Test (YENİ)"),
+        types.BotCommand("harita", "Kavram Haritası (YENİ)"),
+        types.BotCommand("sesli_ozet", "Sesli Özet (YENİ)"),
+        types.BotCommand("kayitli_sorular", "Favori Sorularım (YENİ)"),
         types.BotCommand("kart", "Bilgi Kartı (Flashcard)"),
         types.BotCommand("plan", "Ders Çalışma Programı"),
         types.BotCommand("koc", "Akıllı Koç Analizi"),
