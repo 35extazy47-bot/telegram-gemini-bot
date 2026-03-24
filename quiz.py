@@ -1126,6 +1126,59 @@ def register_quiz_handlers(bot, tirtil_utils):
         except Exception as e:
             bot.reply_to(message, f"Test oluşturulurken hata oluştu: {e}")
 
+    @bot.message_handler(commands=['metin_test'])
+    def quiz_from_text_request(message):
+        user_id = str(message.from_user.id)
+        if not check_daily_limit(user_id):
+            bot.reply_to(message, "⛔ Günlük AI limitin doldu!"); return
+        
+        msg = bot.reply_to(message, "📄 **METİNDEN TEST OLUŞTURUCU**\n\nLütfen test oluşturmak istediğin ders notunu, paragrafı veya metni buraya yapıştır (veya ilet).")
+        bot.register_next_step_handler(msg, process_text_for_quiz)
+
+    def process_text_for_quiz(message):
+        user_id = str(message.from_user.id)
+        text_content = message.text
+        
+        if not text_content or text_content.startswith("/"):
+            bot.reply_to(message, "⚠️ İşlem iptal edildi.")
+            return
+
+        if len(text_content) < 50:
+             bot.reply_to(message, "⚠️ Metin çok kısa. Lütfen daha uzun bir metin gönder (En az 50 karakter).")
+             return
+
+        wait_msg = bot.reply_to(message, "🤖 Metin analiz ediliyor ve sorular çıkarılıyor... Lütfen bekle.")
+
+        try:
+            prompt = f"""
+            Aşağıdaki metni analiz et ve bu metne dayalı 5 adet çoktan seçmeli soru (KPSS formatında) hazırla.
+            Sorular SADECE verilen metindeki bilgilerle çözülebilir olsun.
+            Zorluk seviyesi orta olsun.
+            
+            Metin:
+            "{text_content}"
+
+            Çıktıyı SADECE şu JSON formatında ver, başka hiçbir metin yazma:
+            [
+                {{ "question": "Soru metni", "options": ["A) Şık1", "B) Şık2", "C) Şık3", "D) Şık4"], "answer": "A", "explanation": "Kısa açıklama" }}, ...
+            ]
+            """
+            response = safe_generate_content(prompt)
+            text_resp = response.text.replace("```json", "").replace("```", "").strip()
+            if text_resp.startswith("json"): text_resp = text_resp[4:].strip()
+            
+            questions = json.loads(text_resp)
+            
+            users[user_id]["ai_quiz_queue"] = questions
+            users[user_id]["ai_quiz_topic"] = "Kendi Notun"
+            users[user_id]["mode"] = "ai_quiz"
+            save_users()
+            
+            bot.delete_message(message.chat.id, wait_msg.message_id)
+            send_ai_question(message.chat.id, user_id)
+        except Exception as e:
+            bot.reply_to(message, f"Test oluşturulurken hata oluştu: {e}")
+
     @bot.callback_query_handler(func=lambda c: c.data.startswith("cat_"))
     def category_selected(call):
         user_id = str(call.from_user.id)
