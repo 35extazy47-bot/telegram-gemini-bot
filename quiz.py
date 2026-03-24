@@ -28,7 +28,7 @@ except ImportError:
 import database
 from database import (
     users, save_users, QUIZ_QUESTIONS, DEVELOPER_USERNAME,
-    user_timers, pending_duels
+    user_timers, pending_duels, active_sessions
 )
 
 active_quiz_duels = {}
