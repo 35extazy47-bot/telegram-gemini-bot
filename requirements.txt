@@ -8,3 +8,5 @@ requests
 gTTS
 google-genai
 fpdf2
+matplotlib
+numpy

@@ -4,6 +4,13 @@ import os
 import io
 from PIL import Image
 from datetime import datetime
+
+import matplotlib
+matplotlib.use('Agg') # Non-GUI backend
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import numpy as np
+
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from database import shared_files, save_market_data
 
@@ -183,16 +190,62 @@ def register_study_handlers(bot, utils):
     def list_exams(message):
         user_id = str(message.from_user.id)
         exams = users[user_id].get("exams", [])
-        if not exams:
-            bot.reply_to(message, "📂 Henüz kayıtlı deneme sonucun yok.")
+        
+        # Grafik için en az 2 veri noktası gerekir.
+        if not exams or len(exams) < 2:
+            bot.reply_to(message, "📂 Grafik oluşturmak için en az 2 kayıtlı deneme sonucun olmalı.\n`/deneme_ekle <Ad> <Net>` ile ekleyebilirsin.", parse_mode="Markdown")
             return
-        text = "📊 **DENEME SONUÇLARIN**\n\n"
-        for i, ex in enumerate(exams[-10:], 1):
-            text += f"{i}. {ex['name']} ({ex['date']}): **{ex['net']} Net**\n"
-        if len(exams) > 0:
-            avg = sum(e['net'] for e in exams[-10:]) / len(exams[-10:])
-            text += f"\n📈 **Son 10 Deneme Ortalaması:** {avg:.2f} Net"
-        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+
+        wait_msg = bot.reply_to(message, "📈 Gelişim grafiğin oluşturuluyor...")
+
+        try:
+            # Verileri hazırla (Son 30 deneme)
+            exams_to_plot = exams[-30:]
+            dates = [datetime.strptime(ex['date'], "%Y-%m-%d") for ex in exams_to_plot]
+            nets = [ex['net'] for ex in exams_to_plot]
+
+            # Grafik oluşturma
+            plt.style.use('dark_background')
+            fig, ax = plt.subplots(figsize=(10, 6))
+
+            # Çizgi ve noktalar
+            ax.plot(dates, nets, marker='o', linestyle='-', color='#4CAF50', label='Netler')
+            
+            # Trend çizgisi (Lineer regresyon)
+            if len(dates) > 1:
+                x_nums = mdates.date2num(dates)
+                m, b = np.polyfit(x_nums, nets, 1)
+                ax.plot(dates, m*x_nums + b, linestyle='--', color='#03A9F4', label=f'Trend (Eğim: {m:.2f})')
+
+            ax.set_title('Deneme Neti Gelişim Grafiği', fontsize=16, color='white', pad=20)
+            ax.set_xlabel('Tarih', fontsize=12, color='white')
+            ax.set_ylabel('Net Sayısı', fontsize=12, color='white')
+            ax.tick_params(axis='x', colors='white', labelrotation=30)
+            ax.tick_params(axis='y', colors='white')
+            ax.grid(True, which='both', linestyle='--', linewidth=0.5, color='#444444')
+            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d.%m'))
+            ax.legend()
+            fig.tight_layout()
+            
+            buf = io.BytesIO()
+            plt.savefig(buf, format='png')
+            buf.seek(0)
+            plt.close(fig)
+
+            all_nets = [e['net'] for e in exams]
+            avg = sum(all_nets) / len(all_nets)
+            
+            caption = (f"📊 **DENEME PERFORMANSIN**\n\n"
+                       f"📈 **Ortalama Net:** {avg:.2f}\n"
+                       f"🚀 **En Yüksek Net:** {max(all_nets):.2f}\n"
+                       f"📉 **En Düşük Net:** {min(all_nets):.2f}\n\n"
+                       f"_Grafik son 30 denemeni göstermektedir._")
+
+            bot.delete_message(message.chat.id, wait_msg.message_id)
+            bot.send_photo(message.chat.id, buf, caption=caption, parse_mode="Markdown")
+        except Exception as e:
+            bot.delete_message(message.chat.id, wait_msg.message_id)
+            bot.reply_to(message, f"Grafik oluşturulurken bir hata oluştu: {e}")
 
     @bot.message_handler(commands=['soru_kayit'])
     def log_questions(message):
