@@ -3,6 +3,7 @@ import random
 import os
 import io
 from PIL import Image
+import uuid
 from datetime import datetime
 
 import matplotlib
@@ -27,6 +28,18 @@ safe_generate_content = lambda x: MockResponse()
 check_daily_limit = lambda x: True
 users = {}
 save_users = lambda: None
+
+DAY_MAP = {
+    "pazartesi": 0, "pzt": 0,
+    "sali": 1,
+    "carsamba": 2, "çar": 2,
+    "persembe": 3, "per": 3,
+    "cuma": 4,
+    "cumartesi": 5, "cmt": 5,
+    "pazar": 6, "paz": 6
+}
+DAY_NAMES = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
+
 
 def register_study_handlers(bot, utils):
     """Ders ve çalışma ile ilgili komutları bota kaydeder."""
@@ -732,3 +745,70 @@ def register_study_handlers(bot, utils):
         
         for f in results[:3]:
             bot.send_document(message.chat.id, f["file_id"], caption=f"📄 {f['name']}\n👤 Gönderen: {f['uploader']}")
+
+    @bot.message_handler(commands=['haftalik_plan'])
+    def weekly_plan_menu(message):
+        user_id = str(message.from_user.id)
+        schedule = users[user_id].get("weekly_schedule", {})
+        
+        text = "📅 **HAFTALIK DERS PROGRAMIN**\n\n"
+        if not any(schedule.values()):
+            text += "_Henüz bir program oluşturmadın._\n\n"
+        else:
+            for day_idx in range(7):
+                day_name_tr = DAY_NAMES[day_idx].lower()
+                if day_name_tr in schedule and schedule[day_name_tr]:
+                    text += f"🗓️ **{day_name_tr.title()}**\n"
+                    sorted_entries = sorted(schedule[day_name_tr], key=lambda x: x['time'])
+                    for entry in sorted_entries:
+                        text += f"  - `{entry['time']}`: {entry['subject']}  (/program_sil {entry['id']})\n"
+                    text += "\n"
+        
+        text += "🔹 **Ekle:** `/program_ekle <gün> <saat> <ders>`\n"
+        text += "   _Örnek: /program_ekle Salı 10:30 Tarih_\n"
+        text += "🔹 **Sil:** `/program_sil <ID>`"
+
+        bot.reply_to(message, text, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['program_ekle'])
+    def add_weekly_plan(message):
+        user_id = str(message.from_user.id)
+        try:
+            args = message.text.split(maxsplit=3)
+            if len(args) < 4:
+                bot.reply_to(message, "⚠️ Kullanım: `/program_ekle <gün> <saat> <ders>`\nÖrnek: `/program_ekle Salı 10:30 Coğrafya`", parse_mode="Markdown")
+                return
+            
+            day_input, time_input, subject_input = args[1].lower(), args[2], args[3]
+            if day_input not in DAY_MAP:
+                bot.reply_to(message, f"❌ Geçersiz gün: {args[1]}."); return
+            datetime.strptime(time_input, "%H:%M")
+
+            day_name = DAY_NAMES[DAY_MAP[day_input]].lower()
+            
+            schedule = users[user_id].setdefault("weekly_schedule", {})
+            day_schedule = schedule.setdefault(day_name, [])
+            
+            if any(entry['time'] == time_input for entry in day_schedule):
+                bot.reply_to(message, f"❌ Bu saatte ({time_input}) zaten bir dersin var."); return
+
+            day_schedule.append({"id": str(uuid.uuid4())[:6], "time": time_input, "subject": subject_input})
+            save_users()
+            bot.reply_to(message, f"✅ Eklendi: **{day_name.title()} {time_input}** - {subject_input}\nProgramını görmek için: /haftalik_plan")
+        except ValueError:
+            bot.reply_to(message, "❌ Geçersiz saat formatı. Lütfen `SS:DD` formatında girin (Örn: 09:30, 14:00).")
+        except Exception as e: bot.reply_to(message, f"Hata: {e}")
+
+    @bot.message_handler(commands=['program_sil'])
+    def delete_weekly_plan(message):
+        user_id = str(message.from_user.id)
+        try: entry_id_to_delete = message.text.split()[1]
+        except IndexError: bot.reply_to(message, "⚠️ Kullanım: `/program_sil <ID>`\nID'yi görmek için `/haftalik_plan` yaz.", parse_mode="Markdown"); return
+
+        schedule = users[user_id].get("weekly_schedule", {})
+        for day, entries in schedule.items():
+            for i, entry in enumerate(entries):
+                if entry.get("id") == entry_id_to_delete:
+                    deleted_entry = schedule[day].pop(i)
+                    save_users(); bot.reply_to(message, f"🗑️ Silindi: **{deleted_entry['subject']}** ({deleted_entry['time']})"); return
+        bot.reply_to(message, "❌ Bu ID'ye sahip bir program bulunamadı.")

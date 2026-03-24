@@ -54,6 +54,7 @@ from study import register_study_handlers
 # --- Bot Başlangıç Zamanı ---
 BOT_START_TIME = datetime.now()
 
+DAY_NAMES = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
 # --- Bot ve API Başlatma ---
 bot = TeleBot(BOT_TOKEN)
 client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
@@ -811,7 +812,7 @@ def help_callback(call):
         )
     elif category == "help_study":
         text = (
-            "📚 **DERS & ÇALIŞMA**\n\n🔹 🎤 **Sesli Mesaj** - Sesi nota çevir ve kaydet. (YENİ!)\n🔹 `/denemelerim` - Gelişim grafiğini gör. 📊\n🔹 `/kelime_avcisi` - İngilizce kelime çalış. 🇬🇧\n🔹 `/pdf_olustur` - Soru bankası oluştur.\n🔹 `/hedef <sinav> <tarih>` - Sınav sayacı kur.\n🔹 `/harita <konu>` - Kavram haritası çıkar.\n🔹 `/metin_test` - Notundan test oluştur.\n🔹 `/sesli_ozet <konu>` - Konuyu sesli dinle.\n🔹 `/kart <ders>` - Bilgi kartı ile çalış.\n🔹 `/plan` - Günlük ders çalışma programı hazırla.\n🔹 `/ozet <konu>` - İstediğin konunun özetini çıkar.\n🔹 `/motivasyon` - Motivasyon sözü al.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/ders_notu <konu>` - AI ile PDF not oluştur.\n🔹 `/dosya_yukle` - Kütüphaneye dosya ekle.\n🔹 `/dosya_ara` - Kütüphanede dosya ara."
+            "📚 **DERS & ÇALIŞMA**\n\n🔹 `/haftalik_plan` - Haftalık program yap. (YENİ!) 📅\n🔹 🎤 **Sesli Mesaj** - Sesi nota çevir ve kaydet.\n🔹 `/denemelerim` - Gelişim grafiğini gör. 📊\n🔹 `/kelime_avcisi` - İngilizce kelime çalış. 🇬🇧\n🔹 `/pdf_olustur` - Soru bankası oluştur.\n🔹 `/hedef <sinav> <tarih>` - Sınav sayacı kur.\n🔹 `/harita <konu>` - Kavram haritası çıkar.\n🔹 `/metin_test` - Notundan test oluştur.\n🔹 `/sesli_ozet <konu>` - Konuyu sesli dinle.\n🔹 `/kart <ders>` - Bilgi kartı ile çalış.\n🔹 `/plan` - Günlük ders çalışma programı hazırla.\n🔹 `/ozet <konu>` - İstediğin konunun özetini çıkar.\n🔹 `/motivasyon` - Motivasyon sözü al.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/ders_notu <konu>` - AI ile PDF not oluştur.\n🔹 `/dosya_yukle` - Kütüphaneye dosya ekle.\n🔹 `/dosya_ara` - Kütüphanede dosya ara."
         )
     elif category == "help_profile":
         text = (
@@ -1103,6 +1104,27 @@ def check_and_send_notifications():
             except: pass
     if count > 0: print(f"🔔 {now_str} bildirimleri: {count} kişiye gönderildi.")
 
+def send_schedule_notifications():
+    """Haftalık programa göre ders hatırlatmaları gönderir."""
+    now_utc3 = datetime.now(timezone.utc) + timedelta(hours=3)
+    current_day_idx = now_utc3.weekday() # Monday is 0
+    current_time_str = now_utc3.strftime("%H:%M")
+    current_day_name = DAY_NAMES[current_day_idx].lower()
+    
+    count = 0
+    for user_id, user_data in list(users.items()):
+        if not user_data.get("is_approved", True) or user_data.get("is_banned", False): continue
+        
+        schedule = user_data.get("weekly_schedule", {})
+        day_schedule = schedule.get(current_day_name, [])
+        
+        for entry in day_schedule:
+            if entry.get("time") == current_time_str:
+                subject = entry.get("subject", "Ders")
+                try: bot.send_message(user_id, f"⏰ **DERS ZAMANI!**\n\n📅 Programına göre şimdi **{subject}** çalışma zamanı. Hadi başlayalım! 🚀\n\n_İstersen `/pomodoro` ile sayacı başlatabilirsin._", parse_mode="Markdown"); count += 1
+                except: pass
+    if count > 0: print(f"📅 {count} kişiye ders programı hatırlatması gönderildi.")
+
 def send_exam_countdown():
     """Kullanıcılara sınav geri sayımını hatırlatır."""
     print("⏳ Sınav geri sayım bildirimleri gönderiliyor...")
@@ -1194,6 +1216,7 @@ def scheduler_thread():
         # Dakikalık Bildirim Kontrolü
         if now_utc3.minute != last_checked_minute:
             check_and_send_notifications()
+            send_schedule_notifications()
             last_checked_minute = now_utc3.minute
             
             # Sabah 08:30'da sınav sayacı
@@ -1245,6 +1268,7 @@ if __name__ == "__main__":
         types.BotCommand("kayitli_sorular", "Favori Sorularım (YENİ)"),
         types.BotCommand("kart", "Bilgi Kartı (Flashcard)"),
         types.BotCommand("plan", "Ders Çalışma Programı"),
+        types.BotCommand("haftalik_plan", "Haftalık Ders Programı (YENİ)"),
         types.BotCommand("koc", "Akıllı Koç Analizi"),
         types.BotCommand("ozet", "Konu Özeti"),
         types.BotCommand("motivasyon", "Motivasyon"),
