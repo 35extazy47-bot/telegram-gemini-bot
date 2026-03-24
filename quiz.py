@@ -232,6 +232,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         
         markup = InlineKeyboardMarkup(row_width=4).add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
         markup.add(InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
+        # Tekrar modunda kaydet butonu eklemiyoruz (zaten kayıtlı mantığı)
 
         if user_id in user_timers: user_timers[user_id].cancel()
         
@@ -357,7 +358,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         if inv.get("joker_ai", 0) > 0: joker_btns.append(InlineKeyboardButton(f"🤖 AI İpucu ({inv['joker_ai']})", callback_data="joker_ai"))
         if joker_btns: markup.add(*joker_btns)
 
-        markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
+        markup.add(InlineKeyboardButton("💾 Kaydet", callback_data="save_fav"), InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
 
         if user_id in user_timers: user_timers[user_id].cancel()
         msg = bot.send_photo(chat_id, photo, caption=caption, reply_markup=markup)
@@ -382,7 +383,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         photo = create_quiz_image(q['question'], q['options'], q['category'], users[user_id]["level"], users[user_id]['lives'])
         markup = InlineKeyboardMarkup(row_width=4).add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
 
-        markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
+        markup.add(InlineKeyboardButton("💾 Kaydet", callback_data="save_fav"), InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
 
         if user_id in user_timers: user_timers[user_id].cancel()
         
@@ -428,7 +429,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         if inv.get("joker_ai", 0) > 0: joker_btns.append(InlineKeyboardButton(f"🤖 AI İpucu ({inv['joker_ai']})", callback_data="joker_ai"))
         if joker_btns: markup.add(*joker_btns)
 
-        markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
+        markup.add(InlineKeyboardButton("💾 Kaydet", callback_data="save_fav"), InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
 
         if user_id in user_timers: user_timers[user_id].cancel()
         cat_display = q['category'].replace("_", " ").title()
@@ -459,7 +460,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         
         markup = InlineKeyboardMarkup(row_width=4)
         markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
-        markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
+        markup.add(InlineKeyboardButton("💾 Kaydet", callback_data="save_fav"), InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
 
         if user_id in user_timers: user_timers[user_id].cancel()
         
@@ -473,6 +474,50 @@ def register_quiz_handlers(bot, tirtil_utils):
         
         if is_timer_on:
             user_timers[user_id] = Timer(45.0, question_timeout, args=[chat_id, user_id]); user_timers[user_id].start()
+        save_users()
+
+    def send_saved_question(chat_id, user_id):
+        queue = users[user_id].get("saved_queue", [])
+        if not queue:
+            bot.send_message(chat_id, "🏁 **Favori soruların bitti!**")
+            users[user_id]["mode"] = "local"
+            save_users()
+            return
+
+        item = queue[0]
+        q = None
+        
+        if item.get("source") == "db":
+            q = next((x for x in QUIZ_QUESTIONS if x["id"] == item["id"]), None)
+            if not q: # Soru silinmişse geç
+                users[user_id]["saved_queue"].pop(0)
+                send_saved_question(chat_id, user_id)
+                return
+        else:
+            q = item.get("data")
+            
+        users[user_id]["current_saved_item"] = item # Silme işlemi için takip
+        users[user_id]["current_answer"] = q["answer"]
+        
+        photo = create_quiz_image(q['question'], q['options'], "FAVORİ", users[user_id]["level"], users[user_id]['lives'])
+        
+        markup = InlineKeyboardMarkup(row_width=4)
+        markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
+        markup.add(InlineKeyboardButton("🗑️ Favorilerden Sil", callback_data="del_fav"))
+        markup.add(InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
+
+        if user_id in user_timers: user_timers[user_id].cancel()
+        
+        # Timer Kontrolü
+        is_timer_on = database.quiz_timer_enabled and users[user_id].get("timer_enabled", True)
+        time_text = "(⏳ 30 sn)" if is_timer_on else "(⏳ ∞)"
+        
+        msg = bot.send_photo(chat_id, photo, caption=f"📂 **FAVORİ SORU**\n👇 Doğru şıkkı seç! {time_text}", reply_markup=markup)
+        users[user_id]["last_question_message_id"] = msg.message_id
+        
+        if is_timer_on:
+            user_timers[user_id] = Timer(30.0, question_timeout, args=[chat_id, user_id])
+            user_timers[user_id].start()
         save_users()
 
     def evaluate_quiz_answer(chat_id, user_id, answer, bot, message_id_to_delete=None):
@@ -501,6 +546,8 @@ def register_quiz_handlers(bot, tirtil_utils):
         q_id = users[user_id].get("current_question_id")
         if u.get("mode") == "ai_quiz":
             question_data = u.get("current_ai_question")
+        elif u.get("mode") == "saved":
+            question_data = u.get("current_saved_item", {}).get("data") or next((x for x in QUIZ_QUESTIONS if x["id"] == u.get("current_saved_item", {}).get("id")), None)
         else:
             question_data = next((q for q in QUIZ_QUESTIONS if q["id"] == q_id), None)
 
@@ -553,6 +600,18 @@ def register_quiz_handlers(bot, tirtil_utils):
                 bot.send_photo(chat_id, photo, caption=f"❌ **Yanlış!** Soru 1. Kutuya döndü. Yarın tekrar soracağım. 📦⬇️\nDoğru Cevap: {correct}")
             u.pop("current_answer", None); save_users(); send_spaced_question(chat_id, user_id); return
         # --------------------------
+
+        # --- SAVED (FAVORİ) MODU ---
+        if u.get("mode") == "saved":
+            if u.get("saved_queue"): u["saved_queue"].pop(0)
+            if answer == correct:
+                bot.send_dice(chat_id, emoji="🎯")
+                bot.send_message(chat_id, f"✅ **Doğru!** {random.choice(correct_msgs)}")
+            else:
+                bot.send_message(chat_id, f"❌ **Yanlış!**\nDoğru Cevap: {correct}")
+            
+            u.pop("current_answer", None); save_users(); send_saved_question(chat_id, user_id); return
+        # ---------------------------
 
         if u.get("mode") == "marathon":
             if answer == correct:
@@ -674,7 +733,7 @@ def register_quiz_handlers(bot, tirtil_utils):
             
             markup = InlineKeyboardMarkup(row_width=4).add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in letters])
             # Jokerler eklenebilir
-            markup.add(InlineKeyboardButton("🏁 Testi Bitir", callback_data="finish_quiz"))
+            markup.add(InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
             
             if user_id in user_timers: user_timers[user_id].cancel()
             bot.delete_message(chat_id, wait_msg.message_id)
@@ -1178,6 +1237,77 @@ def register_quiz_handlers(bot, tirtil_utils):
             send_ai_question(message.chat.id, user_id)
         except Exception as e:
             bot.reply_to(message, f"Test oluşturulurken hata oluştu: {e}")
+
+    @bot.callback_query_handler(func=lambda c: c.data == 'save_fav')
+    def save_favorite_question(call):
+        user_id = str(call.from_user.id)
+        u = users.get(user_id)
+        if not u: return
+        
+        if u.get("mode") == "ai_quiz":
+            q_data = u.get("current_ai_question")
+            if not q_data: bot.answer_callback_query(call.id, "⚠️ Hata: Soru verisi yok."); return
+            
+            if "saved_custom" not in u: u["saved_custom"] = []
+            if q_data not in u["saved_custom"]:
+                u["saved_custom"].append(q_data)
+                save_users()
+                bot.answer_callback_query(call.id, "✅ Soru favorilere eklendi!")
+            else:
+                bot.answer_callback_query(call.id, "⚠️ Bu soru zaten kayıtlı.")
+        else:
+            q_id = u.get("current_question_id")
+            if not q_id: bot.answer_callback_query(call.id, "⚠️ Hata: Soru ID yok."); return
+            
+            if "saved_ids" not in u: u["saved_ids"] = []
+            if q_id not in u["saved_ids"]:
+                u["saved_ids"].append(q_id)
+                save_users()
+                bot.answer_callback_query(call.id, "✅ Soru favorilere eklendi!")
+            else:
+                bot.answer_callback_query(call.id, "⚠️ Bu soru zaten kayıtlı.")
+
+    @bot.message_handler(commands=['kayitli_sorular'])
+    def start_saved_quiz(message):
+        user_id = str(message.from_user.id)
+        if not users.get(user_id, {}).get("is_approved", True): return
+        
+        saved_ids = users[user_id].get("saved_ids", [])
+        saved_custom = users[user_id].get("saved_custom", [])
+        
+        if not saved_ids and not saved_custom:
+            bot.reply_to(message, "📂 **Favori listen boş!**\n\nSoru çözerken '💾 Kaydet' butonuna basarak buraya ekleyebilirsin.", parse_mode="Markdown")
+            return
+            
+        queue = []
+        for qid in saved_ids: queue.append({"source": "db", "id": qid})
+        for qdata in saved_custom: queue.append({"source": "custom", "data": qdata})
+        
+        random.shuffle(queue)
+        users[user_id]["mode"] = "saved"
+        users[user_id]["saved_queue"] = queue
+        save_users()
+        
+        bot.reply_to(message, f"📂 **FAVORİ SORULARIN**\n\nToplam: {len(queue)} soru\nBaşlıyoruz... 🚀", parse_mode="Markdown")
+        send_saved_question(message.chat.id, user_id)
+
+    @bot.callback_query_handler(func=lambda c: c.data == 'del_fav')
+    def delete_favorite_question(call):
+        user_id = str(call.from_user.id)
+        u = users.get(user_id)
+        item = u.get("current_saved_item")
+        
+        if not item: return
+        
+        if item["source"] == "db":
+            if item["id"] in u.get("saved_ids", []):
+                u["saved_ids"].remove(item["id"])
+        else:
+            if item["data"] in u.get("saved_custom", []):
+                u["saved_custom"].remove(item["data"])
+        
+        save_users()
+        bot.answer_callback_query(call.id, "🗑️ Soru favorilerden silindi.")
 
     @bot.callback_query_handler(func=lambda c: c.data.startswith("cat_"))
     def category_selected(call):

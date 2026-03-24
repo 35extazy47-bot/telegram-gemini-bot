@@ -815,7 +815,7 @@ def help_callback(call):
         )
     elif category == "help_profile":
         text = (
-            "👤 **PROFİL & ARAÇLAR**\n\n🔹 `/profil` - Profil kartını gör.\n🔹 `/envanter` - Çantanı gör.\n🔹 `/yanlislarim` - Hatalarını tekrar et.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/soruekle` - Soru öner."
+            "👤 **PROFİL & ARAÇLAR**\n\n🔹 `/profil` - Profil kartını gör.\n🔹 `/envanter` - Çantanı gör.\n🔹 `/kayitli_sorular` - Favori sorularını çöz. (YENİ!)\n🔹 `/yanlislarim` - Hatalarını tekrar et.\n🔹 `/pomodoro` - Ders çalışma sayacı.\n🔹 `/soruekle` - Soru öner."
         )
     elif category == "help_back":
         markup = InlineKeyboardMarkup(row_width=2)
