@@ -142,40 +142,50 @@ def get_user_profile_image(user_id):
     return None
 
 def create_profile_image(user_id, user_data):
-    width, height = 600, 400
-    img = Image.new('RGB', (width, height), color=(35, 39, 42))
+    width, height = 600, 450
+    # RGBA modu ile şeffaflık ve modern renk paleti
+    img = Image.new('RGBA', (width, height), color=(15, 23, 42, 255))
     draw = ImageDraw.Draw(img)
     try:
         font_path = "arial.ttf"
         if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-        name_font, header_font, normal_font, small_font = ImageFont.truetype(font_path, 32), ImageFont.truetype(font_path, 24), ImageFont.truetype(font_path, 18), ImageFont.truetype(font_path, 14)
+        name_font = ImageFont.truetype(font_path, 36)
+        header_font = ImageFont.truetype(font_path, 26)
+        normal_font = ImageFont.truetype(font_path, 20)
+        small_font = ImageFont.truetype(font_path, 16)
     except:
         name_font, header_font, normal_font, small_font = ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default()
 
     name, level, exp, money = user_data.get('name', 'Bilinmiyor')[:20], user_data.get('level', 1), user_data.get('exp', 0), user_data.get('money', 0)
     target_xp, rank = level * 100, get_rank(level, user_data.get('username'))
     
+    # Arka plan süslemesi (Glassmorphism kartı)
+    draw.rounded_rectangle([20, 20, 580, 430], radius=25, fill=(30, 41, 59, 200), outline=(51, 65, 85, 255), width=2)
+
     profile_pic = get_user_profile_image(user_id)
-    text_x = 30
+    text_x = 40
     if profile_pic:
-        profile_pic = profile_pic.resize((80, 80)); mask = Image.new("L", (80, 80), 0)
-        draw_mask = ImageDraw.Draw(mask); draw_mask.ellipse((0, 0, 80, 80), fill=255)
-        img.paste(profile_pic, (30, 30), mask); text_x = 130
+        # Dairesel Progress Ring (Profil fotosu etrafında)
+        ring_box = [35, 35, 135, 135]
+        draw.arc(ring_box, start=0, end=360, fill=(51, 65, 85, 255), width=6) # Arka halka
+        percent = min(exp / target_xp, 1.0)
+        if percent > 0:
+            draw.arc(ring_box, start=-90, end=-90 + (percent * 360), fill=(34, 197, 94, 255), width=6) # İlerleme
 
-    draw.text((text_x, 30), name, font=name_font, fill=(255,255,255))
-    draw.text((text_x, 75), rank, font=header_font, fill=(0, 174, 255))
-    draw.text((450, 20), f"Level {level}", font=name_font, fill=(255, 215, 0))
-    draw.text((450, 60), f"{money} $", font=header_font, fill=(46, 204, 113))
+        profile_pic = profile_pic.resize((90, 90)); mask = Image.new("L", (90, 90), 0)
+        draw_mask = ImageDraw.Draw(mask); draw_mask.ellipse((0, 0, 90, 90), fill=255)
+        img.paste(profile_pic, (40, 40), mask); text_x = 150
 
-    bar_x, bar_y, bar_w, bar_h = 30, 130, 540, 20
-    draw.rectangle([bar_x, bar_y, bar_x + bar_w, bar_y + bar_h], fill=(60,60,60))
-    percent = min(exp / target_xp, 1.0)
-    if percent > 0: draw.rectangle([bar_x, bar_y, bar_x + int(bar_w * percent), bar_y + bar_h], fill=(46,204,113))
-    draw.text((bar_x, bar_y - 20), f"EXP: {exp} / {target_xp}", font=small_font, fill=(200,200,200))
+    draw.text((text_x, 45), name, font=name_font, fill=(241, 245, 249, 255))
+    draw.text((text_x, 90), rank, font=header_font, fill=(56, 189, 248, 255))
+    
+    # Seviye Rozeti
+    draw.rounded_rectangle([440, 40, 560, 100], radius=15, fill=(30, 58, 138, 255))
+    draw.text((455, 55), f"LVL {level}", font=header_font, fill=(250, 204, 21, 255))
     
     # İstatistikler
-    y_start = 180
-    col1, col2, col3 = 30, 230, 430
+    y_start = 160
+    col1, col2, col3 = 50, 230, 410
     
     total = user_data.get('total_questions', 0)
     correct = user_data.get('total_correct', 0)

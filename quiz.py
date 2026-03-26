@@ -90,10 +90,10 @@ def create_quiz_image(question, options, category, level, lives):
     elif "guncel" in cat_lower or "güncel" in cat_lower:
         bg_color, header_text_color = (80, 50, 20), (255, 220, 100)
     else:
-        bg_color, header_text_color = (35, 39, 42), (255, 215, 0)
+        bg_color, header_text_color = (15, 23, 42), (255, 215, 0)
 
-    card_color = (44, 47, 51)
-    img = Image.new('RGB', (width, height), color=bg_color)
+    card_color = (30, 41, 59)
+    img = Image.new('RGBA', (width, height), color=bg_color + (255,))
     draw = ImageDraw.Draw(img)
     
     try:
@@ -101,26 +101,36 @@ def create_quiz_image(question, options, category, level, lives):
         if not os.path.exists(font_path):
             candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "/System/Library/Fonts/Helvetica.ttc"]
             font_path = next((f for f in candidates if os.path.exists(f)), font_path)
-        header_font, question_font, option_font = ImageFont.truetype(font_path, 28), ImageFont.truetype(font_path, 32), ImageFont.truetype(font_path, 24)
+        header_font = ImageFont.truetype(font_path, 28)
+        question_font = ImageFont.truetype(font_path, 34)
+        option_font = ImageFont.truetype(font_path, 26)
+        tag_font = ImageFont.truetype(font_path, 20)
     except:
         header_font, question_font, option_font = ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default()
+        tag_font = ImageFont.load_default()
 
-    draw.rectangle([(0, 0), (width, 80)], fill=(30, 33, 36))
-    draw.text((40, 25), f"🧠 {category.upper()}  |  LEVEL {level}  |  ❤️ {lives}", font=header_font, fill=header_text_color)
-    draw.rectangle([(40, 100), (760, 300)], fill=card_color)
+    # Üst bar ve Zorluk Yıldızları
+    draw.rectangle([(0, 0), (width, 80)], fill=(15, 23, 42))
+    stars = "⭐" * level
+    draw.text((40, 25), f"🧠 {category.upper()}  |  {stars}  |  ❤️ {lives}", font=header_font, fill=header_text_color)
+    
+    # Soru Kartı
+    draw.rounded_rectangle([(40, 100), (760, 320)], radius=20, fill=card_color, outline=(51, 65, 85), width=2)
+    draw.rounded_rectangle([(60, 110), (160, 140)], radius=10, fill=(56, 189, 248))
+    draw.text((75, 115), "SORU", font=tag_font, fill=(255, 255, 255))
     
     wrapper = textwrap.TextWrapper(width=40) 
     lines = wrapper.wrap(text=question)
-    y_text = 130
+    y_text = 160
     for line in lines:
         draw.text((60, y_text), line, font=question_font, fill=(255, 255, 255))
-        y_text += 40
+        y_text += 45
 
-    y_opt = 330
+    y_opt = 345
     for opt in options:
-        draw.rectangle([(40, y_opt), (760, y_opt + 50)], fill=card_color)
-        draw.text((60, y_opt + 10), opt, font=option_font, fill=(200, 200, 200))
-        y_opt += 65
+        draw.rounded_rectangle([(40, y_opt), (760, y_opt + 55)], radius=15, fill=(51, 65, 85))
+        draw.text((70, y_opt + 12), opt, font=option_font, fill=(241, 245, 249))
+        y_opt += 70
 
     bio = io.BytesIO()
     img.save(bio, 'PNG')

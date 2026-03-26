@@ -218,28 +218,23 @@ def register_study_handlers(bot, utils):
             dates = [datetime.strptime(ex['date'], "%Y-%m-%d") for ex in exams_to_plot]
             nets = [ex['net'] for ex in exams_to_plot]
 
-            # Grafik oluşturma
-            plt.style.use('dark_background')
-            fig, ax = plt.subplots(figsize=(10, 6))
+            # t.style.use('dark_background')
+            fig, ax = plt.subplots(figsize=(12, 7), dpi=100)
+            ax.set_facecolor('#0f172a')
 
-            # Çizgi ve noktalar
-            ax.plot(dates, nets, marker='o', linestyle='-', color='#4CAF50', label='Netler')
-            
+            # Yumuşak Çizgi ve Alan Doldurma (Area Chart)
+            ax.plot(dates, nets, marker='o', markersize=8, linewidth=3, color='#22c55e', label='Netlerin', markerfacecolor='#ffffff', markeredgewidth=2)
+
             # Trend çizgisi (Lineer regresyon)
             if len(dates) > 1:
                 x_nums = mdates.date2num(dates)
                 m, b = np.polyfit(x_nums, nets, 1)
-                ax.plot(dates, m*x_nums + b, linestyle='--', color='#03A9F4', label=f'Trend (Eğim: {m:.2f})')
+                ax.plot(dates, m*x_nums + b, linestyle='--', color='#38bdf8', alpha=0.8, label=f'Gelişim Eğilimi')
 
-            ax.set_title('Deneme Neti Gelişim Grafiği', fontsize=16, color='white', pad=20)
-            ax.set_xlabel('Tarih', fontsize=12, color='white')
-            ax.set_ylabel('Net Sayısı', fontsize=12, color='white')
-            ax.tick_params(axis='x', colors='white', labelrotation=30)
-            ax.tick_params(axis='y', colors='white')
-            ax.grid(True, which='both', linestyle='--', linewidth=0.5, color='#444444')
-            ax.xaxis.set_major_formatter(mdates.DateFormatter('%d.%m'))
-            ax.legend()
-            fig.tight_layout()
+            ax.set_title('DENEME PERFORMANS ANALİZİ', fontsize=18, fontweight='bold', color='#f1f5f9', pad=30)
+            ax.set_ylabel('Net Sayısı', fontsize=12, color='#94a3b8', labelpad=15) # Y ekseni etiketi
+            ax.tick_params(axis='both', colors='#94a3b8', labelsize=10) # X ve Y ekseni işaretleri
+
             
             buf = io.BytesIO()
             plt.savefig(buf, format='png')
