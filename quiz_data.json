@@ -9630,46 +9630,216 @@
     "answer": "B",
     "explanation": "ABD'ye ait U-2 casus uçağının Sovyet topraklarında düşürülmesi, Türkiye'yi de içine alan büyük bir krize neden olmuştur."
   },
+
+
   {
-    "id": 736,
+    "id": 739,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "İslamiyet öncesi Türk devletlerinde, devletin ve milletin geleceği ile ilgili önemli kararların alındığı, kağanın başkanlık ettiği meclise ne ad verilir?",
+    "options": [
+      "A) Toy",
+      "B) Kurultay",
+      "C) Keneş",
+      "D) Divan"
+    ],
+    "answer": "B",
+    "explanation": "Kurultay (Toy), eski Türklerde devlet işlerinin görüşüldüğü ve karara bağlandığı en yüksek danışma meclisidir."
+  },
+  {
+    "id": 740,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "Uygurların Maniheizm dinini kabul etmeleriyle birlikte, Türk sanatında hangi alanda önemli gelişmeler yaşanmıştır?",
+    "options": [
+      "A) Heykelcilik",
+      "B) Mimari ve Duvar Resmi (Fresk)",
+      "C) Madencilik",
+      "D) Dokumacılık"
+    ],
+    "answer": "B",
+    "explanation": "Yerleşik hayata geçen Uygurlar, Maniheizm'in etkisiyle tapınaklar inşa etmiş ve bu tapınakları duvar resimleriyle (fresk) süslemişlerdir."
+  },
+  {
+    "id": 741,
+    "category": "tarih_islamiyet_oncesi",
+    "level": 3,
+    "question": "İslamiyet öncesi Türklerde, ölen kişinin ruhunun göğe yükseldiğine inanılan ve cenneti ifade eden kavram hangisidir?",
+    "options": [
+      "A) Tamu",
+      "B) Uçmağ",
+      "C) Balbal",
+      "D) Bengütaş"
+    ],
+    "answer": "B",
+    "explanation": "Eski Türk inancında 'Uçmağ' cenneti, 'Tamu' ise cehennemi ifade eder."
+  },
+  {
+    "id": 742,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Anadolu Selçuklu Devleti döneminde, kervanların güvenliğini sağlamak ve konaklama ihtiyaçlarını karşılamak amacıyla inşa edilen büyük yapılar hangisidir?",
+    "options": [
+      "A) Medrese",
+      "B) Kümbet",
+      "C) Kervansaray (Han)",
+      "D) Ribat"
+    ],
+    "answer": "C",
+    "explanation": "Kervansaraylar (Hanlar), ticaret yolları üzerinde inşa edilen, tüccarların ve kervanların konakladığı, güvenlikli ve hizmet veren yapılardır. Ribat ise ilk Türk-İslam devletlerinde sınır karakolu ve kervansaray işlevi gören yapılardır."
+  },
+  {
+    "id": 743,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Büyük Selçuklu Devleti'nde, toprakların dağıtımı ve denetiminden sorumlu olan divan görevlisine ne ad verilirdi?",
+    "options": [
+      "A) Emir-i Dad",
+      "B) Pervaneci",
+      "C) Müstevfi",
+      "D) Tuğrai"
+    ],
+    "answer": "B",
+    "explanation": "Pervaneci, ikta topraklarının dağıtımı ve kayıtlarını tutan görevlidir. Emir-i Dad adli işlerden, Müstevfi mali işlerden, Tuğrai ise yazışmalardan sorumluydu."
+  },
+  {
+    "id": 744,
+    "category": "tarih_ilk_turk_islam",
+    "level": 3,
+    "question": "Türk-İslam bilim tarihinde 'Kitabü'l-Cebr ve'l-Mukabele' adlı eseriyle cebir biliminin kurucusu sayılan bilgin kimdir?",
+    "options": [
+      "A) Farabi",
+      "B) İbn-i Sina",
+      "C) Harezmi",
+      "D) Biruni"
+    ],
+    "answer": "C",
+    "explanation": "Harezmi, cebir bilimini sistemleştiren ve algoritma kavramını ortaya koyan önemli bir Türk-İslam bilginidir."
+  },
+  {
+    "id": 745,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde, III. Selim döneminde kurulan ve Batı tarzında eğitim veren ilk askeri okul hangisidir?",
+    "options": [
+      "A) Mühendishane-i Bahr-i Hümayun",
+      "B) Mekteb-i Harbiye",
+      "C) Tıbbiye-i Şahane",
+      "D) Hendesehane"
+    ],
+    "answer": "A",
+    "explanation": "Mühendishane-i Bahr-i Hümayun (Deniz Mühendishanesi), III. Selim döneminde kurulan ve Batı tarzında eğitim veren ilk askeri okuldur. Hendesehane ise I. Mahmut döneminde kurulmuştur."
+  },
+  {
+    "id": 746,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı minyatür sanatında, özellikle şehir manzaraları ve sefer güzergahlarını tasvir eden ünlü minyatürcü kimdir?",
+    "options": [
+      "A) Levni",
+      "B) Nakkaş Osman",
+      "C) Matrakçı Nasuh",
+      "D) Nigari"
+    ],
+    "answer": "C",
+    "explanation": "Matrakçı Nasuh, Kanuni döneminin önemli minyatürcülerinden olup, menzilnameleriyle (sefer güzergahları) tanınır."
+  },
+  {
+    "id": 747,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nde, 1876 Kanun-i Esasi'sinin hazırlanmasında ve I. Meşrutiyet'in ilanında etkili olan aydın grubu hangisidir?",
+    "options": [
+      "A) İttihat ve Terakki",
+      "B) Genç Osmanlılar (Jön Türkler)",
+      "C) Fedakaran-ı Millet",
+      "D) Hürriyet ve İtilaf"
+    ],
+    "answer": "B",
+    "explanation": "Genç Osmanlılar (Jön Türkler), Osmanlı Devleti'nin kurtuluşunu anayasal monarşide gören ve I. Meşrutiyet'in ilanında etkili olan aydın grubudur."
+  },
+  {
+    "id": 748,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Sivas Kongresi'nde, Milli Mücadele'nin yayın organı olarak çıkarılmasına karar verilen gazete hangisidir?",
+    "options": [
+      "A) Hakimiyet-i Milliye",
+      "B) İrade-i Milliye",
+      "C) Albayrak",
+      "D) Anadolu Ajansı"
+    ],
+    "answer": "B",
+    "explanation": "Sivas Kongresi'nde alınan kararla, Milli Mücadele'nin sesini duyurmak amacıyla 'İrade-i Milliye' gazetesi çıkarılmıştır. Hakimiyet-i Milliye ise Ankara'da çıkarılmıştır."
+  },
+  {
+    "id": 749,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Kurtuluş Savaşı'nda, Batı Cephesi'nde düzenli orduya geçiş sürecinde, Kuvay-ı Milliye'nin disiplinsiz hareketleri nedeniyle isyan eden ve daha sonra düzenli ordu tarafından bastırılan komutan kimdir?",
+    "options": [
+      "A) Demirci Mehmet Efe",
+      "B) Yörük Ali Efe",
+      "C) Çerkez Ethem",
+      "D) Kuva-yı İnzibatiye"
+    ],
+    "answer": "C",
+    "explanation": "Çerkez Ethem, düzenli orduya katılmayı reddederek isyan etmiş ve bu isyan I. İnönü Savaşı öncesinde düzenli ordu tarafından bastırılmıştır."
+  },
+  {
+    "id": 750,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "1924 Anayasası'nda yapılan 1937 değişikliği ile anayasaya dahil edilen Atatürk ilkelerinden hangisi, devletin toplumsal barışı ve eşitliği sağlamasını hedefler?",
+    "options": [
+      "A) Cumhuriyetçilik",
+      "B) Milliyetçilik",
+      "C) Halkçılık",
+      "D) Laiklik"
+    ],
+    "answer": "C",
+    "explanation": "Halkçılık ilkesi, toplumda sınıf ayrımı gözetmeksizin herkesin kanun önünde eşitliğini ve devletin halkın refahını sağlamasını amaçlar."
+  },
+  {
+    "id": 751,
     "category": "tarih_cagdas",
     "level": 3,
-    "question": "1953 yılında SSCB tehdidine karşı Türkiye, Yunanistan ve Yugoslavya arasında imzalanan dostluk ve işbirliği antlaşması hangisidir?",
+    "question": "II. Dünya Savaşı sonrası, ABD'nin Sovyet tehdidine karşı Batı Avrupa ülkelerine ekonomik yardım sağlamayı amaçlayan plan hangisidir?",
     "options": [
-      "A) Balkan Antantı",
-      "B) Balkan Paktı",
-      "C) Sadabat Paktı",
-      "D) Akdeniz Paktı"
+      "A) Truman Doktrini",
+      "B) Marshall Planı",
+      "C) Eisenhower Doktrini",
+      "D) Monroe Doktrini"
     ],
     "answer": "B",
-    "explanation": "1934 Balkan Antantı ile karıştırılmamalıdır. 1953 Balkan Paktı, Soğuk Savaş döneminde Sovyet tehdidine karşı kurulmuştur."
+    "explanation": "Marshall Planı, II. Dünya Savaşı sonrası Avrupa'nın yeniden inşası ve Sovyet etkisinin önlenmesi amacıyla ABD tarafından başlatılan ekonomik yardım programıdır. Truman Doktrini ise askeri yardımı içerir."
   },
   {
-    "id": 737,
+    "id": 752,
     "category": "tarih_cagdas",
-    "level": 2,
-    "question": "SSCB'nin dağılmasından sonra Türk dilli ülkeler arasındaki kalkınma işbirliğini geliştirmek amacıyla 1992 yılında Türkiye tarafından kurulan kurum hangisidir?",
+    "level": 3,
+    "question": "1980 Darbesi sonrası kurulan ve Türkiye'de liberal ekonomi politikalarını uygulayan ilk hükümetin Başbakanı kimdir?",
     "options": [
-      "A) TÜRKSOY",
-      "B) TİKA",
-      "C) YEE (Yunus Emre Enstitüsü)",
-      "D) Türk Keneşi"
+      "A) Bülent Ecevit",
+      "B) Süleyman Demirel",
+      "C) Turgut Özal",
+      "D) Necmettin Erbakan"
     ],
-    "answer": "B",
-    "explanation": "Türk İşbirliği ve Koordinasyon Ajansı Başkanlığı (TİKA), 1992 yılında kurulmuş ve Orta Asya Türk Cumhuriyetlerine yönelik faaliyetlere başlamıştır."
+    "answer": "C",
+    "explanation": "1980 Darbesi sonrası kurulan hükümetlerde görev alan Turgut Özal, 24 Ocak Kararları'nın mimarı olmuş ve ANAP ile iktidara gelerek liberal ekonomi politikalarını uygulamıştır."
   },
   {
-    "id": 738,
+    "id": 753,
     "category": "tarih_cagdas",
-    "level": 2,
-    "question": "1955 yılında Atatürk'ün Selanik'teki evine bomba atıldığı haberi üzerine İstanbul'da başlayan ve azınlıklara ait işyerlerinin tahrip edildiği olay hangisidir?",
+    "level": 3,
+    "question": "1990'lı yıllarda, Hazar Denizi ve Orta Asya enerji kaynaklarının Batı'ya ulaştırılması amacıyla Türkiye'nin öncülük ettiği boru hattı projesi hangisidir?",
     "options": [
-      "A) Varlık Vergisi Olayları",
-      "B) 6-7 Eylül Olayları",
-      "C) Kanlı Pazar",
-      "D) 1 Mayıs Olayları"
+      "A) Mavi Akım",
+      "B) TANAP",
+      "C) Bakü-Tiflis-Ceyhan (BTC)",
+      "D) Türk Akımı"
     ],
-    "answer": "B",
-    "explanation": "6-7 Eylül Olayları, Demokrat Parti döneminde yaşanan ve Rum vatandaşların mülklerine zarar verilen toplumsal bir olaydır."
+    "answer": "C",
+    "explanation": "Bakü-Tiflis-Ceyhan (BTC) Ham Petrol Boru Hattı, Azerbaycan petrolünü Türkiye üzerinden Akdeniz'e taşıyarak Hazar enerji kaynaklarının Batı'ya ulaşmasında stratejik bir rol oynamıştır. TANAP ise doğalgaz içindir."
   }
 ]
