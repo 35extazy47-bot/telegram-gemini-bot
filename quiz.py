@@ -76,7 +76,7 @@ check_daily_limit = None
 update_quest_progress = None
 safe_generate_content = None
 
-def create_quiz_image(question, options, category, level, lives):
+def create_quiz_image(question, options, category, level, lives, question_img_url=None):
     width = 800
     height = 600
     
@@ -119,9 +119,32 @@ def create_quiz_image(question, options, category, level, lives):
     draw.rounded_rectangle([(60, 110), (160, 140)], radius=10, fill=(56, 189, 248))
     draw.text((75, 115), "SORU", font=tag_font, fill=(255, 255, 255))
     
-    wrapper = textwrap.TextWrapper(width=40) 
-    lines = wrapper.wrap(text=question)
     y_text = 160
+    # --- Resim Ekleme Bölümü ---
+    if question_img_url:
+        try:
+            # Resmi indir
+            response = requests.get(question_img_url, timeout=5)
+            q_img = Image.open(io.BytesIO(response.content)).convert("RGBA")
+            
+            # Resmi "Soru Kartı" içine sığacak şekilde boyutlandır (Max Genişlik: 300, Max Yükseklik: 180)
+            max_w, max_h = 300, 180
+            q_img.thumbnail((max_w, max_h), Image.Resampling.LANCZOS)
+            
+            # Resmi sağ tarafa yapıştır
+            img.paste(q_img, (760 - q_img.size[0] - 20, 120), q_img if q_img.mode == 'RGBA' else None)
+            
+            # Metin alanını daralt (Resim olduğu için)
+            text_width = 30
+        except Exception as e:
+            print(f"Soru resmi yüklenemedi: {e}")
+            text_width = 40
+    else:
+        text_width = 40
+
+    # Metni yazdır
+    wrapper = textwrap.TextWrapper(width=text_width) 
+    lines = wrapper.wrap(text=question)
     for line in lines:
         draw.text((60, y_text), line, font=question_font, fill=(255, 255, 255))
         y_text += 45
@@ -243,7 +266,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         users[user_id].update({"current_answer": q["answer"], "current_question_id": q["id"]})
         
         box_num = users[user_id].get("spaced_repetition", {}).get(str(q_id), {}).get("box", 1)
-        photo = create_quiz_image(q['question'], q['options'], f"TEKRAR (Kutu {box_num})", users[user_id]["level"], users[user_id]['lives'])
+        photo = create_quiz_image(q['question'], q['options'], f"TEKRAR (Kutu {box_num})", users[user_id]["level"], users[user_id]['lives'], q.get('image_url'))
         
         markup = InlineKeyboardMarkup(row_width=4).add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
         markup.add(InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
@@ -331,7 +354,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         current_idx = users[user_id]["exam_total"] - len(queue) + 1
         total = users[user_id]["exam_total"]
         
-        photo = create_quiz_image(q['question'], q['options'], f"DENEME ({current_idx}/{total})", users[user_id]["level"], users[user_id]['lives'])
+        photo = create_quiz_image(q['question'], q['options'], f"DENEME ({current_idx}/{total})", users[user_id]["level"], users[user_id]['lives'], q.get('image_url'))
         
         markup = InlineKeyboardMarkup(row_width=4)
         markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
@@ -355,7 +378,7 @@ def register_quiz_handlers(bot, tirtil_utils):
 
         users[user_id].update({"current_answer": q["answer"], "current_question_id": q["id"]})
         mode_prefix = f"🏃‍♂️ **MARATON: {users[user_id].get('marathon_score', 0) + 1}. SORU**\n" if users[user_id].get("mode") == "marathon" else ""
-        photo = create_quiz_image(q['question'], q['options'], category, level, users[user_id]['lives'])
+        photo = create_quiz_image(q['question'], q['options'], category, level, users[user_id]['lives'], q.get('image_url'))
         
         # Timer Kontrolü
         is_timer_on = database.quiz_timer_enabled and users[user_id].get("timer_enabled", True)
@@ -395,7 +418,7 @@ def register_quiz_handlers(bot, tirtil_utils):
             users[user_id]["wrong_answers"].remove(q_id); send_wrong_question(chat_id, user_id); return
 
         users[user_id].update({"current_answer": q["answer"], "current_question_id": q["id"]})
-        photo = create_quiz_image(q['question'], q['options'], q['category'], users[user_id]["level"], users[user_id]['lives'])
+        photo = create_quiz_image(q['question'], q['options'], q['category'], users[user_id]["level"], users[user_id]['lives'], q.get('image_url'))
         markup = InlineKeyboardMarkup(row_width=4).add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
 
         markup.add(InlineKeyboardButton("💾 Kaydet", callback_data="save_fav"), InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
@@ -431,7 +454,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         q = random.choice(candidates)
         users[user_id].update({"current_answer": q["answer"], "current_question_id": q["id"]})
         
-        photo = create_quiz_image(q['question'], q['options'], q['category'], users[user_id]["level"], users[user_id]['lives'])
+        photo = create_quiz_image(q['question'], q['options'], q['category'], users[user_id]["level"], users[user_id]['lives'], q.get('image_url'))
         
         markup = InlineKeyboardMarkup(row_width=4)
         markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
@@ -471,7 +494,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         users[user_id]["current_ai_question"] = q 
         users[user_id]["current_answer"] = q["answer"]
         
-        photo = create_quiz_image(q['question'], q['options'], "AI TEST", users[user_id]["level"], users[user_id]['lives'])
+        photo = create_quiz_image(q['question'], q['options'], "AI TEST", users[user_id]["level"], users[user_id]['lives'], q.get('image_url'))
         
         markup = InlineKeyboardMarkup(row_width=4)
         markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
@@ -514,7 +537,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         users[user_id]["current_saved_item"] = item # Silme işlemi için takip
         users[user_id]["current_answer"] = q["answer"]
         
-        photo = create_quiz_image(q['question'], q['options'], "FAVORİ", users[user_id]["level"], users[user_id]['lives'])
+        photo = create_quiz_image(q['question'], q['options'], "FAVORİ", users[user_id]["level"], users[user_id]['lives'], q.get('image_url'))
         
         markup = InlineKeyboardMarkup(row_width=4)
         markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
