@@ -124,8 +124,9 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
     if question_img_url:
         try:
             # Resmi indir
+            # Daha güncel ve tarayıcıya benzer User-Agent
             headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
                 "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
                 "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
                 "Referer": "https://www.google.com/",
@@ -134,15 +135,22 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
             }
             
             response = None
-            for attempt in range(3): # 429 ve 409 gibi hatalar için deneme yap
+            max_attempts = 3
+            for attempt in range(max_attempts):
                 response = requests.get(question_img_url, headers=headers, timeout=10)
-                if response.status_code == 200 and "image" in response.headers.get("Content-Type", "").lower():
+                # Sadece başarılı ve içerik tipi resimse döngüden çık
+                if response.status_code == 200 and response.headers.get("Content-Type", "").lower().startswith("image/"):
                     break
                 elif response.status_code in [409, 429, 503]:
-                    time.sleep(attempt * 2 + 2) # Hata durumunda kademeli bekle ve tekrar dene
+                    time.sleep(attempt * 5 + 5) # Hata durumunda daha uzun bekleme süresi (5, 10, 15 saniye)
+                else:
+                    # Diğer hatalar veya resim olmayan içerik için denemeyi durdur
+                    raise requests.exceptions.RequestException(f"Beklenmedik durum: Status {response.status_code}, Content-Type: {response.headers.get('Content-Type')}")
             
-            # Eğer 3 deneme sonunda hala başarılı değilse hatayı fırlat
-            response.raise_for_status()
+            # Eğer tüm denemeler başarısız olursa veya son deneme resim değilse hata fırlat
+            if not (response and response.status_code == 200 and response.headers.get("Content-Type", "").lower().startswith("image/")):
+                raise requests.exceptions.RequestException(f"Resim yüklenemedi veya geçerli bir resim değil. Son durum: Status {response.status_code}, Content-Type: {response.headers.get('Content-Type')}")
+            
             q_img = Image.open(io.BytesIO(response.content)).convert("RGBA")
             
             # Resmi "Soru Kartı" içine sığacak şekilde boyutlandır (Max Genişlik: 300, Max Yükseklik: 180)
