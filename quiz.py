@@ -124,7 +124,9 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
     if question_img_url:
         try:
             # Resmi indir
-            response = requests.get(question_img_url, timeout=5)
+            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"}
+            response = requests.get(question_img_url, headers=headers, timeout=5)
+            response.raise_for_status() # Bağlantı hatası varsa yakala
             q_img = Image.open(io.BytesIO(response.content)).convert("RGBA")
             
             # Resmi "Soru Kartı" içine sığacak şekilde boyutlandır (Max Genişlik: 300, Max Yükseklik: 180)

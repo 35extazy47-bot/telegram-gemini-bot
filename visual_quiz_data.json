@@ -28,5 +28,20 @@
     "answer": "C",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Lake_Tuz_from_space.jpg/640px-Lake_Tuz_from_space.jpg",
     "explanation": "Tuz Gölü, Türkiye'nin en sığ göllerinden biridir ve İç Anadolu Bölgesi'nde yer alır. Tuz ihtiyacımızın büyük bir kısmı buradan karşılanır."
+  },
+  {
+    "id": 2003,
+    "category": "gorselli",
+    "level": 1,
+    "question": "Görselde devasa heykelleriyle görülen ve UNESCO Dünya Miras Listesi'nde yer alan bu tarihi yer hangisidir?",
+    "options": [
+      "A) Efes Antik Kenti",
+      "B) Nemrut Dağı",
+      "C) Hattuşaş",
+      "D) Çatalhöyük"
+    ],
+    "answer": "B",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Mount_Nemrut_heads.jpg/640px-Mount_Nemrut_heads.jpg",
+    "explanation": "Nemrut Dağı, Adıyaman ilimizde bulunur. Kommagene Kralı I. Antiochos tarafından yaptırılan dev heykelleriyle dünyaca ünlüdür."
   }
 ]
