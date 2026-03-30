@@ -13,5 +13,20 @@
     "answer": "B",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Lake_Van_from_space.jpg/640px-Lake_Van_from_space.jpg",
     "explanation": "Van Gölü, Türkiye'nin en büyük gölüdür ve Doğu Anadolu Bölgesi'nde yer alır."
+  },
+  {
+    "id": 2002,
+    "category": "gorselli",
+    "level": 1,
+    "question": "Uydu görüntüsü verilen ve Türkiye'nin yüzölçümü bakımından ikinci büyük gölü olan bu göl hangisidir?",
+    "options": [
+      "A) Beyşehir Gölü",
+      "B) Eğirdir Gölü",
+      "C) Tuz Gölü",
+      "D) Akşehir Gölü"
+    ],
+    "answer": "C",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Lake_Tuz_from_space.jpg/640px-Lake_Tuz_from_space.jpg",
+    "explanation": "Tuz Gölü, Türkiye'nin en sığ göllerinden biridir ve İç Anadolu Bölgesi'nde yer alır. Tuz ihtiyacımızın büyük bir kısmı buradan karşılanır."
   }
 ]
