@@ -25,6 +25,16 @@ except FileNotFoundError:
     print("❌ HATA: quiz_data.json bulunamadı!")
     QUIZ_QUESTIONS = []
 
+# --- Visual Quiz Data ---
+try:
+    if os.path.exists("visual_quiz_data.json"):
+        with open("visual_quiz_data.json", "r", encoding="utf-8") as f:
+            VISUAL_QUESTIONS = json.load(f)
+            QUIZ_QUESTIONS.extend(VISUAL_QUESTIONS)
+            print(f"✅ {len(VISUAL_QUESTIONS)} adet görselli soru yüklendi.")
+except Exception as e:
+    print(f"⚠️ visual_quiz_data.json yükleme hatası: {e}")
+
 # --- Database Connection ---
 mongo_client = None
 users_collection = None

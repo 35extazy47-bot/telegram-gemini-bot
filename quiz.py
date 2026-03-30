@@ -859,7 +859,8 @@ def register_quiz_handlers(bot, tirtil_utils):
         kb = InlineKeyboardMarkup(row_width=2)
         kb.add(InlineKeyboardButton("📜 Tarih", callback_data="submenu_tarih"), InlineKeyboardButton("🌍 Coğrafya", callback_data="submenu_cografya"))
         kb.add(InlineKeyboardButton("⚖️ Vatandaşlık", callback_data="submenu_vatandaslik"), InlineKeyboardButton("📰 Güncel", callback_data="submenu_guncel"))
-        kb.add(InlineKeyboardButton(" Karışık", callback_data="cat_karisik"))
+        kb.add(InlineKeyboardButton("🖼️ Görselli Sorular", callback_data="cat_gorselli"))
+        kb.add(InlineKeyboardButton("🔀 Karışık", callback_data="cat_karisik"))
 
         bot.send_message(message.chat.id, "📚 Kategori seç knk 👇", reply_markup=kb)
 
@@ -880,7 +881,8 @@ def register_quiz_handlers(bot, tirtil_utils):
         kb = InlineKeyboardMarkup(row_width=2)
         kb.add(InlineKeyboardButton("📜 Tarih", callback_data="submenu_tarih"), InlineKeyboardButton("🌍 Coğrafya", callback_data="submenu_cografya"))
         kb.add(InlineKeyboardButton("⚖️ Vatandaşlık", callback_data="submenu_vatandaslik"), InlineKeyboardButton("📰 Güncel", callback_data="submenu_guncel"))
-        kb.add(InlineKeyboardButton("� Güncel", callback_data="cat_guncel"), InlineKeyboardButton("🔀 Karışık", callback_data="cat_karisik"))
+        kb.add(InlineKeyboardButton("🖼️ Görselli Sorular", callback_data="cat_gorselli"))
+        kb.add(InlineKeyboardButton("🔀 Karışık", callback_data="cat_karisik"))
         
         bot.edit_message_text("📚 Kategori seç knk 👇", call.message.chat.id, call.message.message_id, reply_markup=kb)
 

@@ -1,0 +1,17 @@
+[
+  {
+    "id": 2001,
+    "category": "gorselli",
+    "level": 1,
+    "question": "Haritada işaretli olan göl aşağıdakilerden hangisidir?",
+    "options": [
+      "A) Tuz Gölü",
+      "B) Van Gölü",
+      "C) Beyşehir Gölü",
+      "D) Eğirdir Gölü"
+    ],
+    "answer": "B",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Lake_Van_from_space.jpg/640px-Lake_Van_from_space.jpg",
+    "explanation": "Van Gölü, Türkiye'nin en büyük gölüdür ve Doğu Anadolu Bölgesi'nde yer alır."
+  }
+]
