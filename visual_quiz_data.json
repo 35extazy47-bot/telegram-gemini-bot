@@ -43,5 +43,20 @@
     "answer": "B",
     "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Mount_Nemrut_heads.jpg/640px-Mount_Nemrut_heads.jpg",
     "explanation": "Nemrut Dağı, Adıyaman ilimizde bulunur. Kommagene Kralı I. Antiochos tarafından yaptırılan dev heykelleriyle dünyaca ünlüdür."
+  },
+  {
+    "id": 2004,
+    "category": "gorselli",
+    "level": 1,
+    "question": "İstanbul'un simgelerinden biri olan ve Üsküdar açıklarında yer alan bu tarihi yapı hangisidir?",
+    "options": [
+      "A) Galata Kulesi",
+      "B) Kız Kulesi",
+      "C) Rumeli Hisarı",
+      "D) Yedikule Zindanları"
+    ],
+    "answer": "B",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Maiden%27s_Tower_August_2018.jpg/640px-Maiden%27s_Tower_August_2018.jpg",
+    "explanation": "Kız Kulesi, Bizans döneminden beri varlığını sürdüren ve efsanelere konu olmuş ikonik bir İstanbul yapısıdır."
   }
 ]

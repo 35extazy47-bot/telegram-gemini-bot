@@ -124,9 +124,21 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
     if question_img_url:
         try:
             # Resmi indir
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"}
-            response = requests.get(question_img_url, headers=headers, timeout=5)
-            response.raise_for_status() # Bağlantı hatası varsa yakala
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+                "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+                "Referer": "https://www.google.com/"
+            }
+            
+            response = None
+            for attempt in range(3): # 429 hatası için 3 deneme yap
+                response = requests.get(question_img_url, headers=headers, timeout=10)
+                if response.status_code == 429:
+                    time.sleep(2) # 2 saniye bekle ve tekrar dene
+                    continue
+                response.raise_for_status()
+                break
+            
             q_img = Image.open(io.BytesIO(response.content)).convert("RGBA")
             
             # Resmi "Soru Kartı" içine sığacak şekilde boyutlandır (Max Genişlik: 300, Max Yükseklik: 180)
