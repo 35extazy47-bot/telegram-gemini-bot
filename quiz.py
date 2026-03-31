@@ -123,7 +123,7 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
     # --- Resim Ekleme Bölümü ---
     if question_img_url:
         try:
-            # Eğer URL ise indir, değilse yerel dosya olarak aç
+            # Yerel dosya mı yoksa URL mi kontrol et
             if question_img_url.startswith(("http://", "https://")):
                 # Wikimedia bot politikasını destekleyen yapı
                 headers = {
@@ -156,11 +156,15 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
                 
                 q_img = Image.open(io.BytesIO(response.content)).convert("RGBA")
             else:
-                # Yerel dosya yolu ise (Örn: images/agri_dagi.jpg)
-                if os.path.exists(question_img_url):
-                    q_img = Image.open(question_img_url).convert("RGBA")
+                # Yerel dosya yolu ise. Önce tam yolu, sonra proje altındaki yolu dene.
+                img_path = question_img_url
+                if not os.path.exists(img_path):
+                    img_path = os.path.join(os.getcwd(), question_img_url)
+                
+                if os.path.exists(img_path):
+                    q_img = Image.open(img_path).convert("RGBA")
                 else:
-                    raise Exception(f"Dosya bulunamadı: {question_img_url}")
+                    raise Exception(f"Görsel bulunamadı: {question_img_url}")
             
             # Resmi "Soru Kartı" içine sığacak şekilde boyutlandır (Max Genişlik: 300, Max Yükseklik: 180)
             max_w, max_h = 300, 180
