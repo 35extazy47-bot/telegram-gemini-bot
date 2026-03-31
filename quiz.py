@@ -123,39 +123,44 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
     # --- Resim Ekleme Bölümü ---
     if question_img_url:
         try:
-            # Resmi indir
-            # Wikimedia bot politikasını destekleyen ve SSL hatalarını esneten yapı
-            headers = {
-                "User-Agent": f"TelegramGeminiBot/1.0 (contact: @{DEVELOPER_USERNAME})",
-                "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"
-            }
-            
-            response = None
-            last_error = "Bilinmeyen bağlantı hatası"
-            for attempt in range(3):
-                try:
-                    # timeout süresi 15 saniyeye çıkarıldı
-                    res = requests.get(question_img_url, headers=headers, timeout=15, verify=False)
-                    if res.status_code == 200:
-                        if "image" in res.headers.get("Content-Type", "").lower():
-                            response = res
-                            break
-                        last_error = f"İçerik tipi resim değil: {res.headers.get('Content-Type')}"
-                    elif res.status_code == 429:
-                        last_error = "HTTP 429 (Sunucu yoğun, yavaşlatıldı)"
-                        # 429 hatası durumunda kademeli olarak daha uzun bekle (3, 6, 9 sn)
-                        time.sleep((attempt + 1) * 3)
-                    else:
-                        last_error = f"HTTP {res.status_code}"
-                except Exception as e:
-                    last_error = str(e)
+            # Eğer URL ise indir, değilse yerel dosya olarak aç
+            if question_img_url.startswith(("http://", "https://")):
+                # Wikimedia bot politikasını destekleyen yapı
+                headers = {
+                    "User-Agent": f"TelegramGeminiBot/1.0 (contact: @{DEVELOPER_USERNAME})",
+                    "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"
+                }
                 
-                if attempt < 2 and not response: time.sleep(1)
-            
-            if not response:
-                raise Exception(last_error)
-            
-            q_img = Image.open(io.BytesIO(response.content)).convert("RGBA")
+                response = None
+                last_error = "Bilinmeyen bağlantı hatası"
+                for attempt in range(3):
+                    try:
+                        res = requests.get(question_img_url, headers=headers, timeout=15, verify=False)
+                        if res.status_code == 200:
+                            if "image" in res.headers.get("Content-Type", "").lower():
+                                response = res
+                                break
+                            last_error = f"İçerik tipi resim değil: {res.headers.get('Content-Type')}"
+                        elif res.status_code == 429:
+                            last_error = "HTTP 429 (Sunucu yoğun)"
+                            time.sleep((attempt + 1) * 3)
+                        else:
+                            last_error = f"HTTP {res.status_code}"
+                    except Exception as e:
+                        last_error = str(e)
+                    
+                    if attempt < 2 and not response: time.sleep(1)
+                
+                if not response:
+                    raise Exception(last_error)
+                
+                q_img = Image.open(io.BytesIO(response.content)).convert("RGBA")
+            else:
+                # Yerel dosya yolu ise (Örn: images/agri_dagi.jpg)
+                if os.path.exists(question_img_url):
+                    q_img = Image.open(question_img_url).convert("RGBA")
+                else:
+                    raise Exception(f"Dosya bulunamadı: {question_img_url}")
             
             # Resmi "Soru Kartı" içine sığacak şekilde boyutlandır (Max Genişlik: 300, Max Yükseklik: 180)
             max_w, max_h = 300, 180
