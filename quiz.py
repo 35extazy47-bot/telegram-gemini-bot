@@ -134,19 +134,23 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
             last_error = "Bilinmeyen bağlantı hatası"
             for attempt in range(3):
                 try:
-                    # verify=False: Cloud sunuculardaki SSL sertifika uyuşmazlığını çözer
-                    res = requests.get(question_img_url, headers=headers, timeout=10, verify=False)
+                    # timeout süresi 15 saniyeye çıkarıldı
+                    res = requests.get(question_img_url, headers=headers, timeout=15, verify=False)
                     if res.status_code == 200:
                         if "image" in res.headers.get("Content-Type", "").lower():
                             response = res
                             break
                         last_error = f"İçerik tipi resim değil: {res.headers.get('Content-Type')}"
+                    elif res.status_code == 429:
+                        last_error = "HTTP 429 (Sunucu yoğun, yavaşlatıldı)"
+                        # 429 hatası durumunda kademeli olarak daha uzun bekle (3, 6, 9 sn)
+                        time.sleep((attempt + 1) * 3)
                     else:
                         last_error = f"HTTP {res.status_code}"
                 except Exception as e:
                     last_error = str(e)
                 
-                if attempt < 2: time.sleep(1)
+                if attempt < 2 and not response: time.sleep(1)
             
             if not response:
                 raise Exception(last_error)
