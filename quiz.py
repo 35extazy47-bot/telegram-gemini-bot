@@ -124,24 +124,32 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
     if question_img_url:
         try:
             # Resmi indir
+            # Wikimedia bot politikasını destekleyen ve SSL hatalarını esneten yapı
             headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-                "Accept": "image/webp,image/apng,image/*,*/*;q=0.8"
+                "User-Agent": f"TelegramGeminiBot/1.0 (contact: @{DEVELOPER_USERNAME})",
+                "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"
             }
             
             response = None
+            last_error = "Bilinmeyen bağlantı hatası"
             for attempt in range(3):
                 try:
-                    res = requests.get(question_img_url, headers=headers, timeout=15, verify=True)
-                    if res.status_code == 200 and "image" in res.headers.get("Content-Type", "").lower():
-                        response = res
-                        break
-                    time.sleep(1)
-                except Exception:
-                    time.sleep(1)
+                    # verify=False: Cloud sunuculardaki SSL sertifika uyuşmazlığını çözer
+                    res = requests.get(question_img_url, headers=headers, timeout=10, verify=False)
+                    if res.status_code == 200:
+                        if "image" in res.headers.get("Content-Type", "").lower():
+                            response = res
+                            break
+                        last_error = f"İçerik tipi resim değil: {res.headers.get('Content-Type')}"
+                    else:
+                        last_error = f"HTTP {res.status_code}"
+                except Exception as e:
+                    last_error = str(e)
+                
+                if attempt < 2: time.sleep(1)
             
             if not response:
-                raise Exception("Resim sunucudan çekilemedi.")
+                raise Exception(last_error)
             
             q_img = Image.open(io.BytesIO(response.content)).convert("RGBA")
             
