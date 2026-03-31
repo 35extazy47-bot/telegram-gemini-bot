@@ -124,38 +124,32 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
     if question_img_url:
         try:
             # Resmi indir
-            # Daha güncel ve tarayıcıya benzer User-Agent
             headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-                "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
-                "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
-                "Referer": "https://www.google.com/",
-                "Cache-Control": "no-cache",
-                "Pragma": "no-cache"
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept": "image/webp,image/apng,image/*,*/*;q=0.8"
             }
             
             response = None
-            max_attempts = 3
-            for attempt in range(max_attempts):
-                response = requests.get(question_img_url, headers=headers, timeout=10)
-                # Sadece başarılı ve içerik tipi resimse döngüden çık
-                if response.status_code == 200 and response.headers.get("Content-Type", "").lower().startswith("image/"):
-                    break
-                elif response.status_code in [409, 429, 503]:
-                    time.sleep(attempt * 5 + 5) # Hata durumunda daha uzun bekleme süresi (5, 10, 15 saniye)
-                else:
-                    # Diğer hatalar veya resim olmayan içerik için denemeyi durdur
-                    raise requests.exceptions.RequestException(f"Beklenmedik durum: Status {response.status_code}, Content-Type: {response.headers.get('Content-Type')}")
+            for attempt in range(3):
+                try:
+                    res = requests.get(question_img_url, headers=headers, timeout=15, verify=True)
+                    if res.status_code == 200 and "image" in res.headers.get("Content-Type", "").lower():
+                        response = res
+                        break
+                    time.sleep(1)
+                except Exception:
+                    time.sleep(1)
             
-            # Eğer tüm denemeler başarısız olursa veya son deneme resim değilse hata fırlat
-            if not (response and response.status_code == 200 and response.headers.get("Content-Type", "").lower().startswith("image/")):
-                raise requests.exceptions.RequestException(f"Resim yüklenemedi veya geçerli bir resim değil. Son durum: Status {response.status_code}, Content-Type: {response.headers.get('Content-Type')}")
+            if not response:
+                raise Exception("Resim sunucudan çekilemedi.")
             
             q_img = Image.open(io.BytesIO(response.content)).convert("RGBA")
             
             # Resmi "Soru Kartı" içine sığacak şekilde boyutlandır (Max Genişlik: 300, Max Yükseklik: 180)
             max_w, max_h = 300, 180
-            q_img.thumbnail((max_w, max_h), Image.Resampling.LANCZOS)
+            # Hem yeni hem eski Pillow sürümleriyle uyumlu thumbnail
+            resample_filter = getattr(Image, 'Resampling', Image).LANCZOS
+            q_img.thumbnail((max_w, max_h), resample_filter)
             
             # Resmi sağ tarafa yapıştır
             img.paste(q_img, (760 - q_img.size[0] - 20, 120), q_img if q_img.mode == 'RGBA' else None)
