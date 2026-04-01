@@ -126,62 +126,43 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
     # --- Resim Ekleme Bölümü ---
     if question_img_url:
         try:
-            # Yerel dosya mı yoksa URL mi kontrol et
+            q_img = None
+            # 1. URL ise internetten indirmeyi dene
             if question_img_url.startswith(("http://", "https://")):
-                # Wikimedia bot politikasını destekleyen yapı
                 headers = {
-                    "User-Agent": f"TelegramGeminiBot/1.0 (contact: @{DEVELOPER_USERNAME})",
-                    "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                    "Accept": "image/*"
                 }
-                
-                response = None
-                last_error = "Bilinmeyen bağlantı hatası"
-                for attempt in range(3):
-                    try:
-                        res = requests.get(question_img_url, headers=headers, timeout=15, verify=False)
-                        if res.status_code == 200:
-                            if "image" in res.headers.get("Content-Type", "").lower():
-                                response = res
-                                break
-                            last_error = f"İçerik tipi resim değil: {res.headers.get('Content-Type')}"
-                        elif res.status_code == 429:
-                            last_error = "HTTP 429 (Sunucu yoğun)"
-                            time.sleep((attempt + 1) * 3)
-                        else:
-                            last_error = f"HTTP {res.status_code}"
-                    except Exception as e:
-                        last_error = str(e)
-                    
-                    if attempt < 2 and not response: time.sleep(1)
-                
-                if not response:
-                    raise Exception(last_error)
-                
-                q_img = Image.open(io.BytesIO(response.content)).convert("RGBA")
-            else:
-                # Yerel dosya yolu ise. Önce tam yolu, sonra proje altındaki yolu dene.
+                res = requests.get(question_img_url, headers=headers, timeout=5, verify=False)
+                if res.status_code == 200:
+                    q_img = Image.open(io.BytesIO(res.content)).convert("RGBA")
+                else:
+                    print(f"⚠️ Resim indirilemedi (HTTP {res.status_code}): {question_img_url}")
+            
+            # 2. URL değilse veya indirme başarısızsa YEREL dosyaya bak
+            if not q_img:
                 img_path = question_img_url
                 if not os.path.exists(img_path):
                     img_path = os.path.join(os.getcwd(), question_img_url)
                 
                 if os.path.exists(img_path):
                     q_img = Image.open(img_path).convert("RGBA")
-                else:
-                    raise Exception(f"Görsel bulunamadı: {question_img_url}")
-            
-            # Resmi "Soru Kartı" içine sığacak şekilde boyutlandır (Max Genişlik: 300, Max Yükseklik: 180)
-            max_w, max_h = 300, 180
-            # Hem yeni hem eski Pillow sürümleriyle uyumlu thumbnail
-            resample_filter = getattr(Image, 'Resampling', Image).LANCZOS
-            q_img.thumbnail((max_w, max_h), resample_filter)
-            
-            # Resmi sağ tarafa yapıştır
-            img.paste(q_img, (760 - q_img.size[0] - 20, 120), q_img if q_img.mode == 'RGBA' else None)
-            
-            # Metin alanını daralt (Resim olduğu için)
-            text_width = 30
+
+            if q_img:
+                # Resmi boyutlandır ve yapıştır
+                max_w, max_h = 300, 180
+                resample_filter = getattr(Image, 'Resampling', Image).LANCZOS
+                q_img.thumbnail((max_w, max_h), resample_filter)
+                img.paste(q_img, (760 - q_img.size[0] - 20, 120), q_img if q_img.mode == 'RGBA' else None)
+                text_width = 30
+            else:
+                # Resim hiçbir şekilde gelmediyse hata kutusu çiz
+                draw.rounded_rectangle([(450, 120), (740, 280)], radius=15, fill=(50, 50, 50), outline=(231, 76, 60), width=2)
+                draw.text((480, 180), "GÖRSEL\nYÜKLENEMEDİ\n(HTTP 429)", font=tag_font, fill=(231, 76, 60))
+                text_width = 35
+
         except Exception as e:
-            print(f"Soru resmi yüklenemedi: {e}")
+            print(f"❌ Kritik Görsel Hatası: {e}")
             text_width = 40
     else:
         text_width = 40
