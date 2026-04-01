@@ -13,6 +13,9 @@ import requests
 from PIL import Image, ImageDraw, ImageFont
 from deep_translator import GoogleTranslator
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 gTTS = None
 try:
@@ -196,6 +199,12 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
         draw.text((70, y_opt + 12), opt, font=option_font, fill=(241, 245, 249))
         y_opt += 70
 
+    img = add_watermark(img)
+    bio = io.BytesIO()
+    img.save(bio, 'PNG')
+    bio.seek(0)
+    return bio
+
 def add_watermark(img):
     """Resmin sağ alt köşesine botun ismini filigran olarak ekler."""
     draw = ImageDraw.Draw(img)
@@ -215,15 +224,13 @@ def add_watermark(img):
     # Sağ alt köşeye konumlandır (hafif gri/beyaz tonlarda)
     draw.text((width - 240, height - 25), watermark_text, font=font, fill=(255, 255, 255, 120))
     return img
-    img = add_watermark(img)
-    bio = io.BytesIO()
-    img.save(bio, 'PNG')
-    bio.seek(0)
-    return bio
 
 def get_question(level, category):
     if category == "karisik":
         uygun = [q for q in QUIZ_QUESTIONS if q["level"] <= level]
+    elif category == "gorselli":
+        # İçinde resim linki olan herhangi bir soruyu getir
+        uygun = [q for q in QUIZ_QUESTIONS if q.get("image_url")]
     else:
         uygun = [q for q in QUIZ_QUESTIONS if q["level"] <= level and q["category"] == category]
     return random.choice(uygun) if uygun else None
