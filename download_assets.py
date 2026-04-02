@@ -55,6 +55,7 @@ def download_kpss_images():
         
         bg_color = data.get("bg_color", (15, 23, 42))
         land_color = data.get("land_color", (30, 41, 59))
+        neighbor_land_color = tuple(max(0, c - 5) for c in bg_color) # Komşu ülkeler için hafif ton
         grid_color = tuple(max(0, c - 10) for c in bg_color)
         outline_color = tuple(min(255, c + 40) for c in land_color)
 
@@ -70,6 +71,11 @@ def download_kpss_images():
             small_font = ImageFont.truetype(font_path, 14)
         except:
             title_font = label_font = small_font = ImageFont.load_default()
+
+        def draw_text_w_shadow(pos, text, font, fill, shadow=(0,0,0,200)):
+            """Yazılara derinlik katar."""
+            draw.text((pos[0]+1, pos[1]+1), text, font=font, fill=shadow)
+            draw.text(pos, text, font=font, fill=fill)
 
         # Referans Şehirler (x, y)
         ref_cities = {
@@ -101,6 +107,12 @@ def download_kpss_images():
         # 1. Koordinat Izgarası (Grid)
         for x in range(0, 800, 50): draw.line([(x, 0), (x, 500)], fill=grid_color, width=1)
         for y in range(0, 500, 50): draw.line([(0, y), (800, y)], fill=grid_color, width=1)
+
+        # 1.5 Komşu Kara Parçaları (Silüet)
+        draw.rectangle([0, 0, 120, 150], fill=neighbor_land_color) # Balkanlar
+        draw.rectangle([650, 0, 800, 150], fill=neighbor_land_color) # Kafkaslar
+        draw.rectangle([750, 150, 800, 500], fill=neighbor_land_color) # İran hattı
+        draw.rectangle([0, 450, 800, 500], fill=neighbor_land_color) # Afrika/Arap Yarımadası girişi
 
         # 2. Geliştirilmiş Türkiye Sınırları (Detaylandırıldı)
         turkey_outline = [
@@ -135,16 +147,16 @@ def download_kpss_images():
             draw.text((mx + 8, my - 8), name, font=small_font, fill=(100, 116, 139))
 
         # 3. Başlık
-        draw.text((320, 20), data["label"], fill=(250, 204, 21), font=title_font)
+        draw_text_w_shadow((320, 20), data["label"], title_font, (250, 204, 21))
         
         # Deniz İsimleri (Daha net ve açık renk)
-        sea_color = (100, 116, 139)
+        sea_color = (148, 163, 184)
         draw.text((350, 45), "KARADENİZ", fill=sea_color, font=label_font)
         draw.text((350, 465), "AKDENİZ", fill=sea_color, font=label_font)
         draw.text((10, 250), "EGE", fill=sea_color, font=label_font)
 
         # 3.5 Komşu Ülkeler (Netleştirildi)
-        neighbor_color = (71, 85, 105)
+        neighbor_color = (90, 100, 120)
         draw.text((25, 85), "BULGARİSTAN", fill=neighbor_color, font=small_font)
         draw.text((10, 320), "YUNANİSTAN", fill=neighbor_color, font=small_font)
         draw.text((680, 65), "GÜRCİSTAN", fill=neighbor_color, font=small_font)
@@ -152,6 +164,11 @@ def download_kpss_images():
         draw.text((745, 285), "İRAN", fill=neighbor_color, font=small_font)
         draw.text((650, 445), "IRAK", fill=neighbor_color, font=small_font)
         draw.text((250, 465), "SURİYE", fill=neighbor_color, font=small_font)
+
+        # 3.6 Pusula (Compass Rose) - Sağ Alt
+        draw.line([(750, 430), (750, 470)], fill=neighbor_color, width=2) # N-S
+        draw.line([(730, 450), (770, 450)], fill=neighbor_color, width=2) # E-W
+        draw.text((745, 415), "K", font=small_font, fill=neighbor_color)
 
         # 4. Dinamik İşaretçi Çizimi
         m_type = data.get("type", "circle")
@@ -165,7 +182,7 @@ def download_kpss_images():
         elif m_type == "diamond":
             draw.polygon([(mx, my-15), (mx+15, my), (mx, my+15), (mx-15, my)], fill=m_color, outline=(255, 255, 255), width=2)
 
-        draw.text((mx+20, my-10), f"📍 {data['info']}", fill=(255, 255, 255), font=label_font)
+        draw_text_w_shadow((mx+20, my-10), f"📍 {data['info']}", label_font, (255, 255, 255))
         img.save(path)
         print(f"🎨 {name} üretildi.")
 
