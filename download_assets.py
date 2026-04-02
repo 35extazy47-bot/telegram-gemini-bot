@@ -49,6 +49,19 @@ def download_kpss_images():
             [(150, 150), (250, 200), (300, 300)] # Sakarya
         ]
 
+        # 2.7 Göller (x, y, rx, ry)
+        lakes = {
+            "Van Gölü": (730, 260, 25, 15),
+            "Tuz Gölü": (380, 280, 20, 20)
+        }
+
+        # 2.8 Dağlar (x, y)
+        mountains = {
+            "Ağrı Dağı": (770, 170),
+            "Erciyes": (480, 300),
+            "Uludağ": (160, 160)
+        }
+
         # 1. Koordinat Izgarası (Grid)
         for x in range(0, 800, 50): draw.line([(x, 0), (x, 500)], fill=(22, 30, 46), width=1)
         for y in range(0, 500, 50): draw.line([(0, y), (800, y)], fill=(22, 30, 46), width=1)
@@ -73,6 +86,17 @@ def download_kpss_images():
         # 2.6 Şehirleri Ekle
         for city, pos in ref_cities.items():
             draw.ellipse([pos[0]-2, pos[1]-2, pos[0]+2, pos[1]+2], fill=(200, 200, 200))
+
+        # 2.7 Gölleri Çiz ve İsimlendir
+        for name, (lx, ly, rx, ry) in lakes.items():
+            draw.ellipse([lx-rx, ly-ry, lx+rx, ly+ry], fill=(100, 149, 237))
+            draw.text((lx - 25, ly + ry + 2), name, font=small_font, fill=(100, 116, 139))
+
+        # 2.8 Dağları Çiz (Üçgen) ve İsimlendir
+        for name, (mx, my) in mountains.items():
+            # Dağ ikonu (Gri Üçgen)
+            draw.polygon([(mx, my-8), (mx-6, my+4), (mx+6, my+4)], fill=(148, 163, 184))
+            draw.text((mx + 8, my - 8), name, font=small_font, fill=(100, 116, 139))
 
         # 3. Başlık
         draw.text((320, 20), data["label"], fill=(250, 204, 21), font=title_font)
