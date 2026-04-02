@@ -25,6 +25,16 @@ def download_kpss_images():
         img = Image.new('RGB', (800, 500), color=(15, 23, 42)) 
         draw = ImageDraw.Draw(img)
 
+        # Fontları Yükle (Netlik için kritik)
+        try:
+            font_path = "arial.ttf"
+            if not os.path.exists(font_path): font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+            title_font = ImageFont.truetype(font_path, 26)
+            label_font = ImageFont.truetype(font_path, 18)
+            small_font = ImageFont.truetype(font_path, 14)
+        except:
+            title_font = label_font = small_font = ImageFont.load_default()
+
         # Referans Şehirler (x, y)
         ref_cities = {
             "İstanbul": (140, 135), "Ankara": (380, 230), "İzmir": (75, 280),
@@ -63,12 +73,23 @@ def download_kpss_images():
             draw.ellipse([pos[0]-2, pos[1]-2, pos[0]+2, pos[1]+2], fill=(200, 200, 200))
 
         # 3. Başlık
-        draw.text((320, 20), data["label"], fill=(250, 204, 21))
+        draw.text((320, 20), data["label"], fill=(250, 204, 21), font=title_font)
         
-        # Deniz İsimleri
-        draw.text((350, 40), "KARADENİZ", fill=(51, 65, 85))
-        draw.text((350, 460), "AKDENİZ", fill=(51, 65, 85))
-        draw.text((15, 250), "EGE", fill=(51, 65, 85))
+        # Deniz İsimleri (Daha net ve açık renk)
+        sea_color = (100, 116, 139)
+        draw.text((350, 45), "KARADENİZ", fill=sea_color, font=label_font)
+        draw.text((350, 465), "AKDENİZ", fill=sea_color, font=label_font)
+        draw.text((10, 250), "EGE", fill=sea_color, font=label_font)
+
+        # 3.5 Komşu Ülkeler (Netleştirildi)
+        neighbor_color = (71, 85, 105)
+        draw.text((25, 85), "BULGARİSTAN", fill=neighbor_color, font=small_font)
+        draw.text((10, 320), "YUNANİSTAN", fill=neighbor_color, font=small_font)
+        draw.text((680, 65), "GÜRCİSTAN", fill=neighbor_color, font=small_font)
+        draw.text((710, 145), "ERMENİSTAN", fill=neighbor_color, font=small_font)
+        draw.text((745, 285), "İRAN", fill=neighbor_color, font=small_font)
+        draw.text((650, 445), "IRAK", fill=neighbor_color, font=small_font)
+        draw.text((250, 465), "SURİYE", fill=neighbor_color, font=small_font)
 
         # 4. Dinamik İşaretçi Çizimi
         m_type = data.get("type", "circle")
@@ -82,7 +103,7 @@ def download_kpss_images():
         elif m_type == "diamond":
             draw.polygon([(mx, my-15), (mx+15, my), (mx, my+15), (mx-15, my)], fill=m_color, outline=(255, 255, 255), width=2)
 
-        draw.text((mx+20, my-10), f"📍 {data['info']}", fill=(255, 255, 255))
+        draw.text((mx+20, my-10), f"📍 {data['info']}", fill=(255, 255, 255), font=label_font)
         img.save(path)
         print(f"🎨 {name} üretildi.")
 
