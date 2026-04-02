@@ -11,12 +11,12 @@ def download_kpss_images():
     # 2. İndirilecek resimlerin listesi
     # Harita oluşturma verileri (Eğer indirme başarısız olursa)
     map_metadata = {
-        "tr_nufus.jpg": {"label": "NÜFUS YOĞUNLUĞU", "marker": (150, 130), "info": "İstanbul-Kocaeli Çevresi"},
-        "tr_delta.jpg": {"label": "DELTA OVALARI", "marker": (550, 400), "info": "Çukurova Bölgesi"},
-        "tr_demir.jpg": {"label": "DEMİR MADENİ", "marker": (600, 220), "info": "Sivas-Divriği Çevresi"},
-        "tr_bor.jpg": {"label": "BOR REZERVLERİ", "marker": (180, 200), "info": "Güney Marmara-Eskişehir"},
-        "tr_petrol.jpg": {"label": "PETROL YATAKLARI", "marker": (720, 350), "info": "Batman ve Çevresi"},
-        "tr_iklim.jpg": {"label": "KARADENİZ İKLİMİ", "marker": (500, 100), "info": "Kıyı Şeridi Taranmış"}
+        "tr_nufus.jpg": {"label": "NÜFUS YOĞUNLUĞU", "marker": (150, 130), "info": "İstanbul-Kocaeli Çevresi", "type": "circle", "color": (56, 189, 248)},
+        "tr_delta.jpg": {"label": "DELTA OVALARI", "marker": (550, 400), "info": "Çukurova Bölgesi", "type": "circle", "color": (34, 197, 94)},
+        "tr_demir.jpg": {"label": "DEMİR MADENİ", "marker": (600, 220), "info": "Sivas-Divriği Çevresi", "type": "square", "color": (249, 115, 22)},
+        "tr_bor.jpg": {"label": "BOR REZERVLERİ", "marker": (180, 200), "info": "Güney Marmara-Eskişehir", "type": "square", "color": (234, 179, 8)},
+        "tr_petrol.jpg": {"label": "PETROL YATAKLARI", "marker": (720, 350), "info": "Batman ve Çevresi", "type": "diamond", "color": (71, 85, 105)},
+        "tr_iklim.jpg": {"label": "KARADENİZ İKLİMİ", "marker": (500, 100), "info": "Kıyı Şeridi Taranmış", "type": "circle", "color": (239, 68, 68)}
     }
 
     def create_fallback_map(name, path):
@@ -70,9 +70,18 @@ def download_kpss_images():
         draw.text((350, 460), "AKDENİZ", fill=(51, 65, 85))
         draw.text((15, 250), "EGE", fill=(51, 65, 85))
 
-        # İşaretçi çiz (Kırmızı Daire)
+        # 4. Dinamik İşaretçi Çizimi
+        m_type = data.get("type", "circle")
+        m_color = data.get("color", (239, 68, 68))
         mx, my = data["marker"]
-        draw.ellipse([mx-12, my-12, mx+12, my+12], fill=(239, 68, 68), outline=(255, 255, 255), width=2)
+
+        if m_type == "circle":
+            draw.ellipse([mx-12, my-12, mx+12, my+12], fill=m_color, outline=(255, 255, 255), width=2)
+        elif m_type == "square":
+            draw.rectangle([mx-12, my-12, mx+12, my+12], fill=m_color, outline=(255, 255, 255), width=2)
+        elif m_type == "diamond":
+            draw.polygon([(mx, my-15), (mx+15, my), (mx, my+15), (mx-15, my)], fill=m_color, outline=(255, 255, 255), width=2)
+
         draw.text((mx+20, my-10), f"📍 {data['info']}", fill=(255, 255, 255))
         img.save(path)
         print(f"🎨 {name} üretildi.")
