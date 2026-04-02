@@ -42,27 +42,46 @@ def download_kpss_images():
 
     # Harita oluşturma verileri (Eğer indirme başarısız olursa)
     map_metadata = {
-        "tr_nufus.jpg": {"label": "NÜFUS YOĞUNLUĞU", "marker": (150, 150), "info": "İstanbul-Kocaeli Çevresi"},
-        "tr_delta.jpg": {"label": "DELTA OVALARI", "marker": (550, 480), "info": "Çukurova Bölgesi"},
-        "tr_demir.jpg": {"label": "DEMİR MADENİ", "marker": (650, 250), "info": "Sivas-Divriği Çevresi"},
-        "tr_bor.jpg": {"label": "BOR REZERVLERİ", "marker": (200, 280), "info": "Güney Marmara-Eskişehir"},
-        "tr_petrol.jpg": {"label": "PETROL YATAKLARI", "marker": (750, 400), "info": "Batman ve Çevresi"},
-        "tr_iklim.jpg": {"label": "KARADENİZ İKLİMİ", "marker": (500, 80), "info": "Kıyı Şeridi Taranmış"}
+        "tr_nufus.jpg": {"label": "NÜFUS YOĞUNLUĞU", "marker": (150, 130), "info": "İstanbul-Kocaeli Çevresi"},
+        "tr_delta.jpg": {"label": "DELTA OVALARI", "marker": (550, 400), "info": "Çukurova Bölgesi"},
+        "tr_demir.jpg": {"label": "DEMİR MADENİ", "marker": (600, 220), "info": "Sivas-Divriği Çevresi"},
+        "tr_bor.jpg": {"label": "BOR REZERVLERİ", "marker": (180, 200), "info": "Güney Marmara-Eskişehir"},
+        "tr_petrol.jpg": {"label": "PETROL YATAKLARI", "marker": (720, 350), "info": "Batman ve Çevresi"},
+        "tr_iklim.jpg": {"label": "KARADENİZ İKLİMİ", "marker": (500, 100), "info": "Kıyı Şeridi Taranmış"}
     }
 
     def create_fallback_map(name, path):
         """İndirme başarısız olursa manuel harita taslağı oluşturur."""
         data = map_metadata.get(name, {"label": "COĞRAFYA HARİTASI", "marker": (400, 300), "info": ""})
-        img = Image.new('RGB', (800, 500), color=(30, 41, 59))
+        img = Image.new('RGB', (800, 500), color=(15, 23, 42)) # Koyu Slate Arkaplan
         draw = ImageDraw.Draw(img)
-        draw.rectangle([20, 20, 780, 480], outline=(51, 65, 85), width=5)
-        draw.text((300, 30), data["label"], fill=(250, 204, 21))
+
+        # 1. Koordinat Izgarası (Grid)
+        for x in range(0, 800, 100):
+            draw.line([(x, 0), (x, 500)], fill=(30, 41, 59), width=1)
+        for y in range(0, 500, 100):
+            draw.line([(0, y), (800, y)], fill=(30, 41, 59), width=1)
+
+        # 2. Basitleştirilmiş Türkiye Formu (Sınırlar)
+        turkey_outline = [
+            (50, 150), (100, 100), (150, 100), (200, 120), (300, 100), 
+            (450, 80), (600, 100), (750, 120), (780, 250), (750, 380), 
+            (650, 400), (550, 450), (450, 420), (300, 430), (150, 450), 
+            (80, 400), (50, 300)
+        ]
+        
+        # Kara parçasını doldur ve sınırı çiz
+        draw.polygon(turkey_outline, fill=(30, 41, 59), outline=(71, 85, 105), width=3)
+
+        # 3. Başlık
+        draw.text((320, 25), data["label"], fill=(250, 204, 21))
+
         # İşaretçi çiz (Kırmızı Daire)
         mx, my = data["marker"]
-        draw.ellipse([mx-20, my-20, mx+20, my+20], fill=(239, 68, 68), outline=(255, 255, 255))
+        draw.ellipse([mx-15, my-15, mx+15, my+15], fill=(239, 68, 68), outline=(255, 255, 255), width=2)
         draw.text((mx+30, my), f"<< İŞARETLİ ALAN: {data['info']}", fill=(255, 255, 255))
         img.save(path)
-        print(f"🎨 {name} için özel harita taslağı OLUŞTURULDU (Fallback).")
+        print(f"🎨 {name} için geliştirilmiş harita taslağı OLUŞTURULDU.")
 
     print("🚀 İşlem başlıyor. Önce indirme denenecek, olmazsa haritalar üretilecek...")
     success_count = 0
