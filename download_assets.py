@@ -16,34 +16,6 @@ def download_kpss_images():
     # 2. İndirilecek resimlerin listesi
     # Her görsel için bir liste oluşturduk. İlki başarısız olursa sonrakini deneyecek.
     images_to_download = {
-        "agri_dagi.jpg": [
-            "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/agri_dagi.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Mount_Ararat_and_the_Ararat_Plain.jpg/640px-Mount_Ararat_and_the_Ararat_Plain.jpg",
-        ],
-        "van_golu.jpg": [
-            "https://www.kulturportali.gov.tr/contents/images/20170324151245656_Van%20Golu.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Lake_Van%2C_Turkey.jpg/640px-Lake_Van%2C_Turkey.jpg"
-        ],
-        "pamukkale.jpg": [
-            "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=640",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Pamukkale_Travertines.jpg/640px-Pamukkale_Travertines.jpg"
-        ],
-        "van_golu_uzay.jpg": [
-            "https://www.universetoday.com/wp-content/uploads/2021/04/Lake_Van_Turkey_ISS.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Lake_Van_from_space.jpg/640px-Lake_Van_from_space.jpg"
-        ],
-        "tuz_golu_uzay.jpg": [
-            "https://landsat.gsfc.nasa.gov/wp-content/uploads/2014/08/LakeTuz_OLI_2013140_lrg.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Lake_Tuz_from_space.jpg/640px-Lake_Tuz_from_space.jpg"
-        ],
-        "nemrut_heykeller.jpg": [
-            "https://images.unsplash.com/photo-1621274403997-37aae1848bbd?w=640",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Mount_Nemrut_heads.jpg/640px-Mount_Nemrut_heads.jpg"
-        ],
-        "kiz_kulesi.jpg": [
-            "https://images.unsplash.com/photo-1541432901012-a5e35fc33aed?w=640",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Maiden%27s_Tower_August_2018.jpg/640px-Maiden%27s_Tower_August_2018.jpg"
-        ],
         "tr_nufus_haritasi.jpg": [
             "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_nufus_isaretli.jpg"
         ],
