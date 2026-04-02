@@ -16,30 +16,33 @@ def download_kpss_images():
     # 2. İndirilecek resimlerin listesi
     # Her görsel için bir liste oluşturduk. İlki başarısız olursa sonrakini deneyecek.
     images_to_download = {
-        "tr_nufus_haritasi.jpg": [
-            "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_nufus_isaretli.jpg"
+        "tr_nufus.jpg": [
+            "https://www.cografyaci.gen.tr/wp-content/uploads/2019/01/turkiye-nufus-yogunlugu-haritasi.jpg",
+            "https://cografyaharita.com/haritalar/turkiye-nufus-yogunlugu-haritasi.png"
         ],
-        "tr_cukurova_haritasi.jpg": [
-            "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_cukurova_isaretli.jpg"
+        "tr_delta.jpg": [
+            "https://www.cografyaci.gen.tr/wp-content/uploads/2019/01/turkiye-ovalar-haritasi.jpg",
+            "https://cografyaharita.com/haritalar/turkiye-delta-ovalari-haritasi.png"
         ],
-        "tr_demir_haritasi.jpg": [
-            "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_demir_isaretli.jpg"
+        "tr_demir.jpg": [
+            "https://www.cografyaci.gen.tr/wp-content/uploads/2019/01/turkiye-demir-haritasi.jpg"
         ],
-        "tr_bor_haritasi.jpg": [
-            "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_bor_isaretli.jpg"
+        "tr_bor.jpg": [
+            "https://www.cografyaci.gen.tr/wp-content/uploads/2019/01/turkiye-bor-haritasi.jpg"
         ],
-        "tr_petrol_rafineri_batman.jpg": [
-            "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_petrol_rafineri_batman.jpg"
+        "tr_petrol.jpg": [
+            "https://cografyaharita.com/haritalar/turkiye-petrol-rafinerileri-haritasi.png"
         ],
-        "tr_osb_marmara.jpg": [
-            "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_osb_marmara.jpg"
+        "tr_iklim.jpg": [
+            "https://cografyaharita.com/haritalar/turkiye-iklim-haritasi.png",
+            "https://www.cografyaci.gen.tr/wp-content/uploads/2019/01/turkiye-iklim-tipleri-haritasi.jpg"
         ]
     }
 
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-        "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+        "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        "Referer": "https://www.google.com/",
     }
 
     print("🚀 Resim indirme işlemi başlıyor (Alternatif kaynak destekli)...")

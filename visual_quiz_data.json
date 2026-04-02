@@ -11,7 +11,7 @@
       "D) Hakkari Bölümü"
     ],
     "answer": "B",
-    "image_url": "images/tr_nufus_haritasi.jpg",
+    "image_url": "images/tr_nufus.jpg",
     "explanation": "Çatalca-Kocaeli Platosu (İstanbul-Kocaeli çevresi), sanayi ve ulaşımın merkezi olduğu için Türkiye'nin en yoğun nüfuslu yeridir."
   },
   {
@@ -26,7 +26,7 @@
       "D) Silifke"
     ],
     "answer": "C",
-    "image_url": "images/tr_cukurova_haritasi.jpg",
+    "image_url": "images/tr_delta.jpg",
     "explanation": "Seyhan ve Ceyhan nehirlerinin taşıdığı alüvyonlarla oluşan Çukurova, Türkiye'nin en büyük delta ovasıdır."
   },
   {
@@ -41,7 +41,7 @@
       "D) Krom"
     ],
     "answer": "C",
-    "image_url": "images/tr_demir_haritasi.jpg",
+    "image_url": "images/tr_demir.jpg",
     "explanation": "Türkiye'nin en önemli demir yatakları Sivas (Divriği) ve Malatya (Hekimhan, Hasançelebi) çevresinde bulunur."
   },
   {
@@ -56,7 +56,7 @@
       "D) Boksit"
     ],
     "answer": "B",
-    "image_url": "images/tr_bor_haritasi.jpg",
+    "image_url": "images/tr_bor.jpg",
     "explanation": "Dünya bor rezervlerinin yaklaşık %72'si Türkiye'de; özellikle Balıkesir, Kütahya ve Eskişehir illerinde toplanmıştır."
   },
   {
@@ -71,22 +71,22 @@
       "D) Mersin"
     ],
     "answer": "C",
-    "image_url": "images/tr_petrol_rafineri_batman.jpg",
+    "image_url": "images/tr_petrol.jpg",
     "explanation": "Batman Rafinerisi, Türkiye'de petrolün çıkarıldığı bölgede (Batman) olduğu için hammaddeye yakınlık ilkesiyle kurulmuştur."
   },
   {
     "id": 2010,
     "category": "gorselli",
     "level": 2,
-    "question": "Haritada taranmış olarak gösterilen bölge, Türkiye'de hangi sanayi kolunun en yoğun geliştiği Organize Sanayi Bölgesi'ne ev sahipliği yapar?",
+    "question": "Haritada taranmış olarak gösterilen Karadeniz kıyı kuşağında hangi iklim tipi görülmektedir?",
     "options": [
-      "A) Tekstil",
-      "B) Otomotiv",
-      "C) Gıda",
-      "D) Kimya"
+      "A) Karasal İklim",
+      "B) Akdeniz İklimi",
+      "C) Karadeniz İklimi",
+      "D) Step İklimi"
     ],
-    "answer": "B",
-    "image_url": "images/tr_osb_marmara.jpg",
-    "explanation": "Marmara Bölgesi (özellikle Bursa, Kocaeli çevresi), Türkiye'nin en büyük otomotiv ve yan sanayi Organize Sanayi Bölgelerine ev sahipliği yapar."
+    "answer": "C",
+    "image_url": "images/tr_iklim.jpg",
+    "explanation": "Karadeniz kıyı kuşağında her mevsim yağışlı, yazları serin, kışları ılık geçen Karadeniz iklimi hakimdir."
   }
 ]
