@@ -17,25 +17,25 @@ def download_kpss_images():
     # Her görsel için bir liste oluşturduk. İlki başarısız olursa sonrakini deneyecek.
     images_to_download = {
         "tr_nufus.jpg": [
-            "https://mapdb.net/wp-content/uploads/2021/01/turkiye-nufus-yogunlugu-haritasi.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Turkey_population_density_map.png/800px-Turkey_population_density_map.png"
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Turkey_population_density_map.png/800px-Turkey_population_density_map.png",
+            "https://mapdb.net/wp-content/uploads/2021/01/turkiye-nufus-yogunlugu-haritasi.jpg"
         ],
         "tr_delta.jpg": [
-            "https://www.haritane.com/images/turkiye-ovalar-haritasi.jpg",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Adana_in_Turkey.svg/800px-Adana_in_Turkey.svg.png",
             "https://www.cografyaci.biz/wp-content/uploads/2020/05/turkiye-ovalar-haritasi.jpg"
         ],
         "tr_demir.jpg": [
-            "https://www.cografyaci.biz/wp-content/uploads/2020/05/turkiye-demir-haritasi.jpg"
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Turkey_location_map.svg/800px-Turkey_location_map.svg.png"
         ],
         "tr_bor.jpg": [
-            "https://www.cografyaci.biz/wp-content/uploads/2020/05/turkiye-bor-haritasi.jpg"
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Turkey_location_map.svg/800px-Turkey_location_map.svg.png"
         ],
         "tr_petrol.jpg": [
-            "https://www.cografyaci.biz/wp-content/uploads/2020/05/turkiye-petrol-haritasi.jpg"
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Turkey_location_map.svg/800px-Turkey_location_map.svg.png"
         ],
         "tr_iklim.jpg": [
-            "https://www.haritane.com/images/turkiye-iklim-haritasi.jpg",
-            "https://www.cografyaci.biz/wp-content/uploads/2020/05/turkiye-iklim-haritasi.jpg"
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Turkey_climate_map_tr.png/800px-Turkey_climate_map_tr.png",
+            "https://www.haritane.com/images/turkiye-iklim-haritasi.jpg"
         ]
     }
 
