@@ -25,6 +25,20 @@ def download_kpss_images():
         img = Image.new('RGB', (800, 500), color=(15, 23, 42)) 
         draw = ImageDraw.Draw(img)
 
+        # Referans Şehirler (x, y)
+        ref_cities = {
+            "İstanbul": (140, 135), "Ankara": (380, 230), "İzmir": (75, 280),
+            "Antalya": (300, 400), "Adana": (520, 380), "Diyarbakır": (700, 350),
+            "Erzurum": (700, 220), "Samsun": (480, 110)
+        }
+
+        # Akarsu Hatları (Basitleştirilmiş)
+        rivers = [
+            [(720, 200), (650, 300), (600, 380)], # Fırat
+            [(600, 250), (450, 300), (350, 220), (480, 100)], # Kızılırmak
+            [(150, 150), (250, 200), (300, 300)] # Sakarya
+        ]
+
         # 1. Koordinat Izgarası (Grid)
         for x in range(0, 800, 50): draw.line([(x, 0), (x, 500)], fill=(22, 30, 46), width=1)
         for y in range(0, 500, 50): draw.line([(0, y), (800, y)], fill=(22, 30, 46), width=1)
@@ -39,6 +53,14 @@ def download_kpss_images():
         
         # Kara parçasını doldur ve sınırı çiz
         draw.polygon(turkey_outline, fill=(30, 41, 59), outline=(51, 65, 85), width=2)
+
+        # 2.5 Nehirleri Çiz
+        for river in rivers:
+            draw.line(river, fill=(100, 149, 237), width=2)
+
+        # 2.6 Şehirleri Ekle
+        for city, pos in ref_cities.items():
+            draw.ellipse([pos[0]-2, pos[1]-2, pos[0]+2, pos[1]+2], fill=(200, 200, 200))
 
         # 3. Başlık
         draw.text((320, 20), data["label"], fill=(250, 204, 21))
