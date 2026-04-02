@@ -17,25 +17,25 @@ def download_kpss_images():
     # Her görsel için bir liste oluşturduk. İlki başarısız olursa sonrakini deneyecek.
     images_to_download = {
         "tr_nufus.jpg": [
-            "https://www.cografyaci.gen.tr/wp-content/uploads/2019/01/turkiye-nufus-yogunlugu-haritasi.jpg",
-            "https://cografyaharita.com/haritalar/turkiye-nufus-yogunlugu-haritasi.png"
+            "https://mapdb.net/wp-content/uploads/2021/01/turkiye-nufus-yogunlugu-haritasi.jpg",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Turkey_population_density_map.png/800px-Turkey_population_density_map.png"
         ],
         "tr_delta.jpg": [
-            "https://www.cografyaci.gen.tr/wp-content/uploads/2019/01/turkiye-ovalar-haritasi.jpg",
-            "https://cografyaharita.com/haritalar/turkiye-delta-ovalari-haritasi.png"
+            "https://www.haritane.com/images/turkiye-ovalar-haritasi.jpg",
+            "https://www.cografyaci.biz/wp-content/uploads/2020/05/turkiye-ovalar-haritasi.jpg"
         ],
         "tr_demir.jpg": [
-            "https://www.cografyaci.gen.tr/wp-content/uploads/2019/01/turkiye-demir-haritasi.jpg"
+            "https://www.cografyaci.biz/wp-content/uploads/2020/05/turkiye-demir-haritasi.jpg"
         ],
         "tr_bor.jpg": [
-            "https://www.cografyaci.gen.tr/wp-content/uploads/2019/01/turkiye-bor-haritasi.jpg"
+            "https://www.cografyaci.biz/wp-content/uploads/2020/05/turkiye-bor-haritasi.jpg"
         ],
         "tr_petrol.jpg": [
-            "https://cografyaharita.com/haritalar/turkiye-petrol-rafinerileri-haritasi.png"
+            "https://www.cografyaci.biz/wp-content/uploads/2020/05/turkiye-petrol-haritasi.jpg"
         ],
         "tr_iklim.jpg": [
-            "https://cografyaharita.com/haritalar/turkiye-iklim-haritasi.png",
-            "https://www.cografyaci.gen.tr/wp-content/uploads/2019/01/turkiye-iklim-tipleri-haritasi.jpg"
+            "https://www.haritane.com/images/turkiye-iklim-haritasi.jpg",
+            "https://www.cografyaci.biz/wp-content/uploads/2020/05/turkiye-iklim-haritasi.jpg"
         ]
     }
 
