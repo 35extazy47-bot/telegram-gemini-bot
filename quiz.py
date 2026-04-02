@@ -210,8 +210,8 @@ def get_question(level, category):
     if category == "karisik":
         uygun = [q for q in QUIZ_QUESTIONS if q["level"] <= level]
     elif category == "gorselli":
-        # İçinde resim linki olan herhangi bir soruyu getir
-        uygun = [q for q in QUIZ_QUESTIONS if q.get("image_url")]
+        # Sadece image_url'si 'images/tr_' ile başlayan (yani kendi ürettiğimiz haritalar) soruları getir
+        uygun = [q for q in QUIZ_QUESTIONS if q.get("image_url", "").startswith("images/tr_")]
     else:
         uygun = [q for q in QUIZ_QUESTIONS if q["level"] <= level and q["category"] == category]
     return random.choice(uygun) if uygun else None
