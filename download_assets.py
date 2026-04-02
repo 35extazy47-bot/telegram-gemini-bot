@@ -49,6 +49,12 @@ def download_kpss_images():
         ],
         "tr_cukurova_haritasi.jpg": [
             "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_cukurova_isaretli.jpg"
+        ],
+        "tr_demir_haritasi.jpg": [
+            "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_demir_isaretli.jpg"
+        ],
+        "tr_bor_haritasi.jpg": [
+            "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_bor_isaretli.jpg"
         ]
     }
 

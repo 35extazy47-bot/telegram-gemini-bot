@@ -88,5 +88,35 @@
     "answer": "C",
     "image_url": "images/tr_cukurova_haritasi.jpg",
     "explanation": "Seyhan ve Ceyhan nehirlerinin taşıdığı alüvyonlarla oluşan Çukurova, Türkiye'nin en büyük delta ovasıdır."
+  },
+  {
+    "id": 2007,
+    "category": "gorselli",
+    "level": 2,
+    "question": "Haritada işaretli olan Sivas-Divriği ve Malatya-Hekimhan çevresi hangi madenin en önemli çıkarım alanıdır?",
+    "options": [
+      "A) Bor",
+      "B) Bakır",
+      "C) Demir",
+      "D) Krom"
+    ],
+    "answer": "C",
+    "image_url": "images/tr_demir_haritasi.jpg",
+    "explanation": "Türkiye'nin en önemli demir yatakları Sivas (Divriği) ve Malatya (Hekimhan, Hasançelebi) çevresinde bulunur."
+  },
+  {
+    "id": 2008,
+    "category": "gorselli",
+    "level": 2,
+    "question": "Haritada taranmış olarak gösterilen Güney Marmara ve İç Ege çevresi dünyada hangi madenin rezervinde birinci sıradadır?",
+    "options": [
+      "A) Linyit",
+      "B) Bor",
+      "C) Taş Kömürü",
+      "D) Boksit"
+    ],
+    "answer": "B",
+    "image_url": "images/tr_bor_haritasi.jpg",
+    "explanation": "Dünya bor rezervlerinin yaklaşık %72'si Türkiye'de; özellikle Balıkesir, Kütahya ve Eskişehir illerinde toplanmıştır."
   }
 ]
