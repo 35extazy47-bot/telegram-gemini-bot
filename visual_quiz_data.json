@@ -11,7 +11,7 @@
       "D) Eğirdir Gölü"
     ],
     "answer": "B",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Lake_Van_from_space.jpg/640px-Lake_Van_from_space.jpg",
+    "image_url": "images/van_golu_uzay.jpg",
     "explanation": "Van Gölü, Türkiye'nin en büyük gölüdür ve Doğu Anadolu Bölgesi'nde yer alır."
   },
   {
@@ -26,7 +26,7 @@
       "D) Akşehir Gölü"
     ],
     "answer": "C",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Lake_Tuz_from_space.jpg/640px-Lake_Tuz_from_space.jpg",
+    "image_url": "images/tuz_golu_uzay.jpg",
     "explanation": "Tuz Gölü, Türkiye'nin en sığ göllerinden biridir ve İç Anadolu Bölgesi'nde yer alır. Tuz ihtiyacımızın büyük bir kısmı buradan karşılanır."
   },
   {
@@ -41,7 +41,7 @@
       "D) Çatalhöyük"
     ],
     "answer": "B",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Mount_Nemrut_heads.jpg/640px-Mount_Nemrut_heads.jpg",
+    "image_url": "images/nemrut_heykeller.jpg",
     "explanation": "Nemrut Dağı, Adıyaman ilimizde bulunur. Kommagene Kralı I. Antiochos tarafından yaptırılan dev heykelleriyle dünyaca ünlüdür."
   },
   {
@@ -56,7 +56,7 @@
       "D) Yedikule Zindanları"
     ],
     "answer": "B",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Maiden%27s_Tower_August_2018.jpg/640px-Maiden%27s_Tower_August_2018.jpg",
+    "image_url": "images/kiz_kulesi.jpg",
     "explanation": "Kız Kulesi, Bizans döneminden beri varlığını sürdüren ve efsanelere konu olmuş ikonik bir İstanbul yapısıdır."
   }
 ]
