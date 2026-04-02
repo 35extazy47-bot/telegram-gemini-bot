@@ -58,5 +58,35 @@
     "answer": "B",
     "image_url": "images/kiz_kulesi.jpg",
     "explanation": "Kız Kulesi, Bizans döneminden beri varlığını sürdüren ve efsanelere konu olmuş ikonik bir İstanbul yapısıdır."
+  },
+  {
+    "id": 2005,
+    "category": "gorselli",
+    "level": 2,
+    "question": "Haritada işaretli olan alanlardan hangisinde 'Sanayi ve Ticaret' daha fazla geliştiği için nüfus yoğunluğu en yüksektir?",
+    "options": [
+      "A) Yıldız Dağları",
+      ",B) Çatalca-Kocaeli Platosu",
+      "C) Menteşe Yöresi",
+      "D) Hakkari Bölümü"
+    ],
+    "answer": "B",
+    "image_url": "images/tr_nufus_haritasi.jpg",
+    "explanation": "Çatalca-Kocaeli Platosu (İstanbul-Kocaeli çevresi), sanayi ve ulaşımın merkezi olduğu için Türkiye'nin en yoğun nüfuslu yeridir."
+  },
+  {
+    "id": 2006,
+    "category": "gorselli",
+    "level": 2,
+    "question": "Haritada gösterilen taranmış alanda hangi delta ovası yer almaktadır?",
+    "options": [
+      "A) Bafra",
+      "B) Çarşamba",
+      "C) Çukurova",
+      "D) Silifke"
+    ],
+    "answer": "C",
+    "image_url": "images/tr_cukurova_haritasi.jpg",
+    "explanation": "Seyhan ve Ceyhan nehirlerinin taşıdığı alüvyonlarla oluşan Çukurova, Türkiye'nin en büyük delta ovasıdır."
   }
 ]
