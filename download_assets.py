@@ -55,6 +55,12 @@ def download_kpss_images():
         ],
         "tr_bor_haritasi.jpg": [
             "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_bor_isaretli.jpg"
+        ],
+        "tr_petrol_rafineri_batman.jpg": [
+            "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_petrol_rafineri_batman.jpg"
+        ],
+        "tr_osb_marmara.jpg": [
+            "https://raw.githubusercontent.com/huseyinacar/assets/main/kpss/tr_osb_marmara.jpg"
         ]
     }
 

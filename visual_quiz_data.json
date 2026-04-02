@@ -118,5 +118,35 @@
     "answer": "B",
     "image_url": "images/tr_bor_haritasi.jpg",
     "explanation": "Dünya bor rezervlerinin yaklaşık %72'si Türkiye'de; özellikle Balıkesir, Kütahya ve Eskişehir illerinde toplanmıştır."
+  },
+  {
+    "id": 2009,
+    "category": "gorselli",
+    "level": 2,
+    "question": "Haritada işaretli olan petrol rafinerisi hangi ilimizdedir ve hammaddeye yakınlık ilkesiyle kurulmuştur?",
+    "options": [
+      "A) İzmir",
+      "B) Kırıkkale",
+      "C) Batman",
+      "D) Mersin"
+    ],
+    "answer": "C",
+    "image_url": "images/tr_petrol_rafineri_batman.jpg",
+    "explanation": "Batman Rafinerisi, Türkiye'de petrolün çıkarıldığı bölgede (Batman) olduğu için hammaddeye yakınlık ilkesiyle kurulmuştur."
+  },
+  {
+    "id": 2010,
+    "category": "gorselli",
+    "level": 2,
+    "question": "Haritada taranmış olarak gösterilen bölge, Türkiye'de hangi sanayi kolunun en yoğun geliştiği Organize Sanayi Bölgesi'ne ev sahipliği yapar?",
+    "options": [
+      "A) Tekstil",
+      "B) Otomotiv",
+      "C) Gıda",
+      "D) Kimya"
+    ],
+    "answer": "B",
+    "image_url": "images/tr_osb_marmara.jpg",
+    "explanation": "Marmara Bölgesi (özellikle Bursa, Kocaeli çevresi), Türkiye'nin en büyük otomotiv ve yan sanayi Organize Sanayi Bölgelerine ev sahipliği yapar."
   }
 ]
