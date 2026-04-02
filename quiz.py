@@ -81,7 +81,7 @@ safe_generate_content = None
 
 def create_quiz_image(question, options, category, level, lives, question_img_url=None):
     width = 800
-    height = 600
+    height = 850
     
     cat_lower = category.lower()
     if "tarih" in cat_lower:
@@ -117,12 +117,13 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
     stars = "⭐" * level
     draw.text((40, 25), f"🧠 {category.upper()}  |  {stars}  |  ❤️ {lives}", font=header_font, fill=header_text_color)
     
-    # Soru Kartı
-    draw.rounded_rectangle([(40, 100), (760, 320)], radius=20, fill=card_color, outline=(51, 65, 85), width=2)
-    draw.rounded_rectangle([(60, 110), (160, 140)], radius=10, fill=(56, 189, 248))
-    draw.text((75, 115), "SORU", font=tag_font, fill=(255, 255, 255))
+    # Soru Kartı (Haritanın altına taşındı)
+    soru_y_start = 420
+    draw.rounded_rectangle([(40, soru_y_start), (760, soru_y_start + 120)], radius=20, fill=card_color, outline=(51, 65, 85), width=2)
+    draw.rounded_rectangle([(60, soru_y_start + 10), (160, soru_y_start + 40)], radius=10, fill=(56, 189, 248))
+    draw.text((75, soru_y_start + 15), "SORU", font=tag_font, fill=(255, 255, 255))
     
-    y_text = 160
+    y_text = soru_y_start + 50
     # --- Resim Ekleme Bölümü ---
     if question_img_url:
         try:
@@ -149,18 +150,17 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
                     q_img = Image.open(img_path).convert("RGBA")
 
             if q_img:
-                # Resmi boyutlandır ve yapıştır
-                max_w, max_h = 300, 180
+                # Resmi boyutlandır ve ÜST MERKEZE yapıştır
+                max_w, max_h = 720, 300
                 resample_filter = getattr(Image, 'Resampling', Image).LANCZOS
                 q_img.thumbnail((max_w, max_h), resample_filter)
-                img.paste(q_img, (760 - q_img.size[0] - 20, 120), q_img if q_img.mode == 'RGBA' else None)
-                text_width = 30
+                img.paste(q_img, (int((width - q_img.size[0]) / 2), 100), q_img if q_img.mode == 'RGBA' else None)
             else:
                 # Resim hiçbir şekilde gelmediyse hata kutusu çiz
-                draw.rounded_rectangle([(450, 120), (740, 280)], radius=15, fill=(50, 50, 50), outline=(231, 76, 60), width=2)
-                draw.text((480, 180), "GÖRSEL\nYÜKLENEMEDİ\n(HTTP 429)", font=tag_font, fill=(231, 76, 60))
-                text_width = 35
+                draw.rounded_rectangle([(300, 150), (500, 300)], radius=15, fill=(50, 50, 50), outline=(231, 76, 60), width=2)
+                draw.text((320, 210), "GÖRSEL\nYOK", font=tag_font, fill=(231, 76, 60))
 
+            text_width = 40
         except Exception as e:
             print(f"❌ Kritik Görsel Hatası: {e}")
             text_width = 40
@@ -172,13 +172,13 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
     lines = wrapper.wrap(text=question)
     for line in lines:
         draw.text((60, y_text), line, font=question_font, fill=(255, 255, 255))
-        y_text += 45
+        y_text += 40
 
-    y_opt = 345
+    y_opt = 560
     for opt in options:
         draw.rounded_rectangle([(40, y_opt), (760, y_opt + 55)], radius=15, fill=(51, 65, 85))
         draw.text((70, y_opt + 12), opt, font=option_font, fill=(241, 245, 249))
-        y_opt += 70
+        y_opt += 65
 
     img = add_watermark(img)
     bio = io.BytesIO()
