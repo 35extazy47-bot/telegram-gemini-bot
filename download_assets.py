@@ -56,8 +56,17 @@ def download_kpss_images():
         bg_color = data.get("bg_color", (15, 23, 42))
         neighbor_land_color = tuple(max(0, c - 5) for c in bg_color) # Komşu ülkeler için hafif ton
         grid_color = tuple(max(0, c - 10) for c in bg_color)
+        
+        # 0. Arkaplan Görseli Kontrolü (Senin yükleyeceğin harita)
+        base_img_path = os.path.join("images", "tr_base_blank.png")
+        use_base_img = os.path.exists(base_img_path)
 
-        img = Image.new('RGB', (800, 500), color=bg_color) 
+        if use_base_img:
+            # Senin haritanı yükle ve sistem boyutuna (800x500) getir
+            img = Image.open(base_img_path).convert('RGB').resize((800, 500))
+        else:
+            img = Image.new('RGB', (800, 500), color=bg_color) 
+        
         draw = ImageDraw.Draw(img)
 
         # Fontları Yükle (Netlik için kritik)
@@ -70,66 +79,50 @@ def download_kpss_images():
         except:
             title_font = label_font = small_font = ImageFont.load_default()
 
-        # 1. Izgara (Grid)
-        for x in range(0, 800, 50): draw.line([(x, 0), (x, 500)], fill=grid_color, width=1)
-        for y in range(0, 500, 50): draw.line([(0, y), (800, y)], fill=grid_color, width=1)
+        # Eğer arkaplan görseli yoksa (fallback), kendi haritamızı çizelim
+        if not use_base_img:
+            # 1. Izgara (Grid)
+            for x in range(0, 800, 50): draw.line([(x, 0), (x, 500)], fill=grid_color, width=1)
+            for y in range(0, 500, 50): draw.line([(0, y), (800, y)], fill=grid_color, width=1)
 
-        # 2. Koordinatlı Türkiye Sınırları (Önce tanımlıyoruz ki aşağıda kullanabilelim)
-        # Ege girintileri ve körfezler optimize edildi
-        turkey_outline = [
-            (50, 150), (60, 140), (80, 130), (100, 125), (125, 120), (150, 135), (165, 125), (180, 110), 
-            (200, 112), (220, 115), (250, 118), (300, 105), (350, 100), (400, 95), (450, 85), (480, 105), 
-            (520, 100), (550, 90), (600, 95), (650, 100), (700, 105), (750, 115), (770, 130), (785, 180), 
-            (795, 230), (795, 280), (785, 330), (770, 360), (740, 380), (720, 390), (680, 400), (650, 405), 
-            (620, 408), (580, 410), (560, 425), (545, 440), (535, 460), (530, 475), (520, 465), (510, 450), 
-            (480, 435), (450, 420), (420, 425), (380, 435), (340, 445), (300, 450), (260, 440), (220, 430), 
-            (200, 435), (180, 445), (150, 445), (120, 435), (100, 420), (80, 400), (70, 380), (60, 360), 
-            (75, 345), (85, 330), (70, 315), (55, 300), (65, 285), (80, 270), (65, 255), (50, 240), (70, 225), 
-            (90, 210), (75, 195), (65, 180), (55, 165)
-        ]
+            # 2. Türkiye Sınırları
+            turkey_outline = [
+                (50, 150), (60, 140), (80, 130), (100, 125), (125, 120), (150, 135), (165, 125), (180, 110), 
+                (200, 112), (220, 115), (250, 118), (300, 105), (350, 100), (400, 95), (450, 85), (480, 105), 
+                (520, 100), (550, 90), (600, 95), (650, 100), (700, 105), (750, 115), (770, 130), (785, 180), 
+                (795, 230), (795, 280), (785, 330), (770, 360), (740, 380), (720, 390), (680, 400), (650, 405), 
+                (620, 408), (580, 410), (560, 425), (545, 440), (535, 460), (530, 475), (520, 465), (510, 450), 
+                (480, 435), (450, 420), (420, 425), (380, 435), (340, 445), (300, 450), (260, 440), (220, 430), 
+                (200, 435), (180, 445), (150, 445), (120, 435), (100, 420), (80, 400), (70, 380), (60, 360), 
+                (75, 345), (85, 330), (70, 315), (55, 300), (65, 285), (80, 270), (65, 255), (50, 240), (70, 225), 
+                (90, 210), (75, 195), (65, 180), (55, 165)
+            ]
 
-        # 1.5 Gölge Efekti (3D Relief için)
-        shadow_img = Image.new('RGBA', (800, 500), (0, 0, 0, 0))
-        shadow_draw = ImageDraw.Draw(shadow_img)
-        shadow_outline = [(x+4, y+4) for x, y in turkey_outline]
-        shadow_draw.polygon(shadow_outline, fill=(0, 0, 0, 120))
-        shadow_img = shadow_img.filter(ImageFilter.GaussianBlur(radius=5))
-        img.paste(shadow_img, (0, 0), shadow_img)
+            # 1.5 Gölge Efekti (3D Relief)
+            shadow_img = Image.new('RGBA', (800, 500), (0, 0, 0, 0))
+            shadow_draw = ImageDraw.Draw(shadow_img)
+            shadow_outline = [(x+4, y+4) for x, y in turkey_outline]
+            shadow_draw.polygon(shadow_outline, fill=(0, 0, 0, 120))
+            shadow_img = shadow_img.filter(ImageFilter.GaussianBlur(radius=5))
+            img.paste(shadow_img, (0, 0), shadow_img)
 
-        # 3. Gerçekçi Fiziki Harita Renklendirmesi (Yeşil -> Kahverengi Geçişi)
-        # Her nokta için yükselti rengi hesaplayarak dolduracağız
-        mask = Image.new('L', (800, 500), 0)
-        mask_draw = ImageDraw.Draw(mask)
-        mask_draw.polygon(turkey_outline, fill=255)
+            # 3. Fiziki Renklendirme
+            mask = Image.new('L', (800, 500), 0)
+            mask_draw = ImageDraw.Draw(mask); mask_draw.polygon(turkey_outline, fill=255)
+            for x in range(800):
+                if x < 300: r, g, b = int(45 + 150*(x/300)), int(120 + 50*(x/300)), 45
+                elif x < 600: r, g, b = int(195 + 20*((x-300)/300)), int(170 - 50*((x-300)/300)), 45
+                else: r, g, b = int(215 - 100*((x-600)/200)), int(120 - 60*((x-600)/200)), int(45 - 20*((x-600)/200))
+                for y in range(500):
+                    if mask.getpixel((x, y)) == 255: img.putpixel((x, y), (r, g, b))
+            draw.polygon(turkey_outline, outline=(255, 255, 255, 100), width=2)
 
-        # Fiziki Harita Geçişi (Batı: Yeşil, Orta: Sarı, Doğu: Kahverengi)
-        for x in range(800):
-            # x koordinatına göre renk belirle (Basitleştirilmiş yükselti)
-            if x < 300: # Batı
-                ratio = x / 300
-                r, g, b = int(45 + 150*ratio), int(120 + 50*ratio), int(45)
-            elif x < 600: # Orta
-                ratio = (x - 300) / 300
-                r, g, b = int(195 + 20*ratio), int(170 - 50*ratio), int(45)
-            else: # Doğu
-                ratio = (x - 600) / 200
-                r, g, b = int(215 - 100*ratio), int(120 - 60*ratio), int(45 - 20*ratio)
-            
-            # Sadece Türkiye sınırları içini boya
-            for y in range(500):
-                if mask.getpixel((x, y)) == 255:
-                    img.putpixel((x, y), (r, g, b))
-
-        # 3.1 Doku ve Kabartma (Gren/Noise)
-        # study.py'de numpy olduğu için buradan faydalanıyoruz, haritaya kağıt hissi verir
+        # Her iki durumda da hafif doku ekle
         noise = np.random.randint(-10, 10, (500, 800, 3), dtype='int16')
         img_np = np.array(img).astype('int16')
         img_np = np.clip(img_np + noise, 0, 255).astype('uint8')
         img = Image.fromarray(img_np)
         draw = ImageDraw.Draw(img)
-
-        # Sınır hattını çiz
-        draw.polygon(turkey_outline, outline=(255, 255, 255, 100), width=2)
 
         def draw_text_w_shadow(pos, text, font, fill, shadow=(0,0,0,200)):
             """Yazılara derinlik katar."""
