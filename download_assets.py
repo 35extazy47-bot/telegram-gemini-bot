@@ -136,44 +136,13 @@ def download_kpss_images():
             "Erzurum": (700, 220), "Samsun": (480, 110)
         }
 
-        # Akarsu Hatları (Basitleştirilmiş)
-        rivers = [
-            [(720, 200), (650, 300), (600, 380)], # Fırat
-            [(600, 250), (450, 300), (350, 220), (480, 100)], # Kızılırmak
-            [(150, 150), (250, 200), (300, 300)] # Sakarya
-        ]
-
-        # 2.7 Göller (x, y, rx, ry)
-        lakes = {
-            "Van Gölü": (730, 260, 25, 15),
-            "Tuz Gölü": (380, 280, 20, 20)
-        }
-
-        # 2.8 Dağlar (x, y)
-        mountains = {
-            "Ağrı Dağı": (770, 170),
-            "Erciyes": (480, 300),
-            "Uludağ": (160, 160)
-        }
-
-        # 2.5 Nehirleri Çiz
-        for river in rivers:
-            draw.line(river, fill=(100, 149, 237, 180), width=2)
-
-        # 2.6 Şehirleri Ekle
-        for city, pos in ref_cities.items():
-            draw.ellipse([pos[0]-2, pos[1]-2, pos[0]+2, pos[1]+2], fill=(255, 255, 255, 150))
-
-        # 2.7 Gölleri Çiz ve İsimlendir
-        for name, (lx, ly, rx, ry) in lakes.items():
-            draw.ellipse([lx-rx, ly-ry, lx+rx, ly+ry], fill=(100, 149, 237))
-            draw.text((lx - 25, ly + ry + 2), name, font=small_font, fill=(100, 116, 139))
-
-        # 2.8 Dağları Çiz (Üçgen) ve İsimlendir
-        for name, (mx, my) in mountains.items():
-            # Dağ ikonu (Gri Üçgen)
-            draw.polygon([(mx, my-8), (mx-6, my+4), (mx+6, my+4)], fill=(148, 163, 184))
-            draw.text((mx + 8, my - 8), name, font=small_font, fill=(100, 116, 139))
+        # Eğer gerçek harita kullanıyorsak manuel detayları (nehir, göl, dağ) çizmiyoruz.
+        # Sadece fallback (kodla çizim) durumunda bunlar gözükebilir.
+        if not use_base_img:
+            for city, pos in ref_cities.items():
+                draw.ellipse([pos[0]-2, pos[1]-2, pos[0]+2, pos[1]+2], fill=(255, 255, 255, 150))
+            # Buraya istersen diğer fallback detaylarını da (dağ, göl vb.) if içine alabiliriz.
+            # Ancak şimdilik senin isteğin üzerine nehirleri tamamen sildim.
 
         # 3. Başlık
         draw_text_w_shadow((320, 20), data["label"], title_font, (250, 204, 21))
