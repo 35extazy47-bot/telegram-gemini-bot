@@ -4,6 +4,9 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 def download_kpss_images():
+    # Kalibrasyon yapmak istersen burayı True yap knk, resimlerin üstüne koordinat yazar
+    DEBUG_MODE = False
+
     # 1. Klasörü oluştur
     if not os.path.exists("images"):
         os.makedirs("images")
@@ -13,32 +16,32 @@ def download_kpss_images():
     # Harita oluşturma verileri (Eğer indirme başarısız olursa)
     map_metadata = {
         "tr_nufus.jpg": {
-            "label": "NÜFUS YOĞUNLUĞU", "marker": (150, 130), "info": "İstanbul-Kocaeli Çevresi", 
+            "label": "NÜFUS YOĞUNLUĞU", "marker": (160, 130), "info": "İstanbul-Kocaeli Çevresi", 
             "type": "circle", "color": (56, 189, 248),
             "bg_color": (15, 23, 42)
         },
         "tr_delta.jpg": {
-            "label": "DELTA OVALARI", "marker": (550, 400), "info": "Çukurova Bölgesi", 
+            "label": "DELTA OVALARI", "marker": (525, 375), "info": "Çukurova Bölgesi", 
             "type": "circle", "color": (34, 197, 94),
             "bg_color": (10, 20, 15)
         },
         "tr_demir.jpg": {
-            "label": "DEMİR MADENİ", "marker": (600, 220), "info": "Sivas-Divriği Çevresi", 
+            "label": "DEMİR MADENİ", "marker": (585, 215), "info": "Sivas-Divriği Çevresi", 
             "type": "square", "color": (249, 115, 22),
             "bg_color": (25, 15, 15)
         },
         "tr_bor.jpg": {
-            "label": "BOR REZERVLERİ", "marker": (180, 200), "info": "Güney Marmara-Eskişehir", 
+            "label": "BOR REZERVLERİ", "marker": (210, 190), "info": "Güney Marmara-Eskişehir", 
             "type": "square", "color": (234, 179, 8),
             "bg_color": (20, 20, 30)
         },
         "tr_petrol.jpg": {
-            "label": "PETROL YATAKLARI", "marker": (720, 350), "info": "Batman ve Çevresi", 
+            "label": "PETROL YATAKLARI", "marker": (715, 325), "info": "Batman ve Çevresi", 
             "type": "diamond", "color": (71, 85, 105),
             "bg_color": (10, 10, 10)
         },
         "tr_iklim.jpg": {
-            "label": "KARADENİZ İKLİMİ", "marker": (500, 100), "info": "Kıyı Şeridi Taranmış", 
+            "label": "KARADENİZ İKLİMİ", "marker": (480, 95), "info": "Kıyı Şeridi Taranmış", 
             "type": "circle", "color": (239, 68, 68),
             "bg_color": (15, 25, 35)
         }
@@ -131,10 +134,19 @@ def download_kpss_images():
 
         # Referans Şehirler (x, y)
         ref_cities = {
-            "İstanbul": (140, 135), "Ankara": (380, 230), "İzmir": (75, 280),
-            "Antalya": (300, 400), "Adana": (520, 380), "Diyarbakır": (700, 350),
-            "Erzurum": (700, 220), "Samsun": (480, 110)
+            "İstanbul": (130, 110), "Ankara": (360, 185), "İzmir": (65, 260),
+            "Antalya": (290, 370), "Adana": (510, 350), "Diyarbakır": (685, 315),
+            "Erzurum": (705, 180), "Samsun": (475, 100)
         }
+
+        # 0.5 Kalibrasyon Izgarası (Sadece DEBUG_MODE açıksa)
+        if DEBUG_MODE:
+            for x in range(0, 800, 50):
+                draw.line([(x, 0), (x, 500)], fill=(200, 0, 0, 100), width=1)
+                draw.text((x, 5), str(x), font=small_font, fill=(200, 0, 0))
+            for y in range(0, 500, 50):
+                draw.line([(0, y), (800, y)], fill=(200, 0, 0, 100), width=1)
+                draw.text((5, y), str(y), font=small_font, fill=(200, 0, 0))
 
         # Eğer gerçek harita kullanıyorsak manuel detayları (nehir, göl, dağ) çizmiyoruz.
         # Sadece fallback (kodla çizim) durumunda bunlar gözükebilir.
