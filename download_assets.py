@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 def download_kpss_images():
     # Kalibrasyon yapmak istersen burayı True yap knk, resimlerin üstüne koordinat yazar
-    DEBUG_MODE = True
+    DEBUG_MODE = False
 
     # 1. Klasörü oluştur
     if not os.path.exists("images"):
