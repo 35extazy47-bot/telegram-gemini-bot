@@ -105,9 +105,9 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
             candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "/System/Library/Fonts/Helvetica.ttc"]
             font_path = next((f for f in candidates if os.path.exists(f)), font_path)
         header_font = ImageFont.truetype(font_path, 28)
-        question_font = ImageFont.truetype(font_path, 34)
-        option_font = ImageFont.truetype(font_path, 26)
-        tag_font = ImageFont.truetype(font_path, 20)
+        question_font = ImageFont.truetype(font_path, 30) # 34 -> 30 yapıldı
+        option_font = ImageFont.truetype(font_path, 24)   # 26 -> 24 yapıldı
+        tag_font = ImageFont.truetype(font_path, 18)     # 20 -> 18 yapıldı
     except:
         header_font, question_font, option_font = ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default()
         tag_font = ImageFont.load_default()
@@ -118,12 +118,12 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
     draw.text((40, 25), f"🧠 {category.upper()}  |  {stars}  |  ❤️ {lives}", font=header_font, fill=header_text_color)
     
     # Soru Kartı (Haritanın altına taşındı)
-    soru_y_start = 420
-    draw.rounded_rectangle([(40, soru_y_start), (760, soru_y_start + 120)], radius=20, fill=card_color, outline=(51, 65, 85), width=2)
-    draw.rounded_rectangle([(60, soru_y_start + 10), (160, soru_y_start + 40)], radius=10, fill=(56, 189, 248))
-    draw.text((75, soru_y_start + 15), "SORU", font=tag_font, fill=(255, 255, 255))
+    soru_y_start = 410 # Bir tık yukarı çekildi
+    draw.rounded_rectangle([(40, soru_y_start), (760, soru_y_start + 110)], radius=20, fill=card_color, outline=(51, 65, 85), width=2)
+    draw.rounded_rectangle([(60, soru_y_start + 10), (160, soru_y_start + 38)], radius=10, fill=(56, 189, 248))
+    draw.text((75, soru_y_start + 12), "SORU", font=tag_font, fill=(255, 255, 255))
     
-    y_text = soru_y_start + 50
+    y_text = soru_y_start + 45 # Padding azaltıldı
     # --- Resim Ekleme Bölümü ---
     if question_img_url:
         try:
@@ -174,11 +174,11 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
         draw.text((60, y_text), line, font=question_font, fill=(255, 255, 255))
         y_text += 40
 
-    y_opt = 560
+    y_opt = 535 # Seçenekler yukarı taşındı
     for opt in options:
-        draw.rounded_rectangle([(40, y_opt), (760, y_opt + 55)], radius=15, fill=(51, 65, 85))
-        draw.text((70, y_opt + 12), opt, font=option_font, fill=(241, 245, 249))
-        y_opt += 65
+        draw.rounded_rectangle([(40, y_opt), (760, y_opt + 50)], radius=15, fill=(51, 65, 85)) # Yükseklik 55 -> 50
+        draw.text((70, y_opt + 10), opt, font=option_font, fill=(241, 245, 249))
+        y_opt += 60 # Boşluk 65 -> 60
 
     img = add_watermark(img)
     bio = io.BytesIO()
