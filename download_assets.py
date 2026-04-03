@@ -21,7 +21,7 @@ def download_kpss_images():
             "bg_color": (15, 23, 42)
         },
         "tr_delta.jpg": {
-            "label": "DELTA OVALARI", "marker": (525, 375), "info": "Çukurova Bölgesi", 
+            "label": "DELTA OVALARI", "marker": (350, 400), "info": "Çukurova Bölgesi", 
             "type": "circle", "color": (34, 197, 94),
             "bg_color": (10, 20, 15)
         },
@@ -31,17 +31,17 @@ def download_kpss_images():
             "bg_color": (25, 15, 15)
         },
         "tr_bor.jpg": {
-            "label": "BOR REZERVLERİ", "marker": (210, 190), "info": "Güney Marmara-Eskişehir", 
+            "label": "BOR REZERVLERİ", "marker": (160, 150), "info": "Güney Marmara-Eskişehir", 
             "type": "square", "color": (234, 179, 8),
             "bg_color": (20, 20, 30)
         },
         "tr_petrol.jpg": {
-            "label": "PETROL YATAKLARI", "marker": (715, 325), "info": "Batman ve Çevresi", 
+            "label": "PETROL YATAKLARI", "marker": (330, 650), "info": "Batman ve Çevresi", 
             "type": "diamond", "color": (71, 85, 105),
             "bg_color": (10, 10, 10)
         },
         "tr_iklim.jpg": {
-            "label": "KARADENİZ İKLİMİ", "marker": (480, 95), "info": "Kıyı Şeridi Taranmış", 
+            "label": "KARADENİZ İKLİMİ", "marker": (100, 400), "info": "Kıyı Şeridi Taranmış", 
             "type": "circle", "color": (239, 68, 68),
             "bg_color": (15, 25, 35)
         }
