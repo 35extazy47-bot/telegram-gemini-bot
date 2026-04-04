@@ -81,7 +81,7 @@ safe_generate_content = None
 
 def create_quiz_image(question, options, category, level, lives, question_img_url=None):
     width = 800
-    height = 850
+    height = 1000 # Görsel ve uzun soruların sığması için yükseklik artırıldı
     
     cat_lower = category.lower()
     if "tarih" in cat_lower:
@@ -117,14 +117,8 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
     stars = "⭐" * level
     draw.text((40, 25), f"🧠 {category.upper()}  |  {stars}  |  ❤️ {lives}", font=header_font, fill=header_text_color)
     
-    # Soru Kartı (Haritanın altına taşındı)
-    soru_y_start = 410 # Bir tık yukarı çekildi
-    draw.rounded_rectangle([(40, soru_y_start), (760, soru_y_start + 110)], radius=20, fill=card_color, outline=(51, 65, 85), width=2)
-    draw.rounded_rectangle([(60, soru_y_start + 10), (160, soru_y_start + 38)], radius=10, fill=(56, 189, 248))
-    draw.text((75, soru_y_start + 12), "SORU", font=tag_font, fill=(255, 255, 255))
-    
-    y_text = soru_y_start + 45 # Padding azaltıldı
     # --- Resim Ekleme Bölümü ---
+    y_cursor = 100
     if question_img_url:
         try:
             q_img = None
@@ -154,27 +148,40 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
                 max_w, max_h = 720, 300
                 resample_filter = getattr(Image, 'Resampling', Image).LANCZOS
                 q_img.thumbnail((max_w, max_h), resample_filter)
-                img.paste(q_img, (int((width - q_img.size[0]) / 2), 100), q_img if q_img.mode == 'RGBA' else None)
+                img.paste(q_img, (int((width - q_img.size[0]) / 2), y_cursor), q_img if q_img.mode == 'RGBA' else None)
+                y_cursor += q_img.size[1] + 20
             else:
                 # Resim hiçbir şekilde gelmediyse hata kutusu çiz
-                draw.rounded_rectangle([(300, 150), (500, 300)], radius=15, fill=(50, 50, 50), outline=(231, 76, 60), width=2)
-                draw.text((320, 210), "GÖRSEL\nYOK", font=tag_font, fill=(231, 76, 60))
+                draw.rounded_rectangle([(300, y_cursor), (500, y_cursor + 150)], radius=15, fill=(50, 50, 50), outline=(231, 76, 60), width=2)
+                draw.text((320, y_cursor + 60), "GÖRSEL\nYOK", font=tag_font, fill=(231, 76, 60))
+                y_cursor += 170
 
-            text_width = 40
         except Exception as e:
             print(f"❌ Kritik Görsel Hatası: {e}")
-            text_width = 40
     else:
-        text_width = 40
+        y_cursor = 120 # Resim yoksa soru kutusunu biraz yukarı al
 
-    # Metni yazdır
-    wrapper = textwrap.TextWrapper(width=text_width) 
+    # Soru Metni Hazırlama (Dinamik Yerleşim)
+    wrapper = textwrap.TextWrapper(width=40)
     lines = wrapper.wrap(text=question)
+    
+    # Soru kutusunun yüksekliğini satır sayısına göre dinamik hesapla
+    box_height = 60 + (len(lines) * 40)
+    soru_y_start = y_cursor
+    
+    # Soru Kartı Çizimi
+    draw.rounded_rectangle([(40, soru_y_start), (760, soru_y_start + box_height)], radius=20, fill=card_color, outline=(51, 65, 85), width=2)
+    draw.rounded_rectangle([(60, soru_y_start + 10), (160, soru_y_start + 38)], radius=10, fill=(56, 189, 248))
+    draw.text((75, soru_y_start + 12), "SORU", font=tag_font, fill=(255, 255, 255))
+
+    y_text = soru_y_start + 50
     for line in lines:
         draw.text((60, y_text), line, font=question_font, fill=(255, 255, 255))
         y_text += 40
 
-    y_opt = 535 # Seçenekler yukarı taşındı
+    # Seçenekler soru kutusunun hemen altından başlasın (Overlap önlendi)
+    y_opt = soru_y_start + box_height + 20
+    
     for opt in options:
         draw.rounded_rectangle([(40, y_opt), (760, y_opt + 50)], radius=15, fill=(51, 65, 85)) # Yükseklik 55 -> 50
         draw.text((70, y_opt + 10), opt, font=option_font, fill=(241, 245, 249))
