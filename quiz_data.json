@@ -9845,4 +9845,80 @@
     "answer": "C",
     "explanation": "Bakü-Tiflis-Ceyhan (BTC) Ham Petrol Boru Hattı, Azerbaycan petrolünü Türkiye üzerinden Akdeniz'e taşıyarak Hazar enerji kaynaklarının Batı'ya ulaşmasında stratejik bir rol oynamıştır. TANAP ise doğalgaz içindir."
   }
+,
+  {
+    "id": 800,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Haritada işaretlenen alan, Türkiye'nin en önemli krom yataklarına ev sahipliği yapmaktadır. Bu bölge hangisidir?",
+    "options": [
+      "A) Muğla - Fethiye",
+      "B) Elazığ - Guleman",
+      "C) Kayseri - Pınarbaşı",
+      "D) Bursa - Orhaneli"
+    ],
+    "answer": "B",
+    "image_url": "images/tr_krom.jpg",
+    "explanation": "Türkiye'nin en zengin krom yatakları Elazığ-Guleman bölgesinde bulunur ve buradaki cevher Antalya ile Elazığ'daki ferrokrom tesislerinde işlenir."
+  },
+  {
+    "id": 801,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Haritada işaretlenen ve Türkiye'nin ilk jeotermal santralinin kurulduğu alan hangi seçenekte doğru verilmiştir?",
+    "options": [
+      "A) Aydın - Germencik",
+      "B) Denizli - Sarayköy",
+      "C) Manisa - Alaşehir",
+      "D) Çanakkale - Tuzla"
+    ],
+    "answer": "B",
+    "image_url": "images/tr_jeotermal.jpg",
+    "explanation": "Türkiye'nin ilk jeotermal enerji santrali Denizli-Sarayköy'de kurulmuştur. Aydın-Germencik ise kapasite bakımından en büyüklerden biridir."
+  },
+  {
+    "id": 802,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Haritada gösterilen ve alüminyum sanayisinin hammaddesi olan boksit madeninin işlendiği tek tesisimiz nerededir?",
+    "options": [
+      "A) Antalya - Akseki",
+      "B) Muğla - Milas",
+      "C) Konya - Seydişehir",
+      "D) Hatay - Payas"
+    ],
+    "answer": "C",
+    "image_url": "images/tr_boksit.jpg",
+    "explanation": "Konya-Seydişehir tesisleri, Türkiye'nin tek entegre alüminyum fabrikasıdır ve bölgedeki boksit yataklarını işler."
+  },
+  {
+    "id": 803,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Haritada işaretlenen ve Türkiye'nin en büyük linyit rezervine sahip olan linyit havzası aşağıdakilerden hangisidir?",
+    "options": [
+      "A) Soma",
+      "B) Tavşanlı",
+      "C) Afşin - Elbistan",
+      "D) Yatağan"
+    ],
+    "answer": "C",
+    "image_url": "images/tr_linyit.jpg",
+    "explanation": "Kahramanmaraş sınırları içinde yer alan Afşin-Elbistan havzası, Türkiye'nin en büyük linyit rezervine ve önemli termik santrallere ev sahipliği yapar."
+  },
+  {
+    "id": 804,
+    "category": "cografya_maden_sanayi",
+    "level": 3,
+    "question": "Haritada işaretlenen alan, Türkiye'nin önemli bakır yataklarından biridir. Bu bölge aşağıdakilerden hangisidir?",
+    "options": [
+      "A) Artvin - Murgul",
+      "B) Kastamonu - Küre",
+      "C) Elazığ - Maden",
+      "D) Rize - Çayeli"
+    ],
+    "answer": "B",
+    "image_url": "images/tr_bakir.jpg",
+    "explanation": "Kastamonu-Küre, Türkiye'nin en eski ve önemli bakır yataklarından biridir. Buradan çıkarılan maden genellikle Samsun'daki tesislerde işlenir."
+  }
 ]
