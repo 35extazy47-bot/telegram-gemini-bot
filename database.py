@@ -25,15 +25,33 @@ except FileNotFoundError:
     print("❌ HATA: quiz_data.json bulunamadı!")
     QUIZ_QUESTIONS = []
 
-# --- Visual Quiz Data ---
+# --- Quiz Data (Genişletilmiş) ---
 try:
     if os.path.exists("visual_quiz_data.json"):
         with open("visual_quiz_data.json", "r", encoding="utf-8") as f:
             VISUAL_QUESTIONS = json.load(f)
             QUIZ_QUESTIONS.extend(VISUAL_QUESTIONS)
             print(f"✅ {len(VISUAL_QUESTIONS)} adet görselli soru yüklendi.")
+except FileNotFoundError:
+    print("⚠️ visual_quiz_data.json bulunamadı, atlanıyor.")
 except Exception as e:
     print(f"⚠️ visual_quiz_data.json yükleme hatası: {e}")
+
+CHRONOLOGY_DATA = []
+try:
+    with open("chronology_data.json", "r", encoding="utf-8") as f:
+        CHRONOLOGY_DATA = json.load(f)
+    print(f"✅ {len(CHRONOLOGY_DATA)} adet kronoloji verisi yüklendi.")
+except FileNotFoundError:
+    print("⚠️ chronology_data.json bulunamadı, kronoloji oyunu devre dışı.")
+
+FILL_BLANK_DATA = []
+try:
+    with open("fill_blank_data.json", "r", encoding="utf-8") as f:
+        FILL_BLANK_DATA = json.load(f)
+    print(f"✅ {len(FILL_BLANK_DATA)} adet boşluk doldurma verisi yüklendi.")
+except FileNotFoundError:
+    print("⚠️ fill_blank_data.json bulunamadı, boşluk doldurma oyunu devre dışı.")
 
 # --- Database Connection ---
 mongo_client = None
