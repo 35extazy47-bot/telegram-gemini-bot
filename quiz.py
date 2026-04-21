@@ -79,23 +79,30 @@ check_daily_limit = None
 update_quest_progress = None
 safe_generate_content = None
 
-def create_quiz_image(question, options, category, level, lives, question_img_url=None):
+def create_quiz_image(question, options, category, level, lives, question_img_url=None, current_q=None, total_q=None):
     width = 800
     height = 1000 # Görsel ve uzun soruların sığması için yükseklik artırıldı
     
+    # Modern Indigo/Slate Renk Paleti
+    bg_color = (15, 23, 42) # Slate 950
+    card_color = (30, 41, 59) # Slate 800
+    border_color = (51, 65, 85) # Slate 700
+    accent_color = (99, 102, 241) # Indigo 500
+    text_primary = (241, 245, 249) # Slate 100
+    text_secondary = (148, 163, 184) # Slate 400
+
     cat_lower = category.lower()
     if "tarih" in cat_lower:
-        bg_color, header_text_color = (60, 40, 30), (255, 200, 150)
+        header_bg, header_text_color = (60, 40, 30), (255, 200, 150)
     elif "cografya" in cat_lower or "coğrafya" in cat_lower:
-        bg_color, header_text_color = (30, 60, 40), (150, 255, 150)
+        header_bg, header_text_color = (30, 60, 40), (150, 255, 150)
     elif "vatandaslik" in cat_lower or "vatandaşlık" in cat_lower:
-        bg_color, header_text_color = (50, 30, 70), (200, 180, 255)
+        header_bg, header_text_color = (50, 30, 70), (200, 180, 255)
     elif "guncel" in cat_lower or "güncel" in cat_lower:
-        bg_color, header_text_color = (80, 50, 20), (255, 220, 100)
+        header_bg, header_text_color = (80, 50, 20), (255, 220, 100)
     else:
-        bg_color, header_text_color = (15, 23, 42), (255, 215, 0)
+        header_bg, header_text_color = (30, 41, 59), (255, 215, 0)
 
-    card_color = (30, 41, 59)
     img = Image.new('RGBA', (width, height), color=bg_color + (255,))
     draw = ImageDraw.Draw(img)
     
@@ -112,13 +119,21 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
         header_font, question_font, option_font = ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default()
         tag_font = ImageFont.load_default()
 
-    # Üst bar ve Zorluk Yıldızları
-    draw.rectangle([(0, 0), (width, 80)], fill=(15, 23, 42))
+    # --- Üst Bar ve Bilgiler ---
+    draw.rectangle([(0, 0), (width, 80)], fill=header_bg)
     stars = "⭐" * level
     draw.text((40, 25), f"🧠 {category.upper()}  |  {stars}  |  ❤️ {lives}", font=header_font, fill=header_text_color)
-    
+
+    # İlerleme Çubuğu (Progress Bar)
+    if current_q is not None and total_q is not None:
+        progress_w = int((current_q / total_q) * (width - 80))
+        # Çubuk arkaplanı
+        draw.rounded_rectangle([(40, 85), (width - 40, 93)], radius=4, fill=(51, 65, 85))
+        # Dolu çubuk
+        draw.rounded_rectangle([(40, 85), (40 + progress_w, 93)], radius=4, fill=accent_color)
+
     # --- Resim Ekleme Bölümü ---
-    y_cursor = 100
+    y_cursor = 110
     if question_img_url:
         try:
             q_img = None
@@ -159,32 +174,38 @@ def create_quiz_image(question, options, category, level, lives, question_img_ur
         except Exception as e:
             print(f"❌ Kritik Görsel Hatası: {e}")
     else:
-        y_cursor = 120 # Resim yoksa soru kutusunu biraz yukarı al
+        y_cursor = 130 # Resim yoksa soru kutusunu biraz yukarı al
 
     # Soru Metni Hazırlama (Dinamik Yerleşim)
     wrapper = textwrap.TextWrapper(width=40)
     lines = wrapper.wrap(text=question)
     
     # Soru kutusunun yüksekliğini satır sayısına göre dinamik hesapla
-    box_height = 60 + (len(lines) * 40)
+    box_height = 80 + (len(lines) * 40)
     soru_y_start = y_cursor
     
-    # Soru Kartı Çizimi
-    draw.rounded_rectangle([(40, soru_y_start), (760, soru_y_start + box_height)], radius=20, fill=card_color, outline=(51, 65, 85), width=2)
-    draw.rounded_rectangle([(60, soru_y_start + 10), (160, soru_y_start + 38)], radius=10, fill=(56, 189, 248))
+    # Gölge Efekti
+    draw.rounded_rectangle([(44, soru_y_start + 4), (764, soru_y_start + box_height + 4)], radius=20, fill=(0, 0, 0, 80))
+    
+    # Soru Kartı
+    draw.rounded_rectangle([(40, soru_y_start), (760, soru_y_start + box_height)], radius=20, fill=card_color, outline=border_color, width=2)
+    draw.rounded_rectangle([(60, soru_y_start + 15), (160, soru_y_start + 43)], radius=10, fill=accent_color)
     draw.text((75, soru_y_start + 12), "SORU", font=tag_font, fill=(255, 255, 255))
 
-    y_text = soru_y_start + 50
+    y_text = soru_y_start + 65
     for line in lines:
-        draw.text((60, y_text), line, font=question_font, fill=(255, 255, 255))
+        draw.text((60, y_text), line, font=question_font, fill=text_primary)
         y_text += 40
 
     # Seçenekler soru kutusunun hemen altından başlasın (Overlap önlendi)
-    y_opt = soru_y_start + box_height + 20
+    y_opt = soru_y_start + box_height + 30
     
     for opt in options:
-        draw.rounded_rectangle([(40, y_opt), (760, y_opt + 50)], radius=15, fill=(51, 65, 85)) # Yükseklik 55 -> 50
-        draw.text((70, y_opt + 10), opt, font=option_font, fill=(241, 245, 249))
+        # Seçenek Gölge
+        draw.rounded_rectangle([(42, y_opt + 2), (762, y_opt + 52)], radius=15, fill=(0, 0, 0, 60))
+        # Seçenek Kutu
+        draw.rounded_rectangle([(40, y_opt), (760, y_opt + 50)], radius=15, fill=(51, 65, 85), outline=border_color, width=1)
+        draw.text((70, y_opt + 10), opt, font=option_font, fill=text_primary)
         y_opt += 60 # Boşluk 65 -> 60
 
     img = add_watermark(img)
@@ -226,12 +247,12 @@ def get_question(level, category):
 def create_quiz_result_image(is_correct, correct_answer, earned_exp, streak, user_answer):
     width, height = 800, 400
     if is_correct:
-        bg_color, title_text = (39, 174, 96), "TEBRİKLER! DOĞRU 🎉"
+        bg_color, title_text = (22, 101, 52), "TEBRİKLER! DOĞRU 🎉" # Emerald 900
     else:
-        bg_color = (192, 57, 43)
+        bg_color = (153, 27, 27) # Red 800
         title_text = "SÜRE DOLDU! ⏳" if user_answer == "TIMEOUT" else "YANLIŞ CEVAP... 🥀"
     
-    img = Image.new('RGB', (width, height), color=bg_color)
+    img = Image.new('RGBA', (width, height), color=bg_color + (255,))
     draw = ImageDraw.Draw(img)
     
     try:
@@ -244,6 +265,9 @@ def create_quiz_result_image(is_correct, correct_answer, earned_exp, streak, use
         title_font, info_font, big_font = ImageFont.truetype(font_path, 45), ImageFont.truetype(font_path, 30), ImageFont.truetype(font_path, 55)
     except:
         title_font, info_font, big_font = ImageFont.load_default(), ImageFont.load_default(), ImageFont.load_default()
+
+    # İç Kart
+    draw.rounded_rectangle([20, 20, width-20, height-20], radius=30, fill=(30, 41, 59, 180), outline=(255, 255, 255, 50), width=2)
 
     draw.text((50, 40), title_text, font=title_font, fill=(255, 255, 255))
     
@@ -323,7 +347,10 @@ def register_quiz_handlers(bot, tirtil_utils):
         users[user_id].update({"current_answer": q["answer"], "current_question_id": q["id"]})
         
         box_num = users[user_id].get("spaced_repetition", {}).get(str(q_id), {}).get("box", 1)
-        photo = create_quiz_image(q['question'], q['options'], f"TEKRAR (Kutu {box_num})", users[user_id]["level"], users[user_id]['lives'], q.get('image_url'))
+        
+        total = users[user_id].get("sr_total_start", len(queue))
+        current = total - len(queue) + 1
+        photo = create_quiz_image(q['question'], q['options'], f"TEKRAR (Kutu {box_num})", users[user_id]["level"], users[user_id]['lives'], q.get('image_url'), current_q=current, total_q=total)
         
         markup = InlineKeyboardMarkup(row_width=4).add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
         markup.add(InlineKeyboardButton("🏁 Bitir", callback_data="finish_quiz"))
@@ -411,7 +438,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         current_idx = users[user_id]["exam_total"] - len(queue) + 1
         total = users[user_id]["exam_total"]
         
-        photo = create_quiz_image(q['question'], q['options'], f"DENEME ({current_idx}/{total})", users[user_id]["level"], users[user_id]['lives'], q.get('image_url'))
+        photo = create_quiz_image(q['question'], q['options'], f"DENEME", users[user_id]["level"], users[user_id]['lives'], q.get('image_url'), current_q=current_idx, total_q=total)
         
         markup = InlineKeyboardMarkup(row_width=4)
         markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
@@ -550,8 +577,11 @@ def register_quiz_handlers(bot, tirtil_utils):
         q = queue[0] # Sıradaki soru
         users[user_id]["current_ai_question"] = q 
         users[user_id]["current_answer"] = q["answer"]
+
+        total = users[user_id].get("ai_quiz_total", 5)
+        current = total - len(queue) + 1
         
-        photo = create_quiz_image(q['question'], q['options'], "AI TEST", users[user_id]["level"], users[user_id]['lives'], q.get('image_url'))
+        photo = create_quiz_image(q['question'], q['options'], "AI TEST", users[user_id]["level"], users[user_id]['lives'], q.get('image_url'), current_q=current, total_q=total)
         
         markup = InlineKeyboardMarkup(row_width=4)
         markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
@@ -593,8 +623,10 @@ def register_quiz_handlers(bot, tirtil_utils):
             
         users[user_id]["current_saved_item"] = item # Silme işlemi için takip
         users[user_id]["current_answer"] = q["answer"]
-        
-        photo = create_quiz_image(q['question'], q['options'], "FAVORİ", users[user_id]["level"], users[user_id]['lives'], q.get('image_url'))
+
+        total = users[user_id].get("saved_total", len(queue))
+        current = total - len(queue) + 1
+        photo = create_quiz_image(q['question'], q['options'], "FAVORİ", users[user_id]["level"], users[user_id]['lives'], q.get('image_url'), current_q=current, total_q=total)
         
         markup = InlineKeyboardMarkup(row_width=4)
         markup.add(*[InlineKeyboardButton(s, callback_data=f"ans_{s}") for s in ["A", "B", "C", "D"]])
@@ -1215,7 +1247,7 @@ def register_quiz_handlers(bot, tirtil_utils):
             bot.reply_to(message, "✅ **Bugünlük tekrarın yok!**\nYanlış yaptığın sorular buraya otomatik eklenir ve zamanı gelince sorulur.")
             return
             
-        users[user_id].update({"mode": "spaced_repetition", "sr_queue": due}); save_users()
+        users[user_id].update({"mode": "spaced_repetition", "sr_queue": due, "sr_total_start": len(due)}); save_users()
         bot.reply_to(message, f"🧠 **AKILLI TEKRAR SİSTEMİ**\n\nBugün tekrar etmen gereken **{len(due)}** soru var.\nLeitner sistemi ile hafızanı güçlendirelim! 🚀")
         send_spaced_question(message.chat.id, user_id)
 
@@ -1283,6 +1315,7 @@ def register_quiz_handlers(bot, tirtil_utils):
             bot.answer_callback_query(call.id, "🎉 Zayıf konun kalmadı!", show_alert=True); return
             
         users[user_id].update({"mode": "weakness", "weak_topics": weak_topics}); save_users()
+        users[user_id]["last_smart_review_date"] = datetime.now().strftime("%Y-%m-%d")
         bot.answer_callback_query(call.id, "📉 Antrenman başlıyor...")
         bot.send_message(call.message.chat.id, "📉 **ZAYIF KONU ANTRENMANI**\n\nBaşarı oranın %50'nin altında olduğu konulardan sorular geliyor.\nBaşarana kadar devam! 🚀")
         send_weakness_question(call.message.chat.id, user_id)
@@ -1314,6 +1347,7 @@ def register_quiz_handlers(bot, tirtil_utils):
             
             users[user_id]["ai_quiz_queue"] = questions
             users[user_id]["ai_quiz_topic"] = topic
+            users[user_id]["ai_quiz_total"] = len(questions)
             users[user_id]["mode"] = "ai_quiz"
             save_users()
             
@@ -1367,6 +1401,7 @@ def register_quiz_handlers(bot, tirtil_utils):
             
             users[user_id]["ai_quiz_queue"] = questions
             users[user_id]["ai_quiz_topic"] = "Kendi Notun"
+            users[user_id]["ai_quiz_total"] = len(questions)
             users[user_id]["mode"] = "ai_quiz"
             save_users()
             
@@ -1423,6 +1458,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         random.shuffle(queue)
         users[user_id]["mode"] = "saved"
         users[user_id]["saved_queue"] = queue
+        users[user_id]["saved_total"] = len(queue)
         save_users()
         
         bot.reply_to(message, f"📂 **FAVORİ SORULARIN**\n\nToplam: {len(queue)} soru\nBaşlıyoruz... 🚀", parse_mode="Markdown")
