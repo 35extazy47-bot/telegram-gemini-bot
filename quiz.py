@@ -32,46 +32,10 @@ import database
 from database import (
     users, save_users, QUIZ_QUESTIONS, DEVELOPER_USERNAME,
     user_timers, pending_duels, active_sessions
+    , CHRONOLOGY_DATA, FILL_BLANK_DATA
 )
 
 active_quiz_duels = {}
-
-# --- Kronoloji Oyunu Verileri (Olay, Yıl) ---
-CHRONOLOGY_DATA = [
-    ("Malazgirt Savaşı", 1071), ("Miryokefalon Savaşı", 1176), ("Kösedağ Savaşı", 1243),
-    ("Söğüt'ün Alınması", 1299), ("Bursa'nın Fethi", 1326), ("Ankara Savaşı", 1402),
-    ("İstanbul'un Fethi", 1453), ("Ridaniye Seferi", 1517), ("Preveze Deniz Zaferi", 1538),
-    ("İnebahtı Deniz Savaşı", 1571), ("Viyana Kuşatması (II)", 1683), ("Karlofça Antlaşması", 1699),
-    ("Pasarofça Antlaşması", 1718), ("Küçük Kaynarca", 1774), ("Yaş Antlaşması", 1792),
-    ("Sened-i İttifak", 1808), ("Tanzimat Fermanı", 1839), ("Islahat Fermanı", 1856),
-    ("I. Meşrutiyet", 1876), ("93 Harbi", 1877), ("II. Meşrutiyet", 1908),
-    ("31 Mart Vakası", 1909), ("Trablusgarp Savaşı", 1911), ("Balkan Savaşları", 1912),
-    ("I. Dünya Savaşı", 1914), ("Çanakkale Zaferi", 1915), ("Mondros Ateşkesi", 1918),
-    ("Samsun'a Çıkış", 1919), ("Sivas Kongresi", 1919), ("TBMM'nin Açılışı", 1920),
-    ("Sakarya Savaşı", 1921), ("Büyük Taarruz", 1922), ("Cumhuriyetin İlanı", 1923),
-    ("Halifeliğin Kaldırılması", 1924), ("Hatay'ın Katılması", 1939), ("Çok Partili Hayat", 1946),
-    ("NATO Üyeliği", 1952), ("6-7 Eylül Olayları", 1955), ("1960 Darbesi", 1960),
-    ("Kıbrıs Barış Harekatı", 1974), ("1980 Darbesi", 1980), ("Gümrük Birliği", 1996)
-]
-
-# --- Boşluk Doldurma Verileri (Soru, [Doğru Cevaplar Listesi]) ---
-FILL_BLANK_DATA = [
-    ("Mustafa Kemal Atatürk 19 Mayıs 1919'da _________ iline çıkarak Milli Mücadele'yi başlatmıştır.", ["samsun"]),
-    ("Türkiye Cumhuriyeti'nin başkenti _________ ilidir.", ["ankara"]),
-    ("Malazgirt Savaşı _________ yılında yapılmıştır.", ["1071"]),
-    ("İstanbul'u fetheden Osmanlı padişahı _________ Sultan Mehmet'tir.", ["fatih", "2. mehmet", "ii. mehmet"]),
-    ("Türkiye'nin en yüksek dağı _________ Dağı'dır.", ["ağrı"]),
-    ("İstiklal Marşı'nın şairi _________ Ersoy'dur.", ["mehmet akif"]),
-    ("Cumhuriyet _________ yılında ilan edilmiştir.", ["1923"]),
-    ("Hatay _________ yılında anavatana katılmıştır.", ["1939"]),
-    ("Osmanlı Devleti'nin kurucusu _________ Bey'dir.", ["osman"]),
-    ("İlk Türk devletlerinde devleti yöneten hükümdara _________ unvanı verilir.", ["kağan", "han", "hakan"]),
-    ("Asya Hun Devleti'nin en parlak dönemi _________ Han zamanıdır.", ["mete"]),
-    ("Müslümanların ilk kıblesi _________ şehrindedir.", ["kudüs"]),
-    ("Türkiye'nin en büyük gölü _________ Gölü'dür.", ["van"]),
-    ("Lozan Antlaşması _________ yılında imzalanmıştır.", ["1923"]),
-    ("UNESCO koruması altındaki Pamukkale _________ ilimizdedir.", ["denizli"])
-]
 
 # Bu fonksiyonlar tirtil.py'den register fonksiyonu aracılığıyla alınacak
 get_rank = None
@@ -1044,7 +1008,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         if not users.get(user_id, {}).get("is_approved", True): return
         
         # Rastgele 4 olay seç
-        selection = random.sample(CHRONOLOGY_DATA, 4)
+        selection = random.sample(database.CHRONOLOGY_DATA, 4)
         
         # Doğru sıralamayı (yıla göre) bul ve indeksleri (1,2,3,4) belirle
         correct_order = sorted(selection, key=lambda x: x[1])
@@ -1104,7 +1068,7 @@ def register_quiz_handlers(bot, tirtil_utils):
         user_id = str(message.from_user.id)
         if not users.get(user_id, {}).get("is_approved", True): return
         
-        question_data = random.choice(FILL_BLANK_DATA)
+        question_data = random.choice(database.FILL_BLANK_DATA)
         question, answers = question_data
         
         users[user_id]["fill_blank_answers"] = answers
