@@ -90,14 +90,35 @@ def get_rank(level, username=None):
     else: return "Acemi 👶"
 
 def get_badges(user_data):
-    badges = []
-    if user_data.get("total_mines", 0) >= 50: badges.append("⛏️ Madenci")
-    if user_data.get("duel_wins", 0) >= 10: badges.append("⚔️ Gladyatör")
-    if user_data.get("total_correct", 0) >= 50: badges.append("🧠 Bilgin")
-    if user_data.get("money", 0) >= 100000: badges.append("💸 Baron")
-    if user_data.get("is_weekly_winner", False):
-        badges.append("🏆 Haftanın Lideri")
-    return " | ".join(badges) if badges else "Yok"
+    """Kullanıcının kazandığı başarımları isim olarak döner."""
+    unlocked = user_data.get("achievements", [])
+    badge_names = []
+    for ach_id in unlocked:
+        if ach_id in ACHIEVEMENTS:
+            badge_names.append(ACHIEVEMENTS[ach_id]["name"])
+    
+    if user_data.get("is_weekly_winner"): badge_names.append("🏆 Haftalık Şampiyon")
+    return " | ".join(badge_names) if badge_names else "Yeni Üye 🌱"
+
+def check_achievements(user_id):
+    """Kullanıcının yeni başarım kazanıp kazanmadığını kontrol eder."""
+    user_data = users[str(user_id)]
+    if "achievements" not in user_data: user_data["achievements"] = []
+    
+    new_unlocked = False
+    for ach_id, info in ACHIEVEMENTS.items():
+        if ach_id in user_data["achievements"]: continue
+        
+        # Kriter kontrolü
+        current_val = user_data.get(info["crit"], 0)
+        if current_val >= info["val"]:
+            user_data["achievements"].append(ach_id)
+            user_data["money"] = user_data.get("money", 0) + info["reward"]
+            new_unlocked = True
+            try: bot.send_message(user_id, f"🎊 **BAŞARIM AÇILDI!** 🎊\n\n🏅 **{info['name']}**\n📜 {info['desc']}\n💰 Ödül: +{info['reward']} $")
+            except: pass
+            
+    if new_unlocked: save_users()
 
 def check_daily_limit(user_id):
     if users.get(str(user_id), {}).get("username") == DEVELOPER_USERNAME: return True
@@ -123,6 +144,12 @@ def generate_daily_quests(user_id):
 
 def update_quest_progress(user_id, q_type):
     generate_daily_quests(user_id)
+    user_id_str = str(user_id)
+    
+    # Gece Kuşu kontrolü (Gece 00-05 arası işlem yaparsa)
+    now_hour = (datetime.now(timezone.utc) + timedelta(hours=3)).hour
+    if 0 <= now_hour <= 5: users[user_id_str]["night_owl"] = 1
+
     for q in users[str(user_id)]["quests"]["list"]:
         if q["type"] == q_type and not q["done"]:
             q["current"] += 1
@@ -131,6 +158,9 @@ def update_quest_progress(user_id, q_type):
                 try: bot.send_message(user_id, f"✅ **GÖREV TAMAMLANDI!**\n📜 {q['desc']}\n💰 Ödül: +{q['reward']} EXP")
                 except: pass
             save_users(); break
+    
+    # Başarımları her güncellemede kontrol et
+    check_achievements(user_id)
 
 def get_user_profile_image(user_id):
     try:

@@ -17,6 +17,16 @@ USERS_FILE = "users_data.json"
 MARKET_FILE = "market_data.json"
 BANNED_WORDS = ["aptal", "salak", "gerizekalı", "mal", "ezik", "amq", "orospu"]
 
+# --- Achievement Definitions ---
+ACHIEVEMENTS = {
+    "ilk_adim": {"name": "İlk Adım 👣", "desc": "10 Soru Çöz", "crit": "total_questions", "val": 10, "reward": 500},
+    "bilgin": {"name": "Bilgin 🧠", "desc": "100 Doğru Cevap", "crit": "total_correct", "val": 100, "reward": 2000},
+    "milyarder": {"name": "Milyarder 💰", "desc": "1M $ Bakiyeye Ulaş", "crit": "money", "val": 1000000, "reward": 5000},
+    "gece_kusu": {"name": "Gece Kuşu 🦉", "desc": "Gece 00:00-05:00 arası soru çöz", "crit": "night_owl", "val": 1, "reward": 1000},
+    "maden_krali": {"name": "Maden Kralı ⛏️", "desc": "100 Kez Madene İn", "crit": "total_mines", "val": 100, "reward": 3000},
+    "seri_katil": {"name": "Seri Katil 🔥", "desc": "20 Soru Seri Yap", "crit": "best_streak", "val": 20, "reward": 2500}
+}
+
 # --- Quiz Data ---
 try:
     with open("quiz_data.json", "r", encoding="utf-8") as f:
