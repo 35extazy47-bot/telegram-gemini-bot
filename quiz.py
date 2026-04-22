@@ -781,6 +781,12 @@ def register_quiz_handlers(bot, tirtil_utils):
 
         if question_data and question_data.get("explanation"): result += f"\n\n💡 **Bilgi:** {question_data['explanation']}"
 
+        # --- DEEP REVIEW BUTTON ---
+        markup = InlineKeyboardMarkup()
+        if answer != correct and q_id and u.get("mode") != "exam":
+            markup.add(InlineKeyboardButton("🤖 Neden Yanlış?", callback_data=f"deep_review_{q_id}_{answer}"))
+        # --------------------------
+
         old_rank = get_rank(level, u.get("username")); leveled_up = False
         while exp >= level * 100: exp -= level * 100; level += 1; leveled_up = True
         if leveled_up:
@@ -813,7 +819,7 @@ def register_quiz_handlers(bot, tirtil_utils):
             else:
                 bot.send_message(chat_id, full_caption)
         else:
-            msg = bot.send_photo(chat_id, result_photo, caption=full_caption)
+            msg = bot.send_photo(chat_id, result_photo, caption=full_caption, reply_markup=markup)
             Timer(5.0, lambda: bot.delete_message(chat_id, msg.message_id) if msg else None).start()
 
         u.pop("current_answer", None); save_users()
@@ -826,6 +832,43 @@ def register_quiz_handlers(bot, tirtil_utils):
                 u["ai_quiz_queue"].pop(0)
             send_ai_question(chat_id, user_id)
         else: send_question(chat_id, user_id)
+
+    @bot.callback_query_handler(func=lambda c: c.data.startswith("deep_review_"))
+    def deep_review_handler(call):
+        user_id = str(call.from_user.id)
+        if not check_daily_limit(user_id):
+            bot.answer_callback_query(call.id, "⛔ Günlük AI limitin doldu!", show_alert=True)
+            return
+
+        try:
+            _, _, q_id, user_wrong_ans = call.data.split("_")
+            q = next((item for item in QUIZ_QUESTIONS if str(item["id"]) == q_id), None)
+            
+            if not q:
+                bot.answer_callback_query(call.id, "⚠️ Soru verisi bulunamadı.")
+                return
+
+            bot.answer_callback_query(call.id, "🤖 Analiz ediliyor...")
+            wait_msg = bot.send_message(call.message.chat.id, "🧐 *Yanlış yaptığın noktayı inceliyorum, bekle knk...*", parse_mode="Markdown")
+
+            prompt = (
+                f"Sen tecrübeli bir KPSS hocasısın. Bir öğrenci şu soruda takıldı:\n\n"
+                f"Soru: {q['question']}\n"
+                f"Şıklar: {', '.join(q['options'])}\n"
+                f"Doğru Cevap: {q['answer']}\n"
+                f"Öğrencinin Yanlış Cevabı: {user_wrong_ans}\n\n"
+                f"Lütfen öğrenciye neden yanlış yapmış olabileceğini, bu iki şık arasındaki ince farkı ve "
+                f"konunun püf noktasını samimi, motive edici ve kısa bir dille açıkla. Bol emoji kullan."
+            )
+
+            response = safe_generate_content(prompt)
+            bot.delete_message(call.message.chat.id, wait_msg.message_id)
+            
+            final_text = f"🛡️ **AI HOCA ANALİZİ**\n\n{response.text}"
+            bot.send_message(call.message.chat.id, final_text, parse_mode="Markdown")
+
+        except Exception as e:
+            bot.send_message(call.message.chat.id, f"❌ Analiz hatası: {e}")
 
     def send_global_question(chat_id, user_id):
         target_lang = users[user_id].get("lang", "tr")
