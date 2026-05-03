@@ -9920,5 +9920,145 @@
     "answer": "B",
     "image_url": "images/tr_bakir.jpg",
     "explanation": "Kastamonu-Küre, Türkiye'nin en eski ve önemli bakır yataklarından biridir. Buradan çıkarılan maden genellikle Samsun'daki tesislerde işlenir."
+  },
+  {
+    "id": 810,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti ile Safevi Devleti (İran) arasında imzalanan ilk resmi antlaşma hangisidir?",
+    "options": [
+      "A) Amasya Antlaşması (1555)",
+      "B) Ferhat Paşa Antlaşması",
+      "C) Kasr-ı Şirin Antlaşması",
+      "D) Nasuh Paşa Antlaşması"
+    ],
+    "answer": "A",
+    "explanation": "1555 Amasya Antlaşması, Kanuni Sultan Süleyman döneminde Safevilerle imzalanan ilk resmi barış antlaşmasıdır."
+  },
+  {
+    "id": 811,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "1711 yılında Rusya ile imzalanan ve kaybedilen Azak Kalesi'nin geri alınmasını sağlayarak İstanbul Antlaşması'nı geçersiz kılan antlaşma hangisidir?",
+    "options": [
+      "A) Belgrad Antlaşması",
+      "B) Prut Antlaşması",
+      "C) Pasarofça Antlaşması",
+      "D) Küçük Kaynarca Antlaşması"
+    ],
+    "answer": "B",
+    "explanation": "Sadrazam Baltacı Mehmet Paşa komutasındaki ordunun başarısı sonucu imzalanan Prut Antlaşması ile Azak Kalesi geri alınmıştır."
+  },
+  {
+    "id": 812,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nin 18. yüzyılda imzaladığı son kazançlı antlaşma olan ve Karadeniz'in Türk gölü olduğunu son kez onaylayan antlaşma hangisidir?",
+    "options": [
+      "A) Pasarofça Antlaşması",
+      "B) Küçük Kaynarca Antlaşması",
+      "C) Belgrad Antlaşması",
+      "D) Yaş Antlaşması"
+    ],
+    "answer": "C",
+    "explanation": "1739 Belgrad Antlaşması, Humbaracı Ahmed Paşa'nın askeri reformlarının etkisiyle kazanılan son büyük diplomatik ve askeri başarıdır."
+  },
+  {
+    "id": 813,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Osmanlı Devleti'nin halifelik makamının siyasi gücünden uluslararası bir antlaşmada ilk kez yararlandığı antlaşma hangisidir?",
+    "options": [
+      "A) Küçük Kaynarca Antlaşması",
+      "B) Berlin Antlaşması",
+      "C) Uşi Antlaşması",
+      "D) Paris Antlaşması"
+    ],
+    "answer": "A",
+    "explanation": "1774 Küçük Kaynarca Antlaşması ile Kırım bağımsız olmuş ancak halkının dini bakımdan halifeye bağlı kalması şartı getirilmiştir. Bu, halifeliğin siyasi bir koz olarak ilk kullanımıdır."
+  },
+  {
+    "id": 814,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Fransız İhtilali'nin etkisiyle Avusturya'nın savaştan çekilmek istemesi üzerine 1791 yılında Osmanlı ile imzaladığı antlaşma hangisidir?",
+    "options": [
+      "A) Ziştovi Antlaşması",
+      "B) Yaş Antlaşması",
+      "C) Bükreş Antlaşması",
+      "D) Edirne Antlaşması"
+    ],
+    "answer": "A",
+    "explanation": "Ziştovi Antlaşması ile Avusturya, milliyetçilik akımının kendi çok uluslu yapısına zarar vermesinden çekindiği için savaşı bitirmiştir."
+  },
+  {
+    "id": 815,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Trablusgarp Savaşı sonunda imzalanan Uşi Antlaşması'nda Osmanlı Devleti'ni delegasyon başkanı olarak kim temsil etmiştir?",
+    "options": [
+      "A) Rauf Orbay",
+      "B) Mehmed Nabi Bey",
+      "C) Enver Paşa",
+      "D) Ali Fethi Okyar"
+    ],
+    "answer": "B",
+    "explanation": "1912 Uşi Antlaşması, Osmanlı adına Mehmed Nabi Bey ve Rumumbeyoğlu Fahreddin Bey tarafından imzalanmıştır."
+  },
+  {
+    "id": 816,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Lozan Barış Konferansı'na giden Türk heyetinde İsmet İnönü dışındaki diğer iki ana temsilci (delege) kimlerdir?",
+    "options": [
+      "A) Kazım Karabekir - Rauf Orbay",
+      "B) Fevzi Çakmak - Refet Bele",
+      "C) Dr. Rıza Nur - Hasan Saka",
+      "D) Celal Bayar - Tevfik Rüştü Aras"
+    ],
+    "answer": "C",
+    "explanation": "TBMM'yi temsilen giden heyetin asıl delegeleri İsmet İnönü (Başkan), Dr. Rıza Nur ve Hasan Saka'dır."
+  },
+  {
+    "id": 817,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "1926 Ankara Antlaşması ile çözülen Musul sorunu sonucunda, Türkiye'ye Musul petrollerinden yüzde kaç pay ve kaç yıl süreyle verilmesi kararlaştırılmıştır?",
+    "options": [
+      "A) %10 - 25 Yıl",
+      "B) %25 - 10 Yıl",
+      "C) %5 - 50 Yıl",
+      "D) %15 - 20 Yıl"
+    ],
+    "answer": "A",
+    "explanation": "Antlaşma gereği Türkiye'ye bölge petrollerinden %10 pay ve 25 yıl süreyle ödeme yapılması kabul edilmiştir (Türkiye daha sonra bu hakkından bir miktar nakit karşılığı feragat etmiştir)."
+  },
+  {
+    "id": 818,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Türkiye, Yunanistan, Yugoslavya ve Romanya arasında imzalanan 'Balkan Antantı' hangi şehirde imzalanmıştır?",
+    "options": [
+      "A) Ankara",
+      "B) Bükreş",
+      "C) Belgrad",
+      "D) Atina"
+    ],
+    "answer": "D",
+    "explanation": "Balkan Antantı, 9 Şubat 1934 tarihinde Yunanistan'ın başkenti Atina'da imzalanmıştır."
+  },
+  {
+    "id": 819,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "1878 Berlin Antlaşması görüşmelerinde Osmanlı Devleti'ni temsil eden heyetin başında bulunan ve bu düzeyde görev alan ilk gayrimüslim devlet adamı kimdir?",
+    "options": [
+      "A) Musurus Paşa",
+      "B) Aleksandr Karatodori Paşa",
+      "C) Sava Paşa",
+      "D) Gabriel Noradunkyan"
+    ],
+    "answer": "B",
+    "explanation": "Berlin Kongresi'nde Osmanlı heyetine Dışişleri Nazırı olan Rum asıllı Aleksandr Karatodori Paşa başkanlık etmiştir."
   }
 ]
