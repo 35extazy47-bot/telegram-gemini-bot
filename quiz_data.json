@@ -10060,5 +10060,145 @@
     ],
     "answer": "B",
     "explanation": "Berlin Kongresi'nde Osmanlı heyetine Dışişleri Nazırı olan Rum asıllı Aleksandr Karatodori Paşa başkanlık etmiştir."
+  },
+  {
+    "id": 820,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "1829 Edirne Antlaşması ile bağımsızlığını kazanan Yunanistan'ın bağımsızlığını Osmanlı Devleti adına hangi padişah tanımak zorunda kalmıştır?",
+    "options": [
+      "A) II. Mahmut",
+      "B) Abdülmecid",
+      "C) III. Selim",
+      "D) I. Abdülhamit"
+    ],
+    "answer": "A",
+    "explanation": "1829 Edirne Antlaşması, II. Mahmut döneminde imzalanmış ve Yunanistan'ın bağımsızlığı Osmanlı Devleti tarafından tanınmıştır."
+  },
+  {
+    "id": 821,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Kavalalı Mehmet Ali Paşa isyanına karşı Rusya ile imzalanan Hünkar İskelesi Antlaşması (1833) ile Osmanlı Devleti'nin Boğazlar üzerindeki egemenlik haklarını son kez tek başına kullandığı antlaşma hangisidir?",
+    "options": [
+      "A) Londra Boğazlar Sözleşmesi",
+      "B) Paris Antlaşması",
+      "C) Hünkar İskelesi Antlaşması",
+      "D) Berlin Antlaşması"
+    ],
+    "answer": "C",
+    "explanation": "Hünkar İskelesi Antlaşması, Osmanlı'nın Boğazlar üzerindeki egemenlik haklarını tek başına kullandığı son antlaşma olup, Boğazlar Sorunu'nu uluslararası bir mesele haline getirmiştir."
+  },
+  {
+    "id": 822,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "1838 Balta Limanı Ticaret Antlaşması ile İngiliz tüccarlara tanınan geniş imtiyazlar, Osmanlı ekonomisini dışa bağımlı hale getirerek yerli sanayiye büyük darbe vurmuştur. Bu antlaşma hangi padişah döneminde imzalanmıştır?",
+    "options": [
+      "A) II. Mahmut",
+      "B) Abdülmecid",
+      "C) Abdülaziz",
+      "D) II. Abdülhamit"
+    ],
+    "answer": "A",
+    "explanation": "Balta Limanı Ticaret Antlaşması, II. Mahmut döneminde imzalanmış ve Osmanlı ekonomisi üzerinde yıkıcı etkiler yaratmıştır."
+  },
+  {
+    "id": 823,
+    "category": "tarih_osmanli",
+    "level": 3,
+    "question": "Kırım Savaşı'nı (1853-1856) sona erdiren Paris Antlaşması'nda, Osmanlı Devleti'nin Avrupa devleti sayılmasına rağmen, Karadeniz'de donanma bulunduramama şartı hangi devlete de getirilmiştir?",
+    "options": [
+      "A) İngiltere",
+      "B) Fransa",
+      "C) Rusya",
+      "D) Avusturya"
+    ],
+    "answer": "C",
+    "explanation": "Paris Antlaşması ile Karadeniz tarafsız hale getirilmiş ve hem Osmanlı hem de Rusya'nın Karadeniz'de donanma bulundurması yasaklanmıştır."
+  },
+  {
+    "id": 824,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Mondros Ateşkes Antlaşması'nı Osmanlı Devleti adına imzalayan Bahriye Nazırı Rauf Orbay, bu antlaşmayı hangi gemide imzalamıştır?",
+    "options": [
+      "A) HMS Iron Duke",
+      "B) HMS Agamemnon",
+      "C) USS Missouri",
+      "D) SMS Goeben"
+    ],
+    "answer": "B",
+    "explanation": "Rauf Orbay, Mondros Ateşkes Antlaşması'nı Limni Adası'nın Mondros Limanı'nda, İngilizlerin Agamemnon zırhlısında imzalamıştır."
+  },
+  {
+    "id": 825,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "TBMM Hükümeti'nin uluslararası alanda imzaladığı ilk antlaşma olan Gümrü Antlaşması (1920) ile Doğu Cephesi'nde Ermenilere karşı kazanılan zaferde, TBMM'yi temsil eden komutan kimdir?",
+    "options": [
+      "A) İsmet İnönü",
+      "B) Ali Fuat Cebesoy",
+      "C) Kazım Karabekir Paşa",
+      "D) Refet Bele"
+    ],
+    "answer": "C",
+    "explanation": "Gümrü Antlaşması, Doğu Cephesi Komutanı Kazım Karabekir Paşa tarafından Ermenistan ile imzalanmıştır."
+  },
+  {
+    "id": 826,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "I. İnönü Savaşı sonrası imzalanan Moskova Antlaşması (1921) ile Misak-ı Milli'den verilen ilk taviz olan Batum, hangi devlete bırakılmıştır?",
+    "options": [
+      "A) Ermenistan",
+      "B) Azerbaycan",
+      "C) Gürcistan",
+      "D) Rusya"
+    ],
+    "answer": "C",
+    "explanation": "Moskova Antlaşması ile Batum, Gürcistan'a bırakılarak Misak-ı Milli'den ilk taviz verilmiştir."
+  },
+  {
+    "id": 827,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Sakarya Meydan Muharebesi sonrası Fransa ile imzalanan 1921 Ankara Antlaşması ile Hatay ve İskenderun'un özel bir statüyle Suriye'ye bırakılmasına rağmen, bölgedeki Türk kültürünün korunması için hangi şart getirilmiştir?",
+    "options": [
+      "A) Bölgede özerk yönetim kurulması",
+      "B) Resmi dilin Türkçe olması ve Türk parasının kullanılması",
+      "C) Türklerin bölgeden göç etmesi",
+      "D) Fransız askerlerinin bölgeden çekilmesi"
+    ],
+    "answer": "B",
+    "explanation": "1921 Ankara Antlaşması'nda Hatay ve İskenderun için özel bir yönetim ve Türk kültürünün korunması adına resmi dilin Türkçe olması ve Türk parasının kullanılması şartı getirilmiştir."
+  },
+  {
+    "id": 828,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Lozan Barış Antlaşması'nda, Türkiye ile Yunanistan arasındaki nüfus mübadelesi (mübadele dışı kalanlar) konusunda hangi bölgelerdeki Türk ve Rum nüfusları 'etabli' (yerleşik) kabul edilerek mübadele dışında bırakılmıştır?",
+    "options": [
+      "A) İzmir'deki Rumlar ve Doğu Trakya'daki Türkler",
+      "B) İstanbul'daki Rumlar ve Batı Trakya'daki Türkler",
+      "C) Girit'teki Rumlar ve Anadolu'daki Türkler",
+      "D) Oniki Ada'daki Rumlar ve Adana'daki Türkler"
+    ],
+    "answer": "B",
+    "explanation": "Lozan Antlaşması'na göre İstanbul'daki Rumlar ile Batı Trakya'daki Türkler mübadele dışında tutulmuştur."
+  },
+  {
+    "id": 829,
+    "category": "tarih_inkilap",
+    "level": 3,
+    "question": "Montrö Boğazlar Sözleşmesi (1936) ile Boğazlar Komisyonu'nun kaldırılması ve Boğazlar üzerindeki tam egemenliğin Türkiye'ye devredilmesi, Türkiye'nin hangi ilkesi doğrultusunda atılmış önemli bir adımdır?",
+    "options": [
+      "A) Laiklik",
+      "B) Halkçılık",
+      "C) Milliyetçilik",
+      "D) Devletçilik"
+    ],
+    "answer": "C",
+    "explanation": "Montrö Boğazlar Sözleşmesi ile Boğazlar üzerindeki tam egemenliğin kazanılması, Türkiye'nin tam bağımsızlık ve milliyetçilik ilkesinin bir sonucudur."
   }
 ]
