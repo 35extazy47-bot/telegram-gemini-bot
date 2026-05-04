@@ -10202,3 +10202,75 @@
     "explanation": "Montrö Boğazlar Sözleşmesi ile Boğazlar üzerindeki tam egemenliğin kazanılması, Türkiye'nin tam bağımsızlık ve milliyetçilik ilkesinin bir sonucudur."
   }
 ]
+,
+  {
+    "id": 830,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "Soğuk Savaş döneminde Avrupa'da güvenlik ve işbirliğini artırmak amacıyla 1975 yılında imzalanan ve insan hakları, sınırlar ve işbirliği gibi konuları içeren belge hangisidir?",
+    "options": [
+      "A) Paris Antlaşması",
+      "B) Helsinki Nihai Senedi",
+      "C) Roma Antlaşması",
+      "D) Maastricht Antlaşması"
+    ],
+    "answer": "B",
+    "explanation": "Helsinki Nihai Senedi, Avrupa Güvenlik ve İşbirliği Teşkilatı (AGİT) bünyesinde imzalanmış ve Soğuk Savaş'ın yumuşama döneminin önemli belgelerinden biridir."
+  },
+  {
+    "id": 831,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "Bosna Savaşı'nı sona erdiren ve Bosna-Hersek'in bugünkü siyasi yapısını oluşturan, 1995 yılında imzalanan antlaşma hangisidir?",
+    "options": [
+      "A) Srebrenitsa Anlaşması",
+      "B) Dayton Barış Antlaşması",
+      "C) Karlofça Antlaşması",
+      "D) Lozan Antlaşması"
+    ],
+    "answer": "B",
+    "explanation": "Dayton Barış Antlaşması, ABD'nin Dayton şehrinde müzakere edilmiş ve Paris'te imzalanarak Bosna Savaşı'na son vermiştir."
+  },
+  {
+    "id": 832,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "ABD Başkanı Jimmy Carter'ın arabuluculuğunda, 1978 yılında İsrail Başbakanı Menahem Begin ile Mısır Cumhurbaşkanı Enver Sedat arasında imzalanan ve iki ülke arasında barışı sağlayan antlaşmalar bütününe ne ad verilir?",
+    "options": [
+      "A) Oslo Antlaşmaları",
+      "B) Camp David Antlaşmaları",
+      "C) Madrid Konferansı",
+      "D) Arap-İsrail Barış Antlaşması"
+    ],
+    "answer": "B",
+    "explanation": "Camp David Antlaşmaları, Ortadoğu barış sürecinde önemli bir dönüm noktası olmuş ve Mısır'ın İsrail'i tanıyan ilk Arap ülkesi olmasını sağlamıştır."
+  },
+  {
+    "id": 833,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "Soğuk Savaş'ın son dönemlerinde, ABD ile Sovyetler Birliği arasında stratejik nükleer silahların azaltılmasını öngören ve 1991 yılında imzalanan antlaşma hangisidir?",
+    "options": [
+      "A) SALT-I",
+      "B) INF Antlaşması",
+      "C) START-I",
+      "D) NPT"
+    ],
+    "answer": "C",
+    "explanation": "START-I (Strategic Arms Reduction Treaty), ABD ve SSCB arasında imzalanan ve uzun menzilli nükleer silahların sayısını önemli ölçüde azaltmayı hedefleyen bir antlaşmadır."
+  },
+  {
+    "id": 834,
+    "category": "tarih_cagdas",
+    "level": 3,
+    "question": "Nükleer silahların yayılmasını engellemeyi, nükleer enerjinin barışçıl kullanımını teşvik etmeyi ve nükleer silahsızlanmayı hedefleyen, 1968 yılında imzaya açılan uluslararası antlaşma hangisidir?",
+    "options": [
+      "A) Cenevre Sözleşmeleri",
+      "B) Nükleer Silahların Yayılmasının Önlenmesi Antlaşması (NPT)",
+      "C) Kapsamlı Nükleer Deneme Yasağı Antlaşması (CTBT)",
+      "D) Kimyasal Silahlar Sözleşmesi (CWC)"
+    ],
+    "answer": "B",
+    "explanation": "NPT, nükleer silahların yayılmasını kontrol altına almak ve nükleer silahsızlanma hedefine ulaşmak için en önemli uluslararası antlaşmalardan biridir."
+  }
+]
